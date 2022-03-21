@@ -1,4 +1,4 @@
-# Jetpack Game
+# JetScape
 
 L’obiettivo è quello di realizzare un videogioco 2D a scorrimento ispirato al gioco mobile “Jetpack Joyride”.
 
