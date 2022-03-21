@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 public class GameHandler implements Game {
 	
-	private static final String windowTitle = "Jetpack Joyride dei negri";
+	private static final String windowTitle = "JetScape";
 	private static final boolean allowResize = false;
 	
 	private final JFrame gFrame = new JFrame();
