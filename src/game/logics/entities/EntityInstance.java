@@ -1,19 +1,21 @@
 package game.logics.entities;
 
+import game.frame.GameWindow;
 import game.utility.screen.Pair;
+import game.utility.screen.Screen;
+
 import java.awt.Graphics2D;
 
 
 public abstract class EntityInstance implements Entity{
 	
-	protected int screenWidth, screenHeight, tileSize;
+	protected int fps;
+	protected Screen screen;
 	protected Pair<Double, Double> position;
 	protected String entityTag;
 	
-	EntityInstance(final int width, final int height, final int tileSize) {
-		this.screenWidth = width;
-		this.screenHeight = height;
-		this.tileSize = tileSize;
+	EntityInstance(final GameWindow g) {
+		this.screen = g.getScreenInfo();
 		position = new Pair<>(-1.0,-1.0);
 		entityTag = "undefined";
 	}

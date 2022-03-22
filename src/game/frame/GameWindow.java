@@ -5,7 +5,9 @@ import javax.swing.JPanel;
 
 import game.logics.handler.Logics;
 import game.logics.handler.LogicsHandler;
-import game.utility.input.keyboard.KeyboardHandler;
+import game.utility.input.keyboard.KeyHandler;
+import game.utility.screen.Screen;
+import game.utility.screen.ScreenHandler;
 
 import java.awt.Dimension;
 import java.awt.Color;
@@ -20,19 +22,9 @@ public class GameWindow extends JPanel implements Runnable{
 	
 	public static final int fpsLimiter = 60;
 	
-	private static final int tileBaseSize = 16;
-	private static final int tileScaling = 4;
-	
-	private static final int resulutionOrrizontal = 16;
-	private static final int resulutionVertical = 9;
-	private static final int resulutionScaling = 1;
-	
-	public final int tileSize = tileBaseSize * tileScaling;
-	public final int screenWidth = resulutionOrrizontal * resulutionScaling * tileSize;
-	public final int screenHeight = resulutionVertical * resulutionScaling * tileSize;
-	
 	private final Thread gameLoop = new Thread(this);
-	private final KeyboardHandler keyH = new KeyboardHandler();
+	private final Screen gameScreen = new ScreenHandler();
+	private final KeyHandler keyH = new KeyHandler();
 	private final Logics logH = new LogicsHandler(this);
 	
 	private Font fpsFont = new Font("Calibri", Font.PLAIN, 18);
@@ -41,7 +33,7 @@ public class GameWindow extends JPanel implements Runnable{
 	
 	public GameWindow(final boolean debug) {
 		super();
-		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		this.setPreferredSize(new Dimension(gameScreen.getWidth(), gameScreen.getHeight()));
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
@@ -50,7 +42,11 @@ public class GameWindow extends JPanel implements Runnable{
 		this.debug = debug;
 	}
 	
-	public KeyboardHandler getKeyListener() {
+	public Screen getScreenInfo() {
+		return gameScreen;
+	}
+	
+	public KeyHandler getKeyHandler() {
 		return keyH;
 	}
 	

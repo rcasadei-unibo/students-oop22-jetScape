@@ -3,12 +3,10 @@ package game.logics.entities;
 import java.awt.Graphics2D;
 
 import game.frame.GameWindow;
-import game.utility.input.keyboard.KeyboardHandler;
+import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Pair;
 
 public class PlayerInstance extends EntityInstance implements Player{
-	
-	private final int fps;
 	
 	private final double fallSpeed;
 	private final double jumpSpeed;
@@ -18,18 +16,18 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	private double jumpMultiplier = initialJumpMultiplier;
 	private double fallMultiplier = initialFallMultiplier;
-	private KeyboardHandler keyH;
+	private KeyHandler keyH;
 	private String action;
 	
 	public PlayerInstance(final GameWindow g) {
-		super(g.screenWidth, g.screenHeight, g.tileSize);
-		this.keyH = g.getKeyListener();
+		super(g);
+		this.keyH = g.getKeyHandler();
 		this.fps = GameWindow.fpsLimiter;
 		
 		fallSpeed = baseFallSpeed / fps;
 		jumpSpeed = baseJumpSpeed / fps;
-		yGround = screenHeight - (yLowLimit + tileSize);
-		yRoof = yTopLimit + tileSize;
+		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize());
+		yRoof = yTopLimit + screen.getTileSize();
 
 		position = new Pair<>(xPosition, yGround);
 		action = "idle";
@@ -66,6 +64,6 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.fillRect((int)Math.round(position.getX()), (int)Math.round(position.getY()), tileSize, tileSize);
+		g.fillRect((int)Math.round(position.getX()), (int)Math.round(position.getY()), screen.getTileSize(), screen.getTileSize());
 	}
 }
