@@ -1,8 +1,9 @@
 package game.logics.entities;
 
 import java.awt.Graphics2D;
+import java.awt.Color;
 
-import game.frame.GameWindow;
+import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Pair;
 
@@ -10,24 +11,20 @@ public class PlayerInstance extends EntityInstance implements Player{
 	
 	private final double fallSpeed;
 	private final double jumpSpeed;
-	
-	private final double yGround;
-	private final double yRoof;
 
 	private double jumpMultiplier = initialJumpMultiplier;
 	private double fallMultiplier = initialFallMultiplier;
 	private KeyHandler keyH;
 	private String action;
 	
-	public PlayerInstance(final GameWindow g) {
-		super(g);
-		this.keyH = g.getKeyHandler();
-		this.fps = GameWindow.fpsLimiter;
+	private Color texture = Color.white;
+	
+	public PlayerInstance(final Logics l) {
+		super(l);
+		this.keyH = l.getKeyHandler();
 		
 		fallSpeed = baseFallSpeed / fps;
 		jumpSpeed = baseJumpSpeed / fps;
-		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize());
-		yRoof = yTopLimit + screen.getTileSize();
 
 		position = new Pair<>(xPosition, yGround);
 		action = "idle";
@@ -51,6 +48,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	@Override
 	public void update() {
+		super.update();
 		if(keyH.spacePressed) {
 			jump();
 			jumpMultiplier += jumpMultiplierIncrease;
@@ -64,6 +62,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.fillRect((int)Math.round(position.getX()), (int)Math.round(position.getY()), screen.getTileSize(), screen.getTileSize());
+		g.setColor(texture);
+		super.draw(g);
 	}
 }

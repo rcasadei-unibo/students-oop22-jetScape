@@ -9,7 +9,5 @@ public interface Player extends Entity{
 	static final double jumpMultiplierIncrease = 0.6;
 	static final double fallMultiplierIncrease = 0.15;
 	
-	static final double yTopLimit = -10.0;
-	static final double yLowLimit = 65.0;
 	static final double xPosition = 135.0;
 }

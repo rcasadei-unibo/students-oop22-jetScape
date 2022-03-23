@@ -25,7 +25,7 @@ public class GameWindow extends JPanel implements Runnable{
 	private final Thread gameLoop = new Thread(this);
 	private final Screen gameScreen = new ScreenHandler();
 	private final KeyHandler keyH = new KeyHandler();
-	private final Logics logH = new LogicsHandler(this);
+	private final Logics logH;
 	
 	private Font fpsFont = new Font("Calibri", Font.PLAIN, 18);
 	private int fps = 0;
@@ -38,16 +38,10 @@ public class GameWindow extends JPanel implements Runnable{
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
 		this.addKeyListener(keyH);
+		this.logH = new LogicsHandler(gameScreen, keyH, debug);
+		
 		
 		this.debug = debug;
-	}
-	
-	public Screen getScreenInfo() {
-		return gameScreen;
-	}
-	
-	public KeyHandler getKeyHandler() {
-		return keyH;
 	}
 	
 	public void startLoop() {

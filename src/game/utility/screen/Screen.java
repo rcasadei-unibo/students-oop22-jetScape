@@ -6,12 +6,12 @@ package game.utility.screen;
 public interface Screen {
 	
 	//// 	DEFAULT VALUES    ////
-	static final int tileBaseSize = 16;
+	static final int tileBaseSize = 32;
 	
 	static final int resolutionHorizontal = 16;
 	static final int resolutionVertical = 9;
 	
-	static final double tileScaling = 4;
+	static final double tileScaling = 2;
 	static final double resolutionScaling = 1;
 	
 	/**
