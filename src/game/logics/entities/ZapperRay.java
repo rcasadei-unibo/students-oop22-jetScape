@@ -1,8 +1,5 @@
 package game.logics.entities;
 
-import game.logics.interactions.SpeedHandler;
-
-public interface ZapperRay extends Entity{
+public interface ZapperRay extends Obstacle{
 	
-	SpeedHandler getSpeedHandler();
 }

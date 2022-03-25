@@ -42,7 +42,7 @@ public abstract class EntityInstance implements Entity{
 	}
 	
 	private void updateOnScreen() {
-		if(position.getX() >= 0 && position.getX() <= screen.getWidth() && position.getY() >= 0 && position.getY() <= screen.getHeight()) {
+		if(position.getX() >= -screen.getTileSize() && position.getX() <= screen.getWidth() && position.getY() >= 0 && position.getY() <= screen.getHeight()) {
 			onScreen = true;
 		} else {
 			onScreen = false;
@@ -53,7 +53,7 @@ public abstract class EntityInstance implements Entity{
 		return onScreen;
 	}
 	
-	protected boolean isVisible() {
+	public boolean isVisible() {
 		return visible;
 	}
 	

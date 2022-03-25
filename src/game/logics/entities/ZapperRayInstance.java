@@ -11,7 +11,6 @@ import java.awt.Color;
 //import java.io.IOException;
 
 import game.logics.handler.Logics;
-import game.logics.interactions.SpeedHandler;
 import game.utility.screen.Pair;
 
 public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
@@ -19,21 +18,20 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 	private final ZapperBase electrode1;
 	private final ZapperBase electrode2;
 	
-	private final SpeedHandler speed;
-	
 	//private final Random r = new Random();
 	//private BufferedImage texture;
 	private final Color texture = Color.yellow;
 	private String rotation = "diagonal-left";
 	
 	
-	public ZapperRayInstance(final Logics l, final Pair<Double,Double> position, final ZapperBase e1, final ZapperBase e2) {
-		super(l, position);
-		entityTag = "zapper";
+	public ZapperRayInstance(final Logics l, final Pair<Double,Double> p, final ZapperBase e1, final ZapperBase e2) {
+		super(l, p);
+		entityTag = "zapper-ray";
 		
 		electrode1 = e1;
-		electrode2 = e2;
-		this.speed = e1.getSpeedHandler();
+		electrode2 = e2;	
+		
+		this.movement = e1.getSpeedHandler();
 		
 //		position.setX((double)screen.getWidth());
 //		position.setY(yRoof + (yGround - yRoof) * r.nextDouble());
@@ -57,19 +55,13 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 		}
 	}
 	
-	public SpeedHandler getSpeedHandler() {
-		return speed;
-	}
-	
 	@Override
 	public void update() {
 		super.update();
 		updateRotation();
 		
 		if(position.getX() > -screen.getTileSize()) {
-			position.setX(position.getX() - speed.getXSpeed() / fps);
-		} else {
-			this.setVisibility(false);
+			position.setX(position.getX() - movement.getXSpeed() / fps);
 		}
 	}
 

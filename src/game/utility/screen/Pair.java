@@ -68,6 +68,8 @@ public class Pair<X,Y> {
 		return "Pair [x=" + x + ", y=" + y + "]";
 	}
 	
-	
+	public Pair<X,Y> clone(){
+		return new Pair<>(this.getX(), this.getY());
+	}
 
 }

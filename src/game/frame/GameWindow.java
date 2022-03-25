@@ -40,7 +40,6 @@ public class GameWindow extends JPanel implements Runnable{
 		this.addKeyListener(keyH);
 		this.logH = new LogicsHandler(gameScreen, keyH, debug);
 		
-		
 		this.debug = debug;
 	}
 	

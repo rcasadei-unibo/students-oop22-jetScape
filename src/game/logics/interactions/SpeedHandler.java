@@ -2,7 +2,7 @@ package game.logics.interactions;
 
 public class SpeedHandler {
 	
-	public static final double baseXSpeed = 0;
+	public static final double baseXSpeed = 250;
 	public static final double baseXSpeedIncDiff = 10;
 	public static final double baseXAcceleration = 0;
 	
