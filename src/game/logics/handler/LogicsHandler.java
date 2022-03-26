@@ -9,9 +9,9 @@ import java.awt.Graphics2D;
 import java.lang.Runnable;
 
 import game.logics.entities.*;
-//import game.logics.interactions.Generator;
-//import game.logics.interactions.SpeedHandler;
-//import game.logics.interactions.TileGenerator;
+import game.logics.interactions.Generator;
+import game.logics.interactions.SpeedHandler;
+import game.logics.interactions.TileGenerator;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 
@@ -21,12 +21,12 @@ public class LogicsHandler implements Logics{
 	
 	private final Screen gScreen;
 	private final KeyHandler keyH;
-//	private final Generator spawner;
+	private final Generator spawner;
 	
 	//private final Pair<Double,Double> obstaclesPos;
 	
-//	private long updateTimer = System.nanoTime();
-//	private int spawnInterval = 3;
+	private long updateTimer = System.nanoTime();
+	private int spawnInterval = 3;
 	private boolean debug;
 	
 	public LogicsHandler(final Screen screen, final KeyHandler keyH, final boolean debug) {
@@ -41,11 +41,11 @@ public class LogicsHandler implements Logics{
 		entities.get("player").add(new PlayerInstance(this));
 		
 //		spawner = new TileGenerator((type, set) -> entities.get(type).addAll(set), 3);
-//		spawner = new TileGenerator(entities, spawnInterval);
-//		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler()));
-//		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
-//		
-//		spawner.initialize();
+		spawner = new TileGenerator(entities, spawnInterval);
+		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler()));
+		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
+		
+		spawner.initialize();
 		
 //		ZapperBase z1 = new ZapperBaseInstance(this, new Pair<>(obstaclesPos.getX(), obstaclesPos.getY()), new SpeedHandler());
 //		entities.get("zappers").add(z1);
@@ -57,16 +57,16 @@ public class LogicsHandler implements Logics{
 		
 	}	
 	
-//	private void cleanEntities() {
-//		entities.get("zappers").removeIf(e -> {
-//			Obstacle o = (Obstacle)e;
-//			if(o.isOutofScreen()) {
-//				o.resetPosition();
-//				//System.out.println("reset");
-//			}
-//			return o.isOutofScreen();
-//		});
-//	}
+	private void cleanEntities() {
+		entities.get("zappers").removeIf(e -> {
+			Obstacle o = (Obstacle)e;
+			if(o.isOutofScreen()) {
+				o.resetPosition();
+				//System.out.println("reset");
+			}
+			return o.isOutofScreen();
+		});
+	}
 	
 	public Screen getScreenInfo() {
 		return gScreen;
@@ -90,10 +90,10 @@ public class LogicsHandler implements Logics{
 	}
 	
 	public void updateAll() {
-//		if(updateEachInterval(2 * 1000000000, updateTimer, () -> cleanEntities())) {
-//			updateTimer = System.nanoTime();
-//			//System.out.println("clean");
-//		}
+		if(updateEachInterval(2 * 1000000000, updateTimer, () -> cleanEntities())) {
+			updateTimer = System.nanoTime();
+			//System.out.println("clean");
+		}
 		entities.forEach((s, se) -> se.forEach(e -> e.update()));
 	}
 	
