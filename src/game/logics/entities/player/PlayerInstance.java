@@ -1,8 +1,9 @@
-package game.logics.entities;
+package game.logics.entities.player;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
 
+import game.logics.entities.basic.EntityInstance;
 import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Pair;

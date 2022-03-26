@@ -1,5 +1,6 @@
-package game.logics.entities;
+package game.logics.entities.obstacles;
 
+import game.logics.entities.basic.EntityInstance;
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
 import game.utility.screen.Pair;

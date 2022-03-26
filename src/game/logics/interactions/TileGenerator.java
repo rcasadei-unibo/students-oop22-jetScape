@@ -17,9 +17,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import game.logics.entities.Entity;
-import game.logics.entities.ZapperBase;
-import game.logics.entities.ZapperRay;
+import game.logics.entities.basic.Entity;
+import game.logics.entities.obstacles.ZapperBase;
+import game.logics.entities.obstacles.ZapperRay;
 import game.utility.screen.Pair;
 
 public class TileGenerator implements Generator{

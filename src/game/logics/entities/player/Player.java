@@ -1,4 +1,6 @@
-package game.logics.entities;
+package game.logics.entities.player;
+
+import game.logics.entities.basic.Entity;
 
 public interface Player extends Entity{
 

@@ -8,7 +8,11 @@ import java.awt.Graphics2D;
 
 import java.lang.Runnable;
 
-import game.logics.entities.*;
+import game.logics.entities.basic.*;
+import game.logics.entities.obstacles.Obstacle;
+import game.logics.entities.obstacles.ZapperBaseInstance;
+import game.logics.entities.obstacles.ZapperRayInstance;
+import game.logics.entities.player.PlayerInstance;
 import game.logics.interactions.Generator;
 import game.logics.interactions.SpeedHandler;
 import game.logics.interactions.TileGenerator;

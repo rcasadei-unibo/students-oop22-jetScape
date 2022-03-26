@@ -1,4 +1,4 @@
-package game.logics.entities;
+package game.logics.entities.basic;
 
 import game.frame.GameWindow;
 import game.logics.handler.Logics;
@@ -26,7 +26,7 @@ public abstract class EntityInstance implements Entity{
 	protected boolean visible = true;
 	private boolean onScreen = true;
 	
-	EntityInstance(final Logics l) {
+	protected EntityInstance(final Logics l) {
 		this.screen = l.getScreenInfo();
 		entityTag = "undefined";
 		
@@ -36,7 +36,7 @@ public abstract class EntityInstance implements Entity{
 		this.debug = l.isDebugModeOn();
 	}
 	
-	EntityInstance(final Logics l, final Pair<Double,Double> position) {
+	protected EntityInstance(final Logics l, final Pair<Double,Double> position) {
 		this(l);
 		this.position = position;
 	}

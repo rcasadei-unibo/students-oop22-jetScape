@@ -1,4 +1,4 @@
-package game.logics.entities;
+package game.logics.entities.obstacles;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

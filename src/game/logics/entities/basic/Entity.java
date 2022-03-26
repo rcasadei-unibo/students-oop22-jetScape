@@ -1,4 +1,4 @@
-package game.logics.entities;
+package game.logics.entities.basic;
 
 import java.awt.Graphics2D;
 

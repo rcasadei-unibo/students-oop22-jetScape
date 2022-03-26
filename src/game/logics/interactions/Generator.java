@@ -3,8 +3,8 @@ package game.logics.interactions;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import game.logics.entities.ZapperBase;
-import game.logics.entities.ZapperRay;
+import game.logics.entities.obstacles.ZapperBase;
+import game.logics.entities.obstacles.ZapperRay;
 import game.utility.screen.Pair;
 
 public interface Generator extends Runnable{
