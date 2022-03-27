@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
-import game.utility.screen.Pair;
+import game.utility.other.Pair;
 
 public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 

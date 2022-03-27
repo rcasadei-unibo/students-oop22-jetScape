@@ -6,7 +6,7 @@ import java.awt.Color;
 import game.logics.entities.basic.EntityInstance;
 import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
-import game.utility.screen.Pair;
+import game.utility.other.Pair;
 
 public class PlayerInstance extends EntityInstance implements Player{
 	
@@ -50,7 +50,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 	@Override
 	public void update() {
 		super.update();
-		if(keyH.spacePressed) {
+		if(keyH.input.get("spacebar")) {
 			jump();
 			jumpMultiplier += jumpMultiplierIncrease;
 			fallMultiplier = initialFallMultiplier;

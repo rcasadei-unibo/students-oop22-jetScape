@@ -3,7 +3,7 @@ package game.logics.entities.obstacles;
 import game.logics.entities.basic.EntityInstance;
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
-import game.utility.screen.Pair;
+import game.utility.other.Pair;
 
 public abstract class ObstacleInstance extends EntityInstance implements Obstacle{
 

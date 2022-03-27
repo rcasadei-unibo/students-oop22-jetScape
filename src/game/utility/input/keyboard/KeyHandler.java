@@ -2,22 +2,33 @@ package game.utility.input.keyboard;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KeyHandler implements KeyListener{
 
-	public boolean spacePressed;
+	public Map<String,Boolean> input = new HashMap<>();
+	
+	public KeyHandler() {
+		input.put("spacebar", false);
+		input.put("x", false);
+		input.put("z", false);
+	}
 	
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
-				spacePressed = true;
+				input.replace("spacebar", true);
+				break;
+			case KeyEvent.VK_X:
+				input.replace("x", true);
+				break;
+			case KeyEvent.VK_Z:
+				input.replace("z", true);
 				break;
 		}
 	}
@@ -26,7 +37,13 @@ public class KeyHandler implements KeyListener{
 	public void keyReleased(KeyEvent e) {
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
-				spacePressed = false;
+				input.replace("spacebar", false);
+				break;
+			case KeyEvent.VK_X:
+				input.replace("x", false);
+				break;
+			case KeyEvent.VK_Z:
+				input.replace("z", false);
 				break;
 		}
 	}

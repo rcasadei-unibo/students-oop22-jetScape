@@ -20,7 +20,7 @@ import org.json.simple.parser.ParseException;
 import game.logics.entities.basic.Entity;
 import game.logics.entities.obstacles.ZapperBase;
 import game.logics.entities.obstacles.ZapperRay;
-import game.utility.screen.Pair;
+import game.utility.other.Pair;
 
 public class TileGenerator implements Generator{
 

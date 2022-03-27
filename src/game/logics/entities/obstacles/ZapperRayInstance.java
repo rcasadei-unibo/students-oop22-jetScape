@@ -11,7 +11,7 @@ import java.awt.Color;
 //import java.io.IOException;
 
 import game.logics.handler.Logics;
-import game.utility.screen.Pair;
+import game.utility.other.Pair;
 
 public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 	

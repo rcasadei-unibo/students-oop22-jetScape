@@ -16,6 +16,7 @@ import game.logics.entities.player.PlayerInstance;
 import game.logics.interactions.Generator;
 import game.logics.interactions.SpeedHandler;
 import game.logics.interactions.TileGenerator;
+import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 
@@ -31,12 +32,12 @@ public class LogicsHandler implements Logics{
 	
 	private long updateTimer = System.nanoTime();
 	private int spawnInterval = 3;
-	private boolean debug;
+	private Debugger debugger;
 	
-	public LogicsHandler(final Screen screen, final KeyHandler keyH, final boolean debug) {
+	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {
 		this.gScreen = screen;
 		this.keyH = keyH;
-		this.debug = debug;
+		this.debugger = debugger;
 		
 		//obstaclesPos = new Pair<>(500.0, (double)gScreen.getTileSize());
 		
@@ -61,17 +62,6 @@ public class LogicsHandler implements Logics{
 		
 	}	
 	
-	private void cleanEntities() {
-		entities.get("zappers").removeIf(e -> {
-			Obstacle o = (Obstacle)e;
-			if(o.isOutofScreen()) {
-				o.resetPosition();
-				//System.out.println("reset");
-			}
-			return o.isOutofScreen();
-		});
-	}
-	
 	public Screen getScreenInfo() {
 		return gScreen;
 	}
@@ -80,8 +70,29 @@ public class LogicsHandler implements Logics{
 		return keyH;
 	}
 	
-	public boolean isDebugModeOn() {
-		return debug;
+	public Debugger getDebugger() {
+		return debugger;
+	}
+	
+	private void cleanEntities() {
+		entities.get("zappers").removeIf(e -> {
+			Obstacle o = (Obstacle)e;
+			if(o.isOutofScreen()) {
+				o.resetPosition();
+				if(debugger.isFeatureEnabled("log: entities cleaner working")) {
+					System.out.println("reset");
+				}
+			}
+			return o.isOutofScreen();
+		});
+	}
+	
+	private void checkDebugMode() {
+		if(keyH.input.get("z")) {
+			debugger.setDebugMode(true);
+		} else if(keyH.input.get("x")) {
+			debugger.setDebugMode(false);
+		}
 	}
 	
 	private boolean updateEachInterval(final long interval, final long timeStart, final Runnable r) {
@@ -96,8 +107,11 @@ public class LogicsHandler implements Logics{
 	public void updateAll() {
 		if(updateEachInterval(2 * 1000000000, updateTimer, () -> cleanEntities())) {
 			updateTimer = System.nanoTime();
-			//System.out.println("clean");
+			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
+				System.out.println("clean");
+			}
 		}
+		checkDebugMode();
 		entities.forEach((s, se) -> se.forEach(e -> e.update()));
 	}
 	

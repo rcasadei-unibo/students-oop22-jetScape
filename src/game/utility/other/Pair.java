@@ -1,4 +1,4 @@
-package game.utility.screen;
+package game.utility.other;
 
 /*
  * A standard generic Pair<X,Y>, with getters, hashCode, equals, and toString well implemented. 

@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import game.logics.entities.obstacles.ZapperBase;
 import game.logics.entities.obstacles.ZapperRay;
-import game.utility.screen.Pair;
+import game.utility.other.Pair;
 
 public interface Generator extends Runnable{
 	

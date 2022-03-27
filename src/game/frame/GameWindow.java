@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 import game.logics.handler.Logics;
 import game.logics.handler.LogicsHandler;
+import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 import game.utility.screen.ScreenHandler;
@@ -29,7 +30,8 @@ public class GameWindow extends JPanel implements Runnable{
 	
 	private Font fpsFont = new Font("Calibri", Font.PLAIN, 18);
 	private int fps = 0;
-	public boolean debug;
+	
+	private final Debugger debugger;
 	
 	public GameWindow(final boolean debug) {
 		super();
@@ -38,9 +40,9 @@ public class GameWindow extends JPanel implements Runnable{
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
 		this.addKeyListener(keyH);
-		this.logH = new LogicsHandler(gameScreen, keyH, debug);
 		
-		this.debug = debug;
+		this.debugger = new Debugger(debug, () -> fps);
+		this.logH = new LogicsHandler(gameScreen, keyH, debugger);
 	}
 	
 	public void startLoop() {
@@ -58,11 +60,10 @@ public class GameWindow extends JPanel implements Runnable{
 		Graphics2D board = (Graphics2D)g;
 		board.setColor(Color.white);
 		
-		if(debug) {
-			board.setFont(fpsFont);
-			board.drawString("FPS: " + fps, 10, 15);
+		if(debugger.isFeatureEnabled("fps meter")) {
+			g.setFont(fpsFont);
+			g.drawString("FPS: " + fps, 10, 15);
 		}
-		
 		logH.drawAll(board);
 		
 		board.dispose();
@@ -77,13 +78,14 @@ public class GameWindow extends JPanel implements Runnable{
 		
 		while(gameLoop.isAlive()) {
 			
-			//System.out.print(debug ? "Running...\n" : "");
 			long timer = System.nanoTime();
 			if(drawTime > 1000000000) {
 				fps = fpsCount;
 				drawTime = 0;
 				fpsCount = 0;
-				//System.out.print(debug ? "FPS: " + fps + "\n" : "");
+				if(debugger.isFeatureEnabled("log: fps")) {
+					System.out.print("FPS: " + fps + "\n");
+				}
 			}
 			
 			update();
