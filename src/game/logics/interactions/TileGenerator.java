@@ -42,7 +42,7 @@ public class TileGenerator implements Generator{
 	private void loadTiles() {
 		JSONParser jsonparser = new JSONParser();
 		try {
-			JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader("C:\\Users\\mdani\\Desktop\\Workspace\\JetScape\\res\\game\\utility\\generator\\tiles.json"));
+			JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader(System.getProperty("user.dir") + "\\res\\game\\utility\\generator\\tiles.json"));
 			if(createZBase.isPresent() && createZRay.isPresent()) {
 				JSONArray types = (JSONArray)allTiles.get("zappers");
 				for(int i = 0; i < types.size(); i++){
