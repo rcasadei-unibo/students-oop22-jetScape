@@ -27,8 +27,8 @@ public class TileGenerator implements Generator{
 	private Optional<BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay>> createZRay = Optional.empty();
 	private Optional<Function<Pair<Double,Double>,ZapperBase>> createZBase = Optional.empty();
 	
-	private final Map<String, Set<Entity>> entities;
 	private final List<Set<Entity>> zapperTiles = new ArrayList<>();
+	private final Map<String, Set<Entity>> entities;
 	
 	private final Thread generator = new Thread(this);
 	private final int spawnInterval;
@@ -103,6 +103,7 @@ public class TileGenerator implements Generator{
 	public void initialize() {
 		this.loadTiles();
 		generator.start();
+		this.start();
 	}
 	
 	public void stop() {
@@ -111,22 +112,17 @@ public class TileGenerator implements Generator{
 	
 	public void start() {
 		working = true;
-		//generator.notify();
 	}
 	
 	@Override
 	public void run(){
 		long interval = spawnInterval * 1000;
 		
-		while(generator.isAlive()) {/*
-			if(!this.isWorking()) {
-				try {
-					generator.wait();
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
-			}*/
-			spawnTile();
+		while(generator.isAlive() && this.isWorking()) {
+			
+			synchronized(entities) {
+				spawnTile();
+			}	
 			
 			try {
 				Thread.sleep(interval);

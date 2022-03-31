@@ -5,9 +5,11 @@ import game.logics.interactions.SpeedHandler;
 
 public abstract interface Obstacle extends Entity{
 	
-	void resetPosition();
-	
 	boolean isOutofScreen();
 	
+	boolean isOnClearArea();
+	
 	SpeedHandler getSpeedHandler();
+	
+	void resetPosition();
 }

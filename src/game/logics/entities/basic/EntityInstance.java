@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 
 public abstract class EntityInstance implements Entity{
 	
-	protected final int fps = GameWindow.fpsLimiter;
+	protected final int fps = GameWindow.fpsLimit;
 	protected final Screen screen;
 	protected final double yGround;
 	protected final double yRoof;
@@ -25,7 +25,7 @@ public abstract class EntityInstance implements Entity{
 	protected int currentFPS = 0;
 	
 	protected boolean visible = true;
-	private boolean onScreen = true;
+	private boolean onScreen = false;
 	
 	protected EntityInstance(final Logics l) {
 		this.screen = l.getScreenInfo();
@@ -65,11 +65,7 @@ public abstract class EntityInstance implements Entity{
 		visible = v;
 	}
 	
-	protected int round(final double coordinate) {
-		return (int)Math.round(coordinate);
-	}
-	
-	private void updateOnScreen() {
+	private void updateFlags() {
 		if(position.getX() >= -screen.getTileSize() && position.getX() <= screen.getWidth() && position.getY() >= 0 && position.getY() <= screen.getHeight()) {
 			onScreen = true;
 		} else {
@@ -79,19 +75,18 @@ public abstract class EntityInstance implements Entity{
 	
 	public void update() {
 		currentFPS = debugger.fps();
-		updateOnScreen();
+		updateFlags();
 	}
 	
 	public void draw(Graphics2D g) {
 		if(this.isVisible()) {
-			g.fillRect(round(position.getX()), round(position.getY()), screen.getTileSize(), screen.getTileSize());
 			
 			if(debugger.isFeatureEnabled("entity coordinates")) {
 				Font debugFont = new Font("Calibri", Font.PLAIN, 10);
 				
-				g.setColor(Color.black);
+				g.setColor(Color.red);
 				g.setFont(debugFont);
-				g.drawString("X:" + round(position.getX()) + " Y:" + round(position.getY()), round(position.getX()) + round(screen.getTileSize() / (8 * Screen.tileScaling)), round(position.getY()) + round(screen.getTileSize() / (4 * Screen.tileScaling)));
+				g.drawString("X:" + Math.round(position.getX()) + " Y:" + Math.round(position.getY()), Math.round(position.getX()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(position.getY()) + Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
 			}
 		}
 	}

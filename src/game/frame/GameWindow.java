@@ -21,7 +21,7 @@ public class GameWindow extends JPanel implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final int fpsLimiter = 60;
+	public static final int fpsLimit = 60;
 	
 	private final Thread gameLoop = new Thread(this);
 	private final Screen gameScreen = new ScreenHandler();
@@ -71,7 +71,7 @@ public class GameWindow extends JPanel implements Runnable{
 	
 	@Override
 	public void run() {
-		double drawInterval = 1000000000 / fpsLimiter;
+		double drawInterval = 1000000000 / fpsLimit;
 		double nextDraw = System.nanoTime() + drawInterval;
 		long drawTime = 0;
 		int fpsCount = 0;

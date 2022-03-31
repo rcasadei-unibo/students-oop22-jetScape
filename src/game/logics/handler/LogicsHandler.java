@@ -28,10 +28,9 @@ public class LogicsHandler implements Logics{
 	private final KeyHandler keyH;
 	private final Generator spawner;
 	
-	//private final Pair<Double,Double> obstaclesPos;
-	
 	private long updateTimer = System.nanoTime();
 	private int spawnInterval = 3;
+	private int cleanInterval = 1;
 	private Debugger debugger;
 	
 	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {
@@ -39,27 +38,15 @@ public class LogicsHandler implements Logics{
 		this.keyH = keyH;
 		this.debugger = debugger;
 		
-		//obstaclesPos = new Pair<>(500.0, (double)gScreen.getTileSize());
-		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
 		entities.get("player").add(new PlayerInstance(this));
 		
-//		spawner = new TileGenerator((type, set) -> entities.get(type).addAll(set), 3);
 		spawner = new TileGenerator(entities, spawnInterval);
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler()));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
-		spawner.initialize();
-		
-//		ZapperBase z1 = new ZapperBaseInstance(this, new Pair<>(obstaclesPos.getX(), obstaclesPos.getY()), new SpeedHandler());
-//		entities.get("zappers").add(z1);
-//		obstaclesPos.setY(obstaclesPos.getY() + gScreen.getTileSize() * 2);
-//		ZapperBase z2 = new ZapperBaseInstance(this, new Pair<>(obstaclesPos.getX(), obstaclesPos.getY()), z1);
-//		entities.get("zappers").add(z2);
-//		obstaclesPos.setY(obstaclesPos.getY() - gScreen.getTileSize());
-//		entities.get("zappers").add(new ZapperRayInstance(this, new Pair<>(obstaclesPos.getX(), obstaclesPos.getY()), z1, z2));
-		
+		spawner.initialize();	
 	}	
 	
 	public Screen getScreenInfo() {
@@ -77,13 +64,13 @@ public class LogicsHandler implements Logics{
 	private void cleanEntities() {
 		entities.get("zappers").removeIf(e -> {
 			Obstacle o = (Obstacle)e;
-			if(o.isOutofScreen()) {
+			if(o.isOnClearArea()) {
 				o.resetPosition();
 				if(debugger.isFeatureEnabled("log: entities cleaner working")) {
 					System.out.println("reset");
 				}
 			}
-			return o.isOutofScreen();
+			return o.isOnClearArea();
 		});
 	}
 	
@@ -105,17 +92,22 @@ public class LogicsHandler implements Logics{
 	}
 	
 	public void updateAll() {
-		if(updateEachInterval(2 * 1000000000, updateTimer, () -> cleanEntities())) {
+		if(updateEachInterval(cleanInterval * 1000000000, updateTimer, () -> cleanEntities())) {
 			updateTimer = System.nanoTime();
 			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
 				System.out.println("clean");
 			}
 		}
 		checkDebugMode();
-		entities.forEach((s, se) -> se.forEach(e -> e.update()));
+		
+		synchronized(entities) {
+			entities.forEach((s, se) -> se.forEach(e -> e.update()));
+		}
 	}
 	
 	public void drawAll(final Graphics2D g) {
-		entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
+		synchronized(entities) {
+			entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
+		}
 	}
 }

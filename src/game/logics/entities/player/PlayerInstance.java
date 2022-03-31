@@ -7,6 +7,7 @@ import game.logics.entities.basic.EntityInstance;
 import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.Pair;
+import game.utility.textures.Texture;
 
 public class PlayerInstance extends EntityInstance implements Player{
 	
@@ -15,10 +16,10 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	private double jumpMultiplier = initialJumpMultiplier;
 	private double fallMultiplier = initialFallMultiplier;
-	private KeyHandler keyH;
+	private final Texture texture = new Texture("player", Color.white);
+	private final KeyHandler keyH;
 	private String action;
 	
-	private Color texture = Color.white;
 	
 	public PlayerInstance(final Logics l) {
 		super(l);
@@ -63,7 +64,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(texture);
+		texture.draw(g, position, screen.getTileSize());
 		super.draw(g);
 	}
 }

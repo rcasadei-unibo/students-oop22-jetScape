@@ -10,14 +10,32 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 	protected final Pair<Double,Double> startPos;
 	protected SpeedHandler movement;
 	
+	private boolean onClearArea = false;
+	
 	ObstacleInstance(final Logics l, final Pair<Double,Double> sPosition){
 		super(l, sPosition.clone());
 		entityTag = "obstacle";
 		startPos = sPosition;
 	}
 	
+	private void updateFlags() {
+		if(position.getX() < -screen.getTileSize()) {
+			onClearArea = true;
+		} else {
+			onClearArea = false;
+		}
+	}
+	
 	public boolean isOutofScreen() {
 		return !this.isOnScreenBounds();
+	}
+	
+	public boolean isOnClearArea() {
+		return this.onClearArea;
+	}
+	
+	public SpeedHandler getSpeedHandler() {
+		return movement;
 	}
 	
 	public void resetPosition() {
@@ -25,7 +43,8 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 		this.position.setY(startPos.getY());
 	}
 	
-	public SpeedHandler getSpeedHandler() {
-		return movement;
+	public void update() {
+		super.update();
+		updateFlags();
 	}
 }

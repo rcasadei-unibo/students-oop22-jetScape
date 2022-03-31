@@ -1,26 +1,24 @@
 package game.logics.entities.obstacles;
 
-//import java.util.Random;
-
-//import javax.imageio.ImageIO;
-
-//import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.Color;
 
-//import java.io.IOException;
-
 import game.logics.handler.Logics;
 import game.utility.other.Pair;
+import game.utility.textures.DrawManager;
+import game.utility.textures.Drawer;
 
 public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
+
+	private static final String texturePath = "zapperray" + System.getProperty("file.separator");
+	private static final Color placeH = Color.yellow;
 	
 	private final ZapperBase electrode1;
 	private final ZapperBase electrode2;
-	
-	//private final Random r = new Random();
-	//private BufferedImage texture;
-	private final Color texture = Color.yellow;
+
+//	private BufferedImage textureVert;
+//	private BufferedImage textureHorr;
+	private final Drawer textureMgr;
 	private String rotation = "diagonal-left";
 	
 	
@@ -33,14 +31,17 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 		
 		this.movement = e1.getSpeedHandler();
 		
-//		position.setX((double)screen.getWidth());
-//		position.setY(yRoof + (yGround - yRoof) * r.nextDouble());
-		
+		updateRotation();
 //		try {
-//			texture = ImageIO.read(getClass().getResourceAsStream("/images/Immagine.png"));
+//			textureVert = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperray" + System.getProperty("file.separator") + "zapperray_vert.png"));
+//			textureHorr = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperray" + System.getProperty("file.separator") + "zapperray_horr.png"));
 //		}catch(IOException e) {
 //			e.printStackTrace();
 //		}
+		textureMgr = new DrawManager(placeH);
+		textureMgr.addTexture("vertical", texturePath + "zapperray_vert.png");
+		textureMgr.addTexture("horizontal", texturePath + "zapperray_horr.png");
+		textureMgr.setAnimator(() -> rotation);
 	}
 	
 	private void updateRotation() {
@@ -58,7 +59,7 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 	@Override
 	public void update() {
 		super.update();
-		updateRotation();
+//		updateRotation();
 		
 		if(position.getX() > -screen.getTileSize()) {
 			position.setX(position.getX() - movement.getXSpeed() / fps);
@@ -67,9 +68,14 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(texture);
+		
+//		if(this.rotation == "vertical") {
+//			g.drawImage(textureVert, round(position.getX()), round(position.getY()), screen.getTileSize(), screen.getTileSize(), null);
+//		} else {
+//			g.drawImage(textureHorr, round(position.getX()), round(position.getY()), screen.getTileSize(), screen.getTileSize(), null);
+//		}
+		textureMgr.drawTexture(g, position, screen.getTileSize());
 		super.draw(g);
-		//g.drawImage(texture, round(position.getX()), round(position.getY()), screen.getTileSize(), screen.getTileSize(), null);
 	}
 	
 }
