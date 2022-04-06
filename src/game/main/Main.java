@@ -5,6 +5,7 @@ import game.frame.Game;
 
 public class Main {
 	
+	///		STARTING MODE
 	static final boolean debugMode = false;
 
 	public static void main(String[] args) {

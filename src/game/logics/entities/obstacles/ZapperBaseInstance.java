@@ -9,44 +9,77 @@ import game.utility.other.Pair;
 import game.utility.textures.DrawManager;
 import game.utility.textures.Drawer;
 
+/**
+ * The class <code>ZapperBaseInstance</code> represents one part of the most common
+ * type of obstacle that can be encountered during the game.
+ * 
+ * <code>ZapperBase</code> is one of the two farthest point of a Zapper obstacle, an electric trap
+ * that can be get the player killed when he hits it.
+ * Each Zapper is composed by 2 <code>ZapperBase</code> and as many <code>ZapperRay</code> as
+ * the size of the trap.
+ * 
+ * Each <code>ZapperBaseInstance</code> needs to be paired to another <code>ZapperBaseInstance</code>.
+ * 
+ * @author Daniel Pellanda
+ */
 public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 
+	/**
+	 * Specifies the path within the texture folder [specified in <code>Texture</code> class]
+	 * where <code>ZapperBaseInstance</code> textures can be found.
+	 */
 	private static final String texturePath = "zapperbase" + System.getProperty("file.separator");
+	/**
+	 * If textures are missing, they will be replace by a rectangle of the color specified in
+	 * <code>ZapperBaseInstance.placeH</code>.
+	 */
 	private static final Color placeH = Color.gray;
 	
+	/**
+	 * Specifies the another <code>ZapperBaseInstance</code> which this object is paired with.
+	 */
 	private ZapperBase pairedBase;
 	
+	/**
+	 * Specifies the current rotation of the obstacle.
+	 */
 	private String rotation = "up";
+	/**
+	 * Manages the textures of the object.
+	 */
 	private Drawer textureMgr;
 	
-//	private BufferedImage textureUp;
-//	private BufferedImage textureDown;
-//	private BufferedImage textureLeft;
-//	private BufferedImage textureRight;
 	private boolean paired = false;
 	
+	/**
+	 * Private constructor used for initializing basic entity
+	 * dependent parameters and its starting position.
+	 * 
+	 * @param l the logics handler which the entity is linked to
+	 * @param position the starting position of the obstacle in the environment
+	 */
 	ZapperBaseInstance(final Logics l, final Pair<Double,Double> position){
 		super(l, position);
-		entityTag = "zapper-base";
+		entityTag = "zapperbase";
 	}
 	
+	/**
+	 * Constructor used for initializing basic parts of the obstacle
+	 * and for giving its movement behavior in game.
+	 * 
+	 * @param l the logics handler which the entity is linked to
+	 * @param position the starting position of the obstacle in the environment
+	 * @param s the movement behavior the obstacle has to followed once loaded up
+	 */
 	public ZapperBaseInstance(final Logics l, final Pair<Double,Double> position, final SpeedHandler s) {
 		this(l, position);
 		
 		this.movement = s;
 	}
 	
-	public ZapperBaseInstance(final Logics l, final Pair<Double,Double> position, final ZapperBase pair) {
-		this(l, position);
-		
-		this.setPaired(pair);
-		
-		this.movement = pair.getSpeedHandler();
-	}
-	
-	public ZapperBase getPaired() {
-		return this.pairedBase;
-	}
+//	public ZapperBase getPaired() {
+//		return this.pairedBase;
+//	}
 	
 	public void setPaired(final ZapperBase zap) {
 		if(!this.paired) {
@@ -55,15 +88,6 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 			zap.setPaired(this);
 			
 			updateRotation();
-//			try {
-//				textureUp = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperbase" + System.getProperty("file.separator") + "zapperbase_up.png"));
-//				textureDown = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperbase" + System.getProperty("file.separator") + "zapperbase_down.png"));
-//				textureLeft = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperbase" + System.getProperty("file.separator") + "zapperbase_left.png"));
-//				textureRight = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperbase" + System.getProperty("file.separator") + "zapperbase_right.png"));
-//			}catch(IOException e) {
-//				e.printStackTrace();
-//				System.out.println("error");
-//			}
 			textureMgr = new DrawManager(placeH);
 			textureMgr.addTexture("up", texturePath + "zapperbase_up.png");
 			textureMgr.addTexture("down", texturePath + "zapperbase_down.png");
@@ -73,6 +97,9 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 		}
 	}
 	
+	/**
+	 * Updates the object rotation, depending of the position of the paired <code>ZapperBaseInstance</code>.
+	 */
 	private void updateRotation() {
 		if(this.getX() == pairedBase.getX()) {
 			if(this.getY() < pairedBase.getY()) {
@@ -146,7 +173,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 		//updateRotation();
 		
 		if(position.getX() > -screen.getTileSize()) {
-			position.setX(position.getX() - movement.getXSpeed() / fps);
+			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
 		} 
 	}
 	

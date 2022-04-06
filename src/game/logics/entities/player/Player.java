@@ -2,6 +2,14 @@ package game.logics.entities.player;
 
 import game.logics.entities.basic.Entity;
 
+/**
+ * The <code>Player</code> interface can be used for accessing <code>PlayerInstance</code> methods.
+ * 
+ * The <code>PlayerInstance</code> class represents the player's entity in
+ * the game environment.
+ * 
+ * @author Daniel Pellanda
+ */
 public interface Player extends Entity{
 
 	static final double baseFallSpeed = 50.0;

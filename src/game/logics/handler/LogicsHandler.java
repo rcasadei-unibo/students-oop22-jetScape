@@ -20,19 +20,50 @@ import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 
+/**
+ * The <code>LogicsHandler</code> class helps <class>GameWindow</class> to update
+ * and draw logical parts of the game like the Interface, Entities, Collisions, etc....
+ * 
+ * @author Daniel Pellanda
+ */
 public class LogicsHandler implements Logics{
 	
+	/**
+	 * Contains the current active entities on the game environment.
+	 */
 	private final Map<String, Set<Entity>> entities = new HashMap<>();
 	
+	/**
+	 * Generates sets of obstacles on the environment.
+	 */
+	private final Generator spawner;
 	private final Screen gScreen;
 	private final KeyHandler keyH;
-	private final Generator spawner;
 	
+	/**
+	 * Keeps the game timer.
+	 */
 	private long updateTimer = System.nanoTime();
+	/**
+	 * Defines how many seconds have to pass for the spawner to generate
+	 * another set of obstacles.
+	 */
 	private int spawnInterval = 3;
+	/**
+	 * Defines the interval of each check for entities to clean.
+	 */
 	private int cleanInterval = 1;
+	
 	private Debugger debugger;
 	
+	/**
+	 * Constructor that gets the screen information, the keyboard listener and the debugger, 
+	 * initialize each entity category on the entities map and initialize the obstacle spawner.
+	 * 
+	 * @param screen the screen information of the game window
+	 * @param keyH the keyboard listener linked to the game window
+	 * @param debugger the debugger used
+	 */
 	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {
 		this.gScreen = screen;
 		this.keyH = keyH;
@@ -47,20 +78,11 @@ public class LogicsHandler implements Logics{
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
 		spawner.initialize();	
-	}	
-	
-	public Screen getScreenInfo() {
-		return gScreen;
 	}
 	
-	public KeyHandler getKeyHandler() {
-		return keyH;
-	}
-	
-	public Debugger getDebugger() {
-		return debugger;
-	}
-	
+	/**
+	 * Removes all entities that are on the "clear area" [x < -tile size].
+	 */
 	private void cleanEntities() {
 		entities.get("zappers").removeIf(e -> {
 			Obstacle o = (Obstacle)e;
@@ -74,6 +96,10 @@ public class LogicsHandler implements Logics{
 		});
 	}
 	
+	/**
+	 * Handles the enabling and disabling of the Debug Mode 
+	 * by using Z (enable) and X (disable).
+	 */
 	private void checkDebugMode() {
 		if(keyH.input.get("z")) {
 			debugger.setDebugMode(true);
@@ -82,6 +108,14 @@ public class LogicsHandler implements Logics{
 		}
 	}
 	
+	/**
+	 * Utility function for running a certain block of code every given interval of time.
+	 * 
+	 * @param interval the interval in nanoseconds that has to pass after each execution
+	 * @param timeStart the system time from when the last execution happened
+	 * @param r the block of the code to execute
+	 * @return <code>true</code> if given code has been executed, <code>false</code> if not
+	 */
 	private boolean updateEachInterval(final long interval, final long timeStart, final Runnable r) {
 		long timePassed = System.nanoTime() - timeStart;
 		if(timePassed >= interval) {
@@ -89,6 +123,18 @@ public class LogicsHandler implements Logics{
 			return true;
 		}
 		return false;
+	}
+	
+	public Screen getScreenInfo() {
+		return gScreen;
+	}
+	
+	public KeyHandler getKeyHandler() {
+		return keyH;
+	}
+	
+	public Debugger getDebugger() {
+		return debugger;
 	}
 	
 	public void updateAll() {

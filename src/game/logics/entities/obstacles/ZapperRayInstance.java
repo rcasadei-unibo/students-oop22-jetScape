@@ -8,23 +8,63 @@ import game.utility.other.Pair;
 import game.utility.textures.DrawManager;
 import game.utility.textures.Drawer;
 
+/**
+ * The class <code>ZapperRayInstance</code> represents one part of the most common
+ * type of obstacle that can be encountered during the game.
+ * 
+ * <code>ZapperRay</code> is one of the central parts of a Zapper obstacle, an electric trap
+ * that can be get the player killed when he hits it.
+ * Each Zapper is composed by 2 <code>ZapperBase</code> and as many <code>ZapperRay</code> as
+ * the size of the trap.
+ * 
+ * Each <code>ZapperRayInstance</code> needs to be paired to the 2 <code>ZapperBaseInstance</code> that compose
+ * the trap.
+ * 
+ * @author Daniel Pellanda
+ */
 public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 
+	/**
+	 * Specifies the path within the texture folder [specified in <code>Texture</code> class]
+	 * where <code>ZapperRayInstance</code> textures can be found.
+	 */
 	private static final String texturePath = "zapperray" + System.getProperty("file.separator");
+	/**
+	 * If textures are missing, they will be replace by a rectangle of the color specified in
+	 * <code>ZapperRayInstance.placeH</code>.
+	 */
 	private static final Color placeH = Color.yellow;
 	
+	/**
+	 * The first <code>ZapperBase</code> paired.
+	 */
 	private final ZapperBase electrode1;
+	/**
+	 * The second <code>ZapperBase</code> paired.
+	 */
 	private final ZapperBase electrode2;
 
-//	private BufferedImage textureVert;
-//	private BufferedImage textureHorr;
-	private final Drawer textureMgr;
+	/**
+	 * Specifies the current rotation of the obstacle.
+	 */
 	private String rotation = "diagonal-left";
+	/**
+	 * Manages the textures of the object.
+	 */
+	private final Drawer textureMgr;
 	
-	
+	/**
+	 * Constructor used for initializing basic parts of the obstacle.
+	 * It also pairs the <code>ZapperBase</code> objects given to the object.
+	 * 
+	 * @param l the logics handler which the entity is linked to
+	 * @param p the starting position of the obstacle in the environment
+	 * @param e1 the first <code>ZapperBase</code> to pair
+	 * @param e2 the second <code>ZapperBase</code> to pair
+	 */
 	public ZapperRayInstance(final Logics l, final Pair<Double,Double> p, final ZapperBase e1, final ZapperBase e2) {
 		super(l, p);
-		entityTag = "zapper-ray";
+		entityTag = "zapperray";
 		
 		electrode1 = e1;
 		electrode2 = e2;	
@@ -32,18 +72,15 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 		this.movement = e1.getSpeedHandler();
 		
 		updateRotation();
-//		try {
-//			textureVert = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperray" + System.getProperty("file.separator") + "zapperray_vert.png"));
-//			textureHorr = ImageIO.read(getClass().getClassLoader().getResourceAsStream(System.getProperty("file.separator") + "game" + System.getProperty("file.separator") + "textures" + System.getProperty("file.separator") + "zapperray" + System.getProperty("file.separator") + "zapperray_horr.png"));
-//		}catch(IOException e) {
-//			e.printStackTrace();
-//		}
 		textureMgr = new DrawManager(placeH);
 		textureMgr.addTexture("vertical", texturePath + "zapperray_vert.png");
 		textureMgr.addTexture("horizontal", texturePath + "zapperray_horr.png");
 		textureMgr.setAnimator(() -> rotation);
 	}
 	
+	/**
+	 * Updates the object rotation, depending of the position of the paired <code>ZapperBase</code> objects.
+	 */
 	private void updateRotation() {
 		if(electrode1.getX() == electrode2.getX()) {
 			rotation = "vertical";
@@ -62,7 +99,7 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 //		updateRotation();
 		
 		if(position.getX() > -screen.getTileSize()) {
-			position.setX(position.getX() - movement.getXSpeed() / fps);
+			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
 		}
 	}
 

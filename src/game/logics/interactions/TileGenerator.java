@@ -22,23 +22,57 @@ import game.logics.entities.obstacles.ZapperBase;
 import game.logics.entities.obstacles.ZapperRay;
 import game.utility.other.Pair;
 
+/**
+ * The class <code>TileGenerator</code> handles the generation of tiles of
+ * obstacles during the game.
+ * 
+ * <code>TileGenerator</code> works on a separated thread which can be manually
+ * controlled by the <code>LogicsHandler</code>.
+ * 
+ * @author Daniel Pellanda
+ */
 public class TileGenerator implements Generator{
 
+	/**
+	 * A function used by the generator for creating <code>ZapperRay</code> object.
+	 */
 	private Optional<BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay>> createZRay = Optional.empty();
+	/**
+	 * A function used by the generator for creating <code>ZapperBase</code> object.
+	 */
 	private Optional<Function<Pair<Double,Double>,ZapperBase>> createZBase = Optional.empty();
 	
+	/**
+	 * A list where all loaded set of tiles are stored.
+	 */
 	private final List<Set<Entity>> zapperTiles = new ArrayList<>();
+	/**
+	 * The entities map where the spawner adds the sets of obstacles.
+	 */
 	private final Map<String, Set<Entity>> entities;
-	
-	private final Thread generator = new Thread(this);
+	/**
+	 * Decides how many seconds the generator pauses after each set spawned.
+	 */
 	private final int spawnInterval;
+
+	private final Thread generator = new Thread(this);
 	private boolean working = false;
 	
+	/**
+	 * Constructor that sets up the entities structure where obstacles will be
+	 * added and allows to specify the interval for spawning.
+	 * 
+	 * @param entities the entities map where obstacles will be added
+	 * @param interval the interval between each generation
+	 */
 	public TileGenerator(final Map<String, Set<Entity>> entities, final int interval) {
 		this.entities = entities;
 		this.spawnInterval = interval;
 	}
 	
+	/**
+	 * Loads each set of obstacles from a json file and store them in Lists.
+	 */
 	private void loadTiles() {
 		JSONParser jsonparser = new JSONParser();
 		try {

@@ -1,7 +1,9 @@
 package game.utility.screen;
 
 /**
- * A basic class for storing the screen information
+ * The <code>ScreenHandler</code> stores all the basic screen information.
+ * 
+ * @author Daniel Pellanda
  */
 public class ScreenHandler implements Screen{
 
