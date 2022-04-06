@@ -11,7 +11,7 @@ public class DisplayController {
 	/*
 	 * displays the correct screen for the current game state
 	 */
-	void displayScreen (Graphics2D g, GameState gs) {
+	public void displayScreen (Graphics2D g, GameState gs) {
 		switch(gs) {
 		case MENU :
 			menu.drawScreen(g);

@@ -19,6 +19,8 @@ import game.logics.interactions.TileGenerator;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
+import game.utility.other.GameState;
+import game.display.DisplayController;
 
 public class LogicsHandler implements Logics{
 	
@@ -27,12 +29,14 @@ public class LogicsHandler implements Logics{
 	private final Screen gScreen;
 	private final KeyHandler keyH;
 	private final Generator spawner;
+	private final DisplayController displayController = new DisplayController();;
 	
 	//private final Pair<Double,Double> obstaclesPos;
 	
 	private long updateTimer = System.nanoTime();
 	private int spawnInterval = 3;
 	private Debugger debugger;
+	private GameState gs = GameState.MENU;
 	
 	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {
 		this.gScreen = screen;
@@ -105,17 +109,31 @@ public class LogicsHandler implements Logics{
 	}
 	
 	public void updateAll() {
-		if(updateEachInterval(2 * 1000000000, updateTimer, () -> cleanEntities())) {
-			updateTimer = System.nanoTime();
-			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
-				System.out.println("clean");
+		if(isInGame()) {
+			if(updateEachInterval(2 * 1000000000, updateTimer, () -> cleanEntities())) {
+				updateTimer = System.nanoTime();
+				if(debugger.isFeatureEnabled("log: entities cleaner check")) {
+					System.out.println("clean");
+				}
 			}
+			checkDebugMode();
+			entities.forEach((s, se) -> se.forEach(e -> e.update()));
 		}
-		checkDebugMode();
-		entities.forEach((s, se) -> se.forEach(e -> e.update()));
 	}
 	
 	public void drawAll(final Graphics2D g) {
-		entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
+		if (isInGame()) {
+			entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
+		}
+		this.displayController.displayScreen(g, gs);
 	}
+
+	public void setGameState(GameState gs) {
+		this.gs = gs;
+	}
+	
+	private boolean isInGame() {
+		return this.gs == GameState.INGAME;
+	}
+	
 }
