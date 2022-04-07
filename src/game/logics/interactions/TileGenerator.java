@@ -157,6 +157,7 @@ public class TileGenerator implements Generator{
 	
 	public void initialize() {
 		this.loadTiles();
+		this.start();
 	}
 	
 	public void start() {

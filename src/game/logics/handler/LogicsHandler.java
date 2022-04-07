@@ -78,10 +78,29 @@ public class LogicsHandler implements Logics{
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler()));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
-		spawner.initialize();	
+		spawner.initialize();
+		spawner.pause();
+	}
+
+/*
+	private void beginGame() {
+		entities.get("player").add(new PlayerInstance(this));
+		spawner.resume();
 	}
 	
-
+	private void endGame() {
+		spawner.pause();
+		entities.forEach((s, se) -> se.clear());
+	}
+	
+	private void pauseGame() {
+		spawner.pause();
+	}
+	
+	private void resumeGame() {
+		spawner.resume();
+	}
+*/
 	/**
 	 * Method for test enabling and disabling entity spawner
 	 */
