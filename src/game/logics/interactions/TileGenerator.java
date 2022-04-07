@@ -22,27 +22,62 @@ import game.logics.entities.obstacles.ZapperBase;
 import game.logics.entities.obstacles.ZapperRay;
 import game.utility.other.Pair;
 
+/**
+ * The class <code>TileGenerator</code> handles the generation of tiles of
+ * obstacles during the game.
+ * 
+ * <code>TileGenerator</code> works on a separated thread which can be manually
+ * controlled by the <code>LogicsHandler</code>.
+ * 
+ * @author Daniel Pellanda
+ */
 public class TileGenerator implements Generator{
 
+	/**
+	 * A function used by the generator for creating <code>ZapperRay</code> object.
+	 */
 	private Optional<BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay>> createZRay = Optional.empty();
+	/**
+	 * A function used by the generator for creating <code>ZapperBase</code> object.
+	 */
 	private Optional<Function<Pair<Double,Double>,ZapperBase>> createZBase = Optional.empty();
 	
-	private final Map<String, Set<Entity>> entities;
+	/**
+	 * A list where all loaded set of tiles are stored.
+	 */
 	private final List<Set<Entity>> zapperTiles = new ArrayList<>();
-	
-	private final Thread generator = new Thread(this);
+	/**
+	 * The entities map where the spawner adds the sets of obstacles.
+	 */
+	private final Map<String, Set<Entity>> entities;
+	/**
+	 * Decides how many seconds the generator pauses after each set spawned.
+	 */
 	private final int spawnInterval;
-	private boolean working = false;
+
+	private final Thread generator = new Thread(this);
+	private boolean running = false;
+	private boolean waiting = false;
 	
+	/**
+	 * Constructor that sets up the entities structure where obstacles will be
+	 * added and allows to specify the interval for spawning.
+	 * 
+	 * @param entities the entities map where obstacles will be added
+	 * @param interval the interval between each generation
+	 */
 	public TileGenerator(final Map<String, Set<Entity>> entities, final int interval) {
 		this.entities = entities;
 		this.spawnInterval = interval;
 	}
 	
+	/**
+	 * Loads each set of obstacles from a json file and store them in Lists.
+	 */
 	private void loadTiles() {
 		JSONParser jsonparser = new JSONParser();
 		try {
-			JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader(System.getProperty("user.dir") + "\\res\\game\\utility\\generator\\tiles.json"));
+			JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader(System.getProperty("user.dir") + System.getProperty("file.separator") + "res" + System.getProperty("file.separator") + "game"+ System.getProperty("file.separator") + "utility" + System.getProperty("file.separator") + "generator" + System.getProperty("file.separator") + "tiles.json"));
 			if(createZBase.isPresent() && createZRay.isPresent()) {
 				JSONArray types = (JSONArray)allTiles.get("zappers");
 				for(int i = 0; i < types.size(); i++){
@@ -96,37 +131,72 @@ public class TileGenerator implements Generator{
 		this.createZRay = Optional.of(zapperr);
 	}
 	
-	public boolean isWorking() {
-		return working;
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public boolean isWaiting() {
+		return waiting;
+	}
+	
+	private void invokeWait() {
+		try {
+			generator.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void initialize() {
 		this.loadTiles();
-		generator.start();
-	}
-	
-	public void stop() {
-		working = false;
 	}
 	
 	public void start() {
-		working = true;
-		//generator.notify();
+		synchronized(generator) {
+			if(!this.isRunning()) {
+				running = true;
+				waiting = false;
+				generator.start();
+			}
+		}
+	}
+	
+	public void stop() {
+		running = false;
+		this.resume();
+	}
+	
+	public void pause() {
+		waiting = true;
+	}
+	
+	public void resume() {
+		synchronized(generator) {
+			if(this.isWaiting()) {
+				waiting = false;
+				generator.notify();
+			}
+		}
 	}
 	
 	@Override
 	public void run(){
 		long interval = spawnInterval * 1000;
 		
-		while(generator.isAlive()) {/*
-			if(!this.isWorking()) {
-				try {
-					generator.wait();
-				} catch(InterruptedException e) {
-					e.printStackTrace();
+		while(generator.isAlive() && this.isRunning()) {
+			
+			synchronized(generator) {
+				while(this.isWaiting()) {
+					this.invokeWait();
+					if(!this.isRunning()) {
+						continue;
+					}
 				}
-			}*/
-			spawnTile();
+			}
+			
+			synchronized(entities) {
+				spawnTile();
+			}	
 			
 			try {
 				Thread.sleep(interval);

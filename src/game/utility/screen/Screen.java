@@ -1,7 +1,11 @@
 package game.utility.screen;
 
 /**
- * Provides all the screen information
+ * The <code>Screen</code> interface can be used for accessing <code>ScreenHandler</code> methods
+ * 
+ * The <code>ScreenHandler</code> stores all the basic screen information.
+ * 
+ * @author Daniel Pellanda
  */
 public interface Screen {
 	
@@ -14,19 +18,18 @@ public interface Screen {
 	static final double tileScaling = 2;
 	static final double resolutionScaling = 1;
 	
+	/// CURRENT RESOLUTION: 1024 x 576 = (64 * 16) x (64 * 9) = ((32 * 2) * 16) x ((32 * 2) * 9)
+	
 	/**
-	 * @return
-	 * 		The size for each tile of the screen
+	 * @return the size for each tile of the screen
 	 */
 	int getTileSize();
 	/**
-	 * @return
-	 * 		The horizontal resolution of the screen
+	 * @return the horizontal resolution of the screen
 	 */
 	int getWidth();
 	/**
-	 * @return
-	 * 		The vertical resolution of the screen
+	 * @return the vertical resolution of the screen
 	 */
 	int getHeight();
 }

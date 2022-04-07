@@ -5,16 +5,39 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The <code>KeyHandler</code> class is used for knowing 
+ * which keys are being pressed or released on the keyboard.
+ * 
+ * @author Daniel Pellanda
+ */
 public class KeyHandler implements KeyListener{
 
+	/**
+	 * A map that tells if a key is being pressed or not.
+	 * 
+	 * <p>
+	 * If <code>input.get(key)</code> is <code>true</code> means
+	 * that the current key is being pressed.
+	 * <br>
+	 * If <code>input.get(key)</code> is <code>false</code> means
+	 * that the current key is not being pressed.
+	 * </p>
+	 * 
+	 */
 	public Map<String,Boolean> input = new HashMap<>();
 	
+	/**
+	 * Initializes a <code>KeyHandler</code>.
+	 */
 	public KeyHandler() {
 		input.put("spacebar", false);
 		input.put("x", false);
 		input.put("z", false);
 		input.put("enter", false);
 		input.put("e", false);
+		input.put("c", false);
+		input.put("v", false);
 	}
 	
 	@Override
@@ -37,6 +60,11 @@ public class KeyHandler implements KeyListener{
 				break;
 			case KeyEvent.VK_E:
 				input.replace("e", true);
+			case KeyEvent.VK_C:
+				input.replace("c", true);
+				break;
+			case KeyEvent.VK_V:
+				input.replace("v", true);
 				break;
 		}
 	}
@@ -58,6 +86,11 @@ public class KeyHandler implements KeyListener{
 				break;
 			case KeyEvent.VK_E:
 				input.replace("e", false);
+			case KeyEvent.VK_C:
+				input.replace("c", false);
+				break;
+			case KeyEvent.VK_V:
+				input.replace("v", false);
 				break;
 		}
 	}
