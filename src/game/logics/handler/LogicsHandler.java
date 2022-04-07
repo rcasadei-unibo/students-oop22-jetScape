@@ -89,7 +89,7 @@ public class LogicsHandler implements Logics{
 		spawner.initialize();	
 	}
 
-/*
+
 	private void beginGame() {
 		entities.get("player").add(new PlayerInstance(this));
 		spawner.start();
@@ -107,7 +107,6 @@ public class LogicsHandler implements Logics{
 	private void resumeGame() {
 		spawner.resume();
 	}
-*/
 	/** 
 	 * Method for test enabling and disabling entity spawner
 	 */
@@ -209,13 +208,17 @@ public class LogicsHandler implements Logics{
 	private void updateGameState() {
 		if(keyH.input.get("enter") && this.isInMenu()) {
 			setGameState(GameState.INGAME);
-		} else if(keyH.input.get("pause") && this.isInGame()) {
+			this.beginGame();
+		} else if(keyH.input.get("p") && this.isInGame()) {
 			setGameState(GameState.PAUSED);
+			this.pauseGame();
 		} else if(this.isPaused()) {
-			if (keyH.input.get("resume")) {
+			if (keyH.input.get("r")) {
 				setGameState(GameState.INGAME);
-			} else if(keyH.input.get("exit")) {
+				this.resumeGame();
+			} else if(keyH.input.get("e")) {
 				setGameState(GameState.MENU);
+				this.endGame();
 			}
 		}
 	}

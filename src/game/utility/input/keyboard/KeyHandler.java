@@ -35,9 +35,9 @@ public class KeyHandler implements KeyListener{
 		input.put("x", false);
 		input.put("z", false);
 		input.put("enter", false);
-		input.put("exit", false);
-		input.put("resume", false);
-		input.put("pause", false);
+		input.put("e", false);
+		input.put("r", false);
+		input.put("p", false);
 		input.put("c", false);
 		input.put("v", false);
 	}
@@ -61,7 +61,7 @@ public class KeyHandler implements KeyListener{
 				input.replace("enter", true);
 				break;
 			case KeyEvent.VK_E:
-				input.replace("exit", true);
+				input.replace("e", true);
 				break;
 			case KeyEvent.VK_C:
 				input.replace("c", true);
@@ -70,10 +70,10 @@ public class KeyHandler implements KeyListener{
 				input.replace("v", true);
 				break;
 			case KeyEvent.VK_P:
-				input.replace("pause", true);
+				input.replace("p", true);
 				break;
 			case KeyEvent.VK_R:
-				input.replace("resume", true);
+				input.replace("r", true);
 				break;
 		}
 	}
@@ -94,7 +94,7 @@ public class KeyHandler implements KeyListener{
 				input.replace("enter", false);
 				break;
 			case KeyEvent.VK_E:
-				input.replace("exit", false);
+				input.replace("e", false);
 				break;
 			case KeyEvent.VK_C:
 				input.replace("c", false);
@@ -103,10 +103,10 @@ public class KeyHandler implements KeyListener{
 				input.replace("v", false);
 				break;
 			case KeyEvent.VK_P:
-				input.replace("pause", false);
+				input.replace("p", false);
 				break;
 			case KeyEvent.VK_R:
-				input.replace("resume", false);
+				input.replace("r", false);
 				break;
 		}
 	}
