@@ -108,11 +108,9 @@ public class LogicsHandler implements Logics{
 		spawner.resume();
 	}
 */
-	
-/*
 	/** 
 	 * Method for test enabling and disabling entity spawner
-	 *//*
+	 */
 	private void checkSpawner() {
 		if(keyH.input.get("c")) {
 			if(spawner.isRunning()) {
@@ -124,7 +122,6 @@ public class LogicsHandler implements Logics{
 			spawner.pause();
 		}
 	}
-*/
 	
 	/**
 	 * Handles the enabling and disabling of the Debug Mode 
@@ -196,7 +193,7 @@ public class LogicsHandler implements Logics{
 			}
 		}
 		checkDebugMode();
-		//checkSpawner();
+		checkSpawner();
 		updateGameState();
 	}
 	

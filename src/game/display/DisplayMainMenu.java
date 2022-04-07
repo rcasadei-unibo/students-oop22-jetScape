@@ -18,15 +18,11 @@ public class DisplayMainMenu implements Display {
 		String title = "JetScape";
 		String msg1 = "Press \"enter\" to start";
 		g.setFont(g.getFont().deriveFont(Font.LAYOUT_RIGHT_TO_LEFT, 110F));
-		g.drawString(title,this.getCenteredX(g, title),gScreen.getTileSize()*2);
+		g.drawString(title,this.getCenteredX(gScreen, g, title),gScreen.getTileSize()*2);
 		g.setFont(g.getFont().deriveFont(Font.ITALIC, 35F));
-		g.drawString(msg1,this.getCenteredX(g, msg1),gScreen.getTileSize()*7);
+		g.drawString(msg1,this.getCenteredX(gScreen, g, msg1),gScreen.getTileSize()*7);
 	}
 	
-	private int getCenteredX(Graphics2D g, String text) {
-		int lenght = (int)g.getFontMetrics().getStringBounds(text,g).getWidth();
-		
-		return this.gScreen.getWidth()/2 - lenght/2;
-	}
+	
 
 }
