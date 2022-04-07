@@ -35,14 +35,24 @@ public interface Generator extends Runnable{
 	void setZapperRayCreator(BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay> zapperr);
 	
 	/**
-	 * @return <code>true</code> if the spawner is working, <code>false</code> if the spawner is paused or not initiated
+	 * @return <code>true</code> if the spawner is running, <code>false</code> if the spawner is not initiated or has ended his execution
 	 */
-	boolean isWorking();
+	boolean isRunning();
 	
 	/**
-	 * Begins the generation of obstacles [Starts thread].
+	 * @return <code>true</code> if the spawner is waiting, <code>false</code> if not
+	 */
+	boolean isWaiting();
+	
+	/**
+	 * Loads up all required information for the generation of obstacles.
 	 */
 	void initialize();
+	
+	/**
+	 * Start the generation of obstacles [Starts thread].
+	 */
+	void start();
 	
 	/**
 	 * Stops the generation of obstacles [Ends thread].
@@ -50,7 +60,13 @@ public interface Generator extends Runnable{
 	void stop();
 	
 	/**
-	 * Resumes the generation of obstacles [Resumes thread].
+	 * Pauses the generation of obstacles [Interrupts thread].
 	 */
-	void start();
+	void pause();
+	
+	/**
+	 * Resumes the generation of obstacles if it was paused before [Resumes thread].
+	 */
+	void resume();
+	
 }

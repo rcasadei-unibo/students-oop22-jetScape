@@ -34,6 +34,8 @@ public class KeyHandler implements KeyListener{
 		input.put("spacebar", false);
 		input.put("x", false);
 		input.put("z", false);
+		input.put("c", false);
+		input.put("v", false);
 	}
 	
 	@Override
@@ -51,6 +53,12 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_Z:
 				input.replace("z", true);
 				break;
+			case KeyEvent.VK_C:
+				input.replace("c", true);
+				break;
+			case KeyEvent.VK_V:
+				input.replace("v", true);
+				break;
 		}
 	}
 
@@ -65,6 +73,12 @@ public class KeyHandler implements KeyListener{
 				break;
 			case KeyEvent.VK_Z:
 				input.replace("z", false);
+				break;
+			case KeyEvent.VK_C:
+				input.replace("c", false);
+				break;
+			case KeyEvent.VK_V:
+				input.replace("v", false);
 				break;
 		}
 	}

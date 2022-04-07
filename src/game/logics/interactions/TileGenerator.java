@@ -56,7 +56,8 @@ public class TileGenerator implements Generator{
 	private final int spawnInterval;
 
 	private final Thread generator = new Thread(this);
-	private boolean working = false;
+	private boolean running = false;
+	private boolean waiting = false;
 	
 	/**
 	 * Constructor that sets up the entities structure where obstacles will be
@@ -130,29 +131,68 @@ public class TileGenerator implements Generator{
 		this.createZRay = Optional.of(zapperr);
 	}
 	
-	public boolean isWorking() {
-		return working;
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public boolean isWaiting() {
+		return waiting;
+	}
+	
+	private void invokeWait() {
+		try {
+			generator.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void initialize() {
 		this.loadTiles();
-		generator.start();
-		this.start();
-	}
-	
-	public void stop() {
-		working = false;
 	}
 	
 	public void start() {
-		working = true;
+		synchronized(generator) {
+			if(!this.isRunning()) {
+				running = true;
+				waiting = false;
+				generator.start();
+			}
+		}
+	}
+	
+	public void stop() {
+		running = false;
+		this.resume();
+	}
+	
+	public void pause() {
+		waiting = true;
+	}
+	
+	public void resume() {
+		synchronized(generator) {
+			if(this.isWaiting()) {
+				waiting = false;
+				generator.notify();
+			}
+		}
 	}
 	
 	@Override
 	public void run(){
 		long interval = spawnInterval * 1000;
 		
-		while(generator.isAlive() && this.isWorking()) {
+		while(generator.isAlive() && this.isRunning()) {
+			
+			synchronized(generator) {
+				while(this.isWaiting()) {
+					this.invokeWait();
+					if(!this.isRunning()) {
+						continue;
+					}
+				}
+			}
 			
 			synchronized(entities) {
 				spawnTile();

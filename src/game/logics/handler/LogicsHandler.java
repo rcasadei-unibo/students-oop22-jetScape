@@ -71,6 +71,8 @@ public class LogicsHandler implements Logics{
 		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
+		
+		// COMMENTA STA RIGA SE USI I METODI QUA SOTTO
 		entities.get("player").add(new PlayerInstance(this));
 		
 		spawner = new TileGenerator(entities, spawnInterval);
@@ -78,6 +80,55 @@ public class LogicsHandler implements Logics{
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
 		spawner.initialize();	
+	}
+
+/*
+	private void beginGame() {
+		entities.get("player").add(new PlayerInstance(this));
+		spawner.start();
+	}
+	
+	private void endGame() {
+		entities.get("player").clear();
+		spawner.stop();
+	}
+	
+	private void pauseGame() {
+		spawner.pause();
+	}
+	
+	private void resumeGame() {
+		spawner.resume();
+	}
+*/
+	
+/*
+	/** 
+	 * Method for test enabling and disabling entity spawner
+	 *//*
+	private void checkSpawner() {
+		if(keyH.input.get("c")) {
+			if(spawner.isRunning()) {
+				spawner.resume();
+			} else {
+				spawner.start();
+			}
+		} else if(keyH.input.get("v")) {
+			spawner.pause();
+		}
+	}
+*/
+	
+	/**
+	 * Handles the enabling and disabling of the Debug Mode 
+	 * by using Z (enable) and X (disable).
+	 */
+	private void checkDebugMode() {
+		if(keyH.input.get("z")) {
+			debugger.setDebugMode(true);
+		} else if(keyH.input.get("x")) {
+			debugger.setDebugMode(false);
+		}
 	}
 	
 	/**
@@ -94,18 +145,6 @@ public class LogicsHandler implements Logics{
 			}
 			return o.isOnClearArea();
 		});
-	}
-	
-	/**
-	 * Handles the enabling and disabling of the Debug Mode 
-	 * by using Z (enable) and X (disable).
-	 */
-	private void checkDebugMode() {
-		if(keyH.input.get("z")) {
-			debugger.setDebugMode(true);
-		} else if(keyH.input.get("x")) {
-			debugger.setDebugMode(false);
-		}
 	}
 	
 	/**
@@ -145,6 +184,7 @@ public class LogicsHandler implements Logics{
 			}
 		}
 		checkDebugMode();
+		//checkSpawner();
 		
 		synchronized(entities) {
 			entities.forEach((s, se) -> se.forEach(e -> e.update()));
