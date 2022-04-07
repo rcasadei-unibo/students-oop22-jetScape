@@ -1,5 +1,5 @@
 package game.utility.other;
 
 public enum GameState {
-		MENU , INGAME ;  // eventually add shop and pause 
+		MENU , INGAME , PAUSED;  // eventually add shop and pause 
 }

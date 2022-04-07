@@ -8,12 +8,14 @@ import java.awt.Graphics2D;
 public class DisplayController {
 	private final Display hud ;
 	private final Display menu ;
+	private final Display pause ; 
 	/* TO DO eventually add shop etc... */
 	
 	public DisplayController(final Screen gScreen) {
 		super();
 		this.hud = new DisplayHUD();
 		this.menu = new DisplayMainMenu(gScreen);
+		this.pause = new DisplayPause(gScreen) ;
 	}
 	
 	/*
@@ -26,6 +28,9 @@ public class DisplayController {
 			break;
 		case INGAME :
 			hud.drawScreen(g);
+			break;
+		case PAUSED :
+			pause.drawScreen(g);
 			break;
 		}
 	}

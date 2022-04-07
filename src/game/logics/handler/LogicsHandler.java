@@ -182,7 +182,7 @@ public class LogicsHandler implements Logics{
 	
 	public void updateAll() {
 		if(isInGame()) {
-			if(updateEachInterval(2 * 1000000000, updateTimer, () -> cleanEntities())) {
+			if(updateEachInterval(this.cleanInterval * 1000000000, updateTimer, () -> cleanEntities())) {
 				updateTimer = System.nanoTime();
 				if(debugger.isFeatureEnabled("log: entities cleaner check")) {
 					System.out.println("clean");
@@ -198,7 +198,7 @@ public class LogicsHandler implements Logics{
 	}
 	
 	public void drawAll(final Graphics2D g) {
-		if (isInGame()) {
+		if (isInGame() || this.isPaused()) {
 			synchronized(entities) {
 				entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
 			}
@@ -207,15 +207,33 @@ public class LogicsHandler implements Logics{
 	}
 
 	private void updateGameState() {
-		if(keyH.input.get("enter")) {
-			this.gState = GameState.INGAME;
-		} else if(keyH.input.get("e")) {
-			this.gState = GameState.MENU;
+		if(keyH.input.get("enter") && this.isInMenu()) {
+			setGameState(GameState.INGAME);
+		} else if(keyH.input.get("pause") && this.isInGame()) {
+			setGameState(GameState.PAUSED);
+		} else if(this.isPaused()) {
+			if (keyH.input.get("resume")) {
+				setGameState(GameState.INGAME);
+			} else if(keyH.input.get("exit")) {
+				setGameState(GameState.MENU);
+			}
 		}
 	}
 	
 	private boolean isInGame() {
 		return this.gState == GameState.INGAME;
+	}
+	
+	private boolean isPaused() {
+		return this.gState == GameState.PAUSED;
+	}
+	
+	private boolean isInMenu() {
+		return this.gState == GameState.MENU;
+	}
+	
+	private void setGameState(GameState gs) {
+		this.gState = gs;
 	}
 	
 }
