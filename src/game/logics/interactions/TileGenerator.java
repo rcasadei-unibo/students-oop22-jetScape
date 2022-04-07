@@ -139,6 +139,14 @@ public class TileGenerator implements Generator{
 		return waiting;
 	}
 	
+	private void invokeSleep(final long interval) {
+		try {
+			Thread.sleep(interval);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void invokeWait() {
 		try {
 			generator.wait();
@@ -198,11 +206,7 @@ public class TileGenerator implements Generator{
 				spawnTile();
 			}	
 			
-			try {
-				Thread.sleep(interval);
-			} catch(InterruptedException e) {
-				e.printStackTrace();
-			}
+			this.invokeSleep(interval);
 		}
 	}
 

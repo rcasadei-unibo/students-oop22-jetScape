@@ -72,7 +72,6 @@ public class LogicsHandler implements Logics{
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
 		
-		// COMMENTA STA RIGA SE USI I METODI QUA SOTTO
 		entities.get("player").add(new PlayerInstance(this));
 		
 		spawner = new TileGenerator(entities, spawnInterval);
@@ -81,31 +80,11 @@ public class LogicsHandler implements Logics{
 		
 		spawner.initialize();	
 	}
+	
 
-/*
-	private void beginGame() {
-		entities.get("player").add(new PlayerInstance(this));
-		spawner.start();
-	}
-	
-	private void endGame() {
-		entities.get("player").clear();
-		spawner.stop();
-	}
-	
-	private void pauseGame() {
-		spawner.pause();
-	}
-	
-	private void resumeGame() {
-		spawner.resume();
-	}
-*/
-	
-/*
-	/** 
+	/**
 	 * Method for test enabling and disabling entity spawner
-	 *//*
+	 */
 	private void checkSpawner() {
 		if(keyH.input.get("c")) {
 			if(spawner.isRunning()) {
@@ -117,7 +96,7 @@ public class LogicsHandler implements Logics{
 			spawner.pause();
 		}
 	}
-*/
+
 	
 	/**
 	 * Handles the enabling and disabling of the Debug Mode 
@@ -184,7 +163,7 @@ public class LogicsHandler implements Logics{
 			}
 		}
 		checkDebugMode();
-		//checkSpawner();
+		checkSpawner();
 		
 		synchronized(entities) {
 			entities.forEach((s, se) -> se.forEach(e -> e.update()));
