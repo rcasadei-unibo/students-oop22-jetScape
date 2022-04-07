@@ -79,25 +79,25 @@ public class LogicsHandler implements Logics{
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
 		
-		// COMMENTA STA RIGA SE USI I METODI QUA SOTTO
 		entities.get("player").add(new PlayerInstance(this));
 		
 		spawner = new TileGenerator(entities, spawnInterval);
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler()));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
-		spawner.initialize();	
+		spawner.initialize();
+		spawner.pause();
 	}
 
 
 	private void beginGame() {
 		entities.get("player").add(new PlayerInstance(this));
-		spawner.start();
+		spawner.resume();
 	}
 	
 	private void endGame() {
-		entities.get("player").clear();
-		spawner.stop();
+		spawner.pause();
+		entities.forEach((s, se) -> se.clear());
 	}
 	
 	private void pauseGame() {
@@ -107,7 +107,9 @@ public class LogicsHandler implements Logics{
 	private void resumeGame() {
 		spawner.resume();
 	}
-	/** 
+
+	/**
+>>>>>>> obstacles
 	 * Method for test enabling and disabling entity spawner
 	 */
 	private void checkSpawner() {
