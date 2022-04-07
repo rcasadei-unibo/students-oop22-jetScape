@@ -13,6 +13,8 @@ public class KeyHandler implements KeyListener{
 		input.put("spacebar", false);
 		input.put("x", false);
 		input.put("z", false);
+		input.put("enter", false);
+		input.put("e", false);
 	}
 	
 	@Override
@@ -30,6 +32,12 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_Z:
 				input.replace("z", true);
 				break;
+			case KeyEvent.VK_ENTER:
+				input.replace("enter", true);
+				break;
+			case KeyEvent.VK_E:
+				input.replace("e", true);
+				break;
 		}
 	}
 
@@ -44,6 +52,12 @@ public class KeyHandler implements KeyListener{
 				break;
 			case KeyEvent.VK_Z:
 				input.replace("z", false);
+				break;
+			case KeyEvent.VK_ENTER:
+				input.replace("enter", false);
+				break;
+			case KeyEvent.VK_E:
+				input.replace("e", false);
 				break;
 		}
 	}

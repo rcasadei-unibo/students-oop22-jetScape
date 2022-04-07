@@ -29,19 +29,20 @@ public class LogicsHandler implements Logics{
 	private final Screen gScreen;
 	private final KeyHandler keyH;
 	private final Generator spawner;
-	private final DisplayController displayController = new DisplayController();;
+	private final DisplayController displayController;
 	
 	//private final Pair<Double,Double> obstaclesPos;
 	
 	private long updateTimer = System.nanoTime();
 	private int spawnInterval = 3;
 	private Debugger debugger;
-	private GameState gs = GameState.MENU;
+	private GameState gState = GameState.MENU;
 	
 	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {
 		this.gScreen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
+		this.displayController = new DisplayController(screen);
 		
 		//obstaclesPos = new Pair<>(500.0, (double)gScreen.getTileSize());
 		
@@ -119,21 +120,26 @@ public class LogicsHandler implements Logics{
 			checkDebugMode();
 			entities.forEach((s, se) -> se.forEach(e -> e.update()));
 		}
+		updateGameState();
 	}
 	
 	public void drawAll(final Graphics2D g) {
 		if (isInGame()) {
 			entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
 		}
-		this.displayController.displayScreen(g, gs);
+		this.displayController.displayScreen(g, gState);
 	}
 
-	public void setGameState(GameState gs) {
-		this.gs = gs;
+	private void updateGameState() {
+		if(keyH.input.get("enter")) {
+			this.gState = GameState.INGAME;
+		} else if(keyH.input.get("e")) {
+			this.gState = GameState.MENU;
+		}
 	}
 	
 	private boolean isInGame() {
-		return this.gs == GameState.INGAME;
+		return this.gState == GameState.INGAME;
 	}
 	
 }
