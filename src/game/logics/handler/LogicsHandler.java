@@ -44,7 +44,7 @@ public class LogicsHandler implements Logics{
 	private final DisplayController displayController;
 	
 	//private final Pair<Double,Double> obstaclesPos;
-	
+	private int score = 0;
 	/**
 	 * Keeps the game timer.
 	 */
@@ -109,7 +109,6 @@ public class LogicsHandler implements Logics{
 	}
 
 	/**
->>>>>>> obstacles
 	 * Method for test enabling and disabling entity spawner
 	 */
 	private void checkSpawner() {
@@ -192,6 +191,8 @@ public class LogicsHandler implements Logics{
 			synchronized(entities) {
 				entities.forEach((s, se) -> se.forEach(e -> e.update()));
 			}
+			incScore();
+			this.displayController.updateHUD(this.score);
 		}
 		checkDebugMode();
 		checkSpawner();
@@ -220,6 +221,7 @@ public class LogicsHandler implements Logics{
 				this.resumeGame();
 			} else if(keyH.input.get("e")) {
 				setGameState(GameState.MENU);
+				this.score = 0;
 				this.endGame();
 			}
 		}
@@ -239,6 +241,10 @@ public class LogicsHandler implements Logics{
 	
 	private void setGameState(GameState gs) {
 		this.gState = gs;
+	}
+	
+	private void incScore() {
+		this.score ++;
 	}
 	
 }

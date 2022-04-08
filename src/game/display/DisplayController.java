@@ -13,7 +13,7 @@ public class DisplayController {
 	
 	public DisplayController(final Screen gScreen) {
 		super();
-		this.hud = new DisplayHUD();
+		this.hud = new DisplayHUD(gScreen);
 		this.menu = new DisplayMainMenu(gScreen);
 		this.pause = new DisplayPause(gScreen) ;
 	}
@@ -33,6 +33,10 @@ public class DisplayController {
 			pause.drawScreen(g);
 			break;
 		}
+	}
+	
+	public void updateHUD(int score) {
+		((DisplayHUD) hud).updateScore(score);
 	}
 
 }
