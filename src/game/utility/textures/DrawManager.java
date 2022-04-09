@@ -66,6 +66,8 @@ public class DrawManager implements Drawer{
 		animator.ifPresent(a -> textureToDraw = a.get());
 		if(textures.containsKey(textureToDraw)) {
 			textures.get(textureToDraw).draw(g, pos, size);
+		} else {
+			textures.get("placeholder").draw(g, pos, size);
 		}
 	}
 }

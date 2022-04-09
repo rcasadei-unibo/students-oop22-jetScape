@@ -42,6 +42,10 @@ public interface Entity {
 	 */
 	String entityType();
 	/**
+	 * Reset the current position of the obstacle, setting it to the starting one.
+	 */
+	void resetPosition();
+	/**
 	 * Updates entity parameters (called for each frame).
 	 */
 	void update();

@@ -172,7 +172,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 		super.update();
 		//updateRotation();
 		
-		if(position.getX() > -screen.getTileSize()) {
+		if(position.getX() > -screen.getTileSize() * 2) {
 			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
 		} 
 	}
@@ -181,7 +181,6 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 //		g.setColor(texture);
 		
 		textureMgr.drawTexture(g, position, screen.getTileSize());
-		super.draw(g);
 	}
 
 }

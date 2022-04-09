@@ -20,4 +20,5 @@ public interface Player extends Entity{
 	static final double fallMultiplierIncrease = 0.15;
 	
 	static final double xPosition = 135.0;
+	
 }

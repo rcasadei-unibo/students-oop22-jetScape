@@ -98,7 +98,7 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 		super.update();
 //		updateRotation();
 		
-		if(position.getX() > -screen.getTileSize()) {
+		if(position.getX() > -screen.getTileSize() * 2) {
 			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
 		}
 	}
@@ -112,7 +112,6 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 //			g.drawImage(textureHorr, round(position.getX()), round(position.getY()), screen.getTileSize(), screen.getTileSize(), null);
 //		}
 		textureMgr.drawTexture(g, position, screen.getTileSize());
-		super.draw(g);
 	}
 	
 }

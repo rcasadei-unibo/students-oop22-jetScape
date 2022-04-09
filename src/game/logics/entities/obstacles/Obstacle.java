@@ -21,8 +21,4 @@ public abstract interface Obstacle extends Entity{
 	 * @return the movement information of the obstacle
 	 */
 	SpeedHandler getSpeedHandler();
-	/**
-	 * Reset the current position of the obstacle, setting it to the starting one.
-	 */
-	void resetPosition();
 }

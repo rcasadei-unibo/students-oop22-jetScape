@@ -3,11 +3,13 @@ package game.logics.entities.player;
 import java.awt.Graphics2D;
 import java.awt.Color;
 
+import game.frame.GameWindow;
 import game.logics.entities.basic.EntityInstance;
 import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.Pair;
-import game.utility.textures.Texture;
+import game.utility.textures.DrawManager;
+import game.utility.textures.Drawer;
 
 /**
  * The <code>PlayerInstance</code> class represents the player's entity in
@@ -16,6 +18,21 @@ import game.utility.textures.Texture;
  * @author Daniel Pellanda
  */
 public class PlayerInstance extends EntityInstance implements Player{
+	
+	/**
+	 * Specifies the path within the texture folder [specified in <code>Texture</code> class]
+	 * where <code>PlayerInstance</code> textures can be found.
+	 */
+	private static final String texturePath = "player" + System.getProperty("file.separator");
+	/**
+	 * If textures are missing, they will be replace by a rectangle of the color specified in
+	 * <code>PlayerInstance.placeH</code>.
+	 */
+	private static final Color placeH = Color.white;
+	/**
+	 * Determines how fast textures change.
+	 */
+	private static final double animationSpeed = 6;
 	
 	/**
 	 * The current jump speed of the player.
@@ -38,7 +55,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 	/**
 	 * Manages the textures of the object.
 	 */
-	private final Texture texture = new Texture("player", Color.white);
+	private final Drawer textureMgr;
 	private final KeyHandler keyH;
 	
 	/**
@@ -46,6 +63,10 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * It can either "<code>idle</code>", "<code>jump</code>" (jumping) and "<code>fall</code>" (falling).
 	 */
 	private String action;
+	
+	private boolean isActionChanged = false;
+	private int textureSwitcher = 1;
+	private int frameTime = 0;
 	
 	/**
 	 * Constructor used for initializing basic parts of the player entity.
@@ -62,23 +83,69 @@ public class PlayerInstance extends EntityInstance implements Player{
 		position = new Pair<>(xPosition, yGround);
 		action = "idle";
 		entityTag = "player";
+		
+		textureMgr = new DrawManager(placeH);
+		textureMgr.addTexture("walk1", texturePath + "barrywalk1.png");
+		textureMgr.addTexture("walk2", texturePath + "barrywalk2.png");
+		textureMgr.addTexture("walk3", texturePath + "barrywalk3.png");
+		textureMgr.addTexture("walk4", texturePath + "barrywalk4.png");
+		textureMgr.addTexture("jump1", texturePath + "barryjump1.png");
+		textureMgr.addTexture("jump2", texturePath + "barryjump2.png");
+		textureMgr.addTexture("fall1", texturePath + "barryfall1.png");
+		textureMgr.addTexture("fall2", texturePath + "barryfall2.png");
+		textureMgr.setAnimator(() -> {
+			String s = "";
+			switch(action) {
+				case "idle":
+					s = "walk" + textureSwitcher;
+					break;
+				case "fall":
+					s = "fall" + (textureSwitcher % 2 + 1);
+					break;
+				case "jump":
+					s = "jump" + (textureSwitcher % 2 + 1);
+					break;
+			}
+			updateTexture();
+			return s;
+		});
 	}
 	
 	private void jump() {
 		position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof ? position.getY() - jumpSpeed * jumpMultiplier : yRoof);
-		action = "jump";
+		updateAction("jump");
 	}
 	
 	private void fall() {
 		if(position.getY() + fallSpeed * fallMultiplier < yGround) {
 			position.setY(position.getY() + fallSpeed * fallMultiplier);
-			action = "fall";
+			updateAction("fall");
 		} else {
 			position.setY(yGround);
-			action = "idle";
+			updateAction("idle");
 		}
 	}
 
+	private void updateAction(final String newAction) {
+		if(action != newAction) {
+			isActionChanged = true;
+		}
+		action = newAction;
+	}
+	
+	private void updateTexture() {
+		if(this.isActionChanged) {
+			frameTime = 0;
+			textureSwitcher = 1;
+			this.isActionChanged = false;
+		}
+		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
+			frameTime = 0;
+			textureSwitcher = textureSwitcher >= 4 ? 1 : textureSwitcher + 1;
+		}
+		frameTime++;
+	}
+	
 	@Override
 	public void update() {
 		super.update();
@@ -95,7 +162,6 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	@Override
 	public void draw(Graphics2D g) {
-		texture.draw(g, position, screen.getTileSize());
-		super.draw(g);
+		textureMgr.drawTexture(g, position, screen.getTileSize());
 	}
 }

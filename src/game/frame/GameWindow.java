@@ -15,7 +15,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Font;
 
 /**
  * The <code>GameWindow</code> class manages both the panel representing 
@@ -66,8 +65,6 @@ public class GameWindow extends JPanel implements Runnable{
 	 */
 	private final Logics logH;
 	private final Thread gameLoop = new Thread(this);
-
-	private Font fpsFont = new Font("Calibri", Font.PLAIN, 18);
 	
 	/**
 	 * Manages enabling and disabling of Debug Features.
@@ -124,8 +121,8 @@ public class GameWindow extends JPanel implements Runnable{
 		
 		// Draws FPS meter if enabled by debugger 
 		if(debugger.isFeatureEnabled("fps meter")) {
-			g.setFont(fpsFont);
-			g.drawString("FPS: " + fps, 10, 15);
+			g.setFont(Debugger.debugFont);
+			g.drawString("FPS: " + fps, 3, 8);
 		}
 		
 		// Draws logical parts of the game

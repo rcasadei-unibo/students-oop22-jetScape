@@ -1,5 +1,6 @@
 package game.utility.debug;
 
+import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -11,6 +12,11 @@ import java.util.function.Supplier;
  * @author Daniel Pellanda
  */
 public class Debugger {
+	
+	/**
+	 * Defines the default font for debugging features.
+	 */
+	public static final Font debugFont = new Font("Calibri", Font.PLAIN, 10);
 	
 	/**
 	 * A map of flags that tells whether a certain debug function (specified as a key)

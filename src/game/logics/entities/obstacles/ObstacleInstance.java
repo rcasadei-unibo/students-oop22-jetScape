@@ -13,10 +13,6 @@ import game.utility.other.Pair;
 public abstract class ObstacleInstance extends EntityInstance implements Obstacle{
 
 	/**
-	 * Defines the starting position where the obstacle starts
-	 */
-	protected final Pair<Double,Double> startPos;
-	/**
 	 * Defines the movement parameters of the obstacle.
 	 */
 	protected SpeedHandler movement;
@@ -34,10 +30,9 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 	 * @param l the logics handler which the entity is linked to
 	 * @param sPosition the starting position of the obstacle in the environment
 	 */
-	ObstacleInstance(final Logics l, final Pair<Double,Double> sPosition){
-		super(l, sPosition.clone());
+	ObstacleInstance(final Logics l, final Pair<Double,Double> p){
+		super(l, p);
 		entityTag = "obstacle";
-		startPos = sPosition;
 	}
 	
 	/**
@@ -57,11 +52,6 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 	
 	public SpeedHandler getSpeedHandler() {
 		return movement;
-	}
-	
-	public void resetPosition() {
-		this.position.setX(startPos.getX());
-		this.position.setY(startPos.getY());
 	}
 	
 	public void update() {

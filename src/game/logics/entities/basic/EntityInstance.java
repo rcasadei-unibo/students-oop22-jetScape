@@ -6,8 +6,6 @@ import game.utility.debug.Debugger;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
-import java.awt.Font;
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
@@ -34,6 +32,10 @@ public abstract class EntityInstance implements Entity{
 	 * Defines the entity's position on the game environment. 
 	 */
 	protected Pair<Double, Double> position;
+	/**
+	 * Defines the entity's starting position.
+	 */
+	private Pair<Double, Double> startPos;
 	/**
 	 * Defines the entity's type category.
 	 */
@@ -77,6 +79,7 @@ public abstract class EntityInstance implements Entity{
 	protected EntityInstance(final Logics l, final Pair<Double,Double> position) {
 		this(l);
 		this.position = position;
+		this.startPos = position.clone();
 	}
 	
 	/**
@@ -108,6 +111,11 @@ public abstract class EntityInstance implements Entity{
 		return entityTag;
 	}
 	
+	public void resetPosition() {
+		position.setX(startPos.getX());
+		position.setY(startPos.getY());
+	}
+	
 	/**
 	 * Updates the entity's flags.
 	 */
@@ -124,17 +132,5 @@ public abstract class EntityInstance implements Entity{
 		updateFlags();
 	}
 	
-	public void draw(Graphics2D g) {
-		if(this.isVisible()) {
-			
-			if(debugger.isFeatureEnabled("entity coordinates")) {
-				Font debugFont = new Font("Calibri", Font.PLAIN, 10);
-				
-				g.setColor(Color.red);
-				g.setFont(debugFont);
-				g.drawString("X:" + Math.round(position.getX()) + " Y:" + Math.round(position.getY()), Math.round(position.getX()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(position.getY()) + Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
-			}
-		}
-	}
-	
+	public abstract void draw(final Graphics2D g);	
 }

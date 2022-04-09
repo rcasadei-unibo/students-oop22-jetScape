@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import java.lang.Runnable;
@@ -37,7 +39,7 @@ public class LogicsHandler implements Logics{
 	 * Generates sets of obstacles on the environment.
 	 */
 	private final Generator spawner;
-	private final Screen gScreen;
+	private final Screen screen;
 	private final KeyHandler keyH;
 	
 	/**
@@ -65,7 +67,7 @@ public class LogicsHandler implements Logics{
 	 * @param debugger the debugger used
 	 */
 	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {
-		this.gScreen = screen;
+		this.screen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
 		
@@ -90,7 +92,10 @@ public class LogicsHandler implements Logics{
 	
 	private void endGame() {
 		spawner.pause();
-		entities.forEach((s, se) -> se.clear());
+		entities.forEach((s, se) -> {
+			se.forEach(e -> e.resetPosition());
+			se.clear();
+		});
 	}
 	
 	private void pauseGame() {
@@ -101,6 +106,7 @@ public class LogicsHandler implements Logics{
 		spawner.resume();
 	}
 */
+
 	/**
 	 * Method for test enabling and disabling entity spawner
 	 */
@@ -163,7 +169,7 @@ public class LogicsHandler implements Logics{
 	}
 	
 	public Screen getScreenInfo() {
-		return gScreen;
+		return screen;
 	}
 	
 	public KeyHandler getKeyHandler() {
@@ -192,6 +198,14 @@ public class LogicsHandler implements Logics{
 	public void drawAll(final Graphics2D g) {
 		synchronized(entities) {
 			entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
+			if(debugger.isFeatureEnabled("entity coordinates")) {
+				entities.forEach((s, se) -> se.stream().filter(e -> e.isVisible()).collect(Collectors.toSet()).forEach(e -> {
+					g.setColor(Color.white);
+					g.setFont(Debugger.debugFont);
+					g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
+					g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
+				}));
+			}
 		}
 	}
 }
