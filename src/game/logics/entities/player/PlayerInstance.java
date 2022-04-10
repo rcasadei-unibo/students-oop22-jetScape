@@ -65,6 +65,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 	private String action;
 	
 	private boolean isActionChanged = false;
+	private boolean isLanding = false;
 	private int textureSwitcher = 1;
 	private int frameTime = 0;
 	
@@ -93,17 +94,24 @@ public class PlayerInstance extends EntityInstance implements Player{
 		textureMgr.addTexture("jump2", texturePath + "barryjump2.png");
 		textureMgr.addTexture("fall1", texturePath + "barryfall1.png");
 		textureMgr.addTexture("fall2", texturePath + "barryfall2.png");
+		textureMgr.addTexture("land1", texturePath + "barryland1.png");
+		textureMgr.addTexture("land2", texturePath + "barryland2.png");
+		textureMgr.addTexture("land3", texturePath + "barryland3.png");
+		textureMgr.addTexture("land4", texturePath + "barryland4.png");
 		textureMgr.setAnimator(() -> {
 			String s = "";
 			switch(action) {
 				case "idle":
 					s = "walk" + textureSwitcher;
 					break;
-				case "fall":
-					s = "fall" + (textureSwitcher % 2 + 1);
+				case "land":
+					s = "land" + textureSwitcher;
 					break;
 				case "jump":
 					s = "jump" + (textureSwitcher % 2 + 1);
+					break;
+				case "fall":
+					s = "fall" + (textureSwitcher % 2 + 1);
 					break;
 			}
 			updateTexture();
@@ -122,13 +130,14 @@ public class PlayerInstance extends EntityInstance implements Player{
 			updateAction("fall");
 		} else {
 			position.setY(yGround);
-			updateAction("idle");
+			updateAction("land");
 		}
 	}
 
 	private void updateAction(final String newAction) {
 		if(action != newAction) {
 			isActionChanged = true;
+			isLanding = newAction == "land" ? true : false;
 		}
 		action = newAction;
 	}
@@ -140,6 +149,9 @@ public class PlayerInstance extends EntityInstance implements Player{
 			this.isActionChanged = false;
 		}
 		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
+			if(this.isLanding && textureSwitcher == 4) {
+				updateAction("idle");
+			}
 			frameTime = 0;
 			textureSwitcher = textureSwitcher >= 4 ? 1 : textureSwitcher + 1;
 		}
