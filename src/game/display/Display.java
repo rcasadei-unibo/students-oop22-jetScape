@@ -16,4 +16,6 @@ public interface Display {
 		return gScreen.getWidth()/2 - lenght/2;
 	}
 	
+	public void setCursorIndex(int index);
+	
 }

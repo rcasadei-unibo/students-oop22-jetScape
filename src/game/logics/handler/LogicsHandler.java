@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.awt.Graphics2D;
 
 import java.lang.Runnable;
@@ -74,7 +75,7 @@ public class LogicsHandler implements Logics{
 		this.gScreen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
-		this.displayController = new DisplayController(screen);
+		this.displayController = new DisplayController(keyH,screen, g -> this.gState = g, () -> gState);
 		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
@@ -194,6 +195,7 @@ public class LogicsHandler implements Logics{
 			incScore();
 			this.displayController.updateHUD(this.score);
 		}
+		this.displayController.updateScreen();
 		checkDebugMode();
 		checkSpawner();
 		updateGameState();
@@ -205,17 +207,32 @@ public class LogicsHandler implements Logics{
 				entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
 			}
 		}
-		this.displayController.displayScreen(g, gState);
+		this.displayController.drawScreen(g);
 	}
 
 	private void updateGameState() {
-		if(keyH.input.get("enter") && this.isInMenu()) {
-			setGameState(GameState.INGAME);
-			this.beginGame();
-		} else if(keyH.input.get("p") && this.isInGame()) {
-			setGameState(GameState.PAUSED);
-			this.pauseGame();
-		} else if(this.isPaused()) {
+		switch (this.gState) {
+		case EXIT:
+			System.exit(0);
+			// TODO FIX BRUTAL EXIT
+			break;
+		case MENU:
+			this.spawner.pause();
+			break;
+		case INGAME:
+			this.spawner.resume();
+			if(updateEachInterval(this.cleanInterval * 1000000000, updateTimer, () -> cleanEntities())) {
+				updateTimer = System.nanoTime();
+				if(debugger.isFeatureEnabled("log: entities cleaner check")) {
+					System.out.println("clean");
+				}
+			}
+			if(keyH.input.get("p") && this.isInGame()) {
+				setGameState(GameState.PAUSED);
+			}
+			break;
+		case PAUSED:
+			this.spawner.pause();
 			if (keyH.input.get("r")) {
 				setGameState(GameState.INGAME);
 				this.resumeGame();

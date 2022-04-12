@@ -42,12 +42,12 @@ public class KeyHandler implements KeyListener{
 		input.put("p", false);
 		input.put("c", false);
 		input.put("v", false);
+		input.put("up", false);
+		input.put("down", false);
 	}
 	
 	@Override
-	public void keyTyped(KeyEvent e) {
-		this.lastKeyPressed = Optional.of(e.getKeyCode());
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -79,7 +79,14 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_R:
 				input.replace("r", true);
 				break;
+			case KeyEvent.VK_UP:
+				input.replace("up", true);
+				break;
+			case KeyEvent.VK_DOWN:
+				input.replace("down", true);
+				break;
 		}
+		this.lastKeyPressed = Optional.of(e.getKeyCode());
 	}
 
 	@Override
@@ -112,12 +119,18 @@ public class KeyHandler implements KeyListener{
 			case KeyEvent.VK_R:
 				input.replace("r", false);
 				break;
+			case KeyEvent.VK_UP:
+				input.replace("up", true);
+				break;
+			case KeyEvent.VK_DOWN:
+				input.replace("down", true);
+				break;
 		}
 	}
 	
-	public boolean isKeyTyped (KeyEvent e) {
+	public boolean isKeyTyped (int e) {
 		if (this.lastKeyPressed.isPresent() &&
-			this.lastKeyPressed.get() == e.getKeyCode()) {
+			this.lastKeyPressed.get() == e) {
 			 this.lastKeyPressed = Optional.empty();
 			 return true;
 		}

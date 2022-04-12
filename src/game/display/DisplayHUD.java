@@ -36,4 +36,10 @@ public class DisplayHUD implements Display {
 		this.score = score;
 	}
 
+	@Override
+	public void setCursorIndex(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

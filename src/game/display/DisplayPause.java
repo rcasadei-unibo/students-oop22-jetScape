@@ -43,4 +43,10 @@ public class DisplayPause implements Display {
 		g.drawString(msg2, x, gScreen.getTileSize() * msg2Tile);
 	}
 
+	@Override
+	public void setCursorIndex(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
