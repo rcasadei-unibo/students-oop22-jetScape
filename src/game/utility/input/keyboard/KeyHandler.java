@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * The <code>KeyHandler</code> class is used for knowing 
@@ -26,6 +27,7 @@ public class KeyHandler implements KeyListener{
 	 * 
 	 */
 	public Map<String,Boolean> input = new HashMap<>();
+	private Optional<Integer> lastKeyPressed = Optional.empty();
 	
 	/**
 	 * Initializes a <code>KeyHandler</code>.
@@ -83,32 +85,50 @@ public class KeyHandler implements KeyListener{
 		switch(e.getKeyCode()) {
 			case KeyEvent.VK_SPACE:
 				input.replace("spacebar", false);
+				setLastKey(Optional.of(KeyEvent.VK_SPACE));
 				break;
 			case KeyEvent.VK_X:
 				input.replace("x", false);
+				setLastKey(Optional.of(KeyEvent.VK_X));
 				break;
 			case KeyEvent.VK_Z:
 				input.replace("z", false);
+				setLastKey(Optional.of(KeyEvent.VK_Z));
 				break;
 			case KeyEvent.VK_ENTER:
 				input.replace("enter", false);
+				setLastKey(Optional.of(KeyEvent.VK_ENTER));
 				break;
 			case KeyEvent.VK_E:
 				input.replace("e", false);
+				setLastKey(Optional.of(KeyEvent.VK_E));
 				break;
 			case KeyEvent.VK_C:
 				input.replace("c", false);
+				setLastKey(Optional.of(KeyEvent.VK_C));
 				break;
 			case KeyEvent.VK_V:
 				input.replace("v", false);
+				setLastKey(Optional.of(KeyEvent.VK_V));
 				break;
 			case KeyEvent.VK_P:
 				input.replace("p", false);
+				setLastKey(Optional.of(KeyEvent.VK_P));
 				break;
 			case KeyEvent.VK_R:
 				input.replace("r", false);
+				setLastKey(Optional.of(KeyEvent.VK_R));
 				break;
 		}
 	}
 	
+	public int ConsumeLastKey() {
+		int e = this.lastKeyPressed.get();
+		setLastKey(Optional.empty());
+		return  e;
+	}
+	
+	private void setLastKey(Optional<Integer> e) {
+		this.lastKeyPressed = e;
+	}
 }
