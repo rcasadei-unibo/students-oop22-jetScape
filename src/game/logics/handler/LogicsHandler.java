@@ -192,10 +192,10 @@ public class LogicsHandler implements Logics{
 				entities.forEach((s, se) -> se.forEach(e -> e.update()));
 			}
 			this.displayController.updateHUD(this.score);
+			checkPause();
 		}
 		updateScore();
 		this.displayController.updateScreen();
-		checkPause();
 		checkDebugMode();
 		checkSpawner();
 	}
