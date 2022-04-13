@@ -14,13 +14,16 @@ public class DisplayMainMenu implements Display {
 	static final int textTile = 6;
 	static final int titleShift = 5;
 	static final int textShift = 2;
+	static final String title = "JetScape";
 	static final Font font = new Font("magneto", Font.PLAIN, 112);
 	static final Font fontText = new Font("calibri", Font.PLAIN, 48);
 	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
-	private final List<Pair<Integer,String>> text = new ArrayList<>();
-	private int cursorIndex = 0;
 	
+	private final List<Pair<Integer,String>> text = new ArrayList<>();
 	private final Screen gScreen;
+	
+	private int cursorIndex = 0;
+	private int x = 0;
 
 	public DisplayMainMenu(Screen gScreen) {
 		super();
@@ -29,8 +32,6 @@ public class DisplayMainMenu implements Display {
 
 	@Override
 	public void drawScreen(Graphics2D g) {
-		int x = 0;
-		String title = "JetScape";
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
 		g.setFont(font);
