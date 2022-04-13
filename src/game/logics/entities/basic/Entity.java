@@ -2,6 +2,8 @@ package game.logics.entities.basic;
 
 import java.awt.Graphics2D;
 
+import game.utility.other.Pair;
+
 /**
  * The <code>Entity</code> interface is used for accessing <code>EntityInstance</code> methods.
  * 
@@ -30,6 +32,10 @@ public interface Entity {
 	 */
 	boolean isOnScreenBounds();
 	/**
+	 * @return the entity's position
+	 */
+	Pair<Double,Double> getPosition();
+	/**
 	 * @return the X coordinate of the entity's position
 	 */
 	double getX();
@@ -44,7 +50,7 @@ public interface Entity {
 	/**
 	 * Reset the current position of the obstacle, setting it to the starting one.
 	 */
-	void resetPosition();
+	void reset();
 	/**
 	 * Updates entity parameters (called for each frame).
 	 */

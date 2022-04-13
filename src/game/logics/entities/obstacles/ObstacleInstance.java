@@ -30,9 +30,10 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 	 * @param l the logics handler which the entity is linked to
 	 * @param sPosition the starting position of the obstacle in the environment
 	 */
-	ObstacleInstance(final Logics l, final Pair<Double,Double> p){
+	ObstacleInstance(final Logics l, final Pair<Double,Double> p, final SpeedHandler s){
 		super(l, p);
 		entityTag = "obstacle";
+		movement = s;
 	}
 	
 	/**
@@ -54,8 +55,20 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 		return movement;
 	}
 	
+	public void reset() {
+		super.reset();
+		movement.resetSpeed();
+	}
+	
 	public void update() {
 		super.update();
 		updateFlags();
+		
+		if(position.getX() > -screen.getTileSize() * 2) {
+			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
+			if(this.isOnScreenBounds()) {
+				movement.applyAcceleration();
+			}
+		}
 	}
 }

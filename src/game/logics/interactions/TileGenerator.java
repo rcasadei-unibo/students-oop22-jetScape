@@ -18,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import game.logics.entities.basic.Entity;
+import game.logics.entities.obstacles.Missile;
 import game.logics.entities.obstacles.ZapperBase;
 import game.logics.entities.obstacles.ZapperRay;
 import game.utility.other.Pair;
@@ -34,6 +35,15 @@ import game.utility.other.Pair;
 public class TileGenerator implements Generator{
 
 	/**
+	 * The type of file separator the system uses.
+	 */
+	private static final String separator = System.getProperty("file.separator");
+	/**
+	 * Default directory where are all tiles are located.
+	 */
+	public static final String defaultDir = System.getProperty("user.dir") + separator + "res" + separator + "game"+ separator + "utility" + separator + "generator" + separator + "tiles.json";
+	
+	/**
 	 * A function used by the generator for creating <code>ZapperRay</code> object.
 	 */
 	private Optional<BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay>> createZRay = Optional.empty();
@@ -41,15 +51,33 @@ public class TileGenerator implements Generator{
 	 * A function used by the generator for creating <code>ZapperBase</code> object.
 	 */
 	private Optional<Function<Pair<Double,Double>,ZapperBase>> createZBase = Optional.empty();
+	/**
+	 * A function used by the generator for creating <code>Missile</code> object.
+	 */
+	private Optional<Function<Pair<Double,Double>,Missile>> createMissile = Optional.empty();
 	
 	/**
-	 * A list where all loaded set of tiles are stored.
+	 * A list where all loaded set of zapper tiles are stored.
 	 */
 	private final List<Set<Entity>> zapperTiles = new ArrayList<>();
+	/**
+	 * A list where all loaded set of missile tiles are stored.
+	 */
+	private final List<Set<Entity>> missileTiles = new ArrayList<>();
 	/**
 	 * The entities map where the spawner adds the sets of obstacles.
 	 */
 	private final Map<String, Set<Entity>> entities;
+	
+	
+	/**
+	 * Decides the odds for the generator to spawn a set of zappers
+	 */
+	private final int zapperOdds = 8;
+	/**
+	 * Decides the odds for the generator to spawn a set of missiles
+	 */
+	private final int missileOdds = 4;
 	/**
 	 * Decides how many seconds the generator pauses after each set spawned.
 	 */
@@ -59,6 +87,8 @@ public class TileGenerator implements Generator{
 	private boolean running = false;
 	private boolean waiting = false;
 	
+	private final int tileSize;
+	
 	/**
 	 * Constructor that sets up the entities structure where obstacles will be
 	 * added and allows to specify the interval for spawning.
@@ -66,9 +96,10 @@ public class TileGenerator implements Generator{
 	 * @param entities the entities map where obstacles will be added
 	 * @param interval the interval between each generation
 	 */
-	public TileGenerator(final Map<String, Set<Entity>> entities, final int interval) {
+	public TileGenerator(final int tileSize, final Map<String, Set<Entity>> entities, final int interval) {
 		this.entities = entities;
 		this.spawnInterval = interval;
+		this.tileSize = tileSize;
 	}
 	
 	/**
@@ -77,7 +108,9 @@ public class TileGenerator implements Generator{
 	private void loadTiles() {
 		JSONParser jsonparser = new JSONParser();
 		try {
-			JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader(System.getProperty("user.dir") + System.getProperty("file.separator") + "res" + System.getProperty("file.separator") + "game"+ System.getProperty("file.separator") + "utility" + System.getProperty("file.separator") + "generator" + System.getProperty("file.separator") + "tiles.json"));
+			JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader(defaultDir));
+			
+			///		LOADING ZAPPERS		///
 			if(createZBase.isPresent() && createZRay.isPresent()) {
 				JSONArray types = (JSONArray)allTiles.get("zappers");
 				for(int i = 0; i < types.size(); i++){
@@ -87,11 +120,11 @@ public class TileGenerator implements Generator{
 						
 						JSONObject b1 = (JSONObject)zsets.get(0), b2 = (JSONObject)zsets.get(1);
 						ZapperBase base1 = createZBase.get().apply(new Pair<>(
-								Double.parseDouble((String)b1.get("x")),
-								Double.parseDouble((String)b1.get("y"))));
+								Double.parseDouble((String)b1.get("x")) * tileSize,
+								Double.parseDouble((String)b1.get("y")) * tileSize));
 						ZapperBase base2 = createZBase.get().apply(new Pair<>(
-								Double.parseDouble((String)b2.get("x")),
-								Double.parseDouble((String)b2.get("y"))));
+								Double.parseDouble((String)b2.get("x")) * tileSize,
+								Double.parseDouble((String)b2.get("y")) * tileSize));
 						base1.setPaired(base2);
 						s.add(base1);
 						s.add(base2);
@@ -99,13 +132,31 @@ public class TileGenerator implements Generator{
 						for(int j = 2; j < zsets.size(); j++) {
 							JSONObject z = (JSONObject)zsets.get(j);
 							s.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
-								Double.parseDouble((String)z.get("x")),
-								Double.parseDouble((String)z.get("y")))));			
+								Double.parseDouble((String)z.get("x")) * tileSize,
+								Double.parseDouble((String)z.get("y")) * tileSize)));			
 						}
 						zapperTiles.add(s);
 					}
 				}
 			}
+			
+			///		LOADING MISSILES	///
+			if(createMissile.isPresent()) {
+				JSONArray types = (JSONArray)allTiles.get("missiles");
+				for(int i = 0; i < types.size(); i++){
+					JSONArray sets = (JSONArray)types.get(i);
+					Set<Entity> s = new HashSet<>();
+				
+					for(int j = 0; j < sets.size(); j++) {
+						JSONObject z = (JSONObject)sets.get(j);
+						s.add(createMissile.get().apply(new Pair<>(
+							Double.parseDouble((String)z.get("x")) * tileSize,
+							Double.parseDouble((String)z.get("y")) * tileSize)));			
+					}
+					missileTiles.add(s);
+				}
+			}
+			
 		} catch(IOException e) {
 			e.printStackTrace();
 		} catch(ParseException pe) {
@@ -116,6 +167,29 @@ public class TileGenerator implements Generator{
 	private void spawnTile() {
 		final Random r = new Random();
 		int randomNumber;
+		randomNumber = r.nextInt() % (missileOdds + zapperOdds);
+		randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
+		
+		if(randomNumber <= missileOdds) {
+			spawnMissile();
+		} else {
+			spawnZapper();
+		}
+	}
+	
+	private void spawnMissile() {
+		final Random r = new Random();
+		int randomNumber;
+		do {
+			randomNumber = r.nextInt() % missileTiles.size();
+			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
+		}while(entities.get("missiles").containsAll(missileTiles.get(randomNumber)));
+		entities.get("missiles").addAll(missileTiles.get(randomNumber));
+	}
+	
+	private void spawnZapper() {
+		final Random r = new Random();
+		int randomNumber;
 		do {
 			randomNumber = r.nextInt() % zapperTiles.size();
 			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
@@ -123,12 +197,16 @@ public class TileGenerator implements Generator{
 		entities.get("zappers").addAll(zapperTiles.get(randomNumber));
 	}
 	
+	public void setZapperRayCreator(final BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay> zapperr) {
+		this.createZRay = Optional.of(zapperr);
+	}
+	
 	public void setZapperBaseCreator(final Function<Pair<Double,Double>,ZapperBase> zapperb) {
 		this.createZBase = Optional.of(zapperb);
 	}
 	
-	public void setZapperRayCreator(final BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay> zapperr) {
-		this.createZRay = Optional.of(zapperr);
+	public void setMissileCreator(final Function<Pair<Double,Double>,Missile> missile) {
+		this.createMissile = Optional.of(missile);
 	}
 	
 	public boolean isRunning() {

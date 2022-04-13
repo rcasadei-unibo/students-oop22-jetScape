@@ -1,13 +1,10 @@
 package game.logics.entities.obstacles;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.Pair;
-import game.utility.textures.DrawManager;
-import game.utility.textures.Drawer;
 
 /**
  * The class <code>ZapperBaseInstance</code> represents one part of the most common
@@ -44,24 +41,8 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 	 * Specifies the current rotation of the obstacle.
 	 */
 	private String rotation = "up";
-	/**
-	 * Manages the textures of the object.
-	 */
-	private Drawer textureMgr;
 	
 	private boolean paired = false;
-	
-	/**
-	 * Private constructor used for initializing basic entity
-	 * dependent parameters and its starting position.
-	 * 
-	 * @param l the logics handler which the entity is linked to
-	 * @param position the starting position of the obstacle in the environment
-	 */
-	ZapperBaseInstance(final Logics l, final Pair<Double,Double> position){
-		super(l, position);
-		entityTag = "zapperbase";
-	}
 	
 	/**
 	 * Constructor used for initializing basic parts of the obstacle
@@ -72,9 +53,8 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 	 * @param s the movement behavior the obstacle has to followed once loaded up
 	 */
 	public ZapperBaseInstance(final Logics l, final Pair<Double,Double> position, final SpeedHandler s) {
-		this(l, position);
-		
-		this.movement = s;
+		super(l, position, s);
+		entityTag = "zapperbase";
 	}
 	
 //	public ZapperBase getPaired() {
@@ -88,7 +68,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 			zap.setPaired(this);
 			
 			updateRotation();
-			textureMgr = new DrawManager(placeH);
+			textureMgr.setPlaceH(placeH);
 			textureMgr.addTexture("up", texturePath + "zapperbase_up.png");
 			textureMgr.addTexture("down", texturePath + "zapperbase_down.png");
 			textureMgr.addTexture("left", texturePath + "zapperbase_left.png");
@@ -167,20 +147,4 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 		}
 		
 	}
-	
-	public void update() {
-		super.update();
-		//updateRotation();
-		
-		if(position.getX() > -screen.getTileSize() * 2) {
-			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
-		} 
-	}
-	
-	public void draw(final Graphics2D g) {
-//		g.setColor(texture);
-		
-		textureMgr.drawTexture(g, position, screen.getTileSize());
-	}
-
 }

@@ -1,6 +1,5 @@
 package game.logics.entities.player;
 
-import java.awt.Graphics2D;
 import java.awt.Color;
 
 import game.frame.GameWindow;
@@ -8,8 +7,6 @@ import game.logics.entities.basic.EntityInstance;
 import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.Pair;
-import game.utility.textures.DrawManager;
-import game.utility.textures.Drawer;
 
 /**
  * The <code>PlayerInstance</code> class represents the player's entity in
@@ -52,10 +49,6 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 */
 	private double fallMultiplier = initialFallMultiplier;
 	
-	/**
-	 * Manages the textures of the object.
-	 */
-	private final Drawer textureMgr;
 	private final KeyHandler keyH;
 	
 	/**
@@ -85,7 +78,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		action = "idle";
 		entityTag = "player";
 		
-		textureMgr = new DrawManager(placeH);
+		textureMgr.setPlaceH(placeH);
 		textureMgr.addTexture("walk1", texturePath + "barrywalk1.png");
 		textureMgr.addTexture("walk2", texturePath + "barrywalk2.png");
 		textureMgr.addTexture("walk3", texturePath + "barrywalk3.png");
@@ -172,8 +165,4 @@ public class PlayerInstance extends EntityInstance implements Player{
 		}
 	}
 
-	@Override
-	public void draw(Graphics2D g) {
-		textureMgr.drawTexture(g, position, screen.getTileSize());
-	}
 }

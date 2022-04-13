@@ -1,12 +1,9 @@
 package game.logics.entities.obstacles;
 
-import java.awt.Graphics2D;
 import java.awt.Color;
 
 import game.logics.handler.Logics;
 import game.utility.other.Pair;
-import game.utility.textures.DrawManager;
-import game.utility.textures.Drawer;
 
 /**
  * The class <code>ZapperRayInstance</code> represents one part of the most common
@@ -48,10 +45,7 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 	 * Specifies the current rotation of the obstacle.
 	 */
 	private String rotation = "diagonal-left";
-	/**
-	 * Manages the textures of the object.
-	 */
-	private final Drawer textureMgr;
+
 	
 	/**
 	 * Constructor used for initializing basic parts of the obstacle.
@@ -63,16 +57,14 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 	 * @param e2 the second <code>ZapperBase</code> to pair
 	 */
 	public ZapperRayInstance(final Logics l, final Pair<Double,Double> p, final ZapperBase e1, final ZapperBase e2) {
-		super(l, p);
+		super(l, p, e1.getSpeedHandler());
 		entityTag = "zapperray";
 		
 		electrode1 = e1;
 		electrode2 = e2;	
 		
-		this.movement = e1.getSpeedHandler();
-		
 		updateRotation();
-		textureMgr = new DrawManager(placeH);
+		textureMgr.setPlaceH(placeH);
 		textureMgr.addTexture("vertical", texturePath + "zapperray_vert.png");
 		textureMgr.addTexture("horizontal", texturePath + "zapperray_horr.png");
 		textureMgr.setAnimator(() -> rotation);
@@ -92,26 +84,5 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 			rotation = "diagonal-left";
 		}
 	}
-	
-	@Override
-	public void update() {
-		super.update();
-//		updateRotation();
-		
-		if(position.getX() > -screen.getTileSize() * 2) {
-			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
-		}
-	}
 
-	@Override
-	public void draw(Graphics2D g) {
-		
-//		if(this.rotation == "vertical") {
-//			g.drawImage(textureVert, round(position.getX()), round(position.getY()), screen.getTileSize(), screen.getTileSize(), null);
-//		} else {
-//			g.drawImage(textureHorr, round(position.getX()), round(position.getY()), screen.getTileSize(), screen.getTileSize(), null);
-//		}
-		textureMgr.drawTexture(g, position, screen.getTileSize());
-	}
-	
 }

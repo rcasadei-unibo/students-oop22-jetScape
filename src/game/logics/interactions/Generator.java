@@ -3,6 +3,7 @@ package game.logics.interactions;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import game.logics.entities.obstacles.Missile;
 import game.logics.entities.obstacles.ZapperBase;
 import game.logics.entities.obstacles.ZapperRay;
 import game.utility.other.Pair;
@@ -21,6 +22,13 @@ import game.utility.other.Pair;
 public interface Generator extends Runnable{
 	
 	/**
+	 * Sets the function for creating <code>ZapperRay</code> objects.
+	 * 
+	 * @param zapperb a function for creating <code>ZapperRay</code>
+	 */
+	void setZapperRayCreator(BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay> zapperr);
+	
+	/**
 	 * Sets the function for creating <code>ZapperBase</code> objects.
 	 * 
 	 * @param zapperb a function for creating <code>ZapperBase</code>
@@ -28,11 +36,11 @@ public interface Generator extends Runnable{
 	void setZapperBaseCreator(Function<Pair<Double,Double>,ZapperBase> zapperb);
 	
 	/**
-	 * Sets the function for creating <code>ZapperRay</code> objects.
+	 * Sets the function for creating <code>Missile</code> objects.
 	 * 
-	 * @param zapperb a function for creating <code>ZapperRay</code>
+	 * @param missile a function for creating <code>Missile</code>
 	 */
-	void setZapperRayCreator(BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay> zapperr);
+	void setMissileCreator(Function<Pair<Double,Double>,Missile> missile);
 	
 	/**
 	 * @return <code>true</code> if the spawner is running, <code>false</code> if the spawner is not initiated or has ended his execution

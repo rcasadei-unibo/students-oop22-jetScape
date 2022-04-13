@@ -25,9 +25,9 @@ public class Texture {
 	/**
 	 * The type of file separator the system uses.
 	 */
-	public static final String separator = System.getProperty("file.separator");
+	private static final String separator = System.getProperty("file.separator");
 	/**
-	 * Default directory where are all texture are located.
+	 * Default directory where are all textures are located.
 	 */
 	public static final String defaultDir = System.getProperty("user.dir") + separator + "res" + separator + "game" + separator + "textures" + separator;
 	

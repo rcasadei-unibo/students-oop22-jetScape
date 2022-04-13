@@ -38,16 +38,18 @@ public class DrawManager implements Drawer{
 	 * A key for the <code>textures</code> map that decides 
 	 * which texture needs to be drawn at the moment.
 	 */
-	private String textureToDraw = "placeholder";
+	private String textureToDraw = placeHKey;
 	
 	/**
 	 * Constructor that sets up the <code>DrawManager</code>.
 	 * 
 	 * @param placeHolder the color of the place holder rectangle
 	 */
-	public DrawManager(final Color placeHolder) {
+	public DrawManager() {}
+	
+	public void setPlaceH(final Color placeHolder) {
 		this.defaultColor = placeHolder;
-		textures.put("placeholder", new Texture("placeholder", defaultColor));
+		textures.put(placeHKey, new Texture(placeHKey, defaultColor));
 	}
 	
 	public void setAnimator(final Supplier<String> animator) {
@@ -66,8 +68,8 @@ public class DrawManager implements Drawer{
 		animator.ifPresent(a -> textureToDraw = a.get());
 		if(textures.containsKey(textureToDraw)) {
 			textures.get(textureToDraw).draw(g, pos, size);
-		} else {
-			textures.get("placeholder").draw(g, pos, size);
+		} else if(textures.containsKey(placeHKey)){
+			textures.get(placeHKey).draw(g, pos, size);
 		}
 	}
 }

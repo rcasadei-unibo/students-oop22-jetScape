@@ -1,11 +1,14 @@
 package game.logics.interactions;
 
+import game.frame.GameWindow;
+
 public class SpeedHandler {
 	
 	public static final double baseXSpeed = 250;
 	public static final double baseXSpeedIncDiff = 10;
 	public static final double baseXAcceleration = 0;
 	
+	private double xStartSpeed = 0;
 	private double xSpeed = 0;
 	private double xSpeedIncDifficulty = 0;
 	private double xAcceleration = 0;
@@ -15,6 +18,7 @@ public class SpeedHandler {
 	}
 	
 	public SpeedHandler(final double xSpeed, final double xSpeedIncDifficulty, final double xAcceleration) {
+		this.xStartSpeed = xSpeed;
 		this.xSpeed = xSpeed;
 		this.xSpeedIncDifficulty = xSpeedIncDifficulty;
 		this.xAcceleration = xAcceleration;
@@ -48,5 +52,13 @@ public class SpeedHandler {
 	
 	public double getXAcceleration() {
 		return xAcceleration;
+	}
+	
+	public void applyAcceleration() {
+		xSpeed += xAcceleration / GameWindow.fpsLimit;
+	}
+	
+	public void resetSpeed() {
+		xSpeed = xStartSpeed;
 	}
 }

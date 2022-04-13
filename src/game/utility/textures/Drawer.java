@@ -1,6 +1,7 @@
 package game.utility.textures;
 
 import java.awt.Graphics2D;
+import java.awt.Color;
 import java.util.function.Supplier;
 
 import game.utility.other.Pair;
@@ -17,6 +18,15 @@ import game.utility.other.Pair;
  * @author Daniel Pellanda
  */
 public interface Drawer {
+	
+	static final String placeHKey = "placeholder";
+	
+	/**
+	 * Sets the color of the rectangle to draw if textures are missing.
+	 * 
+	 * @param placeH the color for the placeholder
+	 */
+	void setPlaceH(final Color placeH);
 	
 	/**
 	 * Sets up the <code>animator</code> that decides what texture to draw

@@ -14,6 +14,8 @@ import game.logics.entities.basic.*;
 import game.logics.entities.obstacles.Obstacle;
 import game.logics.entities.obstacles.ZapperBaseInstance;
 import game.logics.entities.obstacles.ZapperRayInstance;
+import game.logics.entities.obstacles.MissileInstance;
+import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
 import game.logics.interactions.Generator;
 import game.logics.interactions.SpeedHandler;
@@ -42,6 +44,8 @@ public class LogicsHandler implements Logics{
 	private final Screen screen;
 	private final KeyHandler keyH;
 	
+	private final Player playerEntity;
+	
 	/**
 	 * Keeps the game timer.
 	 */
@@ -50,7 +54,7 @@ public class LogicsHandler implements Logics{
 	 * Defines how many seconds have to pass for the spawner to generate
 	 * another set of obstacles.
 	 */
-	private int spawnInterval = 3;
+	private int spawnInterval = 2;
 	/**
 	 * Defines the interval of each check for entities to clean.
 	 */
@@ -73,11 +77,14 @@ public class LogicsHandler implements Logics{
 		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
+		entities.put("missiles", new HashSet<>());
 		
-		entities.get("player").add(new PlayerInstance(this));
+		playerEntity = new PlayerInstance(this);
+		entities.get("player").add(playerEntity);
 		
-		spawner = new TileGenerator(entities, spawnInterval);
-		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler()));
+		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
+		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 0, 5000.0)));
+		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 0, 0)));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
 		spawner.initialize();
@@ -142,7 +149,17 @@ public class LogicsHandler implements Logics{
 		entities.get("zappers").removeIf(e -> {
 			Obstacle o = (Obstacle)e;
 			if(o.isOnClearArea()) {
-				o.resetPosition();
+				o.reset();
+				if(debugger.isFeatureEnabled("log: entities cleaner working")) {
+					System.out.println("reset");
+				}
+			}
+			return o.isOnClearArea();
+		});
+		entities.get("missiles").removeIf(e -> {
+			Obstacle o = (Obstacle)e;
+			if(o.isOnClearArea()) {
+				o.reset();
 				if(debugger.isFeatureEnabled("log: entities cleaner working")) {
 					System.out.println("reset");
 				}
