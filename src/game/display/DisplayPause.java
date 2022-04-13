@@ -2,17 +2,28 @@ package game.display;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Color;
 
+import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
 public class DisplayPause implements Display {
-	static final int msg1Tile = 2;
-	static final int msg2Tile = 7;
-	static final int msg1Shift = 5;
-	static final int msg2Shift = 3;
-	static final Font font = new Font("Stencil",Font.PLAIN,80);
+	static final int titleTile = 2;
+	static final int textTile = 6;
+	static final int titleShift = 5;
+	static final int textShift = 2;
+	static final Font font = new Font("Stencil", Font.PLAIN, 112);
+	static final Font fontText = new Font("calibri", Font.PLAIN, 48);
+	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
+	
+	private final List<Pair<Integer,String>> text = new ArrayList<>();
 	private final Screen gScreen;
+	
+	private int cursorIndex = 0;
+	private int x = 0;
+	private String title = "Paused";
 
 	public DisplayPause(Screen gScreen) {
 		super();
@@ -21,32 +32,62 @@ public class DisplayPause implements Display {
 
 	@Override
 	public void drawScreen(Graphics2D g) {
-		int x = 0;
-		String msg1 = "PAUSED";
-		String msg2 = "Press \"r\" to resume , \"e\" return to menu";
-		
-		//MESSAGE 1 SHADOW
-		g.setColor(Color.black);
+		//TITLE SHADOW
+		g.setColor(Color.darkGray);
 		g.setFont(font);
-		x = this.getCenteredX(gScreen, g, msg1);
-		g.drawString(msg1, x + msg1Shift, gScreen.getTileSize() * msg1Tile);
-		//MESSAGE 1
-		g.setColor(Color.lightGray);
-		g.drawString(msg1, x , gScreen.getTileSize() * msg1Tile);
-		//MESSAGE 2 SHADOW
-		g.setColor(Color.black);
-		g.setFont(g.getFont().deriveFont(Font.ITALIC, 32F));
-		x = this.getCenteredX(gScreen, g, msg2);
-		g.drawString(msg2, x + msg2Shift, gScreen.getTileSize() * msg2Tile);
-		//MESSAGE 2
-		g.setColor(Color.lightGray);
-		g.drawString(msg2, x, gScreen.getTileSize() * msg2Tile);
+		x = this.getCenteredX(gScreen, g, title);
+		g.drawString(title, x + titleShift, gScreen.getTileSize() * titleTile);
+		//TITLE
+		g.setColor(Color.white);
+		g.drawString(title, x, gScreen.getTileSize() * titleTile);
+		//CREATE TEXT LIST
+		g.setFont(DisplayMainMenu.fontText);
+		this.buildText(g);
+		//MESSAGE SHADOW
+		g.setColor(Color.darkGray);
+		this.drawShadow(g);
+		//MESSAGE
+		g.setColor(Color.white);
+		this.drawText(g);
+		//SELECTED TEXT SHADOW
+		g.setColor(Color.darkGray);
+		g.setFont(DisplayMainMenu.selectedTextFont);
+		String selected = "> "+ this.text.get(cursorIndex).getY() +" <";
+		x = this.getCenteredX(gScreen, g, selected);
+		g.drawString(selected, x + textShift, gScreen.getTileSize() *(textTile + this.cursorIndex));
+		// SELECTED TEXT 
+		g.setColor(Color.white);
+		g.drawString(selected, x, gScreen.getTileSize() *(textTile + this.cursorIndex));
 	}
-
-	@Override
+	
+	private void buildText(Graphics2D g) {
+		if(text.isEmpty()) {
+			text.add(new Pair<>(this.getCenteredX(gScreen, g, "Resume"),"Resume"));
+			text.add(new Pair<>(this.getCenteredX(gScreen, g, "Back to Menu"),"Back to Menu"));
+		}
+	}
+	
+	private void drawText(Graphics2D g) {
+		int i = 0;
+		for(Pair<Integer,String> e : this.text) {
+			if(i != this.cursorIndex) {
+				g.drawString(e.getY(), e.getX(), gScreen.getTileSize() * (DisplayMainMenu.textTile + i));
+			}
+			i++;
+		}
+	}
+	
+	private void drawShadow(Graphics2D g) {
+		int i = 0;
+		for(Pair<Integer,String> e : this.text) {
+			if(i != this.cursorIndex) {
+				g.drawString(e.getY(), e.getX() + textShift, gScreen.getTileSize() * (textTile + i));
+			}
+			i++;
+		}
+	}
+	
 	public void setCursorIndex(int index) {
-		// TODO Auto-generated method stub
-		
+		this.cursorIndex = index;
 	}
-
 }
