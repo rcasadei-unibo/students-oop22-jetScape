@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.awt.Graphics2D;
 
 import java.lang.Runnable;
@@ -192,9 +191,9 @@ public class LogicsHandler implements Logics{
 			synchronized(entities) {
 				entities.forEach((s, se) -> se.forEach(e -> e.update()));
 			}
-			incScore();
 			this.displayController.updateHUD(this.score);
 		}
+		updateScore();
 		this.displayController.updateScreen();
 		checkDebugMode();
 		checkSpawner();
@@ -260,8 +259,12 @@ public class LogicsHandler implements Logics{
 		this.gState = gs;
 	}
 	
-	private void incScore() {
-		this.score ++;
+	private void updateScore() {
+		if(this.gState == GameState.MENU) {
+			this.score = 0;
+		} else if (this.gState != GameState.PAUSED) {
+			this.score ++;
+		}
 	}
 	
 }
