@@ -38,7 +38,7 @@ public class MenuHandler implements DisplayHandler {
 	
 	public void draw(Graphics2D g) {
 		this.menu.setCursorIndex(cursor);
-		this.menu.drawScreen(g);
+		this.menu.drawScreen(g, this.options);
 	}
 	
 	private void goUp () {

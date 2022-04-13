@@ -48,7 +48,7 @@ public class DisplayController {
 			menuH.draw(g);
 			break;
 		case INGAME :
-			hud.drawScreen(g);
+			hud.drawScreen(g, List.of());
 			break;
 		case PAUSED :
 			pauseH.draw(g);

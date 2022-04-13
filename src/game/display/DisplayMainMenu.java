@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import game.utility.other.GameState;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
@@ -31,7 +32,7 @@ public class DisplayMainMenu implements Display {
 	}
 
 	@Override
-	public void drawScreen(Graphics2D g) {
+	public void drawScreen(Graphics2D g, List<Pair<String,GameState>> options) {
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
 		g.setFont(font);
@@ -42,7 +43,7 @@ public class DisplayMainMenu implements Display {
 		g.drawString(title, x, gScreen.getTileSize() * titleTile);
 		//CREATE TEXT LIST
 		g.setFont(DisplayMainMenu.fontText);
-		this.buildText(g);
+		this.buildText(g, options);
 		//MESSAGE SHADOW
 		g.setColor(Color.darkGray);
 		this.drawShadow(g);
@@ -60,11 +61,10 @@ public class DisplayMainMenu implements Display {
 		g.drawString(selected, x, gScreen.getTileSize() *(textTile + this.cursorIndex));
 	}
 	
-	private void buildText(Graphics2D g) {
+	private void buildText(Graphics2D g , List<Pair<String,GameState>> options) {
 		if(text.isEmpty()) {
-			text.add(new Pair<>(this.getCenteredX(gScreen, g, "Start"),"Start"));
-			text.add(new Pair<>(this.getCenteredX(gScreen, g, "Shop"),"Shop"));
-			text.add(new Pair<>(this.getCenteredX(gScreen, g, "Quit"),"Quit"));
+			options.forEach( x -> text
+					.add(new Pair<>(this.getCenteredX(gScreen, g, x.getX()), x.getX())));
 		}
 	}
 	
