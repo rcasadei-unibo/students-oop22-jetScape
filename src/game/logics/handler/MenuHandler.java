@@ -5,26 +5,24 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 import game.display.Display;
-import game.display.DisplayMainMenu;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.Pair;
-import game.utility.screen.Screen;
 
 public class MenuHandler implements DisplayHandler {
-	static final GameState currentGS = GameState.MENU;
 	private final Display menu ;
 	private final List<Pair<String,GameState>> options;
 	private final KeyHandler keyH;
 	private int cursor = 0;
-	
-	public MenuHandler(KeyHandler keyH, Screen gScreen) {
+	private final GameState currentGameState;
+
+	public MenuHandler(Display menu, List<Pair<String, GameState>> options, KeyHandler keyH,
+			GameState currentGameState) {
 		super();
-		this.options = List.of(new Pair<>("Start",GameState.INGAME),
-				new Pair<>("Shop",GameState.MENU),
-				new Pair<>("Exit",GameState.EXIT));
+		this.menu = menu;
+		this.options = options;
 		this.keyH = keyH;
-		this.menu = new DisplayMainMenu(gScreen);
+		this.currentGameState = currentGameState;
 	}
 
 	public GameState handle () {
@@ -32,10 +30,10 @@ public class MenuHandler implements DisplayHandler {
 			this.goUp();
 		} else if (this.keyH.isKeyTyped(KeyEvent.VK_DOWN)) {
 			this.goDown();
-		} else if (this.keyH.input.get("enter")) {
+		} else if (this.keyH.isKeyTyped(KeyEvent.VK_ENTER)) {
 			return this.options.get(this.cursor).getY();
 		}
-		return currentGS;
+		return currentGameState;
 	}
 	
 	public void draw(Graphics2D g) {
