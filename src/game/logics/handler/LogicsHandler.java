@@ -74,7 +74,7 @@ public class LogicsHandler implements Logics{
 		this.gScreen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
-		this.displayController = new DisplayController(keyH,screen, g -> this.gState = g, () -> gState);
+		this.displayController = new DisplayController(keyH,screen, g -> setGameState(g), () -> gState);
 		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
@@ -195,9 +195,9 @@ public class LogicsHandler implements Logics{
 		}
 		updateScore();
 		this.displayController.updateScreen();
+		checkPause();
 		checkDebugMode();
 		checkSpawner();
-		updateGameState();
 	}
 	
 	public void drawAll(final Graphics2D g) {
@@ -208,38 +208,41 @@ public class LogicsHandler implements Logics{
 		}
 		this.displayController.drawScreen(g);
 	}
+	
+	private void setGameState(GameState gs) {
+		if(this.gState != gs) {
+			updateSpawnerState(gs);
+			this.gState = gs;
+		}
+	}
+	
+	private void updateScore() {
+		if(this.gState == GameState.MENU) {
+			this.score = 0;
+		} else if (this.gState != GameState.PAUSED) {
+			this.score ++;
+		}
+	}
+	
 
-	private void updateGameState() {
-		switch (this.gState) {
+	private void updateSpawnerState(GameState newGS) {
+		switch (newGS) {
 		case EXIT:
-			System.exit(0);
-			// TODO FIX BRUTAL EXIT
+			System.exit(0); // TODO FIX BRUTAL EXIT
 			break;
 		case MENU:
-			this.spawner.pause();
+			this.endGame();
 			break;
 		case INGAME:
-			this.spawner.resume();
-			if(updateEachInterval(this.cleanInterval * 1000000000, updateTimer, () -> cleanEntities())) {
-				updateTimer = System.nanoTime();
-				if(debugger.isFeatureEnabled("log: entities cleaner check")) {
-					System.out.println("clean");
-				}
-			}
-			if(keyH.input.get("p") && this.isInGame()) {
-				setGameState(GameState.PAUSED);
+			if (this.isInMenu()) {
+				this.beginGame();
+			} else {
+				this.resumeGame();
 			}
 			break;
 		case PAUSED:
-			this.spawner.pause();
-			if (keyH.input.get("r")) {
-				setGameState(GameState.INGAME);
-				this.resumeGame();
-			} else if(keyH.input.get("e")) {
-				setGameState(GameState.MENU);
-				this.score = 0;
-				this.endGame();
-			}
+			this.pauseGame();
+			break;
 		}
 	}
 	
@@ -255,15 +258,9 @@ public class LogicsHandler implements Logics{
 		return this.gState == GameState.MENU;
 	}
 	
-	private void setGameState(GameState gs) {
-		this.gState = gs;
-	}
-	
-	private void updateScore() {
-		if(this.gState == GameState.MENU) {
-			this.score = 0;
-		} else if (this.gState != GameState.PAUSED) {
-			this.score ++;
+	private void checkPause() {
+		if(keyH.input.get("p")) {
+			setGameState(GameState.PAUSED);
 		}
 	}
 	
