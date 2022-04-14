@@ -1,12 +1,11 @@
 package game.logics.handler;
 
-import java.awt.Graphics2D;
-
 import game.utility.other.GameState;
+import game.utility.other.Pair;
 
 public interface DisplayHandler {
 	
 	public GameState handle() ;
 	
-	public void draw(Graphics2D g);
+	public Pair<String,Integer> getSelectedOption();
 }

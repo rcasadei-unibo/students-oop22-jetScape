@@ -1,25 +1,22 @@
 package game.logics.handler;
 
-import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.util.List;
+import java.util.Map;
 
-import game.display.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.Pair;
 
 public class MenuHandler implements DisplayHandler {
-	private final Display menu ;
-	private final List<Pair<String,GameState>> options;
+	private final Map <String,GameState> options;
 	private final KeyHandler keyH;
-	private int cursor = 0;
 	private final GameState currentGameState;
+	private int cursor = 0;
+	private Pair<String,Integer> selectedOption;
 
-	public MenuHandler(Display menu, List<Pair<String, GameState>> options, KeyHandler keyH,
+	public MenuHandler(Map <String, GameState> options, KeyHandler keyH,
 			GameState currentGameState) {
 		super();
-		this.menu = menu;
 		this.options = options;
 		this.keyH = keyH;
 		this.currentGameState = currentGameState;
@@ -31,14 +28,14 @@ public class MenuHandler implements DisplayHandler {
 		} else if (this.keyH.isKeyTyped(KeyEvent.VK_DOWN)) {
 			this.goDown();
 		} else if (this.keyH.isKeyTyped(KeyEvent.VK_ENTER)) {
-			return this.options.get(this.cursor).getY();
+			return this.options.get(this.getSelectedOption().getX());
 		}
 		return currentGameState;
 	}
 	
-	public void draw(Graphics2D g) {
-		this.menu.setCursorIndex(cursor);
-		this.menu.drawScreen(g, this.options);
+	public Pair<String,Integer> getSelectedOption() {
+		this.updateSelectedOption();
+		return this.selectedOption;
 	}
 	
 	private void goUp () {
@@ -54,5 +51,16 @@ public class MenuHandler implements DisplayHandler {
 			this.cursor = 0;
 		}
 	}
+    
+    private void updateSelectedOption() {
+    	int i = 0;
+		for (String s : this.options.keySet()) {
+			if(i == cursor) {
+				this.selectedOption = new Pair<>(s,cursor);
+				break;
+			}
+			i++;
+		}
+    }
 
 }

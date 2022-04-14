@@ -74,7 +74,8 @@ public class LogicsHandler implements Logics{
 		this.gScreen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
-		this.displayController = new DisplayController(keyH,screen, g -> setGameState(g), () -> gState);
+		this.displayController = new DisplayController(keyH,screen, g -> setGameState(g),
+				() -> gState, () -> score);
 		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
@@ -191,7 +192,6 @@ public class LogicsHandler implements Logics{
 			synchronized(entities) {
 				entities.forEach((s, se) -> se.forEach(e -> e.update()));
 			}
-			this.displayController.updateHUD(this.score);
 			checkPause();
 		}
 		updateScore();
@@ -217,9 +217,9 @@ public class LogicsHandler implements Logics{
 	}
 	
 	private void updateScore() {
-		if(this.gState == GameState.MENU) {
+		if(isInMenu()) {
 			this.score = 0;
-		} else if (this.gState != GameState.PAUSED) {
+		} else if (isInGame()) {
 			this.score ++;
 		}
 	}

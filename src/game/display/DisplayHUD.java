@@ -3,10 +3,9 @@ package game.display;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.util.List;
+import java.util.Optional;
 
-import game.utility.other.GameState;
-import game.utility.other.Pair;
+import game.logics.handler.DisplayHandler;
 import game.utility.screen.Screen;
 
 public class DisplayHUD implements Display {
@@ -22,7 +21,7 @@ public class DisplayHUD implements Display {
 	}
 
 	@Override
-	public void drawScreen(Graphics2D g, List<Pair<String,GameState>> options) {
+	public void drawScreen(Graphics2D g) {
 		int x = 0;
 		String score = "SCORE: ";
 		//SCORE SHADOW
@@ -40,8 +39,8 @@ public class DisplayHUD implements Display {
 	}
 
 	@Override
-	public void setCursorIndex(int index) {
-		// TODO Auto-generated method stub
+	public Optional<DisplayHandler> getHandler() {
+		return Optional.empty();
 	}
 
 }
