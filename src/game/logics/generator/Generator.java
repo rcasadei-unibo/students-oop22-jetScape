@@ -1,11 +1,11 @@
-package game.logics.interactions;
+package game.logics.generator;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import game.logics.entities.obstacles.Missile;
-import game.logics.entities.obstacles.ZapperBase;
-import game.logics.entities.obstacles.ZapperRay;
+import game.logics.entities.obstacles.missile.Missile;
+import game.logics.entities.obstacles.zapper.ZapperBase;
+import game.logics.entities.obstacles.zapper.ZapperRay;
 import game.utility.other.Pair;
 
 /**
@@ -41,6 +41,11 @@ public interface Generator extends Runnable{
 	 * @param missile a function for creating <code>Missile</code>
 	 */
 	void setMissileCreator(Function<Pair<Double,Double>,Missile> missile);
+	
+	/**
+	 * Removes all entities that are on the "clear area" [x < -tile size].
+	 */
+	void cleanTiles();
 	
 	/**
 	 * @return <code>true</code> if the spawner is running, <code>false</code> if the spawner is not initiated or has ended his execution

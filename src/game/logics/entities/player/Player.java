@@ -1,6 +1,6 @@
 package game.logics.entities.player;
 
-import game.logics.entities.basic.Entity;
+import game.logics.entities.generic.Entity;
 
 /**
  * The <code>Player</code> interface can be used for accessing <code>PlayerInstance</code> methods.

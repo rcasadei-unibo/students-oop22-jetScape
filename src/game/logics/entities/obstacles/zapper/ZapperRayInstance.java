@@ -1,7 +1,8 @@
-package game.logics.entities.obstacles;
+package game.logics.entities.obstacles.zapper;
 
 import java.awt.Color;
 
+import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.handler.Logics;
 import game.utility.other.Pair;
 

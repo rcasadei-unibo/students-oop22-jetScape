@@ -1,4 +1,6 @@
-package game.logics.entities.obstacles;
+package game.logics.entities.obstacles.zapper;
+
+import game.logics.entities.obstacles.generic.Obstacle;
 
 /**
  * The <code>ZapperBase</code> interface is used for accessing <code>ZapperBaseInstance</code> methods.
@@ -24,14 +26,4 @@ public interface ZapperBase extends Obstacle{
 	 * @param zap the <code>ZapperBaseInstance</code> to pair with this object
 	 */
 	void setPaired(final ZapperBase zap);
-	
-	//void setRotation(final String rotation);
-	
-//	/**
-//	 * Gets the <code>ZapperBaseInstance</code> of which this object is
-//	 * paired with.
-//	 * 
-//	 * @return the paired <code>ZapperBaseInstance</code>
-//	 */
-//	ZapperBase getPaired();
 }

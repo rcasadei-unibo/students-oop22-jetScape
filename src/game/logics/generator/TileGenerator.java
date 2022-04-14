@@ -1,4 +1,4 @@
-package game.logics.interactions;
+package game.logics.generator;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,10 +17,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import game.logics.entities.basic.Entity;
-import game.logics.entities.obstacles.Missile;
-import game.logics.entities.obstacles.ZapperBase;
-import game.logics.entities.obstacles.ZapperRay;
+import game.logics.entities.generic.Entity;
+import game.logics.entities.obstacles.generic.Obstacle;
+import game.logics.entities.obstacles.missile.Missile;
+import game.logics.entities.obstacles.zapper.ZapperBase;
+import game.logics.entities.obstacles.zapper.ZapperRay;
 import game.utility.other.Pair;
 
 /**
@@ -39,9 +40,9 @@ public class TileGenerator implements Generator{
 	 */
 	private static final String separator = System.getProperty("file.separator");
 	/**
-	 * Default directory where are all tiles are located.
+	 * Default directory where all tiles information file is located.
 	 */
-	public static final String defaultDir = System.getProperty("user.dir") + separator + "res" + separator + "game"+ separator + "utility" + separator + "generator" + separator + "tiles.json";
+	public static final String defaultDir = System.getProperty("user.dir") + separator + "res" + separator + "game"+ separator + "generator" + separator + "tiles.json";
 	
 	/**
 	 * A function used by the generator for creating <code>ZapperRay</code> object.
@@ -162,6 +163,23 @@ public class TileGenerator implements Generator{
 		} catch(ParseException pe) {
 			pe.printStackTrace();
 		}
+	}
+	
+	public void cleanTiles() {
+		entities.get("zappers").removeIf(e -> {
+			Obstacle o = (Obstacle)e;
+			if(o.isOnClearArea()) {
+				o.reset();
+			}
+			return o.isOnClearArea();
+		});
+		entities.get("missiles").removeIf(e -> {
+			Obstacle o = (Obstacle)e;
+			if(o.isOnClearArea()) {
+				o.reset();
+			}
+			return o.isOnClearArea();
+		});
 	}
 	
 	private void spawnTile() {

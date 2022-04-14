@@ -1,6 +1,6 @@
-package game.logics.entities.obstacles;
+package game.logics.entities.obstacles.generic;
 
-import game.logics.entities.basic.Entity;
+import game.logics.entities.generic.Entity;
 import game.logics.interactions.SpeedHandler;
 
 /**
@@ -13,12 +13,19 @@ import game.logics.interactions.SpeedHandler;
  * @author Daniel Pellanda
  */
 public abstract interface Obstacle extends Entity{
-	/**
-	 * @return <code>true</code> if the obstacle's position is on the "clear area", <code>false</code> if not
-	 */
-	boolean isOnClearArea();
+
 	/**
 	 * @return the movement information of the obstacle
 	 */
 	SpeedHandler getSpeedHandler();
+	
+	/**
+	 * @return <code>true</code> if the obstacle's position is on the "clear area", <code>false</code> if not
+	 */
+	boolean isOnClearArea();
+	
+	/**
+	 * @return <code>true</code> if the obstacle's position is on the "spawn area", <code>false</code> if not
+	 */
+	boolean isOnSpawnArea();
 }

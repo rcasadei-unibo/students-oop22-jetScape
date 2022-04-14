@@ -1,7 +1,8 @@
-package game.logics.entities.obstacles;
+package game.logics.entities.obstacles.zapper;
 
 import java.awt.Color;
 
+import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.Pair;
@@ -56,10 +57,6 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 		super(l, position, s);
 		entityTag = "zapperbase";
 	}
-	
-//	public ZapperBase getPaired() {
-//		return this.pairedBase;
-//	}
 	
 	public void setPaired(final ZapperBase zap) {
 		if(!this.paired) {

@@ -1,4 +1,6 @@
-package game.logics.entities.obstacles;
+package game.logics.entities.obstacles.zapper;
+
+import game.logics.entities.obstacles.generic.Obstacle;
 
 /**
  * The <code>ZapperRay</code> interface is used for accessing <code>ZapperRayInstance</code> methods.

@@ -10,16 +10,16 @@ import java.awt.Graphics2D;
 
 import java.lang.Runnable;
 
-import game.logics.entities.basic.*;
-import game.logics.entities.obstacles.Obstacle;
-import game.logics.entities.obstacles.ZapperBaseInstance;
-import game.logics.entities.obstacles.ZapperRayInstance;
-import game.logics.entities.obstacles.MissileInstance;
+import game.frame.GameWindow;
+import game.logics.entities.generic.*;
+import game.logics.entities.obstacles.missile.MissileInstance;
+import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
+import game.logics.entities.obstacles.zapper.ZapperRayInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
-import game.logics.interactions.Generator;
+import game.logics.generator.Generator;
+import game.logics.generator.TileGenerator;
 import game.logics.interactions.SpeedHandler;
-import game.logics.interactions.TileGenerator;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
@@ -44,6 +44,9 @@ public class LogicsHandler implements Logics{
 	private final Screen screen;
 	private final KeyHandler keyH;
 	
+	/**
+	 * A reference to the player's entity.
+	 */
 	private final Player playerEntity;
 	
 	/**
@@ -88,7 +91,6 @@ public class LogicsHandler implements Logics{
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
 		spawner.initialize();
-		spawner.pause();
 	}
 
 /*
@@ -143,32 +145,6 @@ public class LogicsHandler implements Logics{
 	}
 	
 	/**
-	 * Removes all entities that are on the "clear area" [x < -tile size].
-	 */
-	private void cleanEntities() {
-		entities.get("zappers").removeIf(e -> {
-			Obstacle o = (Obstacle)e;
-			if(o.isOnClearArea()) {
-				o.reset();
-				if(debugger.isFeatureEnabled("log: entities cleaner working")) {
-					System.out.println("reset");
-				}
-			}
-			return o.isOnClearArea();
-		});
-		entities.get("missiles").removeIf(e -> {
-			Obstacle o = (Obstacle)e;
-			if(o.isOnClearArea()) {
-				o.reset();
-				if(debugger.isFeatureEnabled("log: entities cleaner working")) {
-					System.out.println("reset");
-				}
-			}
-			return o.isOnClearArea();
-		});
-	}
-	
-	/**
 	 * Utility function for running a certain block of code every given interval of time.
 	 * 
 	 * @param interval the interval in nanoseconds that has to pass after each execution
@@ -185,6 +161,34 @@ public class LogicsHandler implements Logics{
 		return false;
 	}
 	
+	/**
+	 * Removes all entities that are on the "clear area" [x < -tile size].
+	 */
+	private void cleaner() {
+		if(updateEachInterval(cleanInterval * GameWindow.nanoSecond, updateTimer, () -> spawner.cleanTiles())) {
+			updateTimer = System.nanoTime();
+			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
+				System.out.println("clean");
+			}
+		}
+	}
+	
+	/**
+	 * Draws the coordinates of each visible entity.
+	 * 
+	 * @param g the graphics drawer
+	 */
+	private void drawCoordinates(final Graphics2D g) {
+		if(debugger.isFeatureEnabled("entity coordinates")) {
+			entities.forEach((s, se) -> se.stream().filter(e -> e.isVisible()).collect(Collectors.toSet()).forEach(e -> {
+				g.setColor(Color.white);
+				g.setFont(Debugger.debugFont);
+				g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
+				g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
+			}));
+		}
+	}
+	
 	public Screen getScreenInfo() {
 		return screen;
 	}
@@ -198,15 +202,10 @@ public class LogicsHandler implements Logics{
 	}
 	
 	public void updateAll() {
-		if(updateEachInterval(cleanInterval * 1000000000, updateTimer, () -> cleanEntities())) {
-			updateTimer = System.nanoTime();
-			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
-				System.out.println("clean");
-			}
-		}
-		checkDebugMode();
-		checkSpawner();
+		this.checkDebugMode();
+		this.checkSpawner();
 		
+		this.cleaner();
 		synchronized(entities) {
 			entities.forEach((s, se) -> se.forEach(e -> e.update()));
 		}
@@ -215,14 +214,7 @@ public class LogicsHandler implements Logics{
 	public void drawAll(final Graphics2D g) {
 		synchronized(entities) {
 			entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
-			if(debugger.isFeatureEnabled("entity coordinates")) {
-				entities.forEach((s, se) -> se.stream().filter(e -> e.isVisible()).collect(Collectors.toSet()).forEach(e -> {
-					g.setColor(Color.white);
-					g.setFont(Debugger.debugFont);
-					g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
-					g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
-				}));
-			}
+			this.drawCoordinates(g);
 		}
 	}
 }

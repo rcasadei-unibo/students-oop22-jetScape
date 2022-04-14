@@ -1,9 +1,10 @@
-package game.logics.entities.obstacles;
+package game.logics.entities.obstacles.missile;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
 import game.frame.GameWindow;
+import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.entities.player.Player;
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
@@ -24,17 +25,40 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 	
 	private enum Direction { UP, DOWN };
 	
+	/**
+	 * The horizontal position of the missile warning.
+	 */
 	private final double warnDefaultX = screen.getWidth() - screen.getTileSize() * 1.5;
-	private final int warnFlickering = 10;
+	/**
+	 * The position of the missile warning is drawn.
+	 */
+	private Pair<Double,Double> warnPosition;
+	
+	/**
+	 * The position when the warning should start flickering.
+	 */
+	private final double warnFlickRange = screen.getWidth() + screen.getTileSize() * 4;
+	/**
+	 * The flickering speed of the missile warning when a missile is about to appear.
+	 */
+	private final int warnFlickSpeed = 10;
+	/**
+	 * How many frames have passed since between a second and another.
+	 */
 	private int frameTime = 0;
 	
+	/**
+	 * A reference to the player's position.
+	 */
 	private final Pair<Double,Double> playerPosition;
-	private Pair<Double,Double> warnPosition;
 	
 	private final double yStartSpeed = yDefaultSpeed;
 	private double ySpeed = yStartSpeed;
 	private double yAcceleration = yDefaultAcceleration;
 	
+	/**
+	 * The direction the missile was moving.
+	 */
 	private Direction lastDir = Direction.UP;
 	
 	public MissileInstance(final Logics l, final Pair<Double,Double> pos, final Player player, final SpeedHandler speed) {
@@ -61,16 +85,18 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		}
 	}
 	
+	@Override
 	public void reset() {
 		super.reset();
 		ySpeed = yStartSpeed;
 	}
 	
+	@Override
 	public void update() {
 		super.update();
 		updateFrameTime();
 		
-		if(!this.isOnScreenBounds()) {
+		if(this.isOnSpawnArea()) {
 			if(position.getY() > playerPosition.getY()) {
 				if(lastDir != Direction.UP) {
 					ySpeed = yStartSpeed;
@@ -90,10 +116,11 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		warnPosition.setY(position.getY());
 	}
 	
+	@Override
 	public void draw(final Graphics2D g) {
 		super.draw(g);
 		if(position.getX() > screen.getWidth()) {
-			if(position.getX() > screen.getWidth() + screen.getTileSize() * 4 || frameTime % warnFlickering < warnFlickering / 2) {
+			if(position.getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
 				textureMgr.drawTexture(g, warnPosition, screen.getTileSize());
 			}
 		}

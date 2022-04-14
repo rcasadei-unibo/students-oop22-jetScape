@@ -32,6 +32,9 @@ public class GameWindow extends JPanel implements Runnable{
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final long nanoSecond = 1000000000;
+	public static final long milliSecond = 1000000;
+	
 	/**
 	 * Defines the cap for the "Frames Per Second". 
 	 * 
@@ -137,7 +140,7 @@ public class GameWindow extends JPanel implements Runnable{
 	@Override
 	public void run() {
 		// Defines how many nanoseconds have to pass until the next execution loop
-		double drawInterval = 1000000000 / fpsLimit;
+		double drawInterval = nanoSecond / fpsLimit;
 		// System time after interval has passed
 		double nextDraw = System.nanoTime() + drawInterval;
 		// Nanoseconds passed from the current loop
@@ -151,7 +154,7 @@ public class GameWindow extends JPanel implements Runnable{
 			long timer = System.nanoTime();
 			
 			// Updates FPS meter each second passed
-			if(drawTime > 1000000000) {
+			if(drawTime > nanoSecond) {
 				fps = fpsCount;
 				drawTime = 0;
 				fpsCount = 0;
@@ -170,7 +173,7 @@ public class GameWindow extends JPanel implements Runnable{
 			try {
 				// Thread sleeps until it's next loop time
 				double sleepTime = nextDraw - System.nanoTime();
-				sleepTime = sleepTime < 0 ? 0 : sleepTime / 1000000;
+				sleepTime = sleepTime < 0 ? 0 : sleepTime / milliSecond;
 				Thread.sleep((long) sleepTime);
 				
 				// Sets up the next loop time for the next frame

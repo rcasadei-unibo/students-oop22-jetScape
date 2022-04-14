@@ -3,7 +3,7 @@ package game.logics.entities.player;
 import java.awt.Color;
 
 import game.frame.GameWindow;
-import game.logics.entities.basic.EntityInstance;
+import game.logics.entities.generic.EntityInstance;
 import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.Pair;
@@ -57,9 +57,21 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 */
 	private String action;
 	
-	private boolean isActionChanged = false;
-	private boolean isLanding = false;
+	/**
+	 * A flag indicating if player has changed his current action.
+	 */
+	private boolean actionChanged = false;
+	/**
+	 * A flag indicating if player is going from a "fall" action to an "idle" action.
+	 */
+	private boolean landing = false;
+	/**
+	 * Decides which texture should be displayed.
+	 */
 	private int textureSwitcher = 1;
+	/**
+	 * How many frames have passed since between a second and another.
+	 */
 	private int frameTime = 0;
 	
 	/**
@@ -129,20 +141,20 @@ public class PlayerInstance extends EntityInstance implements Player{
 
 	private void updateAction(final String newAction) {
 		if(action != newAction) {
-			isActionChanged = true;
-			isLanding = newAction == "land" ? true : false;
+			actionChanged = true;
+			landing = newAction == "land" ? true : false;
 		}
 		action = newAction;
 	}
 	
 	private void updateTexture() {
-		if(this.isActionChanged) {
+		if(this.actionChanged) {
 			frameTime = 0;
 			textureSwitcher = 1;
-			this.isActionChanged = false;
+			this.actionChanged = false;
 		}
 		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
-			if(this.isLanding && textureSwitcher == 4) {
+			if(this.landing && textureSwitcher == 4) {
 				updateAction("idle");
 			}
 			frameTime = 0;

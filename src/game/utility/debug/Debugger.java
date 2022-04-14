@@ -48,7 +48,6 @@ public class Debugger {
 		
 		options.put("log: fps", false);
 		options.put("log: entities cleaner check", false);
-		options.put("log: entities cleaner working", false);
 		options.put("fps meter", true);
 		options.put("entity coordinates", true);
 	}
