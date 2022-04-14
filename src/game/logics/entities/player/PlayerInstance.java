@@ -126,27 +126,35 @@ public class PlayerInstance extends EntityInstance implements Player{
 	
 	private void jump() {
 		position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof ? position.getY() - jumpSpeed * jumpMultiplier : yRoof);
-		updateAction("jump");
+		setAction("jump");
 	}
 	
 	private void fall() {
 		if(position.getY() + fallSpeed * fallMultiplier < yGround) {
 			position.setY(position.getY() + fallSpeed * fallMultiplier);
-			updateAction("fall");
+			setAction("fall");
 		} else {
 			position.setY(yGround);
-			updateAction("land");
+			setAction("land");
 		}
 	}
 
-	private void updateAction(final String newAction) {
+	/**
+	 * Sets the current player's action.
+	 * 
+	 * @param newAction the new action
+	 */
+	private void setAction(final String newAction) {
 		if(action != newAction) {
 			actionChanged = true;
-			landing = newAction == "land" ? true : false;
+			landing = newAction == "land";
 		}
 		action = newAction;
 	}
 	
+	/**
+	 * Updates the texture that should be display during the animation.
+	 */
 	private void updateTexture() {
 		if(this.actionChanged) {
 			frameTime = 0;
@@ -155,7 +163,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		}
 		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
 			if(this.landing && textureSwitcher == 4) {
-				updateAction("idle");
+				setAction("idle");
 			}
 			frameTime = 0;
 			textureSwitcher = textureSwitcher >= 4 ? 1 : textureSwitcher + 1;
