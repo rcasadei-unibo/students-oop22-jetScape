@@ -5,8 +5,8 @@ import game.logics.handler.Logics;
 import game.utility.debug.Debugger;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
-import game.utility.textures.DrawManager;
-import game.utility.textures.Drawer;
+import game.utility.sprites.DrawManager;
+import game.utility.sprites.Drawer;
 
 import java.awt.Graphics2D;
 
@@ -53,9 +53,9 @@ public abstract class EntityInstance implements Entity{
 	private boolean onScreen = false;
 	
 	/**
-	 * Manages the textures of the object.
+	 * Manages the sprites of the object.
 	 */
-	protected final Drawer textureMgr;
+	protected final Drawer spritesMgr;
 	protected final Screen screen;
 	private final Debugger debugger;
 	
@@ -70,7 +70,7 @@ public abstract class EntityInstance implements Entity{
 		this.debugger = l.getDebugger();
 		entityTag = "undefined";
 		
-		textureMgr = new DrawManager();
+		spritesMgr = new DrawManager();
 		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize());
 		yRoof = yTopLimit;
 	}
@@ -144,6 +144,6 @@ public abstract class EntityInstance implements Entity{
 	}
 	
 	public void draw(final Graphics2D g) {
-		textureMgr.drawTexture(g, position, screen.getTileSize());
+		spritesMgr.drawSprite(g, position, screen.getTileSize());
 	}
 }

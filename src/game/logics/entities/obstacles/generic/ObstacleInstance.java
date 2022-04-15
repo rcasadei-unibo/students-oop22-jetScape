@@ -82,7 +82,7 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 		
 		if(position.getX() > -screen.getTileSize() * 2) {
 			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
-			if(this.isOnScreenBounds()) {
+			if(!this.isOnSpawnArea()) {
 				movement.applyAcceleration();
 			}
 		}

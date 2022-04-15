@@ -23,12 +23,12 @@ import game.utility.other.Pair;
 public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 
 	/**
-	 * Specifies the path within the texture folder [specified in <code>Texture</code> class]
-	 * where <code>ZapperRayInstance</code> textures can be found.
+	 * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
+	 * where <code>ZapperRayInstance</code> sprites can be found.
 	 */
-	private static final String texturePath = "zapperray" + System.getProperty("file.separator");
+	private static final String spritePath = "zapperray" + System.getProperty("file.separator");
 	/**
-	 * If textures are missing, they will be replace by a rectangle of the color specified in
+	 * If sprites are missing, they will be replace by a rectangle of the color specified in
 	 * <code>ZapperRayInstance.placeH</code>.
 	 */
 	private static final Color placeH = Color.yellow;
@@ -65,10 +65,10 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 		electrode2 = e2;	
 		
 		updateRotation();
-		textureMgr.setPlaceH(placeH);
-		textureMgr.addTexture("vertical", texturePath + "zapperray_vert.png");
-		textureMgr.addTexture("horizontal", texturePath + "zapperray_horr.png");
-		textureMgr.setAnimator(() -> rotation);
+		spritesMgr.setPlaceH(placeH);
+		spritesMgr.addSprite("vertical", spritePath + "zapperray_vert.png");
+		spritesMgr.addSprite("horizontal", spritePath + "zapperray_horr.png");
+		spritesMgr.setAnimator(() -> rotation);
 	}
 	
 	/**

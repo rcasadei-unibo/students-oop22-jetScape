@@ -1,4 +1,4 @@
-package game.utility.textures;
+package game.utility.sprites;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import game.utility.other.Pair;
 
 /**
- * The <code>DrawManager</code> class decides what textures to draw
+ * The <code>DrawManager</code> class decides what sprites to draw
  * for representing an object.
  * 
  * If there aren't any textures to draw, a place holder rectangle
@@ -21,11 +21,11 @@ import game.utility.other.Pair;
 public class DrawManager implements Drawer{
 	
 	/**
-	 * A map that stores all the textures an object can use to be represented in the environment.
+	 * A map that stores all the sprites an object can use to be represented in the environment.
 	 */
-	private final Map<String, Texture> textures = new HashMap<>();
+	private final Map<String, Sprite> sprites = new HashMap<>();
 	/**
-	 * Sets up the <code>textureToDraw</code> string depending on which texture has to
+	 * Sets up the <code>spriteToDraw</code> string depending on which texture has to
 	 * be drawn at the moment.
 	 */
 	private Optional<Supplier<String>> animator = Optional.empty();
@@ -35,10 +35,10 @@ public class DrawManager implements Drawer{
 	private Color defaultColor;
 	
 	/**
-	 * A key for the <code>textures</code> map that decides 
+	 * A key for the <code>sprites</code> map that decides 
 	 * which texture needs to be drawn at the moment.
 	 */
-	private String textureToDraw = placeHKey;
+	private String spriteToDraw = placeHKey;
 	
 	/**
 	 * Constructor that sets up the <code>DrawManager</code>.
@@ -49,27 +49,27 @@ public class DrawManager implements Drawer{
 	
 	public void setPlaceH(final Color placeHolder) {
 		this.defaultColor = placeHolder;
-		textures.put(placeHKey, new Texture(placeHKey, defaultColor));
+		sprites.put(placeHKey, new Sprite(placeHKey, defaultColor));
 	}
 	
 	public void setAnimator(final Supplier<String> animator) {
 		this.animator = Optional.of(animator);
 	}
 	
-	public void addTexture(final String name, final String path) {
-		textures.put(name, new Texture(name, defaultColor, path));
+	public void addSprite(final String name, final String path) {
+		sprites.put(name, new Sprite(name, defaultColor, path));
 	}
 	
-	public void addLoadedTexture(final Texture t) {
-		textures.put(t.getName(), t);
+	public void addLoadedSprite(final Sprite t) {
+		sprites.put(t.getName(), t);
 	}
 	
-	public void drawTexture(final Graphics2D g, final Pair<Double,Double> pos, final int size) {
-		animator.ifPresent(a -> textureToDraw = a.get());
-		if(textures.containsKey(textureToDraw)) {
-			textures.get(textureToDraw).draw(g, pos, size);
-		} else if(textures.containsKey(placeHKey)){
-			textures.get(placeHKey).draw(g, pos, size);
+	public void drawSprite(final Graphics2D g, final Pair<Double,Double> pos, final int size) {
+		animator.ifPresent(a -> spriteToDraw = a.get());
+		if(sprites.containsKey(spriteToDraw)) {
+			sprites.get(spriteToDraw).draw(g, pos, size);
+		} else if(sprites.containsKey(placeHKey)){
+			sprites.get(placeHKey).draw(g, pos, size);
 		}
 	}
 }

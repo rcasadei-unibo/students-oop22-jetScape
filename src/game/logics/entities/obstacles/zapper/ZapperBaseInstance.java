@@ -23,12 +23,12 @@ import game.utility.other.Pair;
 public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 
 	/**
-	 * Specifies the path within the texture folder [specified in <code>Texture</code> class]
-	 * where <code>ZapperBaseInstance</code> textures can be found.
+	 * Specifies the path within the sprites folder [specified in <code>Sprite</code> class]
+	 * where <code>ZapperBaseInstance</code> sprites can be found.
 	 */
-	private static final String texturePath = "zapperbase" + System.getProperty("file.separator");
+	private static final String spritePath = "zapperbase" + System.getProperty("file.separator");
 	/**
-	 * If textures are missing, they will be replace by a rectangle of the color specified in
+	 * If sprites are missing, they will be replace by a rectangle of the color specified in
 	 * <code>ZapperBaseInstance.placeH</code>.
 	 */
 	private static final Color placeH = Color.gray;
@@ -65,12 +65,12 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 			zap.setPaired(this);
 			
 			updateRotation();
-			textureMgr.setPlaceH(placeH);
-			textureMgr.addTexture("up", texturePath + "zapperbase_up.png");
-			textureMgr.addTexture("down", texturePath + "zapperbase_down.png");
-			textureMgr.addTexture("left", texturePath + "zapperbase_left.png");
-			textureMgr.addTexture("right", texturePath + "zapperbase_right.png");
-			textureMgr.setAnimator(() -> rotation);
+			spritesMgr.setPlaceH(placeH);
+			spritesMgr.addSprite("up", spritePath + "zapperbase_up.png");
+			spritesMgr.addSprite("down", spritePath + "zapperbase_down.png");
+			spritesMgr.addSprite("left", spritePath + "zapperbase_left.png");
+			spritesMgr.addSprite("right", spritePath + "zapperbase_right.png");
+			spritesMgr.setAnimator(() -> rotation);
 		}
 	}
 	

@@ -17,17 +17,17 @@ import game.utility.other.Pair;
 public class PlayerInstance extends EntityInstance implements Player{
 	
 	/**
-	 * Specifies the path within the texture folder [specified in <code>Texture</code> class]
-	 * where <code>PlayerInstance</code> textures can be found.
+	 * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
+	 * where <code>PlayerInstance</code> sprites can be found.
 	 */
 	private static final String texturePath = "player" + System.getProperty("file.separator");
 	/**
-	 * If textures are missing, they will be replace by a rectangle of the color specified in
+	 * If sprites are missing, they will be replace by a rectangle of the color specified in
 	 * <code>PlayerInstance.placeH</code>.
 	 */
 	private static final Color placeH = Color.white;
 	/**
-	 * Determines how fast textures change.
+	 * Determines how fast sprite change.
 	 */
 	private static final double animationSpeed = 6;
 	
@@ -66,9 +66,9 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 */
 	private boolean landing = false;
 	/**
-	 * Decides which texture should be displayed.
+	 * Decides which sprite should be displayed.
 	 */
-	private int textureSwitcher = 1;
+	private int spriteSwitcher = 1;
 	/**
 	 * How many frames have passed since between a second and another.
 	 */
@@ -90,36 +90,36 @@ public class PlayerInstance extends EntityInstance implements Player{
 		action = "idle";
 		entityTag = "player";
 		
-		textureMgr.setPlaceH(placeH);
-		textureMgr.addTexture("walk1", texturePath + "barrywalk1.png");
-		textureMgr.addTexture("walk2", texturePath + "barrywalk2.png");
-		textureMgr.addTexture("walk3", texturePath + "barrywalk3.png");
-		textureMgr.addTexture("walk4", texturePath + "barrywalk4.png");
-		textureMgr.addTexture("jump1", texturePath + "barryjump1.png");
-		textureMgr.addTexture("jump2", texturePath + "barryjump2.png");
-		textureMgr.addTexture("fall1", texturePath + "barryfall1.png");
-		textureMgr.addTexture("fall2", texturePath + "barryfall2.png");
-		textureMgr.addTexture("land1", texturePath + "barryland1.png");
-		textureMgr.addTexture("land2", texturePath + "barryland2.png");
-		textureMgr.addTexture("land3", texturePath + "barryland3.png");
-		textureMgr.addTexture("land4", texturePath + "barryland4.png");
-		textureMgr.setAnimator(() -> {
+		spritesMgr.setPlaceH(placeH);
+		spritesMgr.addSprite("walk1", texturePath + "barrywalk1.png");
+		spritesMgr.addSprite("walk2", texturePath + "barrywalk2.png");
+		spritesMgr.addSprite("walk3", texturePath + "barrywalk3.png");
+		spritesMgr.addSprite("walk4", texturePath + "barrywalk4.png");
+		spritesMgr.addSprite("jump1", texturePath + "barryjump1.png");
+		spritesMgr.addSprite("jump2", texturePath + "barryjump2.png");
+		spritesMgr.addSprite("fall1", texturePath + "barryfall1.png");
+		spritesMgr.addSprite("fall2", texturePath + "barryfall2.png");
+		spritesMgr.addSprite("land1", texturePath + "barryland1.png");
+		spritesMgr.addSprite("land2", texturePath + "barryland2.png");
+		spritesMgr.addSprite("land3", texturePath + "barryland3.png");
+		spritesMgr.addSprite("land4", texturePath + "barryland4.png");
+		spritesMgr.setAnimator(() -> {
 			String s = "";
 			switch(action) {
 				case "idle":
-					s = "walk" + textureSwitcher;
+					s = "walk" + spriteSwitcher;
 					break;
 				case "land":
-					s = "land" + textureSwitcher;
+					s = "land" + spriteSwitcher;
 					break;
 				case "jump":
-					s = "jump" + (textureSwitcher % 2 + 1);
+					s = "jump" + (spriteSwitcher % 2 + 1);
 					break;
 				case "fall":
-					s = "fall" + (textureSwitcher % 2 + 1);
+					s = "fall" + (spriteSwitcher % 2 + 1);
 					break;
 			}
-			updateTexture();
+			updateSprite();
 			return s;
 		});
 	}
@@ -153,20 +153,20 @@ public class PlayerInstance extends EntityInstance implements Player{
 	}
 	
 	/**
-	 * Updates the texture that should be display during the animation.
+	 * Updates the sprite that should be display during the animation.
 	 */
-	private void updateTexture() {
+	private void updateSprite() {
 		if(this.actionChanged) {
 			frameTime = 0;
-			textureSwitcher = 1;
+			spriteSwitcher = 1;
 			this.actionChanged = false;
 		}
 		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
-			if(this.landing && textureSwitcher == 4) {
+			if(this.landing && spriteSwitcher == 4) {
 				setAction("idle");
 			}
 			frameTime = 0;
-			textureSwitcher = textureSwitcher >= 4 ? 1 : textureSwitcher + 1;
+			spriteSwitcher = spriteSwitcher >= 4 ? 1 : spriteSwitcher + 1;
 		}
 		frameTime++;
 	}

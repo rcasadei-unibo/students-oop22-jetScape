@@ -1,4 +1,4 @@
-package game.utility.textures;
+package game.utility.sprites;
 
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
@@ -20,19 +20,19 @@ import game.utility.other.Pair;
  * 
  * @author Daniel Pellanda
  */
-public class Texture {
+public class Sprite {
 	
 	/**
 	 * The type of file separator the system uses.
 	 */
 	private static final String separator = System.getProperty("file.separator");
 	/**
-	 * Default directory where are all textures are located.
+	 * Default directory where are all sprites are located.
 	 */
-	public static final String defaultDir = System.getProperty("user.dir") + separator + "res" + separator + "game" + separator + "textures" + separator;
+	public static final String defaultDir = System.getProperty("user.dir") + separator + "res" + separator + "game" + separator + "sprites" + separator;
 	
 	/**
-	 * The image that will be drawn as texture.
+	 * The image that will be drawn as sprite.
 	 */
 	private Optional<BufferedImage> image = Optional.empty();
 	/**
@@ -43,39 +43,39 @@ public class Texture {
 	private String name = "unknown";
 	
 	/**
-	 * Constructor that creates a <code>Texture</code> object 
+	 * Constructor that creates a <code>Sprite</code> object 
 	 * without any image path specified.
 	 * 
-	 * @param name the texture name identifier
+	 * @param name the sprite name identifier
 	 * @param placeHolder the color of the rectangle drawn as place holder
 	 */
-	public Texture(final String name, final Color placeHolder) {
+	public Sprite(final String name, final Color placeHolder) {
 		this.name = name;
 		this.placeHolder = placeHolder;
 	}
 	
 	/**
-	 * Constructor that creates a <code>Texture</code> object 
+	 * Constructor that creates a <code>Sprite</code> object 
 	 * with a image path specified.
 	 * 
-	 * @param name the texture name identifier
+	 * @param name the sprite name identifier
 	 * @param placeHolder the color of the rectangle drawn as place holder
 	 * @param path the path of the image to load
 	 */
-	public Texture(final String name, final Color placeHolder, final String path) {
+	public Sprite(final String name, final Color placeHolder, final String path) {
 		this(name, placeHolder);
 		this.load(path);
 	}
 	
 	/**
-	 * @return the texture name identifier
+	 * @return the sprite name identifier
 	 */
 	public String getName() {
 		return name;
 	}
 	
 	/**
-	 * Reads and saves the image to be drawn as texture.
+	 * Reads and saves the image to be drawn as sprite.
 	 * 
 	 * @param path the image path
 	 */

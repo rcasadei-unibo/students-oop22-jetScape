@@ -13,12 +13,12 @@ import game.utility.other.Pair;
 public class MissileInstance extends ObstacleInstance implements Missile{
 
 	/**
-	 * Specifies the path within the texture folder [specified in <code>Texture</code> class]
-	 * where <code>MissileInstance</code> textures can be found.
+	 * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
+	 * where <code>MissileInstance</code> sprites can be found.
 	 */
-	private static final String texturePath = "missile" + System.getProperty("file.separator");
+	private static final String spritePath = "missile" + System.getProperty("file.separator");
 	/**
-	 * If textures are missing, they will be replace by a rectangle of the color specified in
+	 * If sprites are missing, they will be replace by a rectangle of the color specified in
 	 * <code>MissileInstance.placeH</code>.
 	 */
 	private static final Color placeH = Color.red;
@@ -67,10 +67,10 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		warnPosition = new Pair<>(warnDefaultX, position.getY());
 		playerPosition = player.getPosition();
 		
-		textureMgr.setPlaceH(placeH);
-		textureMgr.addTexture("warn", texturePath + "warn.png");
-		textureMgr.addTexture("missile", texturePath + "missile.png");
-		textureMgr.setAnimator(() -> {
+		spritesMgr.setPlaceH(placeH);
+		spritesMgr.addSprite("warn", spritePath + "warn.png");
+		spritesMgr.addSprite("missile", spritePath + "missile.png");
+		spritesMgr.setAnimator(() -> {
 			if(position.getX() > screen.getWidth()) {
 				return "warn";
 			}
@@ -104,7 +104,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 				position.setY(position.getY() - ySpeed / GameWindow.fpsLimit);
 				ySpeed += yAcceleration / GameWindow.fpsLimit;
 				lastDir = Direction.UP;
-			} else if(position.getY() <= playerPosition.getY()) {
+			} else if(position.getY() < playerPosition.getY()) {
 				if(lastDir != Direction.DOWN) {
 					ySpeed = yStartSpeed;
 				}
@@ -121,7 +121,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		super.draw(g);
 		if(position.getX() > screen.getWidth()) {
 			if(position.getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
-				textureMgr.drawTexture(g, warnPosition, screen.getTileSize());
+				spritesMgr.drawSprite(g, warnPosition, screen.getTileSize());
 			}
 		}
 	}
