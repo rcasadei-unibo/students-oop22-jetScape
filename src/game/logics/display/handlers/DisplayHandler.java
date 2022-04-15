@@ -1,4 +1,4 @@
-package game.logics.handler;
+package game.logics.display.handlers;
 
 import game.utility.other.GameState;
 import game.utility.other.Pair;

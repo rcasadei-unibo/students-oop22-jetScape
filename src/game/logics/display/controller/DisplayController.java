@@ -1,5 +1,10 @@
-package game.display;
+package game.logics.display.controller;
 
+import game.logics.display.handlers.DisplayHandler;
+import game.logics.display.handlers.MenuHandler;
+import game.logics.display.view.DisplayHUD;
+import game.logics.display.view.DisplayMainMenu;
+import game.logics.display.view.DisplayPause;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.screen.Screen;
@@ -12,9 +17,11 @@ public class DisplayController {
 	private final Supplier<GameState> getState ;
 	private final Supplier<Integer> getScore ;
 	private final Consumer<GameState> setState ;
-	private final Display hud ;
-	private final Display pause ;
-	private final Display mainMenu ;
+	private final DisplayHUD hud ;
+	private final DisplayPause pauseDisplay ;
+	private final DisplayMainMenu mainMenuDisplay ;
+	private final DisplayHandler pauseHandler ;
+	private final DisplayHandler mainMenuHandler ;
 	/* TO DO eventually add shop */
 	
 	public DisplayController(final KeyHandler keyH, final Screen gScreen, 
@@ -25,8 +32,10 @@ public class DisplayController {
 		this.setState = setState;
 		this.getScore = getScore;
 		this.hud = new DisplayHUD(gScreen);
-		this.pause = new DisplayPause(gScreen, keyH);
-		this.mainMenu = new DisplayMainMenu(gScreen, keyH);
+		this.pauseDisplay = new DisplayPause(gScreen);
+		this.mainMenuDisplay = new DisplayMainMenu(gScreen);
+		this.pauseHandler = new MenuHandler(keyH, GameState.PAUSED, pauseDisplay);
+		this.mainMenuHandler = new MenuHandler(keyH, GameState.MENU, mainMenuDisplay);
 	}
 	
 	/*
@@ -35,13 +44,13 @@ public class DisplayController {
 	public void drawScreen (Graphics2D g) {
 		switch(getState.get()) {
 		case MENU :
-			mainMenu.drawScreen(g);
+			this.mainMenuDisplay.drawScreen(g, mainMenuHandler.getSelectedOption());
 			break;
 		case INGAME :
-			hud.drawScreen(g);
+			this.hud.drawScreen(g);
 			break;
 		case PAUSED :
-			pause.drawScreen(g);
+			this.pauseDisplay.drawScreen(g, pauseHandler.getSelectedOption());
 			break;
 		default:
 			break;
@@ -51,13 +60,13 @@ public class DisplayController {
 	public void updateScreen () {
 		switch(getState.get()) {
 		case MENU :
-			setState.accept(this.mainMenu.getHandler().get().handle());
+			setState.accept(mainMenuHandler.handle());
 			break;
 		case PAUSED :
-			setState.accept(this.pause.getHandler().get().handle());
+			setState.accept(this.pauseHandler.handle());
 			break;
 		case INGAME :
-			((DisplayHUD) hud).updateScore(getScore.get());
+			this.hud.updateScore(getScore.get());
 			break;
 		default :
 			break;

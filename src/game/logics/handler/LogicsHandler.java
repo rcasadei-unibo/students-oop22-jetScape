@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 
 import java.lang.Runnable;
 
+import game.logics.display.controller.DisplayController;
 import game.logics.entities.basic.*;
 import game.logics.entities.obstacles.Obstacle;
 import game.logics.entities.obstacles.ZapperBaseInstance;
@@ -20,7 +21,6 @@ import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 import game.utility.other.GameState;
-import game.display.DisplayController;
 
 /**
  * The <code>LogicsHandler</code> class helps <class>GameWindow</class> to update
