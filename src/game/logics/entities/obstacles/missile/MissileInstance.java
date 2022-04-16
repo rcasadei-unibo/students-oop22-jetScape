@@ -64,6 +64,8 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 	public MissileInstance(final Logics l, final Pair<Double,Double> pos, final Player player, final SpeedHandler speed) {
 		super(l, pos, new SpeedHandler(speed.getXSpeed(), speed.getXSpeedIncDiff(), speed.getXAcceleration()));
 		
+		entityTag = "missile";
+		
 		warnPosition = new Pair<>(warnDefaultX, position.getY());
 		playerPosition = player.getPosition();
 		

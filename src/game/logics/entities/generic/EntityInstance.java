@@ -71,7 +71,7 @@ public abstract class EntityInstance implements Entity{
 		entityTag = "undefined";
 		
 		spritesMgr = new DrawManager();
-		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize());
+		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize() * 2);
 		yRoof = yTopLimit;
 	}
 	

@@ -8,21 +8,21 @@ import java.util.stream.Collectors;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import java.lang.Runnable;
-
 import game.frame.GameWindow;
-import game.logics.entities.generic.*;
+import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
 import game.logics.entities.obstacles.zapper.ZapperRayInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
+import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
 import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
+import game.utility.other.GameState;
 
 /**
  * The <code>LogicsHandler</code> class helps <class>GameWindow</class> to update
@@ -43,16 +43,19 @@ public class LogicsHandler implements Logics{
 	private final Generator spawner;
 	private final Screen screen;
 	private final KeyHandler keyH;
+	private final DisplayController displayController;
+	
+	private GameState gameState = GameState.MENU;
 	
 	/**
 	 * A reference to the player's entity.
 	 */
 	private final Player playerEntity;
-	
 	/**
-	 * Keeps the game timer.
+	 * The current player's score.
 	 */
-	private long updateTimer = System.nanoTime();
+	private int score = 0;
+	
 	/**
 	 * Defines how many seconds have to pass for the spawner to generate
 	 * another set of obstacles.
@@ -62,6 +65,17 @@ public class LogicsHandler implements Logics{
 	 * Defines the interval of each check for entities to clean.
 	 */
 	private int cleanInterval = 1;
+	
+	
+	/**
+	 * Keeps the seconds passed since the program was launched.
+	 */
+	private int runTime = 0;
+	/**
+	 * The frames passed since the last second.
+	 */
+	private int frameTime = 0;
+	
 	
 	private Debugger debugger;
 	
@@ -77,13 +91,14 @@ public class LogicsHandler implements Logics{
 		this.screen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
+		this.displayController = new DisplayController(keyH,screen, g -> setGameState(g),
+				() -> gameState, () -> score);
 		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
 		entities.put("missiles", new HashSet<>());
 		
 		playerEntity = new PlayerInstance(this);
-		entities.get("player").add(playerEntity);
 		
 		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
 		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 0, 5000.0)));
@@ -92,33 +107,10 @@ public class LogicsHandler implements Logics{
 		
 		spawner.initialize();
 	}
-
-/*
-	private void beginGame() {
-		entities.get("player").add(new PlayerInstance(this));
-		spawner.resume();
-	}
 	
-	private void endGame() {
-		spawner.pause();
-		entities.forEach((s, se) -> {
-			se.forEach(e -> e.resetPosition());
-			se.clear();
-		});
-	}
-	
-	private void pauseGame() {
-		spawner.pause();
-	}
-	
-	private void resumeGame() {
-		spawner.resume();
-	}
-*/
-
-	/**
+	/*
 	 * Method for test enabling and disabling entity spawner
-	 */
+	 *
 	private void checkSpawner() {
 		if(keyH.input.get("c")) {
 			if(spawner.isRunning()) {
@@ -129,8 +121,7 @@ public class LogicsHandler implements Logics{
 		} else if(keyH.input.get("v")) {
 			spawner.pause();
 		}
-	}
-
+	}*/
 	
 	/**
 	 * Handles the enabling and disabling of the Debug Mode 
@@ -144,29 +135,57 @@ public class LogicsHandler implements Logics{
 		}
 	}
 	
-	/**
-	 * Utility function for running a certain block of code every given interval of time.
-	 * 
-	 * @param interval the interval in nanoseconds that has to pass after each execution
-	 * @param timeStart the system time from when the last execution happened
-	 * @param r the block of the code to execute
-	 * @return <code>true</code> if given code has been executed, <code>false</code> if not
-	 */
-	private boolean updateEachInterval(final long interval, final long timeStart, final Runnable r) {
-		long timePassed = System.nanoTime() - timeStart;
-		if(timePassed >= interval) {
-			r.run();
-			return true;
+	private void checkPause() {
+		if(keyH.input.get("p")) {
+			setGameState(GameState.PAUSED);
 		}
-		return false;
+	}
+	
+	private void setGameState(final GameState gs) {
+		if(this.gameState != gs) {
+			switch (gs) {
+				case INGAME:
+					if (this.gameState == GameState.MENU) {
+						entities.get("player").add(playerEntity);
+					}
+					spawner.resume();
+					break;
+				case MENU:
+					synchronized(entities) {
+						entities.forEach((s, se) -> {
+							se.forEach(e -> e.reset());
+							se.clear();
+						});
+					}
+					this.score = 0;
+				case PAUSED:
+					spawner.pause();
+				default:
+					break;
+			}
+			this.gameState = gs;
+		}
+	}
+	
+	private void updateTimers() {
+		frameTime++;
+		if(frameTime % GameWindow.fpsLimit == 0) {
+			runTime++;
+		}
+	}
+	
+	private void updateScore() {
+		if(frameTime % 2 == 0) {
+			this.score++;
+		}
 	}
 	
 	/**
 	 * Removes all entities that are on the "clear area" [x < -tile size].
 	 */
-	private void cleaner() {
-		if(updateEachInterval(cleanInterval * GameWindow.nanoSecond, updateTimer, () -> spawner.cleanTiles())) {
-			updateTimer = System.nanoTime();
+	private void updateCleaner() {
+		if(runTime % cleanInterval == 0) {
+			spawner.cleanTiles();
 			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
 				System.out.println("clean");
 			}
@@ -202,19 +221,38 @@ public class LogicsHandler implements Logics{
 	}
 	
 	public void updateAll() {
-		this.checkDebugMode();
-		this.checkSpawner();
-		
-		this.cleaner();
-		synchronized(entities) {
-			entities.forEach((s, se) -> se.forEach(e -> e.update()));
+		switch(this.gameState) {
+			case EXIT:
+				System.exit(0); // TODO FIX BRUTAL EXIT
+				break;
+			case INGAME:
+				this.updateCleaner();
+				this.updateScore();
+				this.checkPause();
+				//this.checkSpawner();
+				synchronized(entities) {
+					entities.forEach((s, se) -> se.forEach(e -> e.update()));
+				}
+			default:
+				break;
 		}
-	}
+		this.displayController.updateScreen();
+		this.updateTimers();
+		this.checkDebugMode();
+	}		
 	
 	public void drawAll(final Graphics2D g) {
-		synchronized(entities) {
-			entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
-			this.drawCoordinates(g);
+		switch(this.gameState) {
+			case PAUSED: 
+			case INGAME:
+				synchronized(entities) {
+					entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
+					this.drawCoordinates(g);
+				}
+			default:
+				break;
 		}
+		this.displayController.drawScreen(g);
 	}
+	
 }

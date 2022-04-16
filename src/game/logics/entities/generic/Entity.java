@@ -21,7 +21,7 @@ public interface Entity {
 	/**
 	 * Defines the bottom Y position the entity can go by moving.
 	 */
-	static final double yLowLimit = 64.0;
+	static final double yLowLimit = 0.0;
 	
 	/**
 	 * @return <code>true</code> if the entity is visible, <code>false</code> if the entity is hidden

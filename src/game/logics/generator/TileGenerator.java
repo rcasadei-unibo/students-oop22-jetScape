@@ -260,7 +260,7 @@ public class TileGenerator implements Generator{
 		synchronized(generator) {
 			if(!this.isRunning()) {
 				running = true;
-				waiting = false;
+				waiting = true;
 				generator.start();
 			}
 		}

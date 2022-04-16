@@ -85,7 +85,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		
 		fallSpeed = baseFallSpeed / maximumFPS;
 		jumpSpeed = baseJumpSpeed / maximumFPS;
-
+		
 		position = new Pair<>(xPosition, yGround);
 		action = "idle";
 		entityTag = "player";
@@ -119,7 +119,6 @@ public class PlayerInstance extends EntityInstance implements Player{
 					s = "fall" + (spriteSwitcher % 2 + 1);
 					break;
 			}
-			updateSprite();
 			return s;
 		});
 	}
@@ -172,8 +171,16 @@ public class PlayerInstance extends EntityInstance implements Player{
 	}
 	
 	@Override
+	public void reset() {
+		position.setX(xPosition);
+		position.setY(yGround);
+		action = "idle";
+	}
+	
+	@Override
 	public void update() {
 		super.update();
+		this.updateSprite();
 		if(keyH.input.get("spacebar")) {
 			jump();
 			jumpMultiplier += jumpMultiplierIncrease;
