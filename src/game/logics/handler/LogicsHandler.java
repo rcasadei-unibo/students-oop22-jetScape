@@ -64,13 +64,13 @@ public class LogicsHandler implements Logics{
 	/**
 	 * Defines the interval of each check for entities to clean.
 	 */
-	private int cleanInterval = 1;
+	private int cleanInterval = 5;
 	
 	
-	/**
-	 * Keeps the seconds passed since the program was launched.
-	 */
-	private int runTime = 0;
+//	/**
+//	 * Keeps the seconds passed since the program was launched.
+//	 */
+//	private int runTime = 0;
 	/**
 	 * The frames passed since the last second.
 	 */
@@ -170,7 +170,7 @@ public class LogicsHandler implements Logics{
 	private void updateTimers() {
 		frameTime++;
 		if(frameTime % GameWindow.fpsLimit == 0) {
-			runTime++;
+			//runTime++;
 		}
 	}
 	
@@ -184,7 +184,7 @@ public class LogicsHandler implements Logics{
 	 * Removes all entities that are on the "clear area" [x < -tile size].
 	 */
 	private void updateCleaner() {
-		if(runTime % cleanInterval == 0) {
+		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
 			spawner.cleanTiles();
 			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
 				System.out.println("clean");
