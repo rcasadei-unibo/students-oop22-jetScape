@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 public class DisplayController {
 	private final Supplier<GameState> getState ;
 	private final Supplier<Integer> getScore ;
-	private final Consumer<GameState> setState ;
 	private final DisplayHUD hud ;
 	private final DisplayPause pauseDisplay ;
 	private final DisplayMainMenu mainMenuDisplay ;
@@ -29,13 +28,12 @@ public class DisplayController {
 			Supplier<Integer> getScore) {
 		super();
 		this.getState = getState;
-		this.setState = setState;
 		this.getScore = getScore;
 		this.hud = new DisplayHUD(gScreen);
 		this.pauseDisplay = new DisplayPause(gScreen);
 		this.mainMenuDisplay = new DisplayMainMenu(gScreen);
-		this.pauseHandler = new MenuHandler(keyH, GameState.PAUSED, pauseDisplay);
-		this.mainMenuHandler = new MenuHandler(keyH, GameState.MENU, mainMenuDisplay);
+		this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
+		this.mainMenuHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
 	}
 	
 	/*
@@ -60,10 +58,10 @@ public class DisplayController {
 	public void updateScreen () {
 		switch(getState.get()) {
 		case MENU :
-			setState.accept(mainMenuHandler.handle());
+			mainMenuHandler.handle();
 			break;
 		case PAUSED :
-			setState.accept(this.pauseHandler.handle());
+			this.pauseHandler.handle();
 			break;
 		case INGAME :
 			this.hud.updateScore(getScore.get());

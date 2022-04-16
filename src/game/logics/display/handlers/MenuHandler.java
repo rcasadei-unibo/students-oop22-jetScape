@@ -2,6 +2,7 @@ package game.logics.display.handlers;
 
 import java.awt.event.KeyEvent;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
@@ -9,35 +10,42 @@ import game.utility.other.GameState;
 import game.utility.other.Pair;
 
 public class MenuHandler implements DisplayHandler {
-	private final Map <String,GameState> options;
 	private final KeyHandler keyH;
-	private final GameState currentGameState;
 	private final Display display;
+	private final Map <String,GameState> options;
+	private final Consumer <GameState> setGameState;
+	
 	private int cursor = 0;
 	private Pair<String,Integer> selectedOption;
 
-	public MenuHandler(KeyHandler keyH, GameState currentGameState, Display display) {
+	public MenuHandler(KeyHandler keyH, Display display, Consumer<GameState> setGameState) {
 		super();
+		this.keyH = keyH;
 		this.display = display;
 		this.options = display.getOptions();
-		this.keyH = keyH;
-		this.currentGameState = currentGameState;
+		this.setGameState = setGameState;
 	}
 
-	public GameState handle () {
-		if (this.keyH.isKeyTyped(KeyEvent.VK_UP)) {
+	public void handle () {
+		switch(this.keyH.getLastKeyTyped()) {
+		case KeyEvent.VK_UP :
 			this.goUp();
-		} else if (this.keyH.isKeyTyped(KeyEvent.VK_DOWN)) {
+			break;
+		case KeyEvent.VK_DOWN:
 			this.goDown();
-		} else if (this.keyH.isKeyTyped(KeyEvent.VK_ENTER)) {
-			return this.options.get(this.getSelectedOption().getX());
+			break;
+		case KeyEvent.VK_ENTER:
+			this.setGameState.accept(this.options.get(this.getSelectedOption().getX()));
+			break;
+		default:
+			break;
 		}
-		return currentGameState;
 	}
 	
 	public Pair<String,Integer> getSelectedOption() {
 		this.updateSelectedOption();
 		return this.selectedOption;
+	
 	}
 	
 	public Display getDisplay() {

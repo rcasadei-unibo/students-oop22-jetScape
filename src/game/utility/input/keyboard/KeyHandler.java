@@ -128,12 +128,12 @@ public class KeyHandler implements KeyListener{
 		}
 	}
 	
-	public boolean isKeyTyped (int e) {
-		if (this.lastKeyPressed.isPresent() &&
-			this.lastKeyPressed.get() == e) {
-			 this.lastKeyPressed = Optional.empty();
-			 return true;
+	public int getLastKeyTyped () {
+		if (this.lastKeyPressed.isPresent()) {
+			int key = lastKeyPressed.get();
+			this.lastKeyPressed = Optional.empty();
+			return key;
 		}
-		return false;
+		return -1;
 	}
 }
