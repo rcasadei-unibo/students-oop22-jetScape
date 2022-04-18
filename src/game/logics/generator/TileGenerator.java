@@ -1,5 +1,6 @@
 package game.logics.generator;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import game.utility.other.Pair;
  * @author Daniel Pellanda
  */
 public class TileGenerator implements Generator{
-
+	
 	/**
 	 * The type of file separator the system uses.
 	 */
@@ -105,65 +106,62 @@ public class TileGenerator implements Generator{
 	
 	/**
 	 * Loads each set of obstacles from a json file and store them in Lists.
+	 * 
+	 * @throws ParseException if parser fails to parse into objects the contents of json file
+	 * @throws IOException if json file reading fails
+	 * @throws FileNotFoundException if json file cannot be found
 	 */
-	private void loadTiles() {
+	private void loadTiles() throws FileNotFoundException, IOException, ParseException {
 		JSONParser jsonparser = new JSONParser();
-		try {
-			JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader(defaultDir));
+		JSONObject allTiles = (JSONObject)jsonparser.parse(new FileReader(defaultDir));
 			
-			///		LOADING ZAPPERS		///
-			if(createZBase.isPresent() && createZRay.isPresent()) {
-				JSONArray types = (JSONArray)allTiles.get("zappers");
-				for(int i = 0; i < types.size(); i++){
+		///		LOADING ZAPPERS		///
+		if(createZBase.isPresent() && createZRay.isPresent()) {
+			JSONArray types = (JSONArray)allTiles.get("zappers");
+			for(int i = 0; i < types.size(); i++){
 					JSONArray zsets = (JSONArray)types.get(i);
-					if(zsets.size() >= 2) {
-						Set<Entity> s = new HashSet<>();
-						
-						JSONObject b1 = (JSONObject)zsets.get(0), b2 = (JSONObject)zsets.get(1);
-						ZapperBase base1 = createZBase.get().apply(new Pair<>(
-								Double.parseDouble((String)b1.get("x")) * tileSize,
-								Double.parseDouble((String)b1.get("y")) * tileSize));
-						ZapperBase base2 = createZBase.get().apply(new Pair<>(
-								Double.parseDouble((String)b2.get("x")) * tileSize,
-								Double.parseDouble((String)b2.get("y")) * tileSize));
-						base1.setPaired(base2);
-						s.add(base1);
-						s.add(base2);
-				
-						for(int j = 2; j < zsets.size(); j++) {
-							JSONObject z = (JSONObject)zsets.get(j);
-							s.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
-								Double.parseDouble((String)z.get("x")) * tileSize,
-								Double.parseDouble((String)z.get("y")) * tileSize)));			
-						}
-						zapperTiles.add(s);
-					}
-				}
-			}
-			
-			///		LOADING MISSILES	///
-			if(createMissile.isPresent()) {
-				JSONArray types = (JSONArray)allTiles.get("missiles");
-				for(int i = 0; i < types.size(); i++){
-					JSONArray sets = (JSONArray)types.get(i);
+				if(zsets.size() >= 2) {
 					Set<Entity> s = new HashSet<>();
-				
-					for(int j = 0; j < sets.size(); j++) {
-						JSONObject z = (JSONObject)sets.get(j);
-						s.add(createMissile.get().apply(new Pair<>(
+					
+					JSONObject b1 = (JSONObject)zsets.get(0), b2 = (JSONObject)zsets.get(1);
+					ZapperBase base1 = createZBase.get().apply(new Pair<>(
+							Double.parseDouble((String)b1.get("x")) * tileSize,
+							Double.parseDouble((String)b1.get("y")) * tileSize));
+					ZapperBase base2 = createZBase.get().apply(new Pair<>(
+							Double.parseDouble((String)b2.get("x")) * tileSize,
+							Double.parseDouble((String)b2.get("y")) * tileSize));
+					base1.setPaired(base2);
+					s.add(base1);
+					s.add(base2);
+			
+					for(int j = 2; j < zsets.size(); j++) {
+						JSONObject z = (JSONObject)zsets.get(j);
+					s.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
 							Double.parseDouble((String)z.get("x")) * tileSize,
 							Double.parseDouble((String)z.get("y")) * tileSize)));			
 					}
-					missileTiles.add(s);
+				zapperTiles.add(s);	
 				}
 			}
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		} catch(ParseException pe) {
-			pe.printStackTrace();
 		}
-	}
+			
+		///		LOADING MISSILES	///
+		if(createMissile.isPresent()) {
+			JSONArray types = (JSONArray)allTiles.get("missiles");
+			for(int i = 0; i < types.size(); i++){
+				JSONArray sets = (JSONArray)types.get(i);
+				Set<Entity> s = new HashSet<>();
+				
+				for(int j = 0; j < sets.size(); j++) {
+					JSONObject z = (JSONObject)sets.get(j);
+					s.add(createMissile.get().apply(new Pair<>(
+						Double.parseDouble((String)z.get("x")) * tileSize,							
+						Double.parseDouble((String)z.get("y")) * tileSize)));			
+				}
+				missileTiles.add(s);
+			}
+		}
+}
 	
 	public void cleanTiles() {
 		entities.get("zappers").removeIf(e -> {
@@ -251,7 +249,7 @@ public class TileGenerator implements Generator{
 		}
 	}
 	
-	public void initialize() {
+	public void initialize() throws FileNotFoundException, IOException, ParseException {
 		this.loadTiles();
 		this.start();
 	}

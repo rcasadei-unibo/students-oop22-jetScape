@@ -67,7 +67,9 @@ public class GameWindow extends JPanel implements Runnable{
 	 * Handles the logic part of the game (entities, interface, game state, etc). 
 	 */
 	private final Logics logH;
+	
 	private final Thread gameLoop = new Thread(this);
+	private boolean gameRunning = false;
 	
 	/**
 	 * Manages enabling and disabling of Debug Features.
@@ -94,14 +96,19 @@ public class GameWindow extends JPanel implements Runnable{
 		
 		/// Sets up Debugger and Logics handler ///
 		this.debugger = new Debugger(debug, () -> fps);
-		this.logH = new LogicsHandler(gameScreen, keyH, debugger);
+		this.logH = new LogicsHandler(gameScreen, keyH, debugger, () -> stopGame(), (Component)this);
 	}
 	
 	/**
 	 * Begins the execution of the game loop.
 	 */
-	public void startLoop() {
+	public void startGame() {
+		gameRunning = true;
 		gameLoop.start();
+	}
+	
+	public void stopGame() {
+		gameRunning = false;
 	}
 	
 	/**
@@ -120,9 +127,9 @@ public class GameWindow extends JPanel implements Runnable{
 		super.paintComponent(g);
 		
 		Graphics2D board = (Graphics2D)g;
-		board.setColor(Color.white);
 		
-		// Draws FPS meter if enabled by debugger 
+		// Draws FPS meter if enabled by debugger
+		board.setColor(Color.white);
 		if(debugger.isFeatureEnabled("fps meter")) {
 			g.setFont(Debugger.debugFont);
 			g.drawString("FPS: " + fps, 3, 8);
@@ -148,7 +155,7 @@ public class GameWindow extends JPanel implements Runnable{
 		// FPS counted for the current second
 		int fpsCount = 0;
 		
-		while(gameLoop.isAlive()) {
+		while(gameLoop.isAlive() && gameRunning) {
 			
 			// Gets current system time
 			long timer = System.nanoTime();
@@ -179,8 +186,9 @@ public class GameWindow extends JPanel implements Runnable{
 				// Sets up the next loop time for the next frame
 				nextDraw = System.nanoTime() + drawInterval;
 			} catch (InterruptedException e) {
-				JOptionPane.showMessageDialog((Component)this, "An error occurred!\nProcessing frame has been interrupted", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog((Component)this, "An error occured! \n Details: \n\n" + e.getMessage() , "Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
+				System.exit(-1);
 			}
 			
 			// Adds the time passed since the last second 
