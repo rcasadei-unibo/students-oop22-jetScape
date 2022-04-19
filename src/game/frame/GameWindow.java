@@ -32,7 +32,8 @@ public class GameWindow extends JPanel implements Runnable{
 	private static final long serialVersionUID = 1L;
 	
 	public static final long nanoSecond = 1000000000;
-	public static final long milliSecond = 1000000;
+	public static final long microSecond = 1000000;
+	public static final long milliSecond = 1000;
 	
 	/**
 	 * Defines the cap for the "Frames Per Second". 
@@ -179,7 +180,7 @@ public class GameWindow extends JPanel implements Runnable{
 			try {
 				// Thread sleeps until it's next loop time
 				double sleepTime = nextDraw - System.nanoTime();
-				sleepTime = sleepTime < 0 ? 0 : sleepTime / milliSecond;
+				sleepTime = sleepTime < 0 ? 0 : sleepTime / microSecond;
 				Thread.sleep((long) sleepTime);
 				
 				// Sets up the next loop time for the next frame

@@ -234,7 +234,7 @@ public class LogicsHandler implements Logics{
 	public void updateAll() {
 		switch(this.gameState) {
 			case EXIT:
-				spawner.stop();
+				spawner.terminate();
 				GameHandler.gameWindow.stopGame();
 				System.exit(0);
 				break;

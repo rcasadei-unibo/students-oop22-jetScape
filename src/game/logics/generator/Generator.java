@@ -76,7 +76,12 @@ public interface Generator extends Runnable{
 	void start();
 	
 	/**
-	 * Stops the generation of obstacles [Ends thread].
+	 * Terminates the generation of obstacles [Ends thread].
+	 */
+	void terminate();
+	
+	/**
+	 * Stops the generation of obstacles [Interrupts thread].
 	 */
 	void stop();
 	

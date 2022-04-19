@@ -18,6 +18,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.generic.Obstacle;
 import game.logics.entities.obstacles.missile.Missile;
@@ -84,12 +85,16 @@ public class TileGenerator implements Generator{
 	 * Decides how many seconds the generator pauses after each set spawned.
 	 */
 	private final int spawnInterval;
+	private final long interval;
 
 	private final Thread generator = new Thread(this);
 	private boolean running = false;
 	private boolean waiting = false;
 	
 	private final int tileSize;
+	
+	private long systemTimeBeforeSleep;
+	private long remainingTimeToSleep = 0;
 	
 	/**
 	 * Constructor that sets up the entities structure where obstacles will be
@@ -102,6 +107,8 @@ public class TileGenerator implements Generator{
 		this.entities = entities;
 		this.spawnInterval = interval;
 		this.tileSize = tileSize;
+		
+		this.interval = spawnInterval * GameWindow.milliSecond;
 	}
 	
 	/**
@@ -200,7 +207,10 @@ public class TileGenerator implements Generator{
 			randomNumber = r.nextInt() % missileTiles.size();
 			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 		}while(entities.get("missiles").containsAll(missileTiles.get(randomNumber)));
-		entities.get("missiles").addAll(missileTiles.get(randomNumber));
+		
+		if(!this.isWaiting()) {
+			entities.get("missiles").addAll(missileTiles.get(randomNumber));
+		}
 	}
 	
 	private void spawnZapper() {
@@ -210,7 +220,10 @@ public class TileGenerator implements Generator{
 			randomNumber = r.nextInt() % zapperTiles.size();
 			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 		}while(entities.get("zappers").containsAll(zapperTiles.get(randomNumber)));
-		entities.get("zappers").addAll(zapperTiles.get(randomNumber));
+		
+		if(!this.isWaiting()) {
+			entities.get("zappers").addAll(zapperTiles.get(randomNumber));
+		}
 	}
 	
 	public void setZapperRayCreator(final BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay> zapperr) {
@@ -264,13 +277,20 @@ public class TileGenerator implements Generator{
 		}
 	}
 	
-	public void stop() {
+	public void terminate() {
 		running = false;
 		this.resume();
 	}
 	
+	public void stop() {
+		waiting = true;
+		remainingTimeToSleep = 0;
+	}
+	
 	public void pause() {
 		waiting = true;
+		remainingTimeToSleep = systemTimeBeforeSleep != 0 ? interval - (System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep) : 0;
+		System.out.println(remainingTimeToSleep);
 	}
 	
 	public void resume() {
@@ -284,9 +304,9 @@ public class TileGenerator implements Generator{
 	
 	@Override
 	public void run(){
-		long interval = spawnInterval * 1000;
 		
 		while(generator.isAlive() && this.isRunning()) {
+			systemTimeBeforeSleep = 0;
 			
 			synchronized(generator) {
 				while(this.isWaiting()) {
@@ -295,12 +315,15 @@ public class TileGenerator implements Generator{
 						continue;
 					}
 				}
+				this.invokeSleep(remainingTimeToSleep);
+				remainingTimeToSleep = 0;
 			}
 			
 			synchronized(entities) {
 				spawnTile();
 			}	
 			
+			systemTimeBeforeSleep = System.nanoTime() / GameWindow.microSecond;
 			this.invokeSleep(interval);
 		}
 	}

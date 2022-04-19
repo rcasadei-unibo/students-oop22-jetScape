@@ -56,6 +56,8 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 	private double ySpeed = yStartSpeed;
 	private double yAcceleration = yDefaultAcceleration;
 	
+	private double yBrakingDivider = 3.5;
+	
 	/**
 	 * The direction the missile was moving.
 	 */
@@ -101,14 +103,14 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		if(this.isOnSpawnArea()) {
 			if(position.getY() > playerPosition.getY()) {
 				if(lastDir != Direction.UP) {
-					ySpeed = yStartSpeed;
+					ySpeed = -ySpeed / yBrakingDivider;
 				}
 				position.setY(position.getY() - ySpeed / GameWindow.fpsLimit);
 				ySpeed += yAcceleration / GameWindow.fpsLimit;
 				lastDir = Direction.UP;
 			} else if(position.getY() < playerPosition.getY()) {
 				if(lastDir != Direction.DOWN) {
-					ySpeed = yStartSpeed;
+					ySpeed = -ySpeed / yBrakingDivider;
 				}
 				position.setY(position.getY() + ySpeed / GameWindow.fpsLimit);
 				ySpeed += yAcceleration / GameWindow.fpsLimit;
