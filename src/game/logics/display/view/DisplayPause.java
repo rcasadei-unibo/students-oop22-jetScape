@@ -39,25 +39,11 @@ public class DisplayPause extends Display {
 		//TITLE
 		g.setColor(Color.white);
 		g.drawString(title, x, gScreen.getTileSize() * titleTile);
-		//CREATE TEXT LIST
-		g.setFont(DisplayMainMenu.fontText);
-//		super.buildText(firstOption);
-		//MESSAGE SHADOW
+		//OPTIONS SHADOW
 		g.setColor(Color.black);
 		super.drawText(g, textShift);
-		//MESSAGE
+		//OPTIONS
 		g.setColor(Color.white);
 		super.drawText(g,0);
-		//SELECTED TEXT SHADOW
-//		g.setColor(Color.darkGray);
-//		g.setFont(DisplayMainMenu.selectedTextFont);
-//		super.selectedOption = ("> "+ super.selectedOption +" <");
-//		x = super.getCenteredX(gScreen, g, selectedOption);
-//		g.drawString(selectedOption, x + textShift,
-//				gScreen.getTileSize() *(textTile + super.selectedOption.getY()));
-//		// SELECTED TEXT 
-//		g.setColor(Color.white);
-//		g.drawString(selectedOption.getX(), x, 
-//				gScreen.getTileSize() *(textTile + super.selectedOption.getY()));
 	}	
 }
