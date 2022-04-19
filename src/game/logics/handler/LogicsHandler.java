@@ -12,9 +12,11 @@ import org.json.simple.parser.ParseException;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Component;
+import java.awt.event.KeyEvent;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.awt.Component;
 
 import game.frame.GameHandler;
 import game.frame.GameWindow;
@@ -175,20 +177,20 @@ public class LogicsHandler implements Logics{
 	}
 	
 	/**
-	 * Handles the enabling and disabling of the Debug Mode 
-	 * by using Z (enable) and X (disable).
+	 * Handles the commands executed for each key pressed.
 	 */
-	private void checkDebugMode() {
-		if(keyH.input.get("z")) {
-			debugger.setDebugMode(true);
-		} else if(keyH.input.get("x")) {
-			debugger.setDebugMode(false);
-		}
-	}
-	
-	private void checkPause() {
-		if(keyH.input.get("p")) {
-			setGameState(GameState.PAUSED);
+	private void checkKeyboardInput() {
+		switch(keyH.getKeyTyped()) {
+			case KeyEvent.VK_Z:
+				debugger.setDebugMode(!debugger.isDebugModeOn());
+				keyH.resetKeyTyped();
+				break;
+			case KeyEvent.VK_P:
+				this.setGameState(GameState.PAUSED);
+				keyH.resetKeyTyped();
+				break;
+			default:
+				break;
 		}
 	}
 	
@@ -211,7 +213,7 @@ public class LogicsHandler implements Logics{
 				case MENU:
 					if(this.gameState == GameState.PAUSED) {
 						final String message = "Do you want to return the main menu?\nYou will lose the current progress of this match.";
-						final String title = "Return to main menù";
+						final String title = "Return to main menu";
 						if(JOptionPane.showConfirmDialog((Component)GameHandler.gameWindow, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 							return;
 						}
@@ -222,7 +224,12 @@ public class LogicsHandler implements Logics{
 							se.clear();
 						});
 					}
+					spawner.pause();
+					break;
 				case PAUSED:
+					if(this.gameState != GameState.INGAME) {
+						return;
+					}
 					spawner.pause();
 					break;
 				default:
@@ -241,7 +248,6 @@ public class LogicsHandler implements Logics{
 				break;
 			case INGAME:
 				this.updateCleaner();
-				this.checkPause();
 				//this.checkSpawner();
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.update()));
@@ -250,8 +256,8 @@ public class LogicsHandler implements Logics{
 				break;
 		}
 		this.displayController.updateScreen();
+		this.checkKeyboardInput();
 		this.updateTimers();
-		this.checkDebugMode();
 	}		
 	
 	public void drawAll(final Graphics2D g) {

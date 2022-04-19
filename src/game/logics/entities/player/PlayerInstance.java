@@ -1,6 +1,7 @@
 package game.logics.entities.player;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 
 import game.frame.GameWindow;
 import game.logics.entities.generic.EntityInstance;
@@ -30,6 +31,11 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * Determines how fast sprite change.
 	 */
 	private static final double animationSpeed = 6;
+	
+	/**
+	 * The horizontal position where the player will be.
+	 */
+	private final double xPosition = screen.getTileSize() * xRelativePosition;
 	
 	/**
 	 * The current player's score.
@@ -91,7 +97,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		fallSpeed = baseFallSpeed / maximumFPS;
 		jumpSpeed = baseJumpSpeed / maximumFPS;
 		
-		position = new Pair<>(screen.getTileSize() * xPosition, yGround);
+		position = new Pair<>(xPosition, yGround);
 		action = "idle";
 		entityTag = "player";
 		
@@ -198,7 +204,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		super.update();
 		this.updateSprite();
 		this.updateScore();
-		if(keyH.input.get("spacebar")) {
+		if(keyH.input.get(KeyEvent.VK_SPACE)) {
 			jump();
 			jumpMultiplier += jumpMultiplierIncrease;
 			fallMultiplier = initialFallMultiplier;

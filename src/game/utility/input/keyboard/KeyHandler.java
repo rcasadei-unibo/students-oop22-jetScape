@@ -26,108 +26,26 @@ public class KeyHandler implements KeyListener{
 	 * </p>
 	 * 
 	 */
-	public Map<String,Boolean> input = new HashMap<>();
+	public Map<Integer,Boolean> input = new HashMap<>();
 	private Optional<Integer> lastKeyTyped = Optional.empty();
 	
 	/**
 	 * Initializes a <code>KeyHandler</code>.
 	 */
 	public KeyHandler() {
-		input.put("spacebar", false);
-		input.put("x", false);
-		input.put("z", false);
-		input.put("enter", false);
-		input.put("e", false);
-		input.put("r", false);
-		input.put("p", false);
-		input.put("c", false);
-		input.put("v", false);
-		input.put("up", false);
-		input.put("down", false);
-	}
-	
-	@Override
-	public void keyTyped(KeyEvent e) {}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		switch(e.getKeyCode()) {
-			case KeyEvent.VK_SPACE:
-				input.replace("spacebar", true);
-				break;
-			case KeyEvent.VK_X:
-				input.replace("x", true);
-				break;
-			case KeyEvent.VK_Z:
-				input.replace("z", true);
-				break;
-			case KeyEvent.VK_ENTER:
-				input.replace("enter", true);
-				break;
-			case KeyEvent.VK_E:
-				input.replace("e", true);
-				break;
-			case KeyEvent.VK_C:
-				input.replace("c", true);
-				break;
-			case KeyEvent.VK_V:
-				input.replace("v", true);
-				break;
-			case KeyEvent.VK_P:
-				input.replace("p", true);
-				break;
-			case KeyEvent.VK_R:
-				input.replace("r", true);
-				break;
-			case KeyEvent.VK_UP:
-				input.replace("up", true);
-				break;
-			case KeyEvent.VK_DOWN:
-				input.replace("down", true);
-				break;
-		}
-		this.lastKeyTyped = Optional.of(e.getKeyCode());
+		input.put(KeyEvent.VK_SPACE, false);
+		input.put(KeyEvent.VK_X, false);
+		input.put(KeyEvent.VK_Z, false);
+		input.put(KeyEvent.VK_ENTER, false);
+		input.put(KeyEvent.VK_E, false);
+		input.put(KeyEvent.VK_R, false);
+		input.put(KeyEvent.VK_P, false);
+		input.put(KeyEvent.VK_C, false);
+		input.put(KeyEvent.VK_V, false);
+		input.put(KeyEvent.VK_UP, false);
+		input.put(KeyEvent.VK_DOWN, false);
 	}
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		switch(e.getKeyCode()) {
-			case KeyEvent.VK_SPACE:
-				input.replace("spacebar", false);
-				break;
-			case KeyEvent.VK_X:
-				input.replace("x", false);
-				break;
-			case KeyEvent.VK_Z:
-				input.replace("z", false);
-				break;
-			case KeyEvent.VK_ENTER:
-				input.replace("enter", false);
-				break;
-			case KeyEvent.VK_E:
-				input.replace("e", false);
-				break;
-			case KeyEvent.VK_C:
-				input.replace("c", false);
-				break;
-			case KeyEvent.VK_V:
-				input.replace("v", false);
-				break;
-			case KeyEvent.VK_P:
-				input.replace("p", false);
-				break;
-			case KeyEvent.VK_R:
-				input.replace("r", false);
-				break;
-			case KeyEvent.VK_UP:
-				input.replace("up", true);
-				break;
-			case KeyEvent.VK_DOWN:
-				input.replace("down", true);
-				break;
-		}
-	}
-	
 	public int getKeyTyped() {
 		if (this.lastKeyTyped.isPresent()) {
 			return lastKeyTyped.get();
@@ -138,4 +56,25 @@ public class KeyHandler implements KeyListener{
 	public void resetKeyTyped() {
 		this.lastKeyTyped = Optional.empty();
 	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(input.containsKey(e.getKeyCode())){
+			if(!input.get(e.getKeyCode())) {
+				this.lastKeyTyped = Optional.of(e.getKeyCode());
+			}
+			input.replace(e.getKeyCode(), true);
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if(input.containsKey(e.getKeyCode())){
+			input.replace(e.getKeyCode(), false);
+		}
+	}
+
 }
