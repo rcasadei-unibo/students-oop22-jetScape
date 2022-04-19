@@ -21,4 +21,5 @@ public interface Player extends Entity{
 	
 	static final double xPosition = 135.0;
 	
+	int getCurrentScore();
 }

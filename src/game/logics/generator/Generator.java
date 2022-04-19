@@ -1,7 +1,11 @@
 package game.logics.generator;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import org.json.simple.parser.ParseException;
 
 import game.logics.entities.obstacles.missile.Missile;
 import game.logics.entities.obstacles.zapper.ZapperBase;
@@ -59,8 +63,12 @@ public interface Generator extends Runnable{
 	
 	/**
 	 * Loads up all required information for the generation of obstacles.
+	 * 
+	 * @throws ParseException if parser fails to parse into objects the contents of json file
+	 * @throws IOException if json file reading fails
+	 * @throws FileNotFoundException if json file cannot be found
 	 */
-	void initialize();
+	void initialize() throws FileNotFoundException, IOException, ParseException;
 	
 	/**
 	 * Start the generation of obstacles [Starts thread].

@@ -5,8 +5,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.swing.JOptionPane;
+
+import org.json.simple.parser.ParseException;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.awt.Component;
 
 import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
@@ -40,9 +48,11 @@ public class LogicsHandler implements Logics{
 	/**
 	 * Generates sets of obstacles on the environment.
 	 */
-	private final Generator spawner;
 	private final Screen screen;
 	private final KeyHandler keyH;
+	
+	private final Generator spawner;
+	
 	private final DisplayController displayController;
 	
 	private GameState gameState = GameState.MENU;
@@ -51,10 +61,6 @@ public class LogicsHandler implements Logics{
 	 * A reference to the player's entity.
 	 */
 	private final Player playerEntity;
-	/**
-	 * The current player's score.
-	 */
-	private int score = 0;
 	
 	/**
 	 * Defines how many seconds have to pass for the spawner to generate
@@ -76,8 +82,10 @@ public class LogicsHandler implements Logics{
 	 */
 	private int frameTime = 0;
 	
+	private final Runnable quit;
+	private final Component window;
 	
-	private Debugger debugger;
+	private final Debugger debugger;
 	
 	/**
 	 * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -87,12 +95,13 @@ public class LogicsHandler implements Logics{
 	 * @param keyH the keyboard listener linked to the game window
 	 * @param debugger the debugger used
 	 */
-	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {
+	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger, final Runnable quit, final Component window) {
+		this.quit = quit;
+		this.window = window;
+		
 		this.screen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
-		this.displayController = new DisplayController(keyH,screen, g -> setGameState(g),
-				() -> gameState, () -> score);
 		
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
@@ -100,28 +109,75 @@ public class LogicsHandler implements Logics{
 		
 		playerEntity = new PlayerInstance(this);
 		
+		displayController = new DisplayController(keyH,screen, g -> setGameState(g),
+				() -> gameState, () -> playerEntity.getCurrentScore());
+		
 		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
+		this.initializeSpawner();
+	}
+	
+	public Screen getScreenInfo() {
+		return screen;
+	}
+	
+	public KeyHandler getKeyHandler() {
+		return keyH;
+	}
+	
+	public Debugger getDebugger() {
+		return debugger;
+	}
+	
+	private void initializeSpawner() {
 		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 0, 5000.0)));
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 0, 0)));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		
-		spawner.initialize();
+		try {
+			spawner.initialize();
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(window, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		} catch (ParseException | IOException e) {
+			JOptionPane.showMessageDialog(window, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 	
-	/*
-	 * Method for test enabling and disabling entity spawner
-	 *
-	private void checkSpawner() {
-		if(keyH.input.get("c")) {
-			if(spawner.isRunning()) {
-				spawner.resume();
-			} else {
-				spawner.start();
-			}
-		} else if(keyH.input.get("v")) {
-			spawner.pause();
+	/**
+	 * Draws the coordinates of each visible entity.
+	 * 
+	 * @param g the graphics drawer
+	 */
+	private void drawCoordinates(final Graphics2D g) {
+		if(debugger.isFeatureEnabled("entity coordinates")) {
+			entities.forEach((s, se) -> se.stream().filter(e -> e.isVisible()).collect(Collectors.toSet()).forEach(e -> {
+				g.setColor(Color.white);
+				g.setFont(Debugger.debugFont);
+				g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
+				g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
+			}));
 		}
-	}*/
+	}
+	
+	private void updateTimers() {
+		frameTime++;
+		if(frameTime % GameWindow.fpsLimit == 0) {
+			//runTime++;
+		}
+	}
+	
+	/**
+	 * Removes all entities that are on the "clear area" [x < -tile size].
+	 */
+	private void updateCleaner() {
+		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
+			spawner.cleanTiles();
+			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
+				System.out.println("clean");
+			}
+		}
+	}
 	
 	/**
 	 * Handles the enabling and disabling of the Debug Mode 
@@ -144,6 +200,13 @@ public class LogicsHandler implements Logics{
 	private void setGameState(final GameState gs) {
 		if(this.gameState != gs) {
 			switch (gs) {
+				case EXIT:
+					final String quitMessage = "Are you sure to quit the game?";
+					final String quitTitle = "Quit Game";
+					if(JOptionPane.showConfirmDialog(window, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+						return;
+					}
+					break;
 				case INGAME:
 					if (this.gameState == GameState.MENU) {
 						entities.get("player").add(playerEntity);
@@ -151,15 +214,22 @@ public class LogicsHandler implements Logics{
 					spawner.resume();
 					break;
 				case MENU:
+					if(this.gameState == GameState.PAUSED) {
+						final String message = "Do you want to return the main menu?\nYou will lose the current progress of this match.";
+						final String title = "Return to main menù";
+						if(JOptionPane.showConfirmDialog(window, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+							return;
+						}
+					}
 					synchronized(entities) {
 						entities.forEach((s, se) -> {
 							se.forEach(e -> e.reset());
 							se.clear();
 						});
 					}
-					this.score = 0;
 				case PAUSED:
 					spawner.pause();
+					break;
 				default:
 					break;
 			}
@@ -167,67 +237,15 @@ public class LogicsHandler implements Logics{
 		}
 	}
 	
-	private void updateTimers() {
-		frameTime++;
-		if(frameTime % GameWindow.fpsLimit == 0) {
-			//runTime++;
-		}
-	}
-	
-	private void updateScore() {
-		if(frameTime % 2 == 0) {
-			this.score++;
-		}
-	}
-	
-	/**
-	 * Removes all entities that are on the "clear area" [x < -tile size].
-	 */
-	private void updateCleaner() {
-		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
-			spawner.cleanTiles();
-			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
-				System.out.println("clean");
-			}
-		}
-	}
-	
-	/**
-	 * Draws the coordinates of each visible entity.
-	 * 
-	 * @param g the graphics drawer
-	 */
-	private void drawCoordinates(final Graphics2D g) {
-		if(debugger.isFeatureEnabled("entity coordinates")) {
-			entities.forEach((s, se) -> se.stream().filter(e -> e.isVisible()).collect(Collectors.toSet()).forEach(e -> {
-				g.setColor(Color.white);
-				g.setFont(Debugger.debugFont);
-				g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
-				g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
-			}));
-		}
-	}
-	
-	public Screen getScreenInfo() {
-		return screen;
-	}
-	
-	public KeyHandler getKeyHandler() {
-		return keyH;
-	}
-	
-	public Debugger getDebugger() {
-		return debugger;
-	}
-	
 	public void updateAll() {
 		switch(this.gameState) {
 			case EXIT:
-				System.exit(0); // TODO FIX BRUTAL EXIT
+				spawner.stop();
+				quit.run();
+				System.exit(0);
 				break;
 			case INGAME:
 				this.updateCleaner();
-				this.updateScore();
 				this.checkPause();
 				//this.checkSpawner();
 				synchronized(entities) {

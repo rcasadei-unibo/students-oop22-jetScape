@@ -32,6 +32,11 @@ public class PlayerInstance extends EntityInstance implements Player{
 	private static final double animationSpeed = 6;
 	
 	/**
+	 * The current player's score.
+	 */
+	private int score = 0;
+	
+	/**
 	 * The current jump speed of the player.
 	 */
 	private final double jumpSpeed;
@@ -170,17 +175,29 @@ public class PlayerInstance extends EntityInstance implements Player{
 		frameTime++;
 	}
 	
+	private void updateScore() {
+		if(frameTime % 2 == 0) {
+			this.score++;
+		}
+	}
+	
+	public int getCurrentScore() {
+		return this.score;
+	}
+	
 	@Override
 	public void reset() {
 		position.setX(xPosition);
 		position.setY(yGround);
 		action = "idle";
+		score = 0;
 	}
 	
 	@Override
 	public void update() {
 		super.update();
 		this.updateSprite();
+		this.updateScore();
 		if(keyH.input.get("spacebar")) {
 			jump();
 			jumpMultiplier += jumpMultiplierIncrease;

@@ -63,7 +63,7 @@ public class GameHandler implements Game {
 	@Override
 	public void initialize() {
 		gFrame.setVisible(true);
-		gScreen.startLoop();
+		gScreen.startGame();
 	}
 
 }
