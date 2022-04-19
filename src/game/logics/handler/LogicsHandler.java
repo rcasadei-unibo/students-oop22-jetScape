@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.awt.Component;
 
+import game.frame.GameHandler;
 import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.MissileInstance;
@@ -81,10 +82,7 @@ public class LogicsHandler implements Logics{
 	 * The frames passed since the last second.
 	 */
 	private int frameTime = 0;
-	
-	private final Runnable quit;
-	private final Component window;
-	
+		
 	private final Debugger debugger;
 	
 	/**
@@ -95,10 +93,7 @@ public class LogicsHandler implements Logics{
 	 * @param keyH the keyboard listener linked to the game window
 	 * @param debugger the debugger used
 	 */
-	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger, final Runnable quit, final Component window) {
-		this.quit = quit;
-		this.window = window;
-		
+	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {		
 		this.screen = screen;
 		this.keyH = keyH;
 		this.debugger = debugger;
@@ -136,10 +131,10 @@ public class LogicsHandler implements Logics{
 		try {
 			spawner.initialize();
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(window, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog((Component)GameHandler.gameWindow, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		} catch (ParseException | IOException e) {
-			JOptionPane.showMessageDialog(window, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog((Component)GameHandler.gameWindow, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -154,8 +149,8 @@ public class LogicsHandler implements Logics{
 			entities.forEach((s, se) -> se.stream().filter(e -> e.isVisible()).collect(Collectors.toSet()).forEach(e -> {
 				g.setColor(Color.white);
 				g.setFont(Debugger.debugFont);
-				g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
-				g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.tileScaling)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.tileScaling)));
+				g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.baseTileSize)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.baseTileSize)));
+				g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.baseTileSize)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.baseTileSize)));
 			}));
 		}
 	}
@@ -203,7 +198,7 @@ public class LogicsHandler implements Logics{
 				case EXIT:
 					final String quitMessage = "Are you sure to quit the game?";
 					final String quitTitle = "Quit Game";
-					if(JOptionPane.showConfirmDialog(window, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+					if(JOptionPane.showConfirmDialog((Component)GameHandler.gameWindow, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
 						return;
 					}
 					break;
@@ -217,7 +212,7 @@ public class LogicsHandler implements Logics{
 					if(this.gameState == GameState.PAUSED) {
 						final String message = "Do you want to return the main menu?\nYou will lose the current progress of this match.";
 						final String title = "Return to main menù";
-						if(JOptionPane.showConfirmDialog(window, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+						if(JOptionPane.showConfirmDialog((Component)GameHandler.gameWindow, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 							return;
 						}
 					}
@@ -241,7 +236,7 @@ public class LogicsHandler implements Logics{
 		switch(this.gameState) {
 			case EXIT:
 				spawner.stop();
-				quit.run();
+				GameHandler.gameWindow.stopGame();
 				System.exit(0);
 				break;
 			case INGAME:

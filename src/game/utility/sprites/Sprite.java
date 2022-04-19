@@ -64,7 +64,23 @@ public class Sprite {
 	 */
 	public Sprite(final String name, final Color placeHolder, final String path) {
 		this(name, placeHolder);
-		this.load(path);
+		image = Optional.ofNullable(Sprite.load(defaultDir + path));
+	}
+	
+	/**
+	 * Loads a <code>BufferedImage</code> of a sprite and returns it.
+	 * 
+	 * @param path the image path
+	 * @return a <code>BufferedImage</code> containing the sprite
+	 */
+	public static BufferedImage load(final String path) {
+		BufferedImage loaded = null;
+		try {
+			loaded = ImageIO.read(new File(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return loaded;
 	}
 	
 	/**
@@ -72,19 +88,6 @@ public class Sprite {
 	 */
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	 * Reads and saves the image to be drawn as sprite.
-	 * 
-	 * @param path the image path
-	 */
-	public void load(final String path) {
-		try {
-			image = Optional.of(ImageIO.read(new File(defaultDir + path)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**

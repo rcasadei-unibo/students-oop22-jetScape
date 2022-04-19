@@ -1,5 +1,8 @@
 package game.utility.screen;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  * The <code>ScreenHandler</code> stores all the basic screen information.
  * 
@@ -7,36 +10,34 @@ package game.utility.screen;
  */
 public class ScreenHandler implements Screen{
 
-	private final int tileSize;
-	private final int screenWidth;
-	private final int screenHeight;
+	private final Dimension currentSize;
+	private int tileSize;
 	
 	/**
 	 * Initialize a ScreenHandler with default screen values. 
 	 */
 	public ScreenHandler() {
-		tileSize = (int)(tileBaseSize * tileScaling);
-		screenWidth = (int)(resolutionHorizontal * tileSize * resolutionScaling);
-		screenHeight = (int)(resolutionVertical * tileSize * resolutionScaling);
+		final Dimension systemResolution = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		
+		tileSize = (int)((systemResolution.getWidth() / proportion) / horizontalRatio);
+		currentSize= new Dimension(tileSize * horizontalRatio, tileSize * verticalRatio);
 	}
 	
-//	/**
-//	 * Initialize a ScreenHandler with values taken from the settings file specified
-//	 * @param filename 
-//	 * 			Settings file where screen values are taken 
-//	 */
-	//public ScreenHandler(final String filename) {}
+	public Dimension getScreenSize() {
+		return currentSize;
+	}
 	
 	public int getTileSize() {
-		return tileSize;
+		return (int)tileSize;
 	}
 	
 	public int getWidth() {
-		return screenWidth;
+		return (int)currentSize.getWidth();
 	}
 	
 	public int getHeight() {
-		return screenHeight;
+		return (int)currentSize.getHeight();
 	}
 	
 }

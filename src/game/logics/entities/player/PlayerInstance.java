@@ -91,7 +91,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		fallSpeed = baseFallSpeed / maximumFPS;
 		jumpSpeed = baseJumpSpeed / maximumFPS;
 		
-		position = new Pair<>(xPosition, yGround);
+		position = new Pair<>(screen.getTileSize() * xPosition, yGround);
 		action = "idle";
 		entityTag = "player";
 		

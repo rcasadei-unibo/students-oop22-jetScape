@@ -2,6 +2,8 @@ package game.frame;
 
 import javax.swing.JFrame;
 
+import game.utility.sprites.Sprite;
+
 /**
  * The <code>GameHandler</code> class is used to create and handle
  * the frame where the window of the game is going to take place
@@ -22,6 +24,10 @@ public class GameHandler implements Game {
 	 */
 	private static final String windowTitle = "JetScape";
 	/**
+	 * The icon representing the game window.
+	 */
+	private static final String windowIconPath = Sprite.defaultDir + "icon.png";
+	/**
 	 * Allows the window to get manually resized by the user.
 	 * <p>It's suggested to leave it <code>false</code> as long as a way to change
 	 * change Resolution run-time is not being implemented.</p> 
@@ -31,8 +37,8 @@ public class GameHandler implements Game {
 	/**
 	 * The <code>JFrame</code> where the game window will be contained.
 	 */
-	private final JFrame gFrame = new JFrame();
-	private final GameWindow gScreen;
+	public static final JFrame gameFrame = new JFrame();
+	public static GameWindow gameWindow;
 	
 	private boolean debugMode = false;
 	
@@ -45,16 +51,17 @@ public class GameHandler implements Game {
 	public GameHandler(final boolean debug) {
 		this.debugMode = debug;
 		
-		gFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gFrame.setTitle(windowTitle);
-		gFrame.setLocationRelativeTo(null);
-		gFrame.setResizable(allowResize);
+		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gameFrame.setTitle(windowTitle);
+		gameFrame.setLocationRelativeTo(null);
+		gameFrame.setIconImage(Sprite.load(windowIconPath));
+		gameFrame.setResizable(allowResize);
 		
-		gScreen = new GameWindow(debugMode);
-		gFrame.add(gScreen);
+		gameWindow = new GameWindow(debugMode);
+		gameFrame.add(gameWindow);
 		
 		//Modifies the frame making it the same size of the game window
-		gFrame.pack();
+		gameFrame.pack();
 	}
 	
 	/**
@@ -62,8 +69,8 @@ public class GameHandler implements Game {
 	 */
 	@Override
 	public void initialize() {
-		gFrame.setVisible(true);
-		gScreen.startGame();
+		gameFrame.setVisible(true);
+		gameWindow.startGame();
 	}
 
 }

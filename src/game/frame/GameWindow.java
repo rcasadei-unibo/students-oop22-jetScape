@@ -10,7 +10,6 @@ import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 import game.utility.screen.ScreenHandler;
 
-import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -86,7 +85,7 @@ public class GameWindow extends JPanel implements Runnable{
 		super();
 		
 		/// Sets up the basic JPanel parameters /// 
-		this.setPreferredSize(new Dimension(gameScreen.getWidth(), gameScreen.getHeight()));
+		this.setPreferredSize(gameScreen.getScreenSize());
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
@@ -96,7 +95,7 @@ public class GameWindow extends JPanel implements Runnable{
 		
 		/// Sets up Debugger and Logics handler ///
 		this.debugger = new Debugger(debug, () -> fps);
-		this.logH = new LogicsHandler(gameScreen, keyH, debugger, () -> stopGame(), (Component)this);
+		this.logH = new LogicsHandler(gameScreen, keyH, debugger);
 	}
 	
 	/**
