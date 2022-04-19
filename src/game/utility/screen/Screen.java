@@ -1,6 +1,7 @@
 package game.utility.screen;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 /**
  * The <code>Screen</code> interface can be used for accessing <code>ScreenHandler</code> methods
@@ -10,6 +11,8 @@ import java.awt.Dimension;
  * @author Daniel Pellanda
  */
 public interface Screen {
+	
+	static final Dimension systemResolution = Toolkit.getDefaultToolkit().getScreenSize();
 	
 	//// 	DEFAULT VALUES    ////
 	static final int baseTileSize = 32;

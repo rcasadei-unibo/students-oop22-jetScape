@@ -1,7 +1,6 @@
 package game.utility.screen;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
 
 /**
  * The <code>ScreenHandler</code> stores all the basic screen information.
@@ -9,7 +8,7 @@ import java.awt.Toolkit;
  * @author Daniel Pellanda
  */
 public class ScreenHandler implements Screen{
-
+	
 	private final Dimension currentSize;
 	private int tileSize;
 	
@@ -17,9 +16,6 @@ public class ScreenHandler implements Screen{
 	 * Initialize a ScreenHandler with default screen values. 
 	 */
 	public ScreenHandler() {
-		final Dimension systemResolution = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		
 		tileSize = (int)((systemResolution.getWidth() / proportion) / horizontalRatio);
 		currentSize= new Dimension(tileSize * horizontalRatio, tileSize * verticalRatio);
 	}

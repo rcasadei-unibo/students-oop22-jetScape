@@ -75,11 +75,6 @@ public class LogicsHandler implements Logics{
 	 */
 	private int cleanInterval = 5;
 	
-	
-//	/**
-//	 * Keeps the seconds passed since the program was launched.
-//	 */
-//	private int runTime = 0;
 	/**
 	 * The frames passed since the last second.
 	 */
@@ -159,9 +154,6 @@ public class LogicsHandler implements Logics{
 	
 	private void updateTimers() {
 		frameTime++;
-		if(frameTime % GameWindow.fpsLimit == 0) {
-			//runTime++;
-		}
 	}
 	
 	/**
@@ -248,7 +240,6 @@ public class LogicsHandler implements Logics{
 				break;
 			case INGAME:
 				this.updateCleaner();
-				//this.checkSpawner();
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.update()));
 				}
