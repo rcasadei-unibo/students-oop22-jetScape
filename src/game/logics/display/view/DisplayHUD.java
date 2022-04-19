@@ -23,7 +23,8 @@ public class DisplayHUD extends Display {
 		g.setColor(Color.darkGray);
 		g.setFont(font);
 		x = 5*(this.getCenteredX(super.gScreen, g, score)/3);
-		g.drawString(score + this.score, x + scoreShift, super.gScreen.getTileSize() * scoreTile);
+		g.drawString(score + this.score, x + scoreShift,
+				super.gScreen.getTileSize() * scoreTile);
 		//SCORE
 		g.setColor(Color.white);
 		g.drawString(score + this.score, x, super.gScreen.getTileSize() * scoreTile);

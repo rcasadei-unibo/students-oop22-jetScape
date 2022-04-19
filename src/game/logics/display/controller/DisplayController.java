@@ -55,6 +55,10 @@ public class DisplayController {
 		}
 	}
 	
+	/*
+	 * Updates the current screen (selected options or score), in menus changes game state
+	 * when you choose an option 
+	 */
 	public void updateScreen () {
 		switch(getState.get()) {
 		case MENU :

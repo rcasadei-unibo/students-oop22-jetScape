@@ -26,7 +26,9 @@ public abstract class Display {
 	public void buildText(String firstOption) {
 		if(this.text.isEmpty()) {
 			this.text.add(firstOption);
-			for(String option : this.options.keySet().stream().filter(s -> s.compareTo(firstOption) != 0).collect(Collectors.toSet())) {
+			for(String option : this.options.keySet().stream()
+					.filter(s -> s.compareTo(firstOption) != 0)
+					.collect(Collectors.toSet())) {
 				this.text.add(option);
 			}
 		}

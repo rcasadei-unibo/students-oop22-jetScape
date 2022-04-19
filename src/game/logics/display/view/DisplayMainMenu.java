@@ -39,26 +39,12 @@ public class DisplayMainMenu extends Display {
 		//TITLE
 		g.setColor(Color.white);
 		g.drawString(title, x, gScreen.getTileSize() * titleTile);
-		//CREATE TEXT LIST
-		g.setFont(DisplayMainMenu.fontText);
-//		super.buildText(firstOption);
 		//OPTIONS SHADOW
 		g.setColor(Color.darkGray);
 		super.drawText(g, textShift);
 		//OPTIONS
 		g.setColor(Color.white);
 		super.drawText(g,0);
-		//SELECTED OPTION SHADOW
-//		g.setColor(Color.darkGray);
-//		g.setFont(DisplayMainMenu.selectedTextFont);
-//		selectedOption = ("> "+ this.selectedOption +" <");
-//		x = super.getCenteredX(gScreen, g, selectedOption);
-//		g.drawString(selectedOption, x + textShift,
-//				gScreen.getTileSize() *(textTile + this.getCenteredX(gScreen, g, selectedOption)));
-//		// SELECTED OPTION
-//		g.setColor(Color.white);
-//		g.drawString(selectedOption, x,
-//				gScreen.getTileSize() *(textTile + this.getCenteredX(gScreen, g, selectedOption)));
 	}
 	
 }
