@@ -8,7 +8,9 @@ import game.utility.screen.Screen;
 import game.utility.sprites.DrawManager;
 import game.utility.sprites.Drawer;
 
+import java.awt.Rectangle;
 import java.awt.Graphics2D;
+import java.util.Set;
 
 /**
  * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
@@ -51,6 +53,8 @@ public abstract class EntityInstance implements Entity{
 	 * A flag that automatically updates and tells if the entity's position between screen bounds.
 	 */
 	private boolean onScreen = false;
+	
+	private Set<Rectangle> hitbox ;
 	
 	/**
 	 * Manages the sprites of the object.
@@ -145,5 +149,9 @@ public abstract class EntityInstance implements Entity{
 	
 	public void draw(final Graphics2D g) {
 		spritesMgr.drawSprite(g, position, screen.getTileSize());
+	}
+	
+	public Set<Rectangle> getHitbox(){
+		return hitbox;
 	}
 }
