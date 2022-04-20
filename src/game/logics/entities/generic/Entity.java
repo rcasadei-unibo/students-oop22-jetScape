@@ -60,4 +60,11 @@ public interface Entity {
 	 * @param g the graphics drawer
 	 */
 	void draw(Graphics2D g);
+	
+	/**
+	 * Draws the coordinates of the entity if visible.
+	 * 
+	 * @param g the graphics drawer
+	 */
+	void drawCoordinates(Graphics2D g);
 }

@@ -34,16 +34,16 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 	private static final Color placeH = Color.gray;
 	
 	/**
-	 * Specifies the another <code>ZapperBaseInstance</code> which this object is paired with.
+	 * Specifies the master class where all the zapper entities are managed.
 	 */
-	private ZapperBase pairedBase;
+	private Zapper master;
 	
 	/**
 	 * Specifies the current rotation of the obstacle.
 	 */
 	private String rotation = "up";
 	
-	private boolean paired = false;
+	private boolean hasMaster = false;
 	
 	/**
 	 * Constructor used for initializing basic parts of the obstacle
@@ -58,11 +58,10 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 		entityTag = "zapperbase";
 	}
 	
-	public void setPaired(final ZapperBase zap) {
-		if(!this.paired) {
-			this.pairedBase = zap;
-			this.paired = true;
-			zap.setPaired(this);
+	public void setMaster(final Zapper zap) {
+		if(!this.hasMaster) {
+			this.master = zap;
+			this.hasMaster = true;
 			
 			updateRotation();
 			spritesMgr.setPlaceH(placeH);
@@ -78,6 +77,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 	 * Updates the object rotation, depending of the position of the paired <code>ZapperBaseInstance</code>.
 	 */
 	private void updateRotation() {
+		ZapperBase pairedBase = master.getPaired(this);
 		if(this.getX() == pairedBase.getX()) {
 			if(this.getY() < pairedBase.getY()) {
 				this.setRotation("down");

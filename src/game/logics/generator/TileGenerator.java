@@ -22,7 +22,9 @@ import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.generic.Obstacle;
 import game.logics.entities.obstacles.missile.Missile;
+import game.logics.entities.obstacles.zapper.Zapper;
 import game.logics.entities.obstacles.zapper.ZapperBase;
+import game.logics.entities.obstacles.zapper.ZapperInstance;
 import game.logics.entities.obstacles.zapper.ZapperRay;
 import game.utility.other.Pair;
 
@@ -126,29 +128,34 @@ public class TileGenerator implements Generator{
 		if(createZBase.isPresent() && createZRay.isPresent()) {
 			JSONArray types = (JSONArray)allTiles.get("zappers");
 			for(int i = 0; i < types.size(); i++){
-					JSONArray zsets = (JSONArray)types.get(i);
-				if(zsets.size() >= 2) {
-					Set<Entity> s = new HashSet<>();
+				JSONArray zsets = (JSONArray)types.get(i);
+				Set<Entity> tile = new HashSet<>();
+				for(int j = 0; j < zsets.size(); j++) {
+					JSONArray set = (JSONArray)zsets.get(j);
+					if(set.size() >= 2) {
+						Set<ZapperRay> s = new HashSet<>();
 					
-					JSONObject b1 = (JSONObject)zsets.get(0), b2 = (JSONObject)zsets.get(1);
-					ZapperBase base1 = createZBase.get().apply(new Pair<>(
-							Double.parseDouble((String)b1.get("x")) * tileSize,
-							Double.parseDouble((String)b1.get("y")) * tileSize));
-					ZapperBase base2 = createZBase.get().apply(new Pair<>(
-							Double.parseDouble((String)b2.get("x")) * tileSize,
-							Double.parseDouble((String)b2.get("y")) * tileSize));
-					base1.setPaired(base2);
-					s.add(base1);
-					s.add(base2);
+						JSONObject b1 = (JSONObject)set.get(0), b2 = (JSONObject)set.get(1);
+						ZapperBase base1 = createZBase.get().apply(new Pair<>(
+								Double.parseDouble((String)b1.get("x")) * tileSize,
+								Double.parseDouble((String)b1.get("y")) * tileSize));
+						ZapperBase base2 = createZBase.get().apply(new Pair<>(
+								Double.parseDouble((String)b2.get("x")) * tileSize,
+								Double.parseDouble((String)b2.get("y")) * tileSize));
 			
-					for(int j = 2; j < zsets.size(); j++) {
-						JSONObject z = (JSONObject)zsets.get(j);
-					s.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
-							Double.parseDouble((String)z.get("x")) * tileSize,
-							Double.parseDouble((String)z.get("y")) * tileSize)));			
+						for(int h = 2; h < set.size(); h++) {
+							JSONObject z = (JSONObject)set.get(h);
+							s.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
+									Double.parseDouble((String)z.get("x")) * tileSize,
+									Double.parseDouble((String)z.get("y")) * tileSize)));			
+						}
+						Zapper master = new ZapperInstance(base1,base2,s);
+						base1.setMaster(master);
+						base2.setMaster(master);
+						tile.add(master);	
 					}
-				zapperTiles.add(s);	
 				}
+				zapperTiles.add(tile);
 			}
 		}
 			
@@ -290,7 +297,6 @@ public class TileGenerator implements Generator{
 	public void pause() {
 		waiting = true;
 		remainingTimeToSleep = systemTimeBeforeSleep != 0 ? interval - (System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep) : 0;
-		System.out.println(remainingTimeToSleep);
 	}
 	
 	public void resume() {

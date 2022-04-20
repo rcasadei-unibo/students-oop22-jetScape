@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
 import org.json.simple.parser.ParseException;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
@@ -136,22 +134,6 @@ public class LogicsHandler implements Logics{
 		}
 	}
 	
-	/**
-	 * Draws the coordinates of each visible entity.
-	 * 
-	 * @param g the graphics drawer
-	 */
-	private void drawCoordinates(final Graphics2D g) {
-		if(debugger.isFeatureEnabled("entity coordinates")) {
-			entities.forEach((s, se) -> se.stream().filter(e -> e.isVisible()).collect(Collectors.toSet()).forEach(e -> {
-				g.setColor(Color.white);
-				g.setFont(Debugger.debugFont);
-				g.drawString("X:" + Math.round(e.getX()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.baseTileSize)), Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.baseTileSize)));
-				g.drawString("Y:" + Math.round(e.getY()), Math.round(e.getX()) + Math.round(screen.getTileSize()) + Math.round(screen.getTileSize() / (8 * Screen.baseTileSize)), 10 + Math.round(e.getY()) + Math.round(screen.getTileSize()) +  Math.round(screen.getTileSize() / (4 * Screen.baseTileSize)));
-			}));
-		}
-	}
-	
 	private void updateTimers() {
 		frameTime++;
 	}
@@ -204,7 +186,7 @@ public class LogicsHandler implements Logics{
 					break;
 				case MENU:
 					if(this.gameState == GameState.PAUSED) {
-						final String message = "Do you want to return the main menu?\nYou will lose the current progress of this match.";
+						final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
 						final String title = "Return to main menu";
 						if(JOptionPane.showConfirmDialog((Component)GameHandler.gameWindow, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 							return;
@@ -257,7 +239,7 @@ public class LogicsHandler implements Logics{
 			case INGAME:
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
-					this.drawCoordinates(g);
+					entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
 				}
 			default:
 				break;
