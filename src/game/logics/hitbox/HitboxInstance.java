@@ -14,19 +14,23 @@ public abstract class HitboxInstance implements Hitbox{
 	protected final Map<Rectangle, Pair<Integer,Integer>> hitboxes;
 	private final Pair<Double,Double> startingPos;
 	private final  Screen gScreen;
+	private Pair<Double,Double> lastPos;
 	
 	
 	public HitboxInstance(Pair<Double, Double> startingPos,	Screen gScreen) {
 		super();
 		this.hitboxes = new HashMap<>();
 		this.startingPos = startingPos;
+		this.lastPos = startingPos;
 		this.gScreen = gScreen;
 	}
 
-	public void updatePosition(int xShift, int yShift) {
+	public void updatePosition(Pair<Double,Double> newPos) {
+		var shift = getShift(newPos);
 		hitboxes.keySet().forEach(hitbox -> {
-			hitbox.translate(xShift, yShift);
+			hitbox.translate(shift.getX(), shift.getY());
 		});
+		this.lastPos = newPos;
 	}
 	
 	public boolean collides(Hitbox entity) {
@@ -58,6 +62,13 @@ public abstract class HitboxInstance implements Hitbox{
 		int rectangleHeight = (int) (gScreen.getTileSize() * hProportion);
 		this.hitboxes.put(new Rectangle(rectangleX,rectangleY,rectangleWidth,rectangleHeight),
 				new Pair<>(rectangleWidth, rectangleHeight));
+	}
+	
+	
+	private Pair<Integer,Integer> getShift(Pair<Double,Double> newPos){
+		int xShift = (int) (newPos.getX() - this.lastPos.getX());
+		int yShift = (int) (newPos.getY() - this.lastPos.getY());
+		return new Pair<>(xShift, yShift);		
 	}
 	
 }
