@@ -86,5 +86,6 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 				movement.applyAcceleration();
 			}
 		}
+		this.hitbox.updatePosition(this.position);
 	}
 }

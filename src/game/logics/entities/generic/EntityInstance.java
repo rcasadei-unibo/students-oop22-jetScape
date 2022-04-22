@@ -54,7 +54,7 @@ public abstract class EntityInstance implements Entity{
 	 */
 	private boolean onScreen = false;
 	
-	private Hitbox hitbox ;
+	protected Hitbox hitbox ;
 	
 	/**
 	 * Manages the sprites of the object.
@@ -129,6 +129,7 @@ public abstract class EntityInstance implements Entity{
 	public void reset() {
 		position.setX(startPos.getX());
 		position.setY(startPos.getY());
+		this.hitbox.resetPosition();
 	}
 	
 	/**

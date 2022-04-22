@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.handler.Logics;
+import game.logics.hitbox.ZapperBaseHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.Pair;
 
@@ -71,6 +72,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 			spritesMgr.addSprite("left", spritePath + "zapperbase_left.png");
 			spritesMgr.addSprite("right", spritePath + "zapperbase_right.png");
 			spritesMgr.setAnimator(() -> rotation);
+			this.hitbox = new ZapperBaseHitbox(position, screen);
 		}
 	}
 	

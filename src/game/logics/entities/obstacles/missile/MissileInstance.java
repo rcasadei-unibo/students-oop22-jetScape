@@ -7,6 +7,7 @@ import game.frame.GameWindow;
 import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.entities.player.Player;
 import game.logics.handler.Logics;
+import game.logics.hitbox.MissileHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.Pair;
 
@@ -78,6 +79,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 			}
 			return "missile";
 		});
+		this.hitbox = new MissileHitbox(pos, screen);
 	}
 	
 	private void updateFrameTime() {

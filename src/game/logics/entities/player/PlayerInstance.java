@@ -5,6 +5,7 @@ import java.awt.Color;
 import game.frame.GameWindow;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.handler.Logics;
+import game.logics.hitbox.PlayerHitbox;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.Pair;
 
@@ -87,6 +88,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 	public PlayerInstance(final Logics l) {
 		super(l);
 		this.keyH = l.getKeyHandler();
+		this.hitbox = new PlayerHitbox(position, screen);
 		
 		fallSpeed = baseFallSpeed / maximumFPS;
 		jumpSpeed = baseJumpSpeed / maximumFPS;
@@ -187,6 +189,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 	
 	@Override
 	public void reset() {
+		super.reset();
 		position.setX(xPosition);
 		position.setY(yGround);
 		action = "idle";
@@ -207,6 +210,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 			fallMultiplier += fallMultiplierIncrease;
 			jumpMultiplier = initialJumpMultiplier;
 		}
+		this.hitbox.updatePosition(position);
 	}
 
 }
