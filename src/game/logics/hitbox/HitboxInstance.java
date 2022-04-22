@@ -5,15 +5,22 @@ import java.util.Map;
 import java.util.Set;
 
 import game.utility.other.Pair;
+import game.utility.screen.Screen;
 
 import java.awt.Rectangle;
 
 public abstract class HitboxInstance implements Hitbox{
-	private final Map<Rectangle, Pair<Integer,Integer>> hitboxes;
+	static final int spriteDimensions = 32;
+	protected final Map<Rectangle, Pair<Integer,Integer>> hitboxes;
+	private final Pair<Double,Double> startingPos;
+	private final  Screen gScreen;
 	
-	public HitboxInstance() {
+	
+	public HitboxInstance(Pair<Double, Double> startingPos,	Screen gScreen) {
 		super();
 		this.hitboxes = new HashMap<>();
+		this.startingPos = startingPos;
+		this.gScreen = gScreen;
 	}
 
 	public void updatePosition(int xShift, int yShift) {
@@ -22,7 +29,7 @@ public abstract class HitboxInstance implements Hitbox{
 		});
 	}
 	
-	public boolean collides(HitboxInstance entity) {
+	public boolean collides(Hitbox entity) {
 		for(Rectangle hitbox : this.hitboxes.keySet()) {
 			for(Rectangle hitboxTarget : entity.getRectangles()) {
 				if(hitbox.intersects(hitboxTarget)) {
@@ -42,6 +49,15 @@ public abstract class HitboxInstance implements Hitbox{
 			var startingPoint = this.hitboxes.get(hitbox);
 			hitbox.setLocation(startingPoint.getX(), startingPoint.getY());
 		});
+	}
+	
+	protected void addRectangle(double xProportion, double yProportion, double hProportion, double wProportion) {
+		int rectangleX = (int) (startingPos.getX() + gScreen.getTileSize()* xProportion);
+		int rectangleY = (int) (startingPos.getY() - gScreen.getTileSize()* yProportion);
+		int rectangleWidth  = (int) (gScreen.getTileSize()* wProportion);
+		int rectangleHeight = (int) (gScreen.getTileSize() * hProportion);
+		this.hitboxes.put(new Rectangle(rectangleX,rectangleY,rectangleWidth,rectangleHeight),
+				new Pair<>(rectangleWidth, rectangleHeight));
 	}
 	
 }
