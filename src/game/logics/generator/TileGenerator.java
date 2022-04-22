@@ -26,6 +26,7 @@ import game.logics.entities.obstacles.zapper.Zapper;
 import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperInstance;
 import game.logics.entities.obstacles.zapper.ZapperRay;
+import game.logics.entities.pickups.shield.Shield;
 import game.utility.other.Pair;
 
 /**
@@ -60,6 +61,10 @@ public class TileGenerator implements Generator{
 	 * A function used by the generator for creating <code>Missile</code> object.
 	 */
 	private Optional<Function<Pair<Double,Double>,Missile>> createMissile = Optional.empty();
+	/**
+	 * A function used by the generator for creating <code>Shield</code> object.
+	 */
+	private Optional<Function<Pair<Double,Double>,Shield>> createShield = Optional.empty();
 	
 	/**
 	 * A list where all loaded set of zapper tiles are stored.
@@ -70,6 +75,10 @@ public class TileGenerator implements Generator{
 	 */
 	private final List<Set<Entity>> missileTiles = new ArrayList<>();
 	/**
+	 * A list where all loaded powerups are stored.
+	 */
+	private final List<Set<Entity>> powerUpTiles = new ArrayList<>();
+	/**
 	 * The entities map where the spawner adds the sets of obstacles.
 	 */
 	private final Map<String, Set<Entity>> entities;
@@ -78,11 +87,16 @@ public class TileGenerator implements Generator{
 	/**
 	 * Decides the odds for the generator to spawn a set of zappers
 	 */
-	private final int zapperOdds = 8;
+	private final int zapperOdds = 100;
 	/**
 	 * Decides the odds for the generator to spawn a set of missiles
 	 */
-	private final int missileOdds = 4;
+	private final int missileOdds = 40;
+	/**
+	 * Decides the odds for the generator to spawn a power up
+	 */
+	private final int powerUpOdds = 5;
+	
 	/**
 	 * Decides how many seconds the generator pauses after each set spawned.
 	 */
@@ -175,6 +189,23 @@ public class TileGenerator implements Generator{
 				missileTiles.add(s);
 			}
 		}
+		
+		///		LOADING SHIELDS 	///
+		if(createShield.isPresent()) {
+			JSONArray types = (JSONArray)allTiles.get("shields");
+			for(int i = 0; i < types.size(); i++){
+				JSONArray sets = (JSONArray)types.get(i);
+				Set<Entity> s = new HashSet<>();
+						
+				for(int j = 0; j < sets.size(); j++) {
+					JSONObject z = (JSONObject)sets.get(j);
+					s.add(createShield.get().apply(new Pair<>(
+						Double.parseDouble((String)z.get("x")) * tileSize,							
+						Double.parseDouble((String)z.get("y")) * tileSize)));			
+				}
+				powerUpTiles.add(s);
+			}
+		}
 }
 	
 	public void cleanTiles() {
@@ -200,10 +231,25 @@ public class TileGenerator implements Generator{
 		randomNumber = r.nextInt() % (missileOdds + zapperOdds);
 		randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 		
-		if(randomNumber <= missileOdds) {
+		if(randomNumber <= powerUpOdds) {
+			spawnPowerUp();
+		} else if(randomNumber <= missileOdds) {
 			spawnMissile();
 		} else {
 			spawnZapper();
+		}
+	}
+	
+	private void spawnPowerUp() {
+		final Random r = new Random();
+		int randomNumber;
+		do {
+			randomNumber = r.nextInt() % powerUpTiles.size();
+			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
+		}while(entities.get("shields").containsAll(powerUpTiles.get(randomNumber)));
+		
+		if(!this.isWaiting()) {
+			entities.get("shields").addAll(powerUpTiles.get(randomNumber));
 		}
 	}
 	
@@ -243,6 +289,10 @@ public class TileGenerator implements Generator{
 	
 	public void setMissileCreator(final Function<Pair<Double,Double>,Missile> missile) {
 		this.createMissile = Optional.of(missile);
+	}
+	
+	public void setShieldCreator(final Function<Pair<Double,Double>,Shield> shield) {
+		this.createShield = Optional.of(shield);
 	}
 	
 	public boolean isRunning() {

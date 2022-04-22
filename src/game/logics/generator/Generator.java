@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 import game.logics.entities.obstacles.missile.Missile;
 import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperRay;
+import game.logics.entities.pickups.shield.Shield;
 import game.utility.other.Pair;
 
 /**
@@ -45,6 +46,13 @@ public interface Generator extends Runnable{
 	 * @param missile a function for creating <code>Missile</code>
 	 */
 	void setMissileCreator(Function<Pair<Double,Double>,Missile> missile);
+	
+	/**
+	 * Sets the function for creating <code>Shield</code> objects.
+	 * 
+	 * @param shield a function for creating <code>Shield</code>
+	 */
+	void setShieldCreator(Function<Pair<Double,Double>,Shield> shield);
 	
 	/**
 	 * Removes all entities that are on the "clear area" [x < -tile size].

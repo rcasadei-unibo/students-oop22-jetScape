@@ -22,6 +22,7 @@ import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
 import game.logics.entities.obstacles.zapper.ZapperRayInstance;
+import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
 import game.logics.display.controller.DisplayController;
@@ -96,6 +97,7 @@ public class LogicsHandler implements Logics{
 		entities.put("player", new HashSet<>());
 		entities.put("zappers", new HashSet<>());
 		entities.put("missiles", new HashSet<>());
+		entities.put("shields", new HashSet<>());
 		
 		playerEntity = new PlayerInstance(this);
 		
@@ -122,6 +124,7 @@ public class LogicsHandler implements Logics{
 		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 0, 5000.0)));
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 0, 0)));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
+		spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, new SpeedHandler(250.0, 0, 0)));
 		
 		try {
 			spawner.initialize();
