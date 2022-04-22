@@ -2,15 +2,15 @@ package game.logics.entities.generic;
 
 import game.frame.GameWindow;
 import game.logics.handler.Logics;
+import game.logics.hitbox.Hitbox;
 import game.utility.debug.Debugger;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 import game.utility.sprites.DrawManager;
 import game.utility.sprites.Drawer;
 
-import java.awt.Rectangle;
+
 import java.awt.Graphics2D;
-import java.util.Set;
 
 /**
  * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
@@ -54,7 +54,7 @@ public abstract class EntityInstance implements Entity{
 	 */
 	private boolean onScreen = false;
 	
-	private Set<Rectangle> hitbox ;
+	private Hitbox hitbox ;
 	
 	/**
 	 * Manages the sprites of the object.
@@ -151,7 +151,7 @@ public abstract class EntityInstance implements Entity{
 		spritesMgr.drawSprite(g, position, screen.getTileSize());
 	}
 	
-	public Set<Rectangle> getHitbox(){
+	public Hitbox getHitbox(){
 		return hitbox;
 	}
 }

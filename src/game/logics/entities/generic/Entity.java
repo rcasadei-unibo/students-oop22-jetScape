@@ -1,9 +1,8 @@
 package game.logics.entities.generic;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.util.Set;
 
+import game.logics.hitbox.Hitbox;
 import game.utility.other.Pair;
 
 /**
@@ -65,5 +64,5 @@ public interface Entity {
 	/**
 	 * @return the hitbox of the entity
 	 */	
-	Set<Rectangle> getHitbox();
+	Hitbox getHitbox();
 }

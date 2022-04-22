@@ -1,30 +1,27 @@
 package game.logics.hitbox;
 
-import java.util.Set;
 import java.awt.Rectangle;
+import java.util.Set;
 
-public class Hitbox {
-	private Set<Rectangle> hitboxes;
+public interface Hitbox {
+	/**
+	 * Translates all this entity's Rectangles the indicated distance,
+	 * to the right along the X coordinate axis, and downward along the Y coordinate axis.
+	 */
+	public void updatePosition(int xShift, int yShift);
 	
-	public void updatePosition(int xShift, int yShift) {
-		hitboxes.forEach(hitbox -> {
-			hitbox.translate(xShift, yShift);
-		});
-	}
+	/**
+	 * @return true if at least one rectangle is intersecting with the target
+	 */
+	public boolean collides(Hitbox entity);
 	
-	public boolean collides(Hitbox entity) {
-		for(Rectangle hitbox : this.hitboxes) {
-			for(Rectangle hitboxTarget : entity.getRectangles()) {
-				if(hitbox.intersects(hitboxTarget)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	/**
+	 * @return all this entity's rectangles
+	 */
+	public Set<Rectangle> getRectangles();
 	
-	public Set<Rectangle> getRectangles() {
-		return this.hitboxes;
-	}
-	
+	/**
+	 * moves all the entity's rectangles to the initial position
+	 */
+	public void resetPosition();
 }
