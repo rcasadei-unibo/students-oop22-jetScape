@@ -31,6 +31,7 @@ import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
+import game.utility.other.EntityType;
 import game.utility.other.GameState;
 
 /**
@@ -44,7 +45,7 @@ public class LogicsHandler implements Logics{
 	/**
 	 * Contains the current active entities on the game environment.
 	 */
-	private final Map<String, Set<Entity>> entities = new HashMap<>();
+	private final Map<EntityType, Set<Entity>> entities = new HashMap<>();
 	
 	/**
 	 * Generates sets of obstacles on the environment.
@@ -93,9 +94,9 @@ public class LogicsHandler implements Logics{
 		this.keyH = keyH;
 		this.debugger = debugger;
 		
-		entities.put("player", new HashSet<>());
-		entities.put("zappers", new HashSet<>());
-		entities.put("missiles", new HashSet<>());
+		entities.put(EntityType.PLAYER, new HashSet<>());
+		entities.put(EntityType.ZAPPER, new HashSet<>());
+		entities.put(EntityType.MISSILE, new HashSet<>());
 		
 		playerEntity = new PlayerInstance(this);
 		
@@ -180,7 +181,7 @@ public class LogicsHandler implements Logics{
 					break;
 				case INGAME:
 					if (this.gameState == GameState.MENU) {
-						entities.get("player").add(playerEntity);
+						entities.get(EntityType.PLAYER).add(playerEntity);
 					}
 					spawner.resume();
 					break;

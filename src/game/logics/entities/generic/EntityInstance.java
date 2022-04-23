@@ -3,6 +3,7 @@ package game.logics.entities.generic;
 import game.frame.GameWindow;
 import game.logics.handler.Logics;
 import game.utility.debug.Debugger;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 import game.utility.sprites.DrawManager;
@@ -42,7 +43,7 @@ public abstract class EntityInstance implements Entity{
 	/**
 	 * Defines the entity's type category.
 	 */
-	protected String entityTag;
+	protected EntityType entityTag;
 	
 	/**
 	 * Decides if the entity has to be shown on screen.
@@ -69,7 +70,7 @@ public abstract class EntityInstance implements Entity{
 	protected EntityInstance(final Logics l) {
 		this.screen = l.getScreenInfo();
 		this.debugger = l.getDebugger();
-		entityTag = "undefined";
+		entityTag = EntityType.UNDEFINED;
 		
 		spritesMgr = new DrawManager();
 		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize() * 2);
@@ -119,7 +120,7 @@ public abstract class EntityInstance implements Entity{
 		return position.getY();
 	}
 	
-	public String entityType() {
+	public EntityType entityType() {
 		return entityTag;
 	}
 	
@@ -146,7 +147,7 @@ public abstract class EntityInstance implements Entity{
 	
 	public void draw(final Graphics2D g) {
 		if(this.isVisible()) {
-			spritesMgr.drawSprite(g, position, screen.getTileSize());
+			spritesMgr.drawCurrentSprite(g, position, screen.getTileSize());
 		}
 	}
 	

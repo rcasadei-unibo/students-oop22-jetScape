@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -26,6 +27,7 @@ import game.logics.entities.obstacles.zapper.Zapper;
 import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperInstance;
 import game.logics.entities.obstacles.zapper.ZapperRay;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
@@ -72,7 +74,7 @@ public class TileGenerator implements Generator{
 	/**
 	 * The entities map where the spawner adds the sets of obstacles.
 	 */
-	private final Map<String, Set<Entity>> entities;
+	private final Map<EntityType, Set<Entity>> entities;
 	
 	
 	/**
@@ -105,7 +107,7 @@ public class TileGenerator implements Generator{
 	 * @param entities the entities map where obstacles will be added
 	 * @param interval the interval between each generation
 	 */
-	public TileGenerator(final int tileSize, final Map<String, Set<Entity>> entities, final int interval) {
+	public TileGenerator(final int tileSize, final Map<EntityType, Set<Entity>> entities, final int interval) {
 		this.entities = entities;
 		this.spawnInterval = interval;
 		this.tileSize = tileSize;
@@ -178,20 +180,14 @@ public class TileGenerator implements Generator{
 }
 	
 	public void cleanTiles() {
-		entities.get("zappers").removeIf(e -> {
+		entities.entrySet().stream().filter(e -> e.getKey().isMovingEntity()).map(e -> e.getValue()).collect(Collectors.toList()).forEach(
+		s -> s.removeIf(e -> {
 			Obstacle o = (Obstacle)e;
 			if(o.isOnClearArea()) {
 				o.reset();
 			}
 			return o.isOnClearArea();
-		});
-		entities.get("missiles").removeIf(e -> {
-			Obstacle o = (Obstacle)e;
-			if(o.isOnClearArea()) {
-				o.reset();
-			}
-			return o.isOnClearArea();
-		});
+		}));
 	}
 	
 	private void spawnTile() {
@@ -213,10 +209,10 @@ public class TileGenerator implements Generator{
 		do {
 			randomNumber = r.nextInt() % missileTiles.size();
 			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
-		}while(entities.get("missiles").containsAll(missileTiles.get(randomNumber)));
+		}while(entities.get(EntityType.MISSILE).containsAll(missileTiles.get(randomNumber)));
 		
 		if(!this.isWaiting()) {
-			entities.get("missiles").addAll(missileTiles.get(randomNumber));
+			entities.get(EntityType.MISSILE).addAll(missileTiles.get(randomNumber));
 		}
 	}
 	
@@ -226,10 +222,10 @@ public class TileGenerator implements Generator{
 		do {
 			randomNumber = r.nextInt() % zapperTiles.size();
 			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
-		}while(entities.get("zappers").containsAll(zapperTiles.get(randomNumber)));
+		}while(entities.get(EntityType.ZAPPER).containsAll(zapperTiles.get(randomNumber)));
 		
 		if(!this.isWaiting()) {
-			entities.get("zappers").addAll(zapperTiles.get(randomNumber));
+			entities.get(EntityType.ZAPPER).addAll(zapperTiles.get(randomNumber));
 		}
 	}
 	

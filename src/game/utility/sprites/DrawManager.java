@@ -25,7 +25,7 @@ public class DrawManager implements Drawer{
 	 */
 	private final Map<String, Sprite> sprites = new HashMap<>();
 	/**
-	 * Sets up the <code>spriteToDraw</code> string depending on which texture has to
+	 * Sets up the <code>spriteToDraw</code> string depending on which sprite has to
 	 * be drawn at the moment.
 	 */
 	private Optional<Supplier<String>> animator = Optional.empty();
@@ -64,12 +64,20 @@ public class DrawManager implements Drawer{
 		sprites.put(t.getName(), t);
 	}
 	
-	public void drawSprite(final Graphics2D g, final Pair<Double,Double> pos, final int size) {
-		animator.ifPresent(a -> spriteToDraw = a.get());
-		if(sprites.containsKey(spriteToDraw)) {
-			sprites.get(spriteToDraw).draw(g, pos, size);
+	private void draw(final Graphics2D g, final String sprite, final Pair<Double,Double> pos, final int size) {
+		if(sprites.containsKey(sprite)) {
+			sprites.get(sprite).draw(g, pos, size);
 		} else if(sprites.containsKey(placeHKey)){
 			sprites.get(placeHKey).draw(g, pos, size);
 		}
+	}
+	
+	public void drawSprite(final Graphics2D g, final String sprite, final Pair<Double,Double> pos, final int size) {
+		this.draw(g, sprite, pos, size);
+	}
+	
+	public void drawCurrentSprite(final Graphics2D g, final Pair<Double,Double> pos, final int size) {
+		animator.ifPresent(a -> spriteToDraw = a.get());
+		this.draw(g, spriteToDraw, pos, size);
 	}
 }
