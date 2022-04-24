@@ -9,7 +9,6 @@ import game.utility.screen.Screen;
 import game.utility.sprites.DrawManager;
 import game.utility.sprites.Drawer;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
@@ -150,7 +149,7 @@ public abstract class EntityInstance implements Entity{
 	
 	public void drawCoordinates(final Graphics2D g) {
 		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
-			g.setColor(Color.white);
+			g.setColor(Debugger.debugColor);
 			g.setFont(Debugger.debugFont);
 			g.drawString("X:" + Math.round(this.getX()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), Math.round(this.getY()) + Math.round(screen.getTileSize()));
 			g.drawString("Y:" + Math.round(this.getY()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), 10 + Math.round(this.getY()) + Math.round(screen.getTileSize()));

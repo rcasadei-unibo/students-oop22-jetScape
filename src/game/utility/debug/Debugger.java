@@ -1,6 +1,8 @@
 package game.utility.debug;
 
 import java.awt.Font;
+import java.awt.Color;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,8 +18,12 @@ public class Debugger {
 	 * Defines the default font for debugging features.
 	 */
 	public static final Font debugFont = new Font("Calibri", Font.PLAIN, 10);
+	/**
+	 * Defines the default color for debugging features.
+	 */
+	public static final Color debugColor = Color.white;
 	
-	public enum Option{ FPS_METER, ENTITY_COORDINATES, LOG_FPS, LOG_CLEANER };
+	public enum Option{ FPS_METER, ENTITY_COORDINATES, NEXT_SPAWN_TIMER, LOG_FPS, LOG_CLEANER };
 	
 	/**
 	 * A map of flags that tells whether a certain debug function (specified as a key)
@@ -43,6 +49,7 @@ public class Debugger {
 		
 		optionEnabled.put(Option.FPS_METER, true);
 		optionEnabled.put(Option.ENTITY_COORDINATES, true);
+		optionEnabled.put(Option.NEXT_SPAWN_TIMER, true);
 		optionEnabled.put(Option.LOG_FPS, false);
 		optionEnabled.put(Option.LOG_CLEANER, false);
 	}

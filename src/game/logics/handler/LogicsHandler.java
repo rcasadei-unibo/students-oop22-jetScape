@@ -219,12 +219,13 @@ public class LogicsHandler implements Logics{
 	
 	public void drawAll(final Graphics2D g) {
 		switch(this.gameState) {
-			case PAUSED: 
+			case PAUSED:
 			case INGAME:
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
 					entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
 				}
+				spawner.drawNextSpawnTimer(g);
 			default:
 				break;
 		}

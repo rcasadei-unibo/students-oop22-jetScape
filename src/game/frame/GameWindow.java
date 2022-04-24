@@ -133,9 +133,9 @@ public class GameWindow extends JPanel implements Runnable{
 		
 		// Draws FPS meter if enabled by debugger
 		if(debugger.isFeatureEnabled(Debugger.Option.FPS_METER)){
-			board.setColor(Color.white);
-			g.setFont(Debugger.debugFont);
-			g.drawString("FPS: " + fps, 3, 8);
+			board.setColor(Debugger.debugColor);
+			board.setFont(Debugger.debugFont);
+			board.drawString("FPS: " + fps, 3, 8);
 		}
 		
 		board.dispose();
