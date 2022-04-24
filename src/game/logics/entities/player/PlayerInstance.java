@@ -84,8 +84,8 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * @param l the logics handler which the entity is linked to
 	 */
 	public PlayerInstance(final Logics l) {
-		super(l);
-		this.keyH = l.getKeyHandler();
+		super();
+		this.keyH = GameWindow.keyHandler;
 		
 		fallSpeed = baseFallSpeed / GameWindow.fpsLimit;
 		jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;

@@ -1,5 +1,6 @@
 package game.logics.entities.generic;
 
+import game.frame.GameWindow;
 import game.logics.handler.Logics;
 import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
@@ -65,9 +66,9 @@ public abstract class EntityInstance implements Entity{
 	 * 
 	 * @param l the logics handler which the entity is linked to
 	 */
-	protected EntityInstance(final Logics l) {
-		this.screen = l.getScreenInfo();
-		this.debugger = l.getDebugger();
+	protected EntityInstance() {
+		this.screen = GameWindow.gameScreen;
+		this.debugger = GameWindow.debugger;
 		entityTag = EntityType.UNDEFINED;
 		
 		spritesMgr = new DrawManager();
@@ -84,7 +85,7 @@ public abstract class EntityInstance implements Entity{
 	 * @param position the starting position of the entity in the environment
 	 */
 	protected EntityInstance(final Logics l, final Pair<Double,Double> position) {
-		this(l);
+		this();
 		this.position = position;
 		this.startPos = position.clone();
 	}
@@ -139,7 +140,7 @@ public abstract class EntityInstance implements Entity{
 	}
 	
 	public void update() {
-		currentFPS = debugger.fps();
+		currentFPS = GameWindow.fps;
 		updateFlags();
 	}
 	
