@@ -87,8 +87,8 @@ public class PlayerInstance extends EntityInstance implements Player{
 		super(l);
 		this.keyH = l.getKeyHandler();
 		
-		fallSpeed = baseFallSpeed / maximumFPS;
-		jumpSpeed = baseJumpSpeed / maximumFPS;
+		fallSpeed = baseFallSpeed / GameWindow.fpsLimit;
+		jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
 		
 		position = new Pair<>(xPosition, yGround);
 		action = PlayerAction.WALK;

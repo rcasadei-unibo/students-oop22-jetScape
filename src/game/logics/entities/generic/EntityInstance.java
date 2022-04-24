@@ -1,6 +1,5 @@
 package game.logics.entities.generic;
 
-import game.frame.GameWindow;
 import game.logics.handler.Logics;
 import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
@@ -20,7 +19,6 @@ import java.awt.Graphics2D;
  */
 public abstract class EntityInstance implements Entity{
 	
-	protected final int maximumFPS = GameWindow.fpsLimit;
 	protected int currentFPS = 0;
 	
 	/**

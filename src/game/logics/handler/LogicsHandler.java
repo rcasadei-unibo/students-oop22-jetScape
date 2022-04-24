@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -94,9 +95,8 @@ public class LogicsHandler implements Logics{
 		this.keyH = keyH;
 		this.debugger = debugger;
 		
-		entities.put(EntityType.PLAYER, new HashSet<>());
-		entities.put(EntityType.ZAPPER, new HashSet<>());
-		entities.put(EntityType.MISSILE, new HashSet<>());
+		EntityType.concreteGenericTypes.stream().sorted((e1, e2) -> -e1.compareTo(e2)).collect(Collectors.toList())
+		.forEach(e -> entities.put(e, new HashSet<>()));
 		
 		playerEntity = new PlayerInstance(this);
 		

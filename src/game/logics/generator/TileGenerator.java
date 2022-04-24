@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,13 +65,17 @@ public class TileGenerator implements Generator{
 	private Optional<Function<Pair<Double,Double>,Missile>> createMissile = Optional.empty();
 	
 	/**
-	 * A list where all loaded set of zapper tiles are stored.
-	 */
-	private final List<Set<Entity>> zapperTiles = new ArrayList<>();
-	/**
-	 * A list where all loaded set of missile tiles are stored.
-	 */
-	private final List<Set<Entity>> missileTiles = new ArrayList<>();
+//	 * A map containing lists where all loaded set of tiles are stored.
+//	 */
+	private final Map<EntityType, List<Set<Entity>>> tileSets = new HashMap<>();
+//	/**
+//	 * A list where all loaded set of zapper tiles are stored.
+//	 */
+//	private final List<Set<Entity>> zapperTiles = new ArrayList<>();
+//	/**
+//	 * A list where all loaded set of missile tiles are stored.
+//	 */
+//	private final List<Set<Entity>> missileTiles = new ArrayList<>();
 	/**
 	 * The entities map where the spawner adds the sets of obstacles.
 	 */
@@ -111,8 +116,10 @@ public class TileGenerator implements Generator{
 		this.entities = entities;
 		this.spawnInterval = interval;
 		this.tileSize = tileSize;
-		
 		this.interval = spawnInterval * GameWindow.milliSecond;
+		
+		EntityType.concreteGenericTypes.stream().filter(e -> e.isMovingEntity()).collect(Collectors.toList())
+		.forEach(e -> tileSets.put(e, new ArrayList<>()));
 	}
 	
 	/**
@@ -128,7 +135,7 @@ public class TileGenerator implements Generator{
 			
 		///		LOADING ZAPPERS		///
 		if(createZBase.isPresent() && createZRay.isPresent()) {
-			JSONArray types = (JSONArray)allTiles.get("zappers");
+			JSONArray types = (JSONArray)allTiles.get(EntityType.ZAPPER.toString());
 			for(int i = 0; i < types.size(); i++){
 				JSONArray zsets = (JSONArray)types.get(i);
 				Set<Entity> tile = new HashSet<>();
@@ -157,13 +164,13 @@ public class TileGenerator implements Generator{
 						tile.add(master);	
 					}
 				}
-				zapperTiles.add(tile);
+				tileSets.get(EntityType.ZAPPER).add(tile);
 			}
 		}
 			
 		///		LOADING MISSILES	///
 		if(createMissile.isPresent()) {
-			JSONArray types = (JSONArray)allTiles.get("missiles");
+			JSONArray types = (JSONArray)allTiles.get(EntityType.MISSILE.toString());
 			for(int i = 0; i < types.size(); i++){
 				JSONArray sets = (JSONArray)types.get(i);
 				Set<Entity> s = new HashSet<>();
@@ -174,7 +181,7 @@ public class TileGenerator implements Generator{
 						Double.parseDouble((String)z.get("x")) * tileSize,							
 						Double.parseDouble((String)z.get("y")) * tileSize)));			
 				}
-				missileTiles.add(s);
+				tileSets.get(EntityType.MISSILE).add(s);
 			}
 		}
 }
@@ -197,35 +204,31 @@ public class TileGenerator implements Generator{
 		randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 		
 		if(randomNumber <= missileOdds) {
-			spawnMissile();
+			spawnObstacle(EntityType.MISSILE);
 		} else {
-			spawnZapper();
+			spawnObstacle(EntityType.ZAPPER);
 		}
 	}
 	
-	private void spawnMissile() {
+	private void spawnObstacle(final EntityType type) {
 		final Random r = new Random();
+		boolean continueSearch;
 		int randomNumber;
 		do {
-			randomNumber = r.nextInt() % missileTiles.size();
+			continueSearch = false;
+			randomNumber = r.nextInt() % tileSets.get(type).size();
 			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
-		}while(entities.get(EntityType.MISSILE).containsAll(missileTiles.get(randomNumber)));
+			
+			for (Entity e : tileSets.get(type).get(randomNumber)) {
+				if(entities.get(type).contains(e)) {
+					continueSearch = true;
+					break;
+				}
+			}
+		}while(continueSearch);
 		
 		if(!this.isWaiting()) {
-			entities.get(EntityType.MISSILE).addAll(missileTiles.get(randomNumber));
-		}
-	}
-	
-	private void spawnZapper() {
-		final Random r = new Random();
-		int randomNumber;
-		do {
-			randomNumber = r.nextInt() % zapperTiles.size();
-			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
-		}while(entities.get(EntityType.ZAPPER).containsAll(zapperTiles.get(randomNumber)));
-		
-		if(!this.isWaiting()) {
-			entities.get(EntityType.ZAPPER).addAll(zapperTiles.get(randomNumber));
+			entities.get(type).addAll(tileSets.get(type).get(randomNumber));
 		}
 	}
 	
