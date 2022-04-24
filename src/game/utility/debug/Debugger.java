@@ -17,11 +17,13 @@ public class Debugger {
 	 */
 	public static final Font debugFont = new Font("Calibri", Font.PLAIN, 10);
 	
+	public enum Option{ FPS_METER, ENTITY_COORDINATES, LOG_FPS, LOG_CLEANER };
+	
 	/**
 	 * A map of flags that tells whether a certain debug function (specified as a key)
 	 * is enabled (<code>true</code> value) or not (<code>false</code> value).
 	 */
-	private final Map<String,Boolean> options = new HashMap<>();
+	private final Map<Option,Boolean> optionEnabled = new HashMap<>();
 	
 	/**
 	 * The main flag that decides if activate or deactivate the debug functions.
@@ -39,12 +41,12 @@ public class Debugger {
 	public Debugger(final boolean mode) {
 		this.debugMode = mode;
 		
-		options.put("log: fps", false);
-		options.put("log: entities cleaner check", false);
-		options.put("fps meter", true);
-		options.put("entity coordinates", true);
+		optionEnabled.put(Option.FPS_METER, true);
+		optionEnabled.put(Option.ENTITY_COORDINATES, true);
+		optionEnabled.put(Option.LOG_FPS, false);
+		optionEnabled.put(Option.LOG_CLEANER, false);
 	}
-
+	
 	/**
 	 * Changes the current debug mode.
 	 * 
@@ -66,11 +68,13 @@ public class Debugger {
 	 * @return <code>true</code> if specified debug function is currently enabled, 
 	 * 		   <code>false</code> if either the singular debug function or the whole debugger is disabled
 	 */
-	public boolean isFeatureEnabled(final String feature) {
-		if(this.debugMode && options.containsKey(feature)) {
-			return options.get(feature);
-		}
-		return false;
+	public boolean isFeatureEnabled(final Option feature) {
+		return optionEnabled.get(feature) && this.debugMode;
 	}
 	
+	public void printLog(final Option feature, final String message) {
+		if(this.isFeatureEnabled(feature)) {
+			System.out.println(message);
+		}
+	}
 }

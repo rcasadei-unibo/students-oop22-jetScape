@@ -130,9 +130,7 @@ public class LogicsHandler implements Logics{
 	private void updateCleaner() {
 		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
 			spawner.cleanTiles();
-			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
-				System.out.println("clean");
-			}
+			debugger.printLog(Debugger.Option.LOG_CLEANER, "clean");
 		}
 	}
 	

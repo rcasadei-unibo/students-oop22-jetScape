@@ -128,15 +128,15 @@ public class GameWindow extends JPanel implements Runnable{
 		
 		Graphics2D board = (Graphics2D)g;
 		
+		// Draws logical parts of the game
+		logH.drawAll(board);
+		
 		// Draws FPS meter if enabled by debugger
-		board.setColor(Color.white);
-		if(debugger.isFeatureEnabled("fps meter")) {
+		if(debugger.isFeatureEnabled(Debugger.Option.FPS_METER)){
+			board.setColor(Color.white);
 			g.setFont(Debugger.debugFont);
 			g.drawString("FPS: " + fps, 3, 8);
 		}
-		
-		// Draws logical parts of the game
-		logH.drawAll(board);
 		
 		board.dispose();
 	}
@@ -167,9 +167,7 @@ public class GameWindow extends JPanel implements Runnable{
 				fpsCount = 0;
 				
 				// Prints FPS on console
-				if(debugger.isFeatureEnabled("log: fps")) {
-					System.out.print("FPS: " + fps + "\n");
-				}
+				debugger.printLog(Debugger.Option.LOG_FPS, "FPS: " + fps);
 			}
 			
 			/// RUNS EACH FRAME ///

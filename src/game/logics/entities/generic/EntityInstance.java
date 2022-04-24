@@ -58,7 +58,6 @@ public abstract class EntityInstance implements Entity{
 	 */
 	protected final Drawer spritesMgr;
 	protected final Screen screen;
-	private final Debugger debugger;
 	
 	/**
 	 * Constructor that sets up entity default values (picked up from 
@@ -68,7 +67,6 @@ public abstract class EntityInstance implements Entity{
 	 */
 	protected EntityInstance() {
 		this.screen = GameWindow.gameScreen;
-		this.debugger = GameWindow.debugger;
 		entityTag = EntityType.UNDEFINED;
 		
 		spritesMgr = new DrawManager();
@@ -151,7 +149,7 @@ public abstract class EntityInstance implements Entity{
 	}
 	
 	public void drawCoordinates(final Graphics2D g) {
-		if(debugger.isFeatureEnabled("entity coordinates") && this.isVisible()) {
+		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
 			g.setColor(Color.white);
 			g.setFont(Debugger.debugFont);
 			g.drawString("X:" + Math.round(this.getX()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), Math.round(this.getY()) + Math.round(screen.getTileSize()));
