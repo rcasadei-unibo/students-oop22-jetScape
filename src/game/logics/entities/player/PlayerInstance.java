@@ -88,12 +88,12 @@ public class PlayerInstance extends EntityInstance implements Player{
 	public PlayerInstance(final Logics l) {
 		super(l);
 		this.keyH = l.getKeyHandler();
-		this.hitbox = new PlayerHitbox(position, screen);
 		
 		fallSpeed = baseFallSpeed / maximumFPS;
 		jumpSpeed = baseJumpSpeed / maximumFPS;
 		
 		position = new Pair<>(xPosition, yGround);
+		this.hitbox = new PlayerHitbox(position, screen);
 		action = "idle";
 		entityTag = "player";
 		
