@@ -216,7 +216,7 @@ public class LogicsHandler implements Logics{
 				case MENU:
 					if(this.gameState == GameState.PAUSED) {
 						final String message = "Do you want to return the main menu?\nYou will lose the current progress of this match.";
-						final String title = "Return to main menù";
+						final String title = "Return to main menï¿½";
 						if(JOptionPane.showConfirmDialog(window, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 							return;
 						}
@@ -266,6 +266,9 @@ public class LogicsHandler implements Logics{
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
 					this.drawCoordinates(g);
+					if(this.debugger.isDebugModeOn()) {
+						entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
+					}
 				}
 			default:
 				break;

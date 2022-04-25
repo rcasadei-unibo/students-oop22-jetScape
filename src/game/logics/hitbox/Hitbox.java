@@ -2,6 +2,7 @@ package game.logics.hitbox;
 
 import java.awt.Rectangle;
 import java.util.Set;
+import java.awt.Graphics2D;
 
 import game.utility.other.Pair;
 
@@ -26,4 +27,9 @@ public interface Hitbox {
 	 * moves all the entity's rectangles to the initial position
 	 */
 	public void resetPosition();
+	
+	/**
+	 * draws the hitboxes
+	 */
+	public void draw (Graphics2D g);
 }

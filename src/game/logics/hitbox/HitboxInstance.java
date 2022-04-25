@@ -3,6 +3,9 @@ package game.logics.hitbox;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.awt.Graphics2D;
+import java.awt.Color;
+
 
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
@@ -49,9 +52,8 @@ public abstract class HitboxInstance implements Hitbox{
 	}
 	
 	public void resetPosition() {
-		this.hitboxes.keySet().forEach(hitbox -> {
-			var startingPoint = this.hitboxes.get(hitbox);
-			hitbox.setLocation(startingPoint.getX(), startingPoint.getY());
+		this.hitboxes.forEach((hitbox, startPos) -> {
+			hitbox.setLocation(startPos.getX(),startPos.getY());
 		});
 	}
 	
@@ -69,6 +71,13 @@ public abstract class HitboxInstance implements Hitbox{
 		int xShift = (int) (newPos.getX() - this.lastPos.getX());
 		int yShift = (int) (newPos.getY() - this.lastPos.getY());
 		return new Pair<>(xShift, yShift);		
+	}
+	
+	public void draw(Graphics2D g) {
+		this.hitboxes.forEach((hitbox, startPos) -> {
+			g.setColor(Color.MAGENTA);
+			g.draw(hitbox);
+		});
 	}
 	
 }
