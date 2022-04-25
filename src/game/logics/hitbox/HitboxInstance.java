@@ -55,13 +55,13 @@ public abstract class HitboxInstance implements Hitbox{
 		});
 	}
 	
-	protected void addRectangle(double xProportion, double yProportion, double hProportion, double wProportion) {
-		int rectangleX = (int) (startingPos.getX() + gScreen.getTileSize()* xProportion);
-		int rectangleY = (int) (startingPos.getY() - gScreen.getTileSize()* yProportion);
-		int rectangleWidth  = (int) (gScreen.getTileSize()* wProportion);
-		int rectangleHeight = (int) (gScreen.getTileSize() * hProportion);
+	protected void addRectangle(double x, double y, double width, double height) {
+		int rectangleX = (int) (startingPos.getX() + (gScreen.getTileSize()* (x/spriteDimensions)));
+		int rectangleY = (int) (startingPos.getY() + (gScreen.getTileSize()* (y/spriteDimensions)));
+		int rectangleWidth  = (int) (gScreen.getTileSize()* (width/spriteDimensions));
+		int rectangleHeight = (int) (gScreen.getTileSize() * (height/spriteDimensions));
 		this.hitboxes.put(new Rectangle(rectangleX,rectangleY,rectangleWidth,rectangleHeight),
-				new Pair<>(rectangleWidth, rectangleHeight));
+				new Pair<>(rectangleX, rectangleY));
 	}
 	
 	

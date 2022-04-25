@@ -4,14 +4,14 @@ import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
 public class PlayerHitbox extends HitboxInstance {
-	static final double rectangle1X = 16/spriteDimensions;
-	static final double rectangle1Y = 8/spriteDimensions;
-	static final double rectangle1W = 8/spriteDimensions;
-	static final double rectangle1H = 8/spriteDimensions;
-	static final double rectangle2X = 16/spriteDimensions;
-	static final double rectangle2Y = 3/spriteDimensions;
-	static final double rectangle2W = 13/spriteDimensions;
-	static final double rectangle2H = 21/spriteDimensions;
+	static final double rectangle1X = 16;
+	static final double rectangle1Y = 24;
+	static final double rectangle1W = 8;
+	static final double rectangle1H = 8;
+	static final double rectangle2X = 16;
+	static final double rectangle2Y = 3;
+	static final double rectangle2W = 13;
+	static final double rectangle2H = 21;
 
 
 	public PlayerHitbox(Pair<Double,Double> startingPos, Screen gScreen) {
