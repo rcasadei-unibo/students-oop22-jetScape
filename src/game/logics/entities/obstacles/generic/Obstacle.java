@@ -19,13 +19,4 @@ public abstract interface Obstacle extends Entity{
 	 */
 	SpeedHandler getSpeedHandler();
 	
-	/**
-	 * @return <code>true</code> if the obstacle's position is on the "clear area", <code>false</code> if not
-	 */
-	boolean isOnClearArea();
-	
-	/**
-	 * @return <code>true</code> if the obstacle's position is on the "spawn area", <code>false</code> if not
-	 */
-	boolean isOnSpawnArea();
 }

@@ -1,9 +1,10 @@
 package game.utility.debug;
 
 import java.awt.Font;
+import java.awt.Color;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * The <code>Debugger</code> class is used to as a control panel
@@ -17,16 +18,18 @@ public class Debugger {
 	 * Defines the default font for debugging features.
 	 */
 	public static final Font debugFont = new Font("Calibri", Font.PLAIN, 10);
+	/**
+	 * Defines the default color for debugging features.
+	 */
+	public static final Color debugColor = Color.white;
+	
+	public enum Option{ FPS_METER, ENTITY_COORDINATES, NEXT_SPAWN_TIMER, LOG_FPS, LOG_CLEANER };
 	
 	/**
 	 * A map of flags that tells whether a certain debug function (specified as a key)
 	 * is enabled (<code>true</code> value) or not (<code>false</code> value).
 	 */
-	private final Map<String,Boolean> options = new HashMap<>();
-	/**
-	 * A supplier that gets the number of FPS the game is currently running with.
-	 */
-	private final Supplier<Integer> fpsGetter;
+	private final Map<Option,Boolean> optionEnabled = new HashMap<>();
 	
 	/**
 	 * The main flag that decides if activate or deactivate the debug functions.
@@ -40,18 +43,17 @@ public class Debugger {
 	 * Constructor that initiate the <code>Debugger</code>.
 	 * 
 	 * @param mode the starting debug mode
-	 * @param fpsGetter a supplier that gets the current FPS
 	 */
-	public Debugger(final boolean mode, final Supplier<Integer> fpsGetter) {
+	public Debugger(final boolean mode) {
 		this.debugMode = mode;
-		this.fpsGetter = fpsGetter;
 		
-		options.put("log: fps", false);
-		options.put("log: entities cleaner check", false);
-		options.put("fps meter", true);
-		options.put("entity coordinates", true);
+		optionEnabled.put(Option.FPS_METER, true);
+		optionEnabled.put(Option.ENTITY_COORDINATES, true);
+		optionEnabled.put(Option.NEXT_SPAWN_TIMER, true);
+		optionEnabled.put(Option.LOG_FPS, false);
+		optionEnabled.put(Option.LOG_CLEANER, false);
 	}
-
+	
 	/**
 	 * Changes the current debug mode.
 	 * 
@@ -69,22 +71,17 @@ public class Debugger {
 	}
 	
 	/**
-	 * @return the number of FPS the game is currently running with
-	 */
-	public int fps() {
-		return fpsGetter.get();
-	}
-	
-	/**
 	 * @param feature the debug function to check
 	 * @return <code>true</code> if specified debug function is currently enabled, 
 	 * 		   <code>false</code> if either the singular debug function or the whole debugger is disabled
 	 */
-	public boolean isFeatureEnabled(final String feature) {
-		if(this.debugMode && options.containsKey(feature)) {
-			return options.get(feature);
-		}
-		return false;
+	public boolean isFeatureEnabled(final Option feature) {
+		return optionEnabled.get(feature) && this.debugMode;
 	}
 	
+	public void printLog(final Option feature, final String message) {
+		if(this.isFeatureEnabled(feature)) {
+			System.out.println(message);
+		}
+	}
 }

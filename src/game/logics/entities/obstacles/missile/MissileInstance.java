@@ -8,6 +8,7 @@ import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.entities.player.Player;
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 public class MissileInstance extends ObstacleInstance implements Missile{
@@ -66,7 +67,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 	public MissileInstance(final Logics l, final Pair<Double,Double> pos, final Player player, final SpeedHandler speed) {
 		super(l, pos, new SpeedHandler(speed.getXSpeed(), speed.getXSpeedIncDiff(), speed.getXAcceleration()));
 		
-		entityTag = "missile";
+		entityTag = EntityType.MISSILE;
 		
 		warnPosition = new Pair<>(warnDefaultX, position.getY());
 		playerPosition = player.getPosition();
@@ -74,12 +75,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		spritesMgr.setPlaceH(placeH);
 		spritesMgr.addSprite("warn", spritePath + "warn.png");
 		spritesMgr.addSprite("missile", spritePath + "missile.png");
-		spritesMgr.setAnimator(() -> {
-			if(position.getX() > screen.getWidth()) {
-				return "warn";
-			}
-			return "missile";
-		});
+		spritesMgr.setAnimator(() -> "missile");
 	}
 	
 	private void updateFrameTime() {
@@ -125,7 +121,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		super.draw(g);
 		if(position.getX() > screen.getWidth()) {
 			if(position.getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
-				spritesMgr.drawSprite(g, warnPosition, screen.getTileSize());
+				spritesMgr.drawSprite(g, "warn", warnPosition, screen.getTileSize());
 			}
 		}
 	}

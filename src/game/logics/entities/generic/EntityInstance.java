@@ -3,12 +3,12 @@ package game.logics.entities.generic;
 import game.frame.GameWindow;
 import game.logics.handler.Logics;
 import game.utility.debug.Debugger;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 import game.utility.sprites.DrawManager;
 import game.utility.sprites.Drawer;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
@@ -19,7 +19,6 @@ import java.awt.Graphics2D;
  */
 public abstract class EntityInstance implements Entity{
 	
-	protected final int maximumFPS = GameWindow.fpsLimit;
 	protected int currentFPS = 0;
 	
 	/**
@@ -42,23 +41,31 @@ public abstract class EntityInstance implements Entity{
 	/**
 	 * Defines the entity's type category.
 	 */
-	protected String entityTag;
+	protected EntityType entityTag;
 	
+	/// FLAGS ///
 	/**
 	 * Decides if the entity has to be shown on screen.
 	 */
-	protected boolean visible = true;
+	private boolean visible = true;
 	/**
 	 * A flag that automatically updates and tells if the entity's position between screen bounds.
 	 */
 	private boolean onScreen = false;
+	/**
+	 * A flag that automatically updates and tells if the entity is on the "clear area".
+	 */
+	private boolean onClearArea = false;
+	/**
+	 * A flag that automatically updates and tells if the entity is on the "spawn area".
+	 */
+	private boolean onSpawnArea = true;
 	
 	/**
 	 * Manages the sprites of the object.
 	 */
 	protected final Drawer spritesMgr;
 	protected final Screen screen;
-	private final Debugger debugger;
 	
 	/**
 	 * Constructor that sets up entity default values (picked up from 
@@ -66,10 +73,9 @@ public abstract class EntityInstance implements Entity{
 	 * 
 	 * @param l the logics handler which the entity is linked to
 	 */
-	protected EntityInstance(final Logics l) {
-		this.screen = l.getScreenInfo();
-		this.debugger = l.getDebugger();
-		entityTag = "undefined";
+	protected EntityInstance() {
+		this.screen = GameWindow.gameScreen;
+		entityTag = EntityType.UNDEFINED;
 		
 		spritesMgr = new DrawManager();
 		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize() * 2);
@@ -85,7 +91,7 @@ public abstract class EntityInstance implements Entity{
 	 * @param position the starting position of the entity in the environment
 	 */
 	protected EntityInstance(final Logics l, final Pair<Double,Double> position) {
-		this(l);
+		this();
 		this.position = position;
 		this.startPos = position.clone();
 	}
@@ -107,6 +113,14 @@ public abstract class EntityInstance implements Entity{
 		return onScreen;
 	}
 	
+	public boolean isOnClearArea() {
+		return this.onClearArea;
+	}
+	
+	public boolean isOnSpawnArea() {
+		return this.onSpawnArea;
+	}
+	
 	public Pair<Double,Double> getPosition(){
 		return position;
 	}
@@ -119,7 +133,7 @@ public abstract class EntityInstance implements Entity{
 		return position.getY();
 	}
 	
-	public String entityType() {
+	public EntityType entityType() {
 		return entityTag;
 	}
 	
@@ -134,25 +148,37 @@ public abstract class EntityInstance implements Entity{
 	private void updateFlags() {
 		if(position.getX() >= -screen.getTileSize() && position.getX() <= screen.getWidth() && position.getY() >= 0 && position.getY() <= screen.getHeight()) {
 			onScreen = true;
+			onClearArea = false;
+			onSpawnArea = false;
 		} else {
+			if(position.getX() < -screen.getTileSize()) {
+				onClearArea = true;
+				onSpawnArea = false;
+			} else if(position.getX() >= screen.getWidth()){
+				onClearArea = false;
+				onSpawnArea = true;
+			} else {
+				onClearArea = false;
+				onSpawnArea = false;
+			}
 			onScreen = false;
 		}
 	}
 	
 	public void update() {
-		currentFPS = debugger.fps();
+		currentFPS = GameWindow.fps;
 		updateFlags();
 	}
 	
 	public void draw(final Graphics2D g) {
 		if(this.isVisible()) {
-			spritesMgr.drawSprite(g, position, screen.getTileSize());
+			spritesMgr.drawCurrentSprite(g, position, screen.getTileSize());
 		}
 	}
 	
 	public void drawCoordinates(final Graphics2D g) {
-		if(debugger.isFeatureEnabled("entity coordinates") && this.isVisible()) {
-			g.setColor(Color.white);
+		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
+			g.setColor(Debugger.debugColor);
 			g.setFont(Debugger.debugFont);
 			g.drawString("X:" + Math.round(this.getX()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), Math.round(this.getY()) + Math.round(screen.getTileSize()));
 			g.drawString("Y:" + Math.round(this.getY()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), 10 + Math.round(this.getY()) + Math.round(screen.getTileSize()));

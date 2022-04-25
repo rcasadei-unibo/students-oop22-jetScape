@@ -2,6 +2,7 @@ package game.logics.entities.generic;
 
 import java.awt.Graphics2D;
 
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
@@ -32,6 +33,14 @@ public interface Entity {
 	 */
 	boolean isOnScreenBounds();
 	/**
+	 * @return <code>true</code> if the obstacle's position is on the "clear area", <code>false</code> if not
+	 */
+	boolean isOnClearArea();
+	/**
+	 * @return <code>true</code> if the obstacle's position is on the "spawn area", <code>false</code> if not
+	 */
+	boolean isOnSpawnArea();
+	/**
 	 * @return the entity's position
 	 */
 	Pair<Double,Double> getPosition();
@@ -46,7 +55,7 @@ public interface Entity {
 	/**
 	 * @return a string representing the entity's category
 	 */
-	String entityType();
+	EntityType entityType();
 	/**
 	 * Reset the current position of the obstacle, setting it to the starting one.
 	 */

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -32,6 +33,7 @@ import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
+import game.utility.other.EntityType;
 import game.utility.other.GameState;
 
 /**
@@ -45,7 +47,7 @@ public class LogicsHandler implements Logics{
 	/**
 	 * Contains the current active entities on the game environment.
 	 */
-	private final Map<String, Set<Entity>> entities = new HashMap<>();
+	private final Map<EntityType, Set<Entity>> entities = new HashMap<>();
 	
 	/**
 	 * Generates sets of obstacles on the environment.
@@ -85,19 +87,14 @@ public class LogicsHandler implements Logics{
 	 * Constructor that gets the screen information, the keyboard listener and the debugger, 
 	 * initialize each entity category on the entities map and initialize the obstacle spawner.
 	 * 
-	 * @param screen the screen information of the game window
-	 * @param keyH the keyboard listener linked to the game window
-	 * @param debugger the debugger used
 	 */
-	public LogicsHandler(final Screen screen, final KeyHandler keyH, final Debugger debugger) {		
-		this.screen = screen;
-		this.keyH = keyH;
-		this.debugger = debugger;
+	public LogicsHandler() {		
+		this.screen = GameWindow.gameScreen;
+		this.keyH = GameWindow.keyHandler;
+		this.debugger = GameWindow.debugger;
 		
-		entities.put("player", new HashSet<>());
-		entities.put("zappers", new HashSet<>());
-		entities.put("missiles", new HashSet<>());
-		entities.put("shields", new HashSet<>());
+		EntityType.concreteGenericTypes.stream().sorted((e1, e2) -> -e1.compareTo(e2)).collect(Collectors.toList())
+		.forEach(e -> entities.put(e, new HashSet<>()));
 		
 		playerEntity = new PlayerInstance(this);
 		
@@ -107,19 +104,7 @@ public class LogicsHandler implements Logics{
 		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
 		this.initializeSpawner();
 	}
-	
-	public Screen getScreenInfo() {
-		return screen;
-	}
-	
-	public KeyHandler getKeyHandler() {
-		return keyH;
-	}
-	
-	public Debugger getDebugger() {
-		return debugger;
-	}
-	
+
 	private void initializeSpawner() {
 		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 0, 5000.0)));
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 0, 0)));
@@ -147,9 +132,7 @@ public class LogicsHandler implements Logics{
 	private void updateCleaner() {
 		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
 			spawner.cleanTiles();
-			if(debugger.isFeatureEnabled("log: entities cleaner check")) {
-				System.out.println("clean");
-			}
+			debugger.printLog(Debugger.Option.LOG_CLEANER, "clean");
 		}
 	}
 	
@@ -183,7 +166,7 @@ public class LogicsHandler implements Logics{
 					break;
 				case INGAME:
 					if (this.gameState == GameState.MENU) {
-						entities.get("player").add(playerEntity);
+						entities.get(EntityType.PLAYER).add(playerEntity);
 					}
 					spawner.resume();
 					break;
@@ -238,12 +221,13 @@ public class LogicsHandler implements Logics{
 	
 	public void drawAll(final Graphics2D g) {
 		switch(this.gameState) {
-			case PAUSED: 
+			case PAUSED:
 			case INGAME:
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
 					entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
 				}
+				spawner.drawNextSpawnTimer(g);
 			default:
 				break;
 		}

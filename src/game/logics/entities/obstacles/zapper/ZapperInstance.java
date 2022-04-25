@@ -6,6 +6,7 @@ import java.util.Set;
 
 import game.logics.entities.generic.Entity;
 import game.logics.interactions.SpeedHandler;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 public class ZapperInstance implements Zapper{
@@ -13,8 +14,6 @@ public class ZapperInstance implements Zapper{
 	private final ZapperBase base1;
 	private final ZapperBase base2;
 	private final Set<ZapperRay> rays;
-
-	private final String entityType = "zapper";
 	
 	public ZapperInstance(final ZapperBase base1, final ZapperBase base2, final Set<ZapperRay> rays) {
 		this.base1 = base1;
@@ -62,8 +61,8 @@ public class ZapperInstance implements Zapper{
 	}
 
 	@Override
-	public String entityType() {
-		return entityType;
+	public EntityType entityType() {
+		return EntityType.ZAPPER;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package game.logics.generator;
 
+import java.awt.Graphics2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.function.BiFunction;
@@ -46,6 +47,8 @@ public interface Generator extends Runnable{
 	 * @param missile a function for creating <code>Missile</code>
 	 */
 	void setMissileCreator(Function<Pair<Double,Double>,Missile> missile);
+	
+	void drawNextSpawnTimer(Graphics2D g);
 	
 	/**
 	 * Sets the function for creating <code>Shield</code> objects.

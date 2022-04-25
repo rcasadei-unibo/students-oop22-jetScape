@@ -7,6 +7,7 @@ import game.frame.GameWindow;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.handler.Logics;
 import game.utility.input.keyboard.KeyHandler;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
@@ -63,19 +64,11 @@ public class PlayerInstance extends EntityInstance implements Player{
 	private final KeyHandler keyH;
 	
 	/**
-	 * A string describing the current action of the player.
-	 * It can either "<code>idle</code>", "<code>jump</code>" (jumping) and "<code>fall</code>" (falling).
+	 * A enumerable describing the current action of the player.
+	 * It can either be <code>IDLE</code>, <code>LAND</code>(landing), <code>FALL</code>(falling) and <code>JUMP</code>(jumping).
 	 */
-	private String action;
+	private PlayerAction action;
 	
-	/**
-	 * A flag indicating if player has changed his current action.
-	 */
-	private boolean actionChanged = false;
-	/**
-	 * A flag indicating if player is going from a "fall" action to an "idle" action.
-	 */
-	private boolean landing = false;
 	/**
 	 * Decides which sprite should be displayed.
 	 */
@@ -91,15 +84,15 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * @param l the logics handler which the entity is linked to
 	 */
 	public PlayerInstance(final Logics l) {
-		super(l);
-		this.keyH = l.getKeyHandler();
+		super();
+		this.keyH = GameWindow.keyHandler;
 		
-		fallSpeed = baseFallSpeed / maximumFPS;
-		jumpSpeed = baseJumpSpeed / maximumFPS;
+		fallSpeed = baseFallSpeed / GameWindow.fpsLimit;
+		jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
 		
 		position = new Pair<>(xPosition, yGround);
-		action = "idle";
-		entityTag = "player";
+		action = PlayerAction.WALK;
+		entityTag = EntityType.PLAYER;
 		
 		spritesMgr.setPlaceH(placeH);
 		spritesMgr.addSprite("walk1", texturePath + "barrywalk1.png");
@@ -115,37 +108,23 @@ public class PlayerInstance extends EntityInstance implements Player{
 		spritesMgr.addSprite("land3", texturePath + "barryland3.png");
 		spritesMgr.addSprite("land4", texturePath + "barryland4.png");
 		spritesMgr.setAnimator(() -> {
-			String s = "";
-			switch(action) {
-				case "idle":
-					s = "walk" + spriteSwitcher;
-					break;
-				case "land":
-					s = "land" + spriteSwitcher;
-					break;
-				case "jump":
-					s = "jump" + (spriteSwitcher % 2 + 1);
-					break;
-				case "fall":
-					s = "fall" + (spriteSwitcher % 2 + 1);
-					break;
-			}
-			return s;
+			int spriteSwitcher = action != PlayerAction.WALK && action != PlayerAction.LAND ? (this.spriteSwitcher % 2 + 1) : this.spriteSwitcher;
+			return action.toString() + spriteSwitcher;
 		});
 	}
 	
 	private void jump() {
 		position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof ? position.getY() - jumpSpeed * jumpMultiplier : yRoof);
-		setAction("jump");
+		setAction(PlayerAction.JUMP);
 	}
 	
 	private void fall() {
 		if(position.getY() + fallSpeed * fallMultiplier < yGround) {
 			position.setY(position.getY() + fallSpeed * fallMultiplier);
-			setAction("fall");
+			setAction(PlayerAction.FALL);
 		} else {
 			position.setY(yGround);
-			setAction("land");
+			setAction(PlayerAction.LAND);
 		}
 	}
 
@@ -154,11 +133,8 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * 
 	 * @param newAction the new action
 	 */
-	private void setAction(final String newAction) {
-		if(action != newAction) {
-			actionChanged = true;
-			landing = newAction == "land";
-		}
+	private void setAction(final PlayerAction newAction) {
+		action.changeAction(newAction);
 		action = newAction;
 	}
 	
@@ -166,14 +142,14 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * Updates the sprite that should be display during the animation.
 	 */
 	private void updateSprite() {
-		if(this.actionChanged) {
+		if(PlayerAction.hasChanged) {
 			frameTime = 0;
 			spriteSwitcher = 1;
-			this.actionChanged = false;
+			PlayerAction.hasChanged = false;
 		}
 		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
-			if(this.landing && spriteSwitcher == 4) {
-				setAction("idle");
+			if(PlayerAction.isLanding && spriteSwitcher == 4) {
+				setAction(PlayerAction.WALK);
 			}
 			frameTime = 0;
 			spriteSwitcher = spriteSwitcher >= 4 ? 1 : spriteSwitcher + 1;
@@ -195,7 +171,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 	public void reset() {
 		position.setX(xPosition);
 		position.setY(yGround);
-		action = "idle";
+		action = PlayerAction.WALK;
 		score = 0;
 	}
 	
@@ -208,7 +184,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 			jump();
 			jumpMultiplier += jumpMultiplierIncrease;
 			fallMultiplier = initialFallMultiplier;
-		} else if(action != "idle") {
+		} else if(action != PlayerAction.WALK) {
 			fall();
 			fallMultiplier += fallMultiplierIncrease;
 			jumpMultiplier = initialJumpMultiplier;
