@@ -16,7 +16,7 @@ public abstract class PickupInstance extends EntityInstance implements Pickup{
 	protected PickupInstance(final Logics l, final Pair<Double,Double> position, final Player player, final SpeedHandler speed) {
 		super(l, position);
 		this.player = player;
-		this.movement = speed;
+		this.movement = speed.clone();
 		
 		entityTag = EntityType.PICKUP;
 	}

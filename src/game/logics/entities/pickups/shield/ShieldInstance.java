@@ -6,6 +6,7 @@ import game.logics.entities.pickups.generic.PickupInstance;
 import game.logics.entities.player.Player;
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 public class ShieldInstance extends PickupInstance implements Shield{
@@ -23,6 +24,7 @@ public class ShieldInstance extends PickupInstance implements Shield{
 	
 	public ShieldInstance(final Logics l, final Pair<Double, Double> position,  final Player player, final SpeedHandler speed) {
 		super(l, position, player, speed);
+		entityTag = EntityType.SHIELD;
 		
 		spritesMgr.setPlaceH(placeH);
 		spritesMgr.addSprite("shield", texturePath + "shield.png");

@@ -14,6 +14,10 @@ import java.awt.Graphics2D;
  */
 public interface Logics {
 	
+	static int getDifficultyLevel() {
+		return LogicsHandler.difficultyLevel;
+	}
+	
 	/**
 	 * Updates all the logical objects handled for a frame.
 	 */

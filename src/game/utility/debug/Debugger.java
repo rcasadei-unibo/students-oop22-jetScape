@@ -23,7 +23,7 @@ public class Debugger {
 	 */
 	public static final Color debugColor = Color.white;
 	
-	public enum Option{ FPS_METER, ENTITY_COORDINATES, NEXT_SPAWN_TIMER, LOG_FPS, LOG_CLEANER };
+	public enum Option{ FPS_METER, ENTITY_COORDINATES, NEXT_SPAWN_TIMER, DIFFICULTY_LEVEL, LOG_FPS, LOG_CLEANER };
 	
 	/**
 	 * A map of flags that tells whether a certain debug function (specified as a key)
@@ -50,6 +50,7 @@ public class Debugger {
 		optionEnabled.put(Option.FPS_METER, true);
 		optionEnabled.put(Option.ENTITY_COORDINATES, true);
 		optionEnabled.put(Option.NEXT_SPAWN_TIMER, true);
+		optionEnabled.put(Option.DIFFICULTY_LEVEL, true);
 		optionEnabled.put(Option.LOG_FPS, false);
 		optionEnabled.put(Option.LOG_CLEANER, false);
 	}

@@ -17,6 +17,10 @@ public enum EntityType {
 		return this.ordinal() > 1 && this.ordinal() < 7;
 	}
 	
+	public boolean isPickUp() {
+		return this.ordinal() > 6;
+	}
+	
 	public boolean isZapperDependent() {
 		return this.ordinal() > 2 && this.ordinal() < 6;
 	}

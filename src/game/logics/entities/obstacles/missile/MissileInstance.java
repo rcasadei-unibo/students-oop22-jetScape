@@ -65,7 +65,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 	private Direction lastDir = Direction.UP;
 	
 	public MissileInstance(final Logics l, final Pair<Double,Double> pos, final Player player, final SpeedHandler speed) {
-		super(l, pos, new SpeedHandler(speed.getXSpeed(), speed.getXSpeedIncDiff(), speed.getXAcceleration()));
+		super(l, pos, speed);
 		
 		entityTag = EntityType.MISSILE;
 		

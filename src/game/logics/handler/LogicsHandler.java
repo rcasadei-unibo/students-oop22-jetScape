@@ -52,9 +52,6 @@ public class LogicsHandler implements Logics{
 	/**
 	 * Generates sets of obstacles on the environment.
 	 */
-	private final Screen screen;
-	private final KeyHandler keyH;
-	
 	private final Generator spawner;
 	
 	private final DisplayController displayController;
@@ -70,7 +67,7 @@ public class LogicsHandler implements Logics{
 	 * Defines how many seconds have to pass for the spawner to generate
 	 * another set of obstacles.
 	 */
-	private int spawnInterval = 2;
+	private int spawnInterval = 3;
 	/**
 	 * Defines the interval of each check for entities to clean.
 	 */
@@ -80,7 +77,11 @@ public class LogicsHandler implements Logics{
 	 * The frames passed since the last second.
 	 */
 	private int frameTime = 0;
+	
+	public static int difficultyLevel = 1;
 		
+	private final Screen screen;
+	private final KeyHandler keyH;
 	private final Debugger debugger;
 	
 	/**
@@ -106,10 +107,10 @@ public class LogicsHandler implements Logics{
 	}
 
 	private void initializeSpawner() {
-		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 0, 5000.0)));
-		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 0, 0)));
+		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 5.0, 5000.0)));
+		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 15.0, 0)));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
-		spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, new SpeedHandler(250.0, 0, 0)));
+		spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));
 		
 		try {
 			spawner.initialize();
@@ -119,20 +120,6 @@ public class LogicsHandler implements Logics{
 		} catch (ParseException | IOException e) {
 			JOptionPane.showMessageDialog((Component)GameHandler.gameWindow, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
-		}
-	}
-	
-	private void updateTimers() {
-		frameTime++;
-	}
-	
-	/**
-	 * Removes all entities that are on the "clear area" [x < -tile size].
-	 */
-	private void updateCleaner() {
-		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
-			spawner.cleanTiles();
-			debugger.printLog(Debugger.Option.LOG_CLEANER, "clean");
 		}
 	}
 	
@@ -151,6 +138,34 @@ public class LogicsHandler implements Logics{
 				break;
 			default:
 				break;
+		}
+	}
+	
+	private void updateTimers() {
+		frameTime++;
+	}
+	
+	/**
+	 * Removes all entities that are on the "clear area" [x < -tile size].
+	 */
+	private void updateCleaner() {
+		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
+			spawner.cleanTiles();
+			debugger.printLog(Debugger.Option.LOG_CLEANER, "clean");
+		}
+	}
+	
+	private void updateDifficulty() {
+		final int increaseDiffPerScore = 250;
+		
+		difficultyLevel = playerEntity.getCurrentScore() / increaseDiffPerScore + 1;
+	}
+	
+	private void drawDifficultyLevel(final Graphics2D g) {
+		if(debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
+			g.setColor(Debugger.debugColor);
+			g.setFont(Debugger.debugFont);
+			g.drawString("DIFFICULTY: " + difficultyLevel, 3, 26);
 		}
 	}
 	
@@ -207,6 +222,7 @@ public class LogicsHandler implements Logics{
 				System.exit(0);
 				break;
 			case INGAME:
+				this.updateDifficulty();
 				this.updateCleaner();
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.update()));
@@ -228,6 +244,7 @@ public class LogicsHandler implements Logics{
 					entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
 				}
 				spawner.drawNextSpawnTimer(g);
+				this.drawDifficultyLevel(g);
 			default:
 				break;
 		}

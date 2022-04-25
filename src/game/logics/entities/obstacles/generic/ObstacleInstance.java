@@ -30,7 +30,7 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 	protected ObstacleInstance(final Logics l, final Pair<Double,Double> p, final SpeedHandler s){
 		super(l, p);
 		entityTag = EntityType.OBSTACLE;
-		movement = s;
+		movement = s.clone();
 	}
 	
 	public SpeedHandler getSpeedHandler() {

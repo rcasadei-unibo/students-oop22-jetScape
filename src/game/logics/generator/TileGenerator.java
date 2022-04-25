@@ -30,6 +30,7 @@ import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperInstance;
 import game.logics.entities.obstacles.zapper.ZapperRay;
 import game.logics.entities.pickups.shield.Shield;
+import game.logics.handler.Logics;
 import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -100,6 +101,8 @@ public class TileGenerator implements Generator{
 	 */
 	private final int spawnInterval;
 	private final long interval;
+	private final long intervalDecreaseDiff = 100;
+	private final long minimalInterval = 15;
 
 	private final Thread generator = new Thread(this);
 	private boolean running = false;
@@ -111,6 +114,7 @@ public class TileGenerator implements Generator{
 	private long systemTimeAfterPaused = 0;
 	private long remainingTimeToSleep = 0;
 	private long sleepTimeLeft = 0;
+	private long sleepInterval;
 
 	
 	/**
@@ -124,7 +128,8 @@ public class TileGenerator implements Generator{
 		this.entities = entities;
 		this.spawnInterval = interval;
 		this.tileSize = tileSize;
-		this.interval = spawnInterval * GameWindow.milliSecond;
+		this.interval = spawnInterval * GameWindow.milliSecond + intervalDecreaseDiff;
+		this.sleepInterval = interval;
 		
 		EntityType.concreteGenericTypes.stream().filter(e -> e.isGenerableEntity()).collect(Collectors.toList())
 		.forEach(e -> tileSets.put(e, new ArrayList<>()));
@@ -286,7 +291,7 @@ public class TileGenerator implements Generator{
 	public void drawNextSpawnTimer(final Graphics2D g) {
 		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.NEXT_SPAWN_TIMER)) {
 			synchronized(this) {
-				long expectedTimer = interval - (System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep);
+				long expectedTimer = sleepInterval - (System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep);
 				long remainingTime = (remainingTimeToSleep + sleepTimeLeft) - (System.nanoTime() / GameWindow.microSecond - systemTimeAfterPaused);
 				long timer = !this.isWaiting() ? remainingTime > 0 ? remainingTime : expectedTimer  : remainingTimeToSleep;
 			
@@ -347,7 +352,7 @@ public class TileGenerator implements Generator{
 		
 		synchronized(this) {
 			long timePassed = System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep;
-			remainingTimeToSleep = interval - timePassed;
+			remainingTimeToSleep = sleepInterval - timePassed;
 		}
 	}
 	
@@ -359,8 +364,8 @@ public class TileGenerator implements Generator{
 				
 				synchronized(this) {
 					long timePassed = System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep;
-					sleepTimeLeft = interval - timePassed;
-					remainingTimeToSleep = timePassed < interval ? remainingTimeToSleep - sleepTimeLeft : remainingTimeToSleep;
+					sleepTimeLeft = sleepInterval - timePassed;
+					remainingTimeToSleep = timePassed < sleepInterval ? remainingTimeToSleep - sleepTimeLeft : remainingTimeToSleep;
 					systemTimeAfterPaused = System.nanoTime() / GameWindow.microSecond; 
 				}
 			}
@@ -369,6 +374,7 @@ public class TileGenerator implements Generator{
 
 	@Override
 	public void run(){
+		final long minimum = (interval - intervalDecreaseDiff) * minimalInterval / 100;
 		
 		while(generator.isAlive() && this.isRunning()) {
 			
@@ -393,8 +399,9 @@ public class TileGenerator implements Generator{
 			
 			synchronized(this) {
 				systemTimeBeforeSleep = System.nanoTime() / GameWindow.microSecond;
+				sleepInterval =  interval - intervalDecreaseDiff * Logics.getDifficultyLevel() > minimum ? interval - intervalDecreaseDiff * Logics.getDifficultyLevel() : minimum;
 			}
-			this.invokeSleep(interval);
+			this.invokeSleep(sleepInterval);
 		}
 	}
 
