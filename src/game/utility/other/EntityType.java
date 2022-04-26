@@ -6,8 +6,8 @@ public enum EntityType {
 	UNDEFINED, PLAYER, OBSTACLE, ZAPPER, ZAPPERBASE, ZAPPERRAY, MISSILE, PICKUP, SHIELD;
 	
 	public static final List<EntityType> allTypes = List.of(EntityType.PLAYER, EntityType.OBSTACLE, EntityType.ZAPPER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.PICKUP, EntityType.SHIELD);
-	public static final List<EntityType> concreteTypes = List.of(EntityType.PLAYER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.SHIELD);
-	public static final List<EntityType> concreteGenericTypes = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD);
+	public static final List<EntityType> concreteTypes = List.of(EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.SHIELD, EntityType.PLAYER);
+	public static final List<EntityType> concreteGenericTypes = List.of(EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.PLAYER);
 	
 	public boolean isGenerableEntity() {
 		return this.ordinal() > 1;

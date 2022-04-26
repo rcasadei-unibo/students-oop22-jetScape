@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -94,7 +93,7 @@ public class LogicsHandler implements Logics{
 		this.keyH = GameWindow.keyHandler;
 		this.debugger = GameWindow.debugger;
 		
-		EntityType.concreteGenericTypes.stream().sorted((e1, e2) -> -e1.compareTo(e2)).collect(Collectors.toList())
+		EntityType.concreteGenericTypes
 		.forEach(e -> entities.put(e, new HashSet<>()));
 		
 		playerEntity = new PlayerInstance(this);
@@ -107,7 +106,7 @@ public class LogicsHandler implements Logics{
 	}
 
 	private void initializeSpawner() {
-		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 5.0, 5000.0)));
+		spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 10.0, 5000.0)));
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 15.0, 0)));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));

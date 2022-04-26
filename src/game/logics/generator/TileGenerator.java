@@ -101,8 +101,8 @@ public class TileGenerator implements Generator{
 	 */
 	private final int spawnInterval;
 	private final long interval;
-	private final long intervalDecreaseDiff = 100;
-	private final long minimalInterval = 15;
+	private final long intervalDecreaseDiff = 40;
+	private final long minimalInterval = 40;
 
 	private final Thread generator = new Thread(this);
 	private boolean running = false;
@@ -364,7 +364,7 @@ public class TileGenerator implements Generator{
 				
 				synchronized(this) {
 					long timePassed = System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep;
-					sleepTimeLeft = sleepInterval - timePassed;
+					sleepTimeLeft = sleepInterval - timePassed > 0 ? sleepInterval - timePassed : 0;
 					remainingTimeToSleep = timePassed < sleepInterval ? remainingTimeToSleep - sleepTimeLeft : remainingTimeToSleep;
 					systemTimeAfterPaused = System.nanoTime() / GameWindow.microSecond; 
 				}
