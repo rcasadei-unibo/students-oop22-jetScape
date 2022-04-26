@@ -93,6 +93,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		
 		position = new Pair<>(xPosition, yGround);
 		this.hitbox = new PlayerHitbox(position, screen);
+		this.hitboxSet.add(this.hitbox);
 		
 		action = PlayerAction.WALK;
 		entityTag = EntityType.PLAYER;

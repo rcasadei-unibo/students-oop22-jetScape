@@ -58,6 +58,8 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 	public ZapperBaseInstance(final Logics l, final Pair<Double,Double> position, final SpeedHandler s) {
 		super(l, position, s);
 		entityTag = EntityType.ZAPPERBASE;
+		this.hitbox = new ZapperBaseHitbox(position, screen);
+		this.hitboxSet.add(this.hitbox);
 	}
 	
 	public void setMaster(final Zapper zap) {
@@ -72,7 +74,6 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 			spritesMgr.addSprite("left", spritePath + "zapperbase_left.png");
 			spritesMgr.addSprite("right", spritePath + "zapperbase_right.png");
 			spritesMgr.setAnimator(() -> rotation);
-			this.hitbox = new ZapperBaseHitbox(position, screen);
 		}
 	}
 	

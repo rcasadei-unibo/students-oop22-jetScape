@@ -78,6 +78,7 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 		spritesMgr.addSprite("missile", spritePath + "missile.png");
 		spritesMgr.setAnimator(() -> "missile");
 		this.hitbox = new MissileHitbox(pos, screen);
+		this.hitboxSet.add(this.hitbox);
 	}
 	
 	private void updateFrameTime() {

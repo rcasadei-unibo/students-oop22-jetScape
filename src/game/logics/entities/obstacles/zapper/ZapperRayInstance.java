@@ -77,6 +77,7 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 		} else {
 			this.hitbox = new ZapperRayHorizontalHitbox(p, screen);
 		}
+		this.hitboxSet.add(this.hitbox);
 	}
 	
 	/**

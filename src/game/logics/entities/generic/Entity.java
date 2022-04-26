@@ -1,6 +1,7 @@
 package game.logics.entities.generic;
 
 import java.awt.Graphics2D;
+import java.util.Set;
 
 import game.logics.hitbox.Hitbox;
 import game.utility.other.EntityType;
@@ -65,7 +66,7 @@ public interface Entity {
 	/**
 	 * @return the hitbox of the entity
 	 */	
-	Hitbox getHitbox();
+	Set<Hitbox> getHitbox();
 	/**
 	 * Draws the coordinates of the entity if visible.
 	 * 

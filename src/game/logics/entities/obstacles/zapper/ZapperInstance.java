@@ -15,11 +15,16 @@ public class ZapperInstance implements Zapper{
 	private final ZapperBase base1;
 	private final ZapperBase base2;
 	private final Set<ZapperRay> rays;
+	private final Set<Hitbox> hitbox;
 	
 	public ZapperInstance(final ZapperBase base1, final ZapperBase base2, final Set<ZapperRay> rays) {
 		this.base1 = base1;
 		this.base2 = base2;
 		this.rays = rays;
+		this.hitbox = new HashSet<>();
+		this.rays.forEach(entity -> this.hitbox.addAll(entity.getHitbox()));
+		this.hitbox.addAll(this.base1.getHitbox());
+		this.hitbox.addAll(this.base2.getHitbox());
 	}
 	
 	public ZapperBase getPaired(final ZapperBase z) {
@@ -147,7 +152,7 @@ public class ZapperInstance implements Zapper{
 	}
 
 	@Override
-	public Hitbox getHitbox() {
-		return this.getHitbox();
+	public Set<Hitbox> getHitbox() {
+		return this.hitbox;
 	}	
 }

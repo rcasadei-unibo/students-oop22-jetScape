@@ -223,7 +223,7 @@ public class LogicsHandler implements Logics{
 			case INGAME:
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
-					entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
+					entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().forEach(hitbox -> hitbox.draw(g))));
 					entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
 				}
 				spawner.drawNextSpawnTimer(g);

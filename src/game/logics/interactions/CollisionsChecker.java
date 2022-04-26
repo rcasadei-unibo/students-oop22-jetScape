@@ -9,17 +9,18 @@ import java.util.Set;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.player.PlayerInstance;
 import game.logics.hitbox.Hitbox;
+import game.utility.other.EntityType;
 
 public class CollisionsChecker {
-	private final Map<String, Set<Entity>> entities;
+	private final Map<EntityType, Set<Entity>> entities;
 	private final Queue<Entity> collisions ;
 	private final Hitbox player;
 	
-	public CollisionsChecker(Map<String, Set<Entity>> entities, PlayerInstance p) {
+	public CollisionsChecker(Map<EntityType, Set<Entity>> entities, PlayerInstance p) {
 		super();
 		this.entities = entities;
 		this.collisions = new PriorityQueue<>();
-		this.player = p.getHitbox();
+		this.player = p.getHitbox().stream().findFirst().get();
 	}
 	
 	public Optional<Entity> getNextToHandle() {
@@ -28,9 +29,9 @@ public class CollisionsChecker {
 
 	public void updateCollisions() {
 		this.entities.forEach((type, entities) -> {
-			if(!type.equals("player")) {
+			if(!type.equals(EntityType.PLAYER)) {
 				entities.forEach(entity -> {
-					this.collides(entity.getHitbox());
+					entity.getHitbox().forEach(hitbox -> this.collides(hitbox));
 				});
 			}		
 		});

@@ -10,8 +10,9 @@ import game.utility.screen.Screen;
 import game.utility.sprites.DrawManager;
 import game.utility.sprites.Drawer;
 
-
 import java.awt.Graphics2D;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
@@ -55,6 +56,7 @@ public abstract class EntityInstance implements Entity{
 	private boolean onScreen = false;
 	
 	protected Hitbox hitbox ;
+	protected Set<Hitbox> hitboxSet = new HashSet<>();
 	
 	/**
 	 * Manages the sprites of the object.
@@ -160,7 +162,7 @@ public abstract class EntityInstance implements Entity{
 		}
 	}
 	
-	public Hitbox getHitbox(){
-		return hitbox;
+	public Set<Hitbox> getHitbox() {
+		return this.hitboxSet;
 	}
 }

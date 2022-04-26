@@ -7,7 +7,8 @@ import java.util.Set;
 import java.awt.Graphics2D;
 import java.awt.Color;
 
-
+import game.frame.GameWindow;
+import game.utility.debug.Debugger;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
@@ -39,10 +40,12 @@ public abstract class HitboxInstance implements Hitbox{
 	}
 	
 	public void draw(Graphics2D g) {
-		this.hitboxes.forEach((hitbox, startPos) -> {
-			g.setColor(Color.MAGENTA);
-			g.draw(hitbox);
-		});
+		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.HITBOX)) {
+			this.hitboxes.forEach((hitbox, startPos) -> {
+				g.setColor(Color.MAGENTA);
+				g.draw(hitbox);
+			});
+		}
 	}
 	
 	protected void addRectangle(double x, double y, double width, double height) {
