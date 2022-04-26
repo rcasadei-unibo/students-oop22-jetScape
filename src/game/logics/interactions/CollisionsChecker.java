@@ -1,51 +1,52 @@
 package game.logics.interactions;
 
-import java.awt.Rectangle;
 import java.util.Map;
+import java.util.Optional;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import game.logics.entities.generic.Entity;
 import game.logics.entities.player.PlayerInstance;
 import game.logics.hitbox.Hitbox;
-import game.utility.other.GameState;
 
 public class CollisionsChecker {
 	private final Map<String, Set<Entity>> entities;
-	private final Consumer<GameState> setGameState;
+	private final Queue<Entity> collisions ;
 	private final Hitbox player;
 	
-	public CollisionsChecker(Map<String, Set<Entity>> entities, 
-			Consumer<GameState> setGameState, PlayerInstance p) {
+	public CollisionsChecker(Map<String, Set<Entity>> entities, PlayerInstance p) {
 		super();
 		this.entities = entities;
-		this.setGameState = setGameState;
+		this.collisions = new PriorityQueue<>();
 		this.player = p.getHitbox();
 	}
-/*
-	public void checkCollision() {
-		this.entities.keySet().forEach(entity -> {
-			if(!entity.equals("player")) {
-				this.entities.get(entity).forEach(obstacle -> {
-					if(obstacle.getHitbox().collides(player)) {
-						setGameState.accept(GameState.MENU);
-						return;
-					}
+	
+	public Optional<Entity> getNextToHandle() {
+		return Optional.ofNullable(this.collisions.poll());
+	}
+
+	public void updateCollisions() {
+		this.entities.forEach((type, entities) -> {
+			if(!type.equals("player")) {
+				entities.forEach(entity -> {
+					this.collides(entity.getHitbox());
 				});
-			}	
+			}		
+		});
+	}
+	
+	private void collides(Hitbox entity) {
+		this.player.getRectangles().forEach(hitbox -> {
+			entity.getRectangles().forEach(target -> {
+				if (hitbox.intersects(target)) {
+					this.collisions.add((Entity) entity);
+					return;
+				}
+			});
 		});
 	}
 	
 	
-	public boolean collides(Hitbox entity) {
-		for(Rectangle hitbox : this.hitboxes.keySet()) {
-			for(Rectangle hitboxTarget : entity.getRectangles()) {
-				if(hitbox.intersects(hitboxTarget)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-*/
+
 }

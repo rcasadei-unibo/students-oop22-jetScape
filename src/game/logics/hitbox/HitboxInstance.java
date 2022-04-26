@@ -1,5 +1,6 @@
 package game.logics.hitbox;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +35,7 @@ public abstract class HitboxInstance implements Hitbox{
 	}
 	
 	public Set<Rectangle> getRectangles() {
-		return this.hitboxes.keySet();
+		return Collections.unmodifiableSet(this.hitboxes.keySet());
 	}
 	
 	public void draw(Graphics2D g) {
