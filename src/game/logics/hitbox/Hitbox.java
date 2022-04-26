@@ -14,19 +14,9 @@ public interface Hitbox {
 	public void updatePosition(Pair<Double,Double> newPos);
 	
 	/**
-	 * @return true if at least one rectangle is intersecting with the target
-	 */
-	public boolean collides(Hitbox entity);
-	
-	/**
 	 * @return all this entity's rectangles
 	 */
 	public Set<Rectangle> getRectangles();
-	
-	/**
-	 * moves all the entity's rectangles to the initial position
-	 */
-	public void resetPosition();
 	
 	/**
 	 * draws the hitboxes

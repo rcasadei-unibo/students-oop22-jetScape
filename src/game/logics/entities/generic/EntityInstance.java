@@ -129,7 +129,6 @@ public abstract class EntityInstance implements Entity{
 	public void reset() {
 		position.setX(startPos.getX());
 		position.setY(startPos.getY());
-		this.hitbox.resetPosition();
 	}
 	
 	/**

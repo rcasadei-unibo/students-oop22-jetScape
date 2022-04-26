@@ -1,5 +1,6 @@
 package game.logics.interactions;
 
+import java.awt.Rectangle;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -21,7 +22,7 @@ public class CollisionsChecker {
 		this.setGameState = setGameState;
 		this.player = p.getHitbox();
 	}
-
+/*
 	public void checkCollision() {
 		this.entities.keySet().forEach(entity -> {
 			if(!entity.equals("player")) {
@@ -34,5 +35,17 @@ public class CollisionsChecker {
 			}	
 		});
 	}
-		
+	
+	
+	public boolean collides(Hitbox entity) {
+		for(Rectangle hitbox : this.hitboxes.keySet()) {
+			for(Rectangle hitboxTarget : entity.getRectangles()) {
+				if(hitbox.intersects(hitboxTarget)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+*/
 }
