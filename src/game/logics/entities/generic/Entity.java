@@ -3,6 +3,7 @@ package game.logics.entities.generic;
 import java.awt.Graphics2D;
 
 import game.logics.hitbox.Hitbox;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
@@ -47,7 +48,7 @@ public interface Entity {
 	/**
 	 * @return a string representing the entity's category
 	 */
-	String entityType();
+	EntityType entityType();
 	/**
 	 * Reset the current position of the obstacle, setting it to the starting one.
 	 */
@@ -65,4 +66,10 @@ public interface Entity {
 	 * @return the hitbox of the entity
 	 */	
 	Hitbox getHitbox();
+	/**
+	 * Draws the coordinates of the entity if visible.
+	 * 
+	 * @param g the graphics drawer
+	 */
+	void drawCoordinates(Graphics2D g);
 }

@@ -20,10 +20,9 @@ import game.logics.entities.obstacles.generic.Obstacle;
 public interface ZapperBase extends Obstacle{
 	
 	/**
-	 * Sets the paired <code>ZapperBaseInstance</code> if
-	 * it hasn't been set yet.
+	 * Sets the master class where all the zapper entities are managed.
 	 * 
 	 * @param zap the <code>ZapperBaseInstance</code> to pair with this object
 	 */
-	void setPaired(final ZapperBase zap);
+	void setMaster(Zapper zap);
 }

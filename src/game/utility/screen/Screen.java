@@ -1,5 +1,8 @@
 package game.utility.screen;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 /**
  * The <code>Screen</code> interface can be used for accessing <code>ScreenHandler</code> methods
  * 
@@ -9,17 +12,22 @@ package game.utility.screen;
  */
 public interface Screen {
 	
+	static final Dimension systemResolution = Toolkit.getDefaultToolkit().getScreenSize();
+	
 	//// 	DEFAULT VALUES    ////
-	static final int tileBaseSize = 32;
+	static final int baseTileSize = 32;
 	
-	static final int resolutionHorizontal = 16;
-	static final int resolutionVertical = 9;
+	static final int horizontalRatio = 16;
+	static final int verticalRatio = 9;
 	
-	static final double tileScaling = 2;
-	static final double resolutionScaling = 1;
+	static final double baseScaling = 2;
 	
-	/// CURRENT RESOLUTION: 1024 x 576 = (64 * 16) x (64 * 9) = ((32 * 2) * 16) x ((32 * 2) * 9)
-	
+	static final double proportion = 1.5;
+		
+	/**
+	 * @return a <code>Dimension</code> containing the size of the screen
+	 */
+	Dimension getScreenSize();
 	/**
 	 * @return the size for each tile of the screen
 	 */

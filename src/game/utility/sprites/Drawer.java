@@ -53,11 +53,20 @@ public interface Drawer {
 	void addLoadedSprite(Sprite s); 
 	
 	/**
+	 * Draws the specified sprite in the game environment.
+	 * 
+	 * @param g the graphics drawer
+	 * @param pos the position to draw the sprite
+	 * @param size the length of a side of the squared image
+	 */
+	void drawSprite(Graphics2D g, String sprite, Pair<Double,Double> pos, int size);
+	
+	/**
 	 * Draws the currently chosen sprite in the game environment.
 	 * 
 	 * @param g the graphics drawer
 	 * @param pos the position to draw the sprite
 	 * @param size the length of a side of the squared image
 	 */
-	void drawSprite(Graphics2D g, Pair<Double,Double> pos, int size);
+	void drawCurrentSprite(Graphics2D g, Pair<Double,Double> pos, int size);
 }

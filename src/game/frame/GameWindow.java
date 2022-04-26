@@ -10,7 +10,6 @@ import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 import game.utility.screen.ScreenHandler;
 
-import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -33,7 +32,8 @@ public class GameWindow extends JPanel implements Runnable{
 	private static final long serialVersionUID = 1L;
 	
 	public static final long nanoSecond = 1000000000;
-	public static final long milliSecond = 1000000;
+	public static final long microSecond = 1000000;
+	public static final long milliSecond = 1000;
 	
 	/**
 	 * Defines the cap for the "Frames Per Second". 
@@ -53,16 +53,21 @@ public class GameWindow extends JPanel implements Runnable{
 	/**
 	 * Shows at how many "Frames Per Second" is currently running the game.
 	 */
-	private int fps = 0;
+	public static int fps = 0;
 	
 	/**
 	 * Stores the screen information (resolution, size of each tile, etc).
 	 */
-	private final Screen gameScreen = new ScreenHandler();
+	public static final Screen gameScreen = new ScreenHandler();
 	/**
 	 * Listens the press of keys of the keyboard.
 	 */
-	private final KeyHandler keyH = new KeyHandler();
+	public static final KeyHandler keyHandler = new KeyHandler();
+	/**
+	 * Manages enabling and disabling of Debug Features.
+	 */
+	public static Debugger debugger;
+	
 	/**
 	 * Handles the logic part of the game (entities, interface, game state, etc). 
 	 */
@@ -70,11 +75,6 @@ public class GameWindow extends JPanel implements Runnable{
 	
 	private final Thread gameLoop = new Thread(this);
 	private boolean gameRunning = false;
-	
-	/**
-	 * Manages enabling and disabling of Debug Features.
-	 */
-	private final Debugger debugger;
 	
 	/**
 	 * Basic constructor that sets <code>JPanel</code> attributes and sets up the <code>Logics</code> handler
@@ -86,17 +86,17 @@ public class GameWindow extends JPanel implements Runnable{
 		super();
 		
 		/// Sets up the basic JPanel parameters /// 
-		this.setPreferredSize(new Dimension(gameScreen.getWidth(), gameScreen.getHeight()));
+		this.setPreferredSize(gameScreen.getScreenSize());
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
 		
 		/// Links the keyboard listener to the JPanel ///
-		this.addKeyListener(keyH);
+		this.addKeyListener(keyHandler);
 		
 		/// Sets up Debugger and Logics handler ///
-		this.debugger = new Debugger(debug, () -> fps);
-		this.logH = new LogicsHandler(gameScreen, keyH, debugger, () -> stopGame(), (Component)this);
+		debugger = new Debugger(debug);
+		this.logH = new LogicsHandler();
 	}
 	
 	/**
@@ -128,15 +128,15 @@ public class GameWindow extends JPanel implements Runnable{
 		
 		Graphics2D board = (Graphics2D)g;
 		
-		// Draws FPS meter if enabled by debugger
-		board.setColor(Color.white);
-		if(debugger.isFeatureEnabled("fps meter")) {
-			g.setFont(Debugger.debugFont);
-			g.drawString("FPS: " + fps, 3, 8);
-		}
-		
 		// Draws logical parts of the game
 		logH.drawAll(board);
+		
+		// Draws FPS meter if enabled by debugger
+		if(debugger.isFeatureEnabled(Debugger.Option.FPS_METER)){
+			board.setColor(Debugger.debugColor);
+			board.setFont(Debugger.debugFont);
+			board.drawString("FPS: " + fps, 3, 8);
+		}
 		
 		board.dispose();
 	}
@@ -167,9 +167,7 @@ public class GameWindow extends JPanel implements Runnable{
 				fpsCount = 0;
 				
 				// Prints FPS on console
-				if(debugger.isFeatureEnabled("log: fps")) {
-					System.out.print("FPS: " + fps + "\n");
-				}
+				debugger.printLog(Debugger.Option.LOG_FPS, "FPS: " + fps);
 			}
 			
 			/// RUNS EACH FRAME ///
@@ -180,7 +178,7 @@ public class GameWindow extends JPanel implements Runnable{
 			try {
 				// Thread sleeps until it's next loop time
 				double sleepTime = nextDraw - System.nanoTime();
-				sleepTime = sleepTime < 0 ? 0 : sleepTime / milliSecond;
+				sleepTime = sleepTime < 0 ? 0 : sleepTime / microSecond;
 				Thread.sleep((long) sleepTime);
 				
 				// Sets up the next loop time for the next frame

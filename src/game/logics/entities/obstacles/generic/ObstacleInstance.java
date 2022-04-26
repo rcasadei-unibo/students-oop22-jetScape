@@ -1,8 +1,10 @@
 package game.logics.entities.obstacles.generic;
 
+import game.frame.GameWindow;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
@@ -37,7 +39,7 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 	 */
 	protected ObstacleInstance(final Logics l, final Pair<Double,Double> p, final SpeedHandler s){
 		super(l, p);
-		entityTag = "obstacle";
+		entityTag = EntityType.OBSTACLE;
 		movement = s;
 	}
 	
@@ -81,7 +83,7 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
 		updateFlags();
 		
 		if(position.getX() > -screen.getTileSize() * 2) {
-			position.setX(position.getX() - movement.getXSpeed() / maximumFPS);
+			position.setX(position.getX() - movement.getXSpeed() / GameWindow.fpsLimit);
 			if(!this.isOnSpawnArea()) {
 				movement.applyAcceleration();
 			}

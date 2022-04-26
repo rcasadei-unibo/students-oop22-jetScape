@@ -6,6 +6,7 @@ import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.handler.Logics;
 import game.logics.hitbox.ZapperRayHorizontalHitbox;
 import game.logics.hitbox.ZapperRayVerticalHitbox;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
@@ -61,7 +62,7 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
 	 */
 	public ZapperRayInstance(final Logics l, final Pair<Double,Double> p, final ZapperBase e1, final ZapperBase e2) {
 		super(l, p, e1.getSpeedHandler());
-		entityTag = "zapperray";
+		entityTag = EntityType.ZAPPERRAY;
 		
 		electrode1 = e1;
 		electrode2 = e2;	

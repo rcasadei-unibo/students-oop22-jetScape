@@ -1,5 +1,6 @@
 package game.logics.generator;
 
+import java.awt.Graphics2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.function.BiFunction;
@@ -46,6 +47,8 @@ public interface Generator extends Runnable{
 	 */
 	void setMissileCreator(Function<Pair<Double,Double>,Missile> missile);
 	
+	void drawNextSpawnTimer(Graphics2D g);
+	
 	/**
 	 * Removes all entities that are on the "clear area" [x < -tile size].
 	 */
@@ -76,7 +79,12 @@ public interface Generator extends Runnable{
 	void start();
 	
 	/**
-	 * Stops the generation of obstacles [Ends thread].
+	 * Terminates the generation of obstacles [Ends thread].
+	 */
+	void terminate();
+	
+	/**
+	 * Stops the generation of obstacles [Interrupts thread].
 	 */
 	void stop();
 	

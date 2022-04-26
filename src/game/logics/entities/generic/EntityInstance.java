@@ -4,6 +4,7 @@ import game.frame.GameWindow;
 import game.logics.handler.Logics;
 import game.logics.hitbox.Hitbox;
 import game.utility.debug.Debugger;
+import game.utility.other.EntityType;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 import game.utility.sprites.DrawManager;
@@ -20,7 +21,6 @@ import java.awt.Graphics2D;
  */
 public abstract class EntityInstance implements Entity{
 	
-	protected final int maximumFPS = GameWindow.fpsLimit;
 	protected int currentFPS = 0;
 	
 	/**
@@ -43,7 +43,7 @@ public abstract class EntityInstance implements Entity{
 	/**
 	 * Defines the entity's type category.
 	 */
-	protected String entityTag;
+	protected EntityType entityTag;
 	
 	/**
 	 * Decides if the entity has to be shown on screen.
@@ -61,7 +61,6 @@ public abstract class EntityInstance implements Entity{
 	 */
 	protected final Drawer spritesMgr;
 	protected final Screen screen;
-	private final Debugger debugger;
 	
 	/**
 	 * Constructor that sets up entity default values (picked up from 
@@ -69,10 +68,9 @@ public abstract class EntityInstance implements Entity{
 	 * 
 	 * @param l the logics handler which the entity is linked to
 	 */
-	protected EntityInstance(final Logics l) {
-		this.screen = l.getScreenInfo();
-		this.debugger = l.getDebugger();
-		entityTag = "undefined";
+	protected EntityInstance() {
+		this.screen = GameWindow.gameScreen;
+		entityTag = EntityType.UNDEFINED;
 		
 		spritesMgr = new DrawManager();
 		yGround = screen.getHeight() - (yLowLimit + screen.getTileSize() * 2);
@@ -88,7 +86,7 @@ public abstract class EntityInstance implements Entity{
 	 * @param position the starting position of the entity in the environment
 	 */
 	protected EntityInstance(final Logics l, final Pair<Double,Double> position) {
-		this(l);
+		this();
 		this.position = position;
 		this.startPos = position.clone();
 	}
@@ -122,7 +120,7 @@ public abstract class EntityInstance implements Entity{
 		return position.getY();
 	}
 	
-	public String entityType() {
+	public EntityType entityType() {
 		return entityTag;
 	}
 	
@@ -143,12 +141,23 @@ public abstract class EntityInstance implements Entity{
 	}
 	
 	public void update() {
-		currentFPS = debugger.fps();
+		currentFPS = GameWindow.fps;
 		updateFlags();
 	}
 	
 	public void draw(final Graphics2D g) {
-		spritesMgr.drawSprite(g, position, screen.getTileSize());
+		if(this.isVisible()) {
+			spritesMgr.drawCurrentSprite(g, position, screen.getTileSize());
+		}
+	}
+	
+	public void drawCoordinates(final Graphics2D g) {
+		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
+			g.setColor(Debugger.debugColor);
+			g.setFont(Debugger.debugFont);
+			g.drawString("X:" + Math.round(this.getX()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), Math.round(this.getY()) + Math.round(screen.getTileSize()));
+			g.drawString("Y:" + Math.round(this.getY()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), 10 + Math.round(this.getY()) + Math.round(screen.getTileSize()));
+		}
 	}
 	
 	public Hitbox getHitbox(){
