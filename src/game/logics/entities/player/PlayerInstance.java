@@ -174,7 +174,6 @@ public class PlayerInstance extends EntityInstance implements Player{
 	
 	@Override
 	public void reset() {
-		super.reset();
 		position.setX(xPosition);
 		position.setY(yGround);
 		action = PlayerAction.WALK;
