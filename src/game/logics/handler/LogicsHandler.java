@@ -28,6 +28,7 @@ import game.logics.entities.player.PlayerInstance;
 import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
+import game.logics.interactions.CollisionsHandler;
 import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
@@ -82,6 +83,7 @@ public class LogicsHandler implements Logics{
 		
 	private final Debugger debugger;
 	
+	private final CollisionsHandler cHandler;
 	/**
 	 * Constructor that gets the screen information, the keyboard listener and the debugger, 
 	 * initialize each entity category on the entities map and initialize the obstacle spawner.
@@ -101,6 +103,7 @@ public class LogicsHandler implements Logics{
 				() -> gameState, () -> playerEntity.getCurrentScore());
 		
 		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
+		this.cHandler = new CollisionsHandler(this.entities, (PlayerInstance) playerEntity);
 		this.initializeSpawner();
 	}
 
@@ -209,6 +212,7 @@ public class LogicsHandler implements Logics{
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.update()));
 				}
+				this.cHandler.interact();
 			default:
 				break;
 		}
