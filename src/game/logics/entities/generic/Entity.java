@@ -1,7 +1,9 @@
 package game.logics.entities.generic;
 
 import java.awt.Graphics2D;
+import java.util.Set;
 
+import game.logics.hitbox.Hitbox;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
@@ -69,7 +71,10 @@ public interface Entity {
 	 * @param g the graphics drawer
 	 */
 	void draw(Graphics2D g);
-	
+	/**
+	 * @return the hitbox of the entity
+	 */	
+	Set<Hitbox> getHitbox();
 	/**
 	 * Draws the coordinates of the entity if visible.
 	 * 

@@ -2,6 +2,7 @@ package game.logics.entities.generic;
 
 import game.frame.GameWindow;
 import game.logics.handler.Logics;
+import game.logics.hitbox.Hitbox;
 import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -10,6 +11,8 @@ import game.utility.sprites.DrawManager;
 import game.utility.sprites.Drawer;
 
 import java.awt.Graphics2D;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
@@ -60,6 +63,9 @@ public abstract class EntityInstance implements Entity{
 	 * A flag that automatically updates and tells if the entity is on the "spawn area".
 	 */
 	private boolean onSpawnArea = true;
+	
+	protected Hitbox hitbox ;
+	protected Set<Hitbox> hitboxSet = new HashSet<>();
 	
 	/**
 	 * Manages the sprites of the object.
@@ -183,5 +189,9 @@ public abstract class EntityInstance implements Entity{
 			g.drawString("X:" + Math.round(this.getX()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), Math.round(this.getY()) + Math.round(screen.getTileSize()));
 			g.drawString("Y:" + Math.round(this.getY()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), 10 + Math.round(this.getY()) + Math.round(screen.getTileSize()));
 		}
+	}
+	
+	public Set<Hitbox> getHitbox() {
+		return this.hitboxSet;
 	}
 }

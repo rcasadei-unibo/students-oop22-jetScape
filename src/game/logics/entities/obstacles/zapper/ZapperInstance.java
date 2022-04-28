@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import game.logics.entities.generic.Entity;
+import game.logics.hitbox.Hitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -14,11 +15,16 @@ public class ZapperInstance implements Zapper{
 	private final ZapperBase base1;
 	private final ZapperBase base2;
 	private final Set<ZapperRay> rays;
+	private final Set<Hitbox> hitbox;
 	
 	public ZapperInstance(final ZapperBase base1, final ZapperBase base2, final Set<ZapperRay> rays) {
 		this.base1 = base1;
 		this.base2 = base2;
 		this.rays = rays;
+		this.hitbox = new HashSet<>();
+		this.rays.forEach(entity -> this.hitbox.addAll(entity.getHitbox()));
+		this.hitbox.addAll(this.base1.getHitbox());
+		this.hitbox.addAll(this.base2.getHitbox());
 	}
 	
 	public ZapperBase getPaired(final ZapperBase z) {
@@ -144,5 +150,9 @@ public class ZapperInstance implements Zapper{
 		base2.drawCoordinates(g);
 		rays.forEach(r -> r.drawCoordinates(g));
 	}
-	
+
+	@Override
+	public Set<Hitbox> getHitbox() {
+		return this.hitbox;
+	}	
 }

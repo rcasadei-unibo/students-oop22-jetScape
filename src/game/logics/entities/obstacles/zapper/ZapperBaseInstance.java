@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.handler.Logics;
+import game.logics.hitbox.ZapperBaseHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -57,6 +58,8 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 	public ZapperBaseInstance(final Logics l, final Pair<Double,Double> position, final SpeedHandler s) {
 		super(l, position, s);
 		entityTag = EntityType.ZAPPERBASE;
+		this.hitbox = new ZapperBaseHitbox(position, screen);
+		this.hitboxSet.add(this.hitbox);
 	}
 	
 	public void setMaster(final Zapper zap) {

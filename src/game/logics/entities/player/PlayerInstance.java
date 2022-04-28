@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import game.frame.GameWindow;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.handler.Logics;
+import game.logics.hitbox.PlayerHitbox;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -91,8 +92,12 @@ public class PlayerInstance extends EntityInstance implements Player{
 		jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
 		
 		position = new Pair<>(xPosition, yGround);
+		this.hitbox = new PlayerHitbox(position, screen);
+		this.hitboxSet.add(this.hitbox);
+		
 		action = PlayerAction.WALK;
 		entityTag = EntityType.PLAYER;
+
 		
 		spritesMgr.setPlaceH(placeH);
 		spritesMgr.addSprite("walk1", texturePath + "barrywalk1.png");
@@ -189,6 +194,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 			fallMultiplier += fallMultiplierIncrease;
 			jumpMultiplier = initialJumpMultiplier;
 		}
+		this.hitbox.updatePosition(position);
 	}
 
 }
