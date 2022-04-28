@@ -20,7 +20,7 @@ public class ShieldInstance extends PickupInstance implements Shield{
 	 * If sprites are missing, they will be replace by a rectangle of the color specified in
 	 * <code>ShieldInstance.placeH</code>.
 	 */
-	private static final Color placeH = Color.white;
+	private static final Color placeH = Color.blue;
 	
 	public ShieldInstance(final Logics l, final Pair<Double, Double> position,  final Player player, final SpeedHandler speed) {
 		super(l, position, player, speed);

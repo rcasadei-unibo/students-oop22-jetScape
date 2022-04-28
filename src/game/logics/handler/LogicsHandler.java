@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
@@ -23,6 +24,7 @@ import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
 import game.logics.entities.obstacles.zapper.ZapperRayInstance;
 import game.logics.entities.pickups.shield.ShieldInstance;
+import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
 import game.logics.display.controller.DisplayController;
@@ -110,6 +112,7 @@ public class LogicsHandler implements Logics{
 		spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 15.0, 0)));
 		spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
 		spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));
+		spawner.setTeleportCreator(p -> new TeleportInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));
 		
 		try {
 			spawner.initialize();
@@ -239,7 +242,7 @@ public class LogicsHandler implements Logics{
 			case PAUSED:
 			case INGAME:
 				synchronized(entities) {
-					entities.forEach((s, se) -> se.forEach(e -> e.draw(g)));
+					entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
 					entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
 				}
 				spawner.drawNextSpawnTimer(g);

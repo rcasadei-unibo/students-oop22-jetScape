@@ -12,6 +12,7 @@ import game.logics.entities.obstacles.missile.Missile;
 import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperRay;
 import game.logics.entities.pickups.shield.Shield;
+import game.logics.entities.pickups.teleport.Teleport;
 import game.utility.other.Pair;
 
 /**
@@ -47,15 +48,20 @@ public interface Generator extends Runnable{
 	 * @param missile a function for creating <code>Missile</code>
 	 */
 	void setMissileCreator(Function<Pair<Double,Double>,Missile> missile);
-	
-	void drawNextSpawnTimer(Graphics2D g);
-	
 	/**
 	 * Sets the function for creating <code>Shield</code> objects.
 	 * 
 	 * @param shield a function for creating <code>Shield</code>
 	 */
 	void setShieldCreator(Function<Pair<Double,Double>,Shield> shield);
+	/**
+	 * Sets the function for creating <code>Teleport</code> objects.
+	 * 
+	 * @param teleport a function for creating <code>Teleport</code>
+	 */
+	void setTeleportCreator(final Function<Pair<Double,Double>,Teleport> teleport);
+	
+	void drawNextSpawnTimer(Graphics2D g);
 	
 	/**
 	 * Removes all entities that are on the "clear area" [x < -tile size].

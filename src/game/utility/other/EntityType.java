@@ -3,11 +3,11 @@ package game.utility.other;
 import java.util.List;
 
 public enum EntityType {
-	UNDEFINED, PLAYER, OBSTACLE, ZAPPER, ZAPPERBASE, ZAPPERRAY, MISSILE, PICKUP, SHIELD;
+	UNDEFINED, PLAYER, OBSTACLE, ZAPPER, ZAPPERBASE, ZAPPERRAY, MISSILE, PICKUP, SHIELD, TELEPORT;
 	
-	public static final List<EntityType> allTypes = List.of(EntityType.PLAYER, EntityType.OBSTACLE, EntityType.ZAPPER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.PICKUP, EntityType.SHIELD);
-	public static final List<EntityType> concreteTypes = List.of(EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.SHIELD, EntityType.PLAYER);
-	public static final List<EntityType> concreteGenericTypes = List.of(EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.PLAYER);
+	public static final List<EntityType> allTypes = List.of(EntityType.PLAYER, EntityType.OBSTACLE, EntityType.ZAPPER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.PICKUP, EntityType.SHIELD, EntityType.TELEPORT);
+	public static final List<EntityType> concreteTypes = List.of(EntityType.PLAYER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
+	public static final List<EntityType> concreteGenericTypes = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
 	
 	public boolean isGenerableEntity() {
 		return this.ordinal() > 1;
@@ -25,27 +25,8 @@ public enum EntityType {
 		return this.ordinal() > 2 && this.ordinal() < 6;
 	}
 	
+	@Override
 	public String toString() {
-		switch(this) {
-			case PLAYER:
-				return "player";
-			case OBSTACLE:
-				return "obstacle";
-			case ZAPPER:
-				return "zapper";
-			case ZAPPERBASE:
-				return "zapperbase";
-			case ZAPPERRAY:
-				return "zapperray";
-			case MISSILE:
-				return "missile";
-			case PICKUP:
-				return "pickup";
-			case SHIELD:
-				return "shield";
-			default:
-				break;
-		}
-		return "undefined";
+		return super.toString().toLowerCase();
 	}
 }

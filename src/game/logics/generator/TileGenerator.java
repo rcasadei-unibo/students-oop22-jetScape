@@ -30,6 +30,7 @@ import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperInstance;
 import game.logics.entities.obstacles.zapper.ZapperRay;
 import game.logics.entities.pickups.shield.Shield;
+import game.logics.entities.pickups.teleport.Teleport;
 import game.logics.handler.Logics;
 import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
@@ -71,6 +72,10 @@ public class TileGenerator implements Generator{
 	 * A function used by the generator for creating <code>Shield</code> object.
 	 */
 	private Optional<Function<Pair<Double,Double>,Shield>> createShield = Optional.empty();
+	/**
+	 * A function used by the generator for creating <code>Teleport</code> object.
+	 */
+	private Optional<Function<Pair<Double,Double>,Teleport>> createTeleport = Optional.empty();
 	
 	/**
 	 * A map containing lists where all loaded set of tiles are stored.
@@ -116,6 +121,7 @@ public class TileGenerator implements Generator{
 	private long sleepTimeLeft = 0;
 	private long sleepInterval;
 
+	private final Random r = new Random();
 	
 	/**
 	 * Constructor that sets up the entities structure where obstacles will be
@@ -214,6 +220,23 @@ public class TileGenerator implements Generator{
 				tileSets.get(EntityType.SHIELD).add(s);
 			}
 		}
+		
+		///		LOADING TELEPORTS  	///
+		if(createTeleport.isPresent()) {
+			JSONArray types = (JSONArray)allTiles.get(EntityType.TELEPORT.toString());
+			for(int i = 0; i < types.size(); i++){
+				JSONArray sets = (JSONArray)types.get(i);
+				Set<Entity> s = new HashSet<>();
+						
+				for(int j = 0; j < sets.size(); j++) {
+					JSONObject z = (JSONObject)sets.get(j);
+					s.add(createTeleport.get().apply(new Pair<>(
+						Double.parseDouble((String)z.get("x")) * tileSize,							
+						Double.parseDouble((String)z.get("y")) * tileSize)));			
+				}
+				tileSets.get(EntityType.TELEPORT).add(s);
+			}
+		}
 }
 	
 	public void cleanTiles() {
@@ -227,13 +250,15 @@ public class TileGenerator implements Generator{
 	}
 	
 	private void spawnTile() {
-		final Random r = new Random();
 		int randomNumber;
 		randomNumber = r.nextInt() % (missileOdds + zapperOdds);
 		randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 		
 		if(randomNumber <= powerUpOdds) {
-			spawnSet(EntityType.SHIELD);
+			randomNumber = r.nextInt() % 2;
+			randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
+			randomNumber += EntityType.PICKUP.ordinal() + 1;
+			spawnSet(EntityType.values()[randomNumber]);
 		} else if(randomNumber <= missileOdds) {
 			spawnSet(EntityType.MISSILE);
 		} else {
@@ -242,7 +267,6 @@ public class TileGenerator implements Generator{
 	}
 	
 	private void spawnSet(final EntityType type) {
-		final Random r = new Random();
 		boolean continueSearch;
 		int randomNumber;
 		do {
@@ -263,15 +287,6 @@ public class TileGenerator implements Generator{
 		}
 	}
 	
-	
-	public boolean isRunning() {
-		return running;
-	}
-	
-	public boolean isWaiting() {
-		return waiting;
-	}
-	
 	public void setZapperRayCreator(final BiFunction<Pair<ZapperBase,ZapperBase>,Pair<Double,Double>,ZapperRay> zapperr) {
 		this.createZRay = Optional.of(zapperr);
 	}
@@ -288,19 +303,16 @@ public class TileGenerator implements Generator{
 		this.createShield = Optional.of(shield);
 	}
 	
-	public void drawNextSpawnTimer(final Graphics2D g) {
-		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.NEXT_SPAWN_TIMER)) {
-			synchronized(this) {
-				long expectedTimer = sleepInterval - (System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep);
-				long remainingTime = (remainingTimeToSleep + sleepTimeLeft) - (System.nanoTime() / GameWindow.microSecond - systemTimeAfterPaused);
-				long timer = !this.isWaiting() ? remainingTime > 0 ? remainingTime : expectedTimer  : remainingTimeToSleep;
-			
-			
-				g.setColor(Debugger.debugColor);
-				g.setFont(Debugger.debugFont);
-				g.drawString("NEXT: " + timer + "ms", 3, 17);
-			}
-		}
+	public void setTeleportCreator(final Function<Pair<Double,Double>,Teleport> teleport) {
+		this.createTeleport = Optional.of(teleport);
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public boolean isWaiting() {
+		return waiting;
 	}
 	
 	private void invokeSleep(final long interval) {
@@ -372,6 +384,21 @@ public class TileGenerator implements Generator{
 		}
 	}
 
+	public void drawNextSpawnTimer(final Graphics2D g) {
+		if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.NEXT_SPAWN_TIMER)) {
+			synchronized(this) {
+				long expectedTimer = sleepInterval - (System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep);
+				long remainingTime = (remainingTimeToSleep + sleepTimeLeft) - (System.nanoTime() / GameWindow.microSecond - systemTimeAfterPaused);
+				long timer = !this.isWaiting() ? remainingTime > 0 ? remainingTime : expectedTimer  : remainingTimeToSleep;
+			
+			
+				g.setColor(Debugger.debugColor);
+				g.setFont(Debugger.debugFont);
+				g.drawString("NEXT: " + timer + "ms", 3, 17);
+			}
+		}
+	}
+	
 	@Override
 	public void run(){
 		final long minimum = (interval - intervalDecreaseDiff) * minimalInterval / 100;
