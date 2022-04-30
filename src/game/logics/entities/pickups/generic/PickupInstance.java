@@ -4,6 +4,7 @@ import game.frame.GameWindow;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.entities.player.Player;
 import game.logics.handler.Logics;
+import game.logics.hitbox.PickableHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -17,6 +18,8 @@ public abstract class PickupInstance extends EntityInstance implements Pickup{
 		super(l, position);
 		this.player = player;
 		this.movement = speed.clone();
+		this.hitbox = new PickableHitbox(position, screen);
+		this.hitboxSet.add(this.hitbox);
 		
 		entityTag = EntityType.PICKUP;
 	}
@@ -34,5 +37,6 @@ public abstract class PickupInstance extends EntityInstance implements Pickup{
 		if(position.getX() > -screen.getTileSize() * 2) {
 			position.setX(position.getX() - movement.getXSpeed() / GameWindow.fpsLimit);
 		}
+		this.hitbox.updatePosition(position);
 	}
 }
