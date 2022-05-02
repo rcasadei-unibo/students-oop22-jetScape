@@ -16,8 +16,6 @@ public class DisplayMainMenu extends Display {
 	static final Font fontText = new Font("calibri", Font.PLAIN, 48);
 	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
 	static final GameState currentGS = GameState.MENU;
-	
-	private int x = 0;
 
 	public DisplayMainMenu(Screen gScreen) {
 		super(gScreen);
@@ -31,6 +29,7 @@ public class DisplayMainMenu extends Display {
 	
 	public void drawScreen(Graphics2D g, String selected) {
 		this.selectedOption = selected;
+		int x = 0;
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
 		g.setFont(font);
