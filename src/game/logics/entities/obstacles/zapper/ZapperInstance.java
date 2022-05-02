@@ -122,6 +122,17 @@ public class ZapperInstance implements Zapper{
 		}
 		return true;
 	}
+	
+	@Override
+	public Set<Hitbox> getHitbox() {
+		return this.hitbox;
+	}	
+	
+	public void hide() {
+		base1.hide();
+		base2.hide();
+		rays.forEach(r -> r.hide());
+	}
 
 	@Override
 	public void reset() {
@@ -151,8 +162,7 @@ public class ZapperInstance implements Zapper{
 		rays.forEach(r -> r.drawCoordinates(g));
 	}
 
-	@Override
-	public Set<Hitbox> getHitbox() {
-		return this.hitbox;
-	}	
+	public String toString() {
+		return entityType().toString() + "[X:"+(int)base1.getX()+"-Y:"+(int)base1.getY()+"]";
+	}
 }

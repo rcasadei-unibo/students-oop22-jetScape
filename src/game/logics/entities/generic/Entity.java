@@ -26,6 +26,7 @@ public interface Entity {
 	 */
 	static final double yLowLimit = 0.0;
 	
+	void hide();
 	/**
 	 * @return <code>true</code> if the entity is visible, <code>false</code> if the entity is hidden
 	 */
@@ -55,9 +56,14 @@ public interface Entity {
 	 */
 	double getY();
 	/**
+	 * @return the hitbox of the entity
+	 */	
+	Set<Hitbox> getHitbox();
+	/**
 	 * @return a string representing the entity's category
 	 */
 	EntityType entityType();
+	
 	/**
 	 * Reset the current position of the obstacle, setting it to the starting one.
 	 */
@@ -71,10 +77,6 @@ public interface Entity {
 	 * @param g the graphics drawer
 	 */
 	void draw(Graphics2D g);
-	/**
-	 * @return the hitbox of the entity
-	 */	
-	Set<Hitbox> getHitbox();
 	/**
 	 * Draws the coordinates of the entity if visible.
 	 * 

@@ -18,6 +18,10 @@ public interface Logics {
 		return LogicsHandler.difficultyLevel;
 	}
 	
+	static int getFrameTime() {
+		return LogicsHandler.frameTime;
+	}
+	
 	/**
 	 * Updates all the logical objects handled for a frame.
 	 */

@@ -237,16 +237,6 @@ public class TileGenerator implements Generator{
 				tileSets.get(EntityType.TELEPORT).add(s);
 			}
 		}
-}
-	
-	public void cleanTiles() {
-		entities.entrySet().stream().filter(e -> e.getKey().isGenerableEntity()).map(e -> e.getValue()).collect(Collectors.toList()).forEach(
-		s -> s.removeIf(e -> {
-			if(e.isOnClearArea()) {
-				e.reset();
-			}
-			return e.isOnClearArea();
-		}));
 	}
 	
 	private void spawnTile() {
