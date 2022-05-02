@@ -25,6 +25,7 @@ public class DisplayMainMenu extends Display {
 		firstOption = "Start";
 		this.options.put(firstOption, GameState.INGAME);
 		this.options.put("Shop", GameState.MENU);
+		this.options.put("Records", GameState.RECORDS);
 		this.options.put("Quit", GameState.EXIT);
 		this.buildText(firstOption);
 	}
