@@ -13,7 +13,7 @@ public class DisplayMainMenu extends Display {
 	static final String title = "JetScape";
 	static final GameState currentGS = GameState.MENU;
 
-	public DisplayMainMenu(Screen gScreen) {
+	public DisplayMainMenu(final Screen gScreen) {
 		super(gScreen);
 		
 		firstOption = "Start";
@@ -24,23 +24,25 @@ public class DisplayMainMenu extends Display {
 		this.buildText(firstOption);
 	}
 	
-	public void drawScreen(Graphics2D g, String selected) {
+	public void drawScreen(final Graphics2D g, final String selected) {
 		this.selectedOption = selected;
-		int x = 0;
+		
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
 		g.setFont(Display.titleFont);
-		x = super.getCenteredX(gScreen, g, title);
+		int x = super.getCenteredX(gScreen, g, title);
 		g.drawString(title, x + titleShift, gScreen.getTileSize() * titleTile);
+		
 		//TITLE
 		g.setColor(Color.white);
 		g.drawString(title, x, gScreen.getTileSize() * titleTile);
+		
 		//OPTIONS SHADOW
 		g.setColor(Color.darkGray);
 		super.drawText(g, textShift);
+		
 		//OPTIONS
 		g.setColor(Color.white);
 		super.drawText(g,0);
 	}
-	
 }

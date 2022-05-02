@@ -25,9 +25,9 @@ public class DisplayRecords extends Display {
 
 	static final GameState currentGS = GameState.RECORDS;
 
-	public DisplayRecords(Screen gScreen) {
+	public DisplayRecords(final Screen gScreen) {
 		super(gScreen);
-		super.textTile = 8;
+		super.setTextTile(8);
 		
 		firstOption = "Back to Menu";
 		this.options.put(firstOption, GameState.MENU);
@@ -49,7 +49,9 @@ public class DisplayRecords extends Display {
 	}
 	
 	//game.utility.sprites.Drawer per caricare una sprite
-	public void drawScreen(Graphics2D g, String selected) {
+	public void drawScreen(final Graphics2D g, final String selected) {
+		int i;
+
 		this.selectedOption = selected;
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
@@ -65,8 +67,6 @@ public class DisplayRecords extends Display {
 		g.setColor(Color.white);
 		g.setFont(textFont);
 		final int centerX = super.getCenteredX(gScreen, g, "");
-
-		int i;
 		final int records1Position = super.getCenteredX(gScreen, g, records1);
 		
 		g.drawString("Length", records1Position - centerX/2, gScreen.getTileSize() * 4);
