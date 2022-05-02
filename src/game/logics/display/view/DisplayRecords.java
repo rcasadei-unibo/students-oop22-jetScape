@@ -1,7 +1,6 @@
 package game.logics.display.view;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,9 +23,6 @@ public class DisplayRecords extends Display {
 	static final Set<String> lengthRecords = new HashSet<>();
 	static final Set<String> monetineRecords = new HashSet<>();
 
-	static final Font titleFont = new Font("magneto", Font.PLAIN, 112);
-	static final Font textFont = new Font("calibri", Font.PLAIN, 36);
-	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
 	static final GameState currentGS = GameState.RECORDS;
 
 	public DisplayRecords(Screen gScreen) {

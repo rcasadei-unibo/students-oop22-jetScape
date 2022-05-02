@@ -1,5 +1,6 @@
 package game.logics.display.view;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,10 @@ public abstract class Display {
 	protected String firstOption = "";
 	protected final Map<String,GameState> options = new HashMap<>();
 	private final List<String> text = new ArrayList<>();
+	
+	static final Font titleFont = new Font("magneto", Font.PLAIN, 112);
+	static final Font textFont = new Font("calibri", Font.PLAIN, 48);
+	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
 	
 	public Display(Screen gScreen) {
 		super();
@@ -61,7 +66,7 @@ public abstract class Display {
 				g.drawString(selected, this.getCenteredX(gScreen, g, selected) + shift,
 						gScreen.getTileSize() * (textTile + i));
 			} else {
-				g.setFont(DisplayMainMenu.fontText);
+				g.setFont(DisplayMainMenu.textFont);
 				g.drawString(option, this.getCenteredX(gScreen, g, option) + shift,
 					gScreen.getTileSize() * (textTile + i));
 			}

@@ -1,6 +1,5 @@
 package game.logics.display.view;
 
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Color;
 
@@ -12,14 +11,9 @@ public class DisplayPause extends Display {
 	static final int titleShift = 3;
 	static final int textShift = 2;
 	static final String title = "Paused";
-	static final Font font = new Font("magneto", Font.PLAIN, 112);
-	static final Font fontText = new Font("calibri", Font.PLAIN, 48);
-	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
 	static final GameState currentGS = GameState.PAUSED;
-	
-	private int x = 0;
 
-	public DisplayPause(Screen gScreen) {
+	public DisplayPause(final Screen gScreen) {
 		super(gScreen);
 		
 		firstOption = "Resume";
@@ -33,8 +27,8 @@ public class DisplayPause extends Display {
 		super.selectedOption = selected;
 		//TITLE SHADOW
 		g.setColor(Color.black);
-		g.setFont(font);
-		x = super.getCenteredX(gScreen, g, title);
+		g.setFont(titleFont);
+		int x = super.getCenteredX(gScreen, g, title);
 		g.drawString(title, x + titleShift, gScreen.getTileSize() * titleTile);
 		//TITLE
 		g.setColor(Color.white);

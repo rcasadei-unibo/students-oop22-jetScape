@@ -1,7 +1,6 @@
 package game.logics.display.view;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 
 import game.utility.other.GameState;
@@ -12,9 +11,6 @@ public class DisplayMainMenu extends Display {
 	static final int titleShift = 5;
 	static final int textShift = 2;
 	static final String title = "JetScape";
-	static final Font font = new Font("magneto", Font.PLAIN, 112);
-	static final Font fontText = new Font("calibri", Font.PLAIN, 48);
-	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
 	static final GameState currentGS = GameState.MENU;
 
 	public DisplayMainMenu(Screen gScreen) {
@@ -33,7 +29,7 @@ public class DisplayMainMenu extends Display {
 		int x = 0;
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
-		g.setFont(font);
+		g.setFont(Display.titleFont);
 		x = super.getCenteredX(gScreen, g, title);
 		g.drawString(title, x + titleShift, gScreen.getTileSize() * titleTile);
 		//TITLE
