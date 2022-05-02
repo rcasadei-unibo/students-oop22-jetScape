@@ -11,7 +11,7 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public abstract class Display {
-	static final int textTile = 6;
+	protected int textTile = 5;
 	protected final Screen gScreen;
 	protected String selectedOption;
 	protected String firstOption = "";

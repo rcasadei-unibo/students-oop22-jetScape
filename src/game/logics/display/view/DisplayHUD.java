@@ -33,5 +33,4 @@ public class DisplayHUD extends Display {
 	public void updateScore(int score) {
 		this.score = score;
 	}
-
 }

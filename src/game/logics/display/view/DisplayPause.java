@@ -16,8 +16,6 @@ public class DisplayPause extends Display {
 	static final Font fontText = new Font("calibri", Font.PLAIN, 48);
 	static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
 	static final GameState currentGS = GameState.PAUSED;
-	
-	private int x = 0;
 
 	public DisplayPause(Screen gScreen) {
 		super(gScreen);
@@ -31,6 +29,8 @@ public class DisplayPause extends Display {
 
 	public void drawScreen(Graphics2D g, String selected) {
 		super.selectedOption = selected;
+		int x = 0;
+		
 		//TITLE SHADOW
 		g.setColor(Color.black);
 		g.setFont(font);
