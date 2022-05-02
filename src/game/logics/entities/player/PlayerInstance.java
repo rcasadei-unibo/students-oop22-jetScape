@@ -2,11 +2,15 @@ package game.logics.entities.player;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.Map;
+import java.util.Set;
 
 import game.frame.GameWindow;
+import game.logics.entities.generic.Entity;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.handler.Logics;
 import game.logics.hitbox.PlayerHitbox;
+import game.logics.interactions.CollisionsHandler;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -32,13 +36,17 @@ public class PlayerInstance extends EntityInstance implements Player{
 	/**
 	 * Determines how fast sprite change.
 	 */
-	private static final double animationSpeed = 6;
+	private static final double animationSpeed = 8;
 	
 	/**
 	 * The horizontal position where the player will be.
 	 */
 	private final double xPosition = screen.getTileSize() * xRelativePosition;
 	
+	private boolean shieldProtected = false;
+	
+	private boolean invulnerable = false;
+			
 	/**
 	 * The current player's score.
 	 */
@@ -62,8 +70,6 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 */
 	private double fallMultiplier = initialFallMultiplier;
 	
-	private final KeyHandler keyH;
-	
 	/**
 	 * A enumerable describing the current action of the player.
 	 * It can either be <code>IDLE</code>, <code>LAND</code>(landing), <code>FALL</code>(falling) and <code>JUMP</code>(jumping).
@@ -79,12 +85,16 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 */
 	private int frameTime = 0;
 	
+	private final KeyHandler keyH;
+	
+	private final CollisionsHandler hitChecker;
+	
 	/**
 	 * Constructor used for initializing basic parts of the player entity.
 	 * 
 	 * @param l the logics handler which the entity is linked to
 	 */
-	public PlayerInstance(final Logics l) {
+	public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
 		super();
 		this.keyH = GameWindow.keyHandler;
 		
@@ -92,12 +102,13 @@ public class PlayerInstance extends EntityInstance implements Player{
 		jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
 		
 		position = new Pair<>(xPosition, yGround);
-		this.hitbox = new PlayerHitbox(position, screen);
-		this.hitboxSet.add(this.hitbox);
+		
+		hitbox = new PlayerHitbox(position, screen);
+		hitboxSet.add(this.hitbox);
+		hitChecker = new CollisionsHandler(entities, this);
 		
 		action = PlayerAction.WALK;
 		entityTag = EntityType.PLAYER;
-
 		
 		spritesMgr.setPlaceH(placeH);
 		spritesMgr.addSprite("walk1", texturePath + "barrywalk1.png");
@@ -112,24 +123,78 @@ public class PlayerInstance extends EntityInstance implements Player{
 		spritesMgr.addSprite("land2", texturePath + "barryland2.png");
 		spritesMgr.addSprite("land3", texturePath + "barryland3.png");
 		spritesMgr.addSprite("land4", texturePath + "barryland4.png");
+		spritesMgr.addSprite("zapped1", texturePath + "barryzapped1.png");
+		spritesMgr.addSprite("zapped2", texturePath + "barryzapped2.png");
+		spritesMgr.addSprite("zapped3", texturePath + "barryzapped3.png");
+		spritesMgr.addSprite("zapped4", texturePath + "barryzapped4.png");
+		spritesMgr.addSprite("burned1", texturePath + "barryburned1.png");
+		spritesMgr.addSprite("burned2", texturePath + "barryburned2.png");
+		spritesMgr.addSprite("burned3", texturePath + "barryburned3.png");
+		spritesMgr.addSprite("burned4", texturePath + "barryburned4.png");
+		spritesMgr.addSprite("dead1", texturePath + "barrydead1.png");
 		spritesMgr.setAnimator(() -> {
-			int spriteSwitcher = action != PlayerAction.WALK && action != PlayerAction.LAND ? (this.spriteSwitcher % 2 + 1) : this.spriteSwitcher;
+			int spriteSwitcher = action == PlayerAction.FALL || action == PlayerAction.JUMP ? (this.spriteSwitcher % 2 + 1) : action == PlayerAction.DEAD ? 1 : this.spriteSwitcher % 4 + 1;
 			return action.toString() + spriteSwitcher;
 		});
 	}
 	
+	private void checkHit(final Entity entityHit) {
+		switch(entityHit.entityType()) {
+			case MISSILE: 
+				if(!this.invulnerable && !action.isInDyingAnimation()) {
+					this.invulnerable = true;
+					if(this.shieldProtected) {
+						this.shieldProtected = false;
+						break;
+					}
+					setAction(PlayerAction.BURNED);
+				}
+				entityHit.hide();
+				break;
+			case ZAPPER:
+				if(!this.invulnerable && !action.isInDyingAnimation()) {
+					this.invulnerable = true;
+					if(this.shieldProtected) {
+						this.shieldProtected = false;
+						break;
+					}
+					setAction(PlayerAction.ZAPPED);
+				}
+				break;
+			case SHIELD:
+				this.shieldProtected = true;
+				break;
+			default:
+				break;
+		}
+	}
+	
 	private void jump() {
+		fallMultiplier = initialFallMultiplier;
+
+		
 		position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof ? position.getY() - jumpSpeed * jumpMultiplier : yRoof);
 		setAction(PlayerAction.JUMP);
 	}
 	
-	private void fall() {
+	private boolean fall() {
+		jumpMultiplier = initialJumpMultiplier;
+		
 		if(position.getY() + fallSpeed * fallMultiplier < yGround) {
 			position.setY(position.getY() + fallSpeed * fallMultiplier);
-			setAction(PlayerAction.FALL);
-		} else {
-			position.setY(yGround);
-			setAction(PlayerAction.LAND);
+			return true;
+		}
+		position.setY(yGround);
+		return false;
+	}
+	
+	private void controlPlayer() {
+		if(keyH.input.get(KeyEvent.VK_SPACE)) {
+			jump();
+			jumpMultiplier += jumpMultiplierIncrease;
+		} else if(action != PlayerAction.WALK) {
+			setAction(fall() ? PlayerAction.FALL : PlayerAction.LAND);
+			fallMultiplier += fallMultiplierIncrease;
 		}
 	}
 
@@ -149,15 +214,18 @@ public class PlayerInstance extends EntityInstance implements Player{
 	private void updateSprite() {
 		if(PlayerAction.hasChanged) {
 			frameTime = 0;
-			spriteSwitcher = 1;
+			spriteSwitcher = 0;
 			PlayerAction.hasChanged = false;
 		}
 		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
-			if(PlayerAction.isLanding && spriteSwitcher == 4) {
+			if(PlayerAction.dying && spriteSwitcher >= 7) {
+				setAction(PlayerAction.DEAD);
+			}
+			if(PlayerAction.landing && spriteSwitcher >= 3) {
 				setAction(PlayerAction.WALK);
 			}
 			frameTime = 0;
-			spriteSwitcher = spriteSwitcher >= 4 ? 1 : spriteSwitcher + 1;
+			spriteSwitcher++;
 		}
 		frameTime++;
 	}
@@ -172,29 +240,39 @@ public class PlayerInstance extends EntityInstance implements Player{
 		return this.score;
 	}
 	
+	public boolean hasDied() {
+		return action == PlayerAction.DEAD;
+	}
+	
 	@Override
 	public void reset() {
 		position.setX(xPosition);
 		position.setY(yGround);
 		action = PlayerAction.WALK;
 		score = 0;
+		frameTime = 0;
+		
+		invulnerable = false;
+		shieldProtected = false;
 	}
 	
 	@Override
 	public void update() {
 		super.update();
 		this.updateSprite();
-		this.updateScore();
-		if(keyH.input.get(KeyEvent.VK_SPACE)) {
-			jump();
-			jumpMultiplier += jumpMultiplierIncrease;
-			fallMultiplier = initialFallMultiplier;
-		} else if(action != PlayerAction.WALK) {
+		
+		if(!action.isInDyingAnimation()) {
+			this.updateScore();
+			this.controlPlayer();
+		} 
+		
+		if(this.hasDied()) {
 			fall();
-			fallMultiplier += fallMultiplierIncrease;
-			jumpMultiplier = initialJumpMultiplier;
+			fallMultiplier += fallMultiplierIncrease * 4;
 		}
+	
 		this.hitbox.updatePosition(position);
+		this.hitChecker.interact(e -> checkHit(e));
 	}
 
 }

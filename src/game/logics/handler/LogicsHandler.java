@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
@@ -30,7 +31,6 @@ import game.logics.entities.player.PlayerInstance;
 import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
-import game.logics.interactions.CollisionsHandler;
 import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
@@ -78,15 +78,14 @@ public class LogicsHandler implements Logics{
 	/**
 	 * The frames passed since the last second.
 	 */
-	private int frameTime = 0;
+	static int frameTime = 0;
 	
-	public static int difficultyLevel = 1;
+	static int difficultyLevel = 1;
 		
 	private final Screen screen;
 	private final KeyHandler keyH;
 	private final Debugger debugger;
 	
-	private final CollisionsHandler cHandler;
 	/**
 	 * Constructor that gets the screen information, the keyboard listener and the debugger, 
 	 * initialize each entity category on the entities map and initialize the obstacle spawner.
@@ -100,13 +99,12 @@ public class LogicsHandler implements Logics{
 		EntityType.concreteGenericTypes
 		.forEach(e -> entities.put(e, new HashSet<>()));
 		
-		playerEntity = new PlayerInstance(this);
+		playerEntity = new PlayerInstance(this, entities);
 		
 		displayController = new DisplayController(keyH,screen, g -> setGameState(g),
 				() -> gameState, () -> playerEntity.getCurrentScore());
 		
 		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
-		this.cHandler = new CollisionsHandler(this.entities, (PlayerInstance) playerEntity);
 		this.initializeSpawner();
 	}
 
@@ -128,6 +126,28 @@ public class LogicsHandler implements Logics{
 		}
 	}
 	
+	private void resetEntities(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
+		synchronized(entities) {
+			entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
+			.forEach(e -> e.reset());
+		}
+	}
+	
+	private void cleanEntities(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
+		synchronized(entities) {
+			entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
+			.forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_CLEAN, "Cleaned::" + e.toString()));
+			this.resetEntities(typeCondition, entityCondition);
+			entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).map(e -> e.getValue()).collect(Collectors.toList())
+			.forEach(se -> se.removeIf(entityCondition));
+		}
+	}
+	
+	private void resetGame() {
+		this.cleanEntities(t -> t != EntityType.PLAYER, e -> true);
+		this.resetEntities(t -> t == EntityType.PLAYER, e -> true);
+	}
+	
 	/**
 	 * Handles the commands executed for each key pressed.
 	 */
@@ -141,13 +161,14 @@ public class LogicsHandler implements Logics{
 				this.setGameState(GameState.PAUSED);
 				keyH.resetKeyTyped();
 				break;
+			case KeyEvent.VK_R:
+				this.resetGame();
+				this.setGameState(GameState.INGAME);
+				keyH.resetKeyTyped();
+				break;
 			default:
 				break;
 		}
-	}
-	
-	private void updateTimers() {
-		frameTime++;
 	}
 	
 	/**
@@ -155,9 +176,12 @@ public class LogicsHandler implements Logics{
 	 */
 	private void updateCleaner() {
 		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
-			spawner.cleanTiles();
-			debugger.printLog(Debugger.Option.LOG_CLEANER, "clean");
+			this.cleanEntities(t -> t.isGenerableEntity(), e -> e.isOnClearArea());
 		}
+	}
+	
+	private void updateTimers() {
+		frameTime++;
 	}
 	
 	private void updateDifficulty() {
@@ -197,14 +221,12 @@ public class LogicsHandler implements Logics{
 						if(JOptionPane.showConfirmDialog((Component)GameHandler.gameWindow, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
 							return;
 						}
+						spawner.stop();
 					}
-					synchronized(entities) {
-						entities.forEach((s, se) -> {
-							se.forEach(e -> e.reset());
-							se.clear();
-						});
-					}
-					spawner.pause();
+					this.cleanEntities(t -> true, e -> true);
+					break;
+				case ENDGAME:
+					spawner.stop();
 					break;
 				case PAUSED:
 					if(this.gameState != GameState.INGAME) {
@@ -226,13 +248,18 @@ public class LogicsHandler implements Logics{
 				GameHandler.gameWindow.stopGame();
 				System.exit(0);
 				break;
+			case ENDGAME:
+				playerEntity.update();
+				break;
 			case INGAME:
+				if(playerEntity.hasDied()) {
+					this.setGameState(GameState.ENDGAME);
+				}
 				this.updateDifficulty();
 				this.updateCleaner();
 				synchronized(entities) {
 					entities.forEach((s, se) -> se.forEach(e -> e.update()));
 				}
-				this.cHandler.interact();
 			default:
 				break;
 		}
@@ -243,6 +270,7 @@ public class LogicsHandler implements Logics{
 	
 	public void drawAll(final Graphics2D g) {
 		switch(this.gameState) {
+			case ENDGAME: 
 			case PAUSED:
 			case INGAME:
 				synchronized(entities) {

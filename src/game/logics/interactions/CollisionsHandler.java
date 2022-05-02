@@ -2,9 +2,12 @@ package game.logics.interactions;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
+import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.player.PlayerInstance;
+import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
 
 public class CollisionsHandler {
@@ -14,12 +17,12 @@ public class CollisionsHandler {
 		this.cChecker = new CollisionsChecker(entities, p);
 	}
 	
-	public void interact() {
+	public void interact(final Consumer<Entity> action) {
 		this.cChecker.updateCollisions();
 		var entity = this.cChecker.getNextToHandle();
 		while (entity.isPresent()) {
-			//TODO use different entities handling method
-			System.out.println("Colpito! "+ entity.get().entityType());
+			action.accept(entity.get());
+			GameWindow.debugger.printLog(Debugger.Option.LOG_HITCHECK, "Colpito! "+ entity.get().entityType());
 			entity = this.cChecker.getNextToHandle();
 		}
 	}

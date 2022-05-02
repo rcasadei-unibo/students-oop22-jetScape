@@ -64,11 +64,6 @@ public interface Generator extends Runnable{
 	void drawNextSpawnTimer(Graphics2D g);
 	
 	/**
-	 * Removes all entities that are on the "clear area" [x < -tile size].
-	 */
-	void cleanTiles();
-	
-	/**
 	 * @return <code>true</code> if the spawner is running, <code>false</code> if the spawner is not initiated or has ended his execution
 	 */
 	boolean isRunning();

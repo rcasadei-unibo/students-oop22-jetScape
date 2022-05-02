@@ -13,29 +13,25 @@ import game.logics.entities.generic.Entity;
 public interface Player extends Entity{
 
 	enum PlayerAction{ 
-		WALK, LAND, FALL, JUMP;
+		WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
 		public static boolean hasChanged = false;
-		public static boolean isLanding = false;
+		public static boolean landing = false;
+		public static boolean dying = false;
 		
 		public void changeAction(final PlayerAction newAction) {
 			if(this != newAction) {
 				hasChanged = true;
-				isLanding = newAction == PlayerAction.LAND;
+				landing = newAction == PlayerAction.LAND;
+				dying = newAction == PlayerAction.BURNED || newAction == PlayerAction.ZAPPED;
 			}
 		}
 		
+		public boolean isInDyingAnimation() {
+			return this.ordinal() > 3;
+		}
+		
 		public String toString() {
-			switch(this) {
-				case LAND:
-					return "land";
-				case FALL:
-					return "fall";
-				case JUMP:
-					return "jump";
-				default:
-					break;
-			}
-			return "walk";
+			return super.toString().toLowerCase();
 		}
 	}
 	
@@ -47,6 +43,8 @@ public interface Player extends Entity{
 	static final double fallMultiplierIncrease = 0.15;
 	
 	static final double xRelativePosition = 2.11;
+	
+	boolean hasDied();
 	
 	int getCurrentScore();
 }

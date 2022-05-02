@@ -111,6 +111,10 @@ public abstract class EntityInstance implements Entity{
 		visible = v;
 	}
 	
+	public void hide() {
+		this.setVisibility(false);
+	}
+	
 	public boolean isVisible() {
 		return visible;
 	}
@@ -139,6 +143,10 @@ public abstract class EntityInstance implements Entity{
 		return position.getY();
 	}
 	
+	public Set<Hitbox> getHitbox() {
+		return this.hitboxSet;
+	}
+	
 	public EntityType entityType() {
 		return entityTag;
 	}
@@ -146,6 +154,7 @@ public abstract class EntityInstance implements Entity{
 	public void reset() {
 		position.setX(startPos.getX());
 		position.setY(startPos.getY());
+		visible = true;
 	}
 	
 	/**
@@ -191,7 +200,7 @@ public abstract class EntityInstance implements Entity{
 		}
 	}
 	
-	public Set<Hitbox> getHitbox() {
-		return this.hitboxSet;
+	public String toString() {
+		return entityType().toString() + "[X:" + (int)getX() + "-Y:" + (int)getY() + "]";
 	}
 }
