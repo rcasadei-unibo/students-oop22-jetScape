@@ -21,7 +21,7 @@ public class DisplayRecords extends Display {
 	
 	//TODO SPOSTARE
 	static final Set<String> lengthRecords = new HashSet<>();
-	static final Set<String> monetineRecords = new HashSet<>();
+	static final Set<String> moneyRecords = new HashSet<>();
 
 	static final GameState currentGS = GameState.RECORDS;
 
@@ -33,11 +33,11 @@ public class DisplayRecords extends Display {
 		this.options.put(firstOption, GameState.MENU);
 		this.buildText(firstOption);
 		
-		DisplayRecords.lengthRecords.add("1");
-		DisplayRecords.lengthRecords.add("50");
-
+		DisplayRecords.lengthRecords.add("1235");
+		DisplayRecords.lengthRecords.add("150");
 		DisplayRecords.lengthRecords.add("1500");
-
+		
+		DisplayRecords.moneyRecords.add("3500");
 	}
 	
 	//TODO SPOSTARE IN CLASSE APPOSITA
@@ -55,7 +55,7 @@ public class DisplayRecords extends Display {
 		this.selectedOption = selected;
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
-		g.setFont(titleFont);
+		g.setFont(Display.titleFont);
 		final int titleXPosition = super.getCenteredX(gScreen, g, title);
 		g.drawString(title, titleXPosition + titleShift, gScreen.getTileSize() * titleTile);
 		
@@ -65,21 +65,21 @@ public class DisplayRecords extends Display {
 		
 		//RECORDS
 		g.setColor(Color.white);
-		g.setFont(textFont);
+		g.setFont(Display.textFont);
 		final int centerX = super.getCenteredX(gScreen, g, "");
-		final int records1Position = super.getCenteredX(gScreen, g, records1);
+		final int recordsLeftPosition = super.getCenteredX(gScreen, g, records1);
 		
-		g.drawString("Length", records1Position - centerX/2, gScreen.getTileSize() * 4);
+		g.drawString("Length", recordsLeftPosition - centerX/2, gScreen.getTileSize() * 3);
 		final List<String> recordList = this.listify(DisplayRecords.lengthRecords);
 		for( i = 0 ; i < recordList.size() ; i++) {
-			g.drawString(recordList.get(i), gScreen.getTileSize()*4, gScreen.getTileSize() * (4 + i+1));
+			g.drawString(recordList.get(i), gScreen.getTileSize()*3, gScreen.getTileSize() * (3 + i+1));
 		}
 		
-		final int records2Position = super.getCenteredX(gScreen, g, records2);
-		g.drawString("Monetine", records2Position + centerX/2, gScreen.getTileSize() * 4);
-		final List<String> monetineList = this.listify(DisplayRecords.monetineRecords);
-		for( i = 0 ; i < monetineList.size() ; i++) {
-			g.drawString(monetineList.get(i), gScreen.getTileSize()*4, gScreen.getTileSize() * (4 + i+1));
+		final int recordsRightPosition = super.getCenteredX(gScreen, g, records2);
+		g.drawString("Monetine", recordsRightPosition + centerX/2, gScreen.getTileSize() * 3);
+		final List<String> moneyList = this.listify(DisplayRecords.moneyRecords);
+		for( i = 0 ; i < moneyList.size() ; i++) {
+			g.drawString(moneyList.get(i), gScreen.getTileSize()*3 + gScreen.getWidth()/2, gScreen.getTileSize() * (3 + i+1));
 		}
 		
 		//OPTIONS SHADOW
