@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import game.logics.handler.Logics;
 import game.logics.handler.LogicsHandler;
 import game.utility.debug.Debugger;
+import game.utility.fonts.FontLoader;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
 import game.utility.screen.ScreenHandler;
@@ -67,7 +68,10 @@ public class GameWindow extends JPanel implements Runnable{
 	 * Manages enabling and disabling of Debug Features.
 	 */
 	public static Debugger debugger;
-	
+	/**
+	 * Loads and stores the font used in the game
+	 */
+	public static FontLoader fLoader = new FontLoader();
 	/**
 	 * Handles the logic part of the game (entities, interface, game state, etc). 
 	 */
