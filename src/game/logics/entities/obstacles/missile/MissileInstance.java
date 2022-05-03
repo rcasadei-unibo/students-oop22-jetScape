@@ -123,6 +123,8 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 	@Override
 	public void draw(final Graphics2D g) {
 		super.draw(g);
+		if(!this.isVisible()) return;
+		
 		if(position.getX() > screen.getWidth()) {
 			if(position.getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
 				spritesMgr.drawSprite(g, "warn", warnPosition, screen.getTileSize());
