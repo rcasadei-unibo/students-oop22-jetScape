@@ -104,7 +104,6 @@ public class TileGenerator implements Generator{
 	/**
 	 * Decides how many seconds the generator pauses after each set spawned.
 	 */
-	private final int spawnInterval;
 	private final long interval;
 	private final long intervalDecreaseDiff = 40;
 	private final long minimalInterval = 40;
@@ -130,12 +129,11 @@ public class TileGenerator implements Generator{
 	 * @param entities the entities map where obstacles will be added
 	 * @param interval the interval between each generation
 	 */
-	public TileGenerator(final int tileSize, final Map<EntityType, Set<Entity>> entities, final int interval) {
+	public TileGenerator(final int tileSize, final Map<EntityType, Set<Entity>> entities, final double interval) {
 		this.entities = entities;
-		this.spawnInterval = interval;
 		this.tileSize = tileSize;
-		this.interval = spawnInterval * GameWindow.milliSecond + intervalDecreaseDiff;
-		this.sleepInterval = interval;
+		this.interval = (long)(interval * GameWindow.milliSecond + intervalDecreaseDiff);
+		this.sleepInterval = this.interval;
 		
 		EntityType.concreteGenericTypes.stream().filter(e -> e.isGenerableEntity()).collect(Collectors.toList())
 		.forEach(e -> tileSets.put(e, new ArrayList<>()));
@@ -273,6 +271,7 @@ public class TileGenerator implements Generator{
 		}while(continueSearch);
 		
 		if(!this.isWaiting()) {
+			tileSets.get(type).get(randomNumber).forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_SPAWN, "Spawned::" + e.toString()));
 			entities.get(type).addAll(tileSets.get(type).get(randomNumber));
 		}
 	}
