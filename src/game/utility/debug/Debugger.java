@@ -24,7 +24,7 @@ public class Debugger {
 	public static final Color debugColor = Color.white;
 	
 	public enum Option{ FPS_METER, ENTITY_COORDINATES, NEXT_SPAWN_TIMER,
-		DIFFICULTY_LEVEL, HITBOX, LOG_FPS, LOG_CLEAN, LOG_HITCHECK};
+		DIFFICULTY_LEVEL, HITBOX, LOG_FPS, LOG_CLEAN, LOG_SPAWN, LOG_HITCHECK};
 	
 	/**
 	 * A map of flags that tells whether a certain debug function (specified as a key)
@@ -55,6 +55,7 @@ public class Debugger {
 		optionEnabled.put(Option.HITBOX, false);
 		optionEnabled.put(Option.LOG_FPS, false);
 		optionEnabled.put(Option.LOG_CLEAN, false);
+		optionEnabled.put(Option.LOG_SPAWN, false);
 		optionEnabled.put(Option.LOG_HITCHECK, false);
 	}
 	

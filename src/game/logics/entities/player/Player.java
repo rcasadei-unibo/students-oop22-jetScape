@@ -12,17 +12,17 @@ import game.logics.entities.generic.Entity;
  */
 public interface Player extends Entity{
 
-	enum PlayerAction{ 
+	enum PlayerStatus{ 
 		WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
 		public static boolean hasChanged = false;
 		public static boolean landing = false;
 		public static boolean dying = false;
 		
-		public void changeAction(final PlayerAction newAction) {
+		public void changeStatus(final PlayerStatus newAction) {
 			if(this != newAction) {
 				hasChanged = true;
-				landing = newAction == PlayerAction.LAND;
-				dying = newAction == PlayerAction.BURNED || newAction == PlayerAction.ZAPPED;
+				landing = newAction == PlayerStatus.LAND;
+				dying = newAction == PlayerStatus.BURNED || newAction == PlayerStatus.ZAPPED;
 			}
 		}
 		
@@ -43,6 +43,11 @@ public interface Player extends Entity{
 	static final double fallMultiplierIncrease = 0.15;
 	
 	static final double xRelativePosition = 2.11;
+	
+	static final int flickeringSpeed = 10;
+	static final int invicibilityTime = 2;
+	
+	static final double animationSpeed = 7;
 	
 	boolean hasDied();
 	

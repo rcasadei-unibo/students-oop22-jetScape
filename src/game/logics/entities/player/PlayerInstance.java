@@ -2,6 +2,8 @@ package game.logics.entities.player;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.awt.Graphics2D;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -33,18 +35,14 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * <code>PlayerInstance.placeH</code>.
 	 */
 	private static final Color placeH = Color.white;
-	/**
-	 * Determines how fast sprite change.
-	 */
-	private static final double animationSpeed = 8;
 	
 	/**
 	 * The horizontal position where the player will be.
 	 */
 	private final double xPosition = screen.getTileSize() * xRelativePosition;
+	private final Pair<Double,Double> shieldPosition = new Pair<>(0.0,0.0);
 	
 	private boolean shieldProtected = false;
-	
 	private boolean invulnerable = false;
 			
 	/**
@@ -71,32 +69,34 @@ public class PlayerInstance extends EntityInstance implements Player{
 	private double fallMultiplier = initialFallMultiplier;
 	
 	/**
-	 * A enumerable describing the current action of the player.
-	 * It can either be <code>IDLE</code>, <code>LAND</code>(landing), <code>FALL</code>(falling) and <code>JUMP</code>(jumping).
+	 * A enumerable describing the current status of the player.
 	 */
-	private PlayerAction action;
+	private PlayerStatus status;
 	
 	/**
 	 * Decides which sprite should be displayed.
 	 */
 	private int spriteSwitcher = 1;
+	
 	/**
 	 * How many frames have passed since between a second and another.
 	 */
 	private int frameTime = 0;
+	private int invulnerableTimer = -1;
 	
 	private final KeyHandler keyH;
-	
 	private final CollisionsHandler hitChecker;
+	private final Runnable cleaner;
 	
 	/**
 	 * Constructor used for initializing basic parts of the player entity.
 	 * 
 	 * @param l the logics handler which the entity is linked to
 	 */
-	public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
+	public PlayerInstance(final Map<EntityType, Set<Entity>> entities, final Runnable cleaner) {
 		super();
 		this.keyH = GameWindow.keyHandler;
+		this.cleaner = cleaner;
 		
 		fallSpeed = baseFallSpeed / GameWindow.fpsLimit;
 		jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
@@ -107,7 +107,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 		hitboxSet.add(this.hitbox);
 		hitChecker = new CollisionsHandler(entities, this);
 		
-		action = PlayerAction.WALK;
+		status = PlayerStatus.WALK;
 		entityTag = EntityType.PLAYER;
 		
 		spritesMgr.setPlaceH(placeH);
@@ -132,38 +132,40 @@ public class PlayerInstance extends EntityInstance implements Player{
 		spritesMgr.addSprite("burned3", texturePath + "barryburned3.png");
 		spritesMgr.addSprite("burned4", texturePath + "barryburned4.png");
 		spritesMgr.addSprite("dead1", texturePath + "barrydead1.png");
+		spritesMgr.addSprite("shield", texturePath + "barryshield.png");
 		spritesMgr.setAnimator(() -> {
-			int spriteSwitcher = action == PlayerAction.FALL || action == PlayerAction.JUMP ? (this.spriteSwitcher % 2 + 1) : action == PlayerAction.DEAD ? 1 : this.spriteSwitcher % 4 + 1;
-			return action.toString() + spriteSwitcher;
+			int spriteSwitcher = status == PlayerStatus.FALL || status == PlayerStatus.JUMP ? (this.spriteSwitcher % 2 + 1) : status == PlayerStatus.DEAD ? 1 : this.spriteSwitcher % 4 + 1;
+			return status.toString() + spriteSwitcher;
 		});
+	}
+	
+	private void obstacleHit(final PlayerStatus statusAfterHit) {
+		if(!this.invulnerable && !status.isInDyingAnimation()) {
+			if(this.shieldProtected) {
+				this.invulnerable = true;
+				this.shieldProtected = false;
+				return;
+			}
+			setStatus(statusAfterHit);
+		}
 	}
 	
 	private void checkHit(final Entity entityHit) {
 		switch(entityHit.entityType()) {
 			case MISSILE: 
-				if(!this.invulnerable && !action.isInDyingAnimation()) {
-					this.invulnerable = true;
-					if(this.shieldProtected) {
-						this.shieldProtected = false;
-						break;
-					}
-					setAction(PlayerAction.BURNED);
-				}
+				obstacleHit(PlayerStatus.BURNED);
 				entityHit.hide();
 				break;
 			case ZAPPER:
-				if(!this.invulnerable && !action.isInDyingAnimation()) {
-					this.invulnerable = true;
-					if(this.shieldProtected) {
-						this.shieldProtected = false;
-						break;
-					}
-					setAction(PlayerAction.ZAPPED);
-				}
+				obstacleHit(PlayerStatus.ZAPPED);
 				break;
 			case SHIELD:
 				this.shieldProtected = true;
+				entityHit.hide();
 				break;
+			case TELEPORT:
+				score += 250;
+				cleaner.run();
 			default:
 				break;
 		}
@@ -172,9 +174,8 @@ public class PlayerInstance extends EntityInstance implements Player{
 	private void jump() {
 		fallMultiplier = initialFallMultiplier;
 
-		
 		position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof ? position.getY() - jumpSpeed * jumpMultiplier : yRoof);
-		setAction(PlayerAction.JUMP);
+		setStatus(PlayerStatus.JUMP);
 	}
 	
 	private boolean fall() {
@@ -192,42 +193,53 @@ public class PlayerInstance extends EntityInstance implements Player{
 		if(keyH.input.get(KeyEvent.VK_SPACE)) {
 			jump();
 			jumpMultiplier += jumpMultiplierIncrease;
-		} else if(action != PlayerAction.WALK) {
-			setAction(fall() ? PlayerAction.FALL : PlayerAction.LAND);
+		} else if(status != PlayerStatus.WALK) {
+			setStatus(fall() ? PlayerStatus.FALL : PlayerStatus.LAND);
 			fallMultiplier += fallMultiplierIncrease;
 		}
 	}
 
 	/**
-	 * Sets the current player's action.
+	 * Sets the current player's status.
 	 * 
-	 * @param newAction the new action
+	 * @param newStatus the new status
 	 */
-	private void setAction(final PlayerAction newAction) {
-		action.changeAction(newAction);
-		action = newAction;
+	private void setStatus(final PlayerStatus newStatus) {
+		status.changeStatus(newStatus);
+		status = newStatus;
 	}
 	
 	/**
 	 * Updates the sprite that should be display during the animation.
 	 */
 	private void updateSprite() {
-		if(PlayerAction.hasChanged) {
+		if(PlayerStatus.hasChanged) {
 			frameTime = 0;
 			spriteSwitcher = 0;
-			PlayerAction.hasChanged = false;
+			PlayerStatus.hasChanged = false;
 		}
 		else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
-			if(PlayerAction.dying && spriteSwitcher >= 7) {
-				setAction(PlayerAction.DEAD);
+			if(PlayerStatus.dying && spriteSwitcher >= 7) {
+				setStatus(PlayerStatus.DEAD);
 			}
-			if(PlayerAction.landing && spriteSwitcher >= 3) {
-				setAction(PlayerAction.WALK);
+			if(PlayerStatus.landing && spriteSwitcher >= 3) {
+				setStatus(PlayerStatus.WALK);
 			}
 			frameTime = 0;
 			spriteSwitcher++;
 		}
 		frameTime++;
+	}
+	
+	private void updateInvulnerableTimer() {
+		if(this.invulnerable) {
+			if(this.invulnerableTimer == -1) {
+				this.invulnerableTimer = Logics.getFrameTime();
+			} else if(Logics.getFrameTime() - this.invulnerableTimer >= invicibilityTime * GameWindow.fpsLimit) {
+				this.invulnerable = false;
+				this.invulnerableTimer = -1;
+			}
+		}
 	}
 	
 	private void updateScore() {
@@ -241,14 +253,14 @@ public class PlayerInstance extends EntityInstance implements Player{
 	}
 	
 	public boolean hasDied() {
-		return action == PlayerAction.DEAD;
+		return status == PlayerStatus.DEAD;
 	}
 	
 	@Override
 	public void reset() {
 		position.setX(xPosition);
 		position.setY(yGround);
-		action = PlayerAction.WALK;
+		status = PlayerStatus.WALK;
 		score = 0;
 		frameTime = 0;
 		
@@ -260,8 +272,9 @@ public class PlayerInstance extends EntityInstance implements Player{
 	public void update() {
 		super.update();
 		this.updateSprite();
+		this.updateInvulnerableTimer();
 		
-		if(!action.isInDyingAnimation()) {
+		if(!status.isInDyingAnimation()) {
 			this.updateScore();
 			this.controlPlayer();
 		} 
@@ -271,8 +284,23 @@ public class PlayerInstance extends EntityInstance implements Player{
 			fallMultiplier += fallMultiplierIncrease * 4;
 		}
 	
+		shieldPosition.setX(position.getX() + screen.getTileSize() / 16);
+		shieldPosition.setY(position.getY());
 		this.hitbox.updatePosition(position);
 		this.hitChecker.interact(e -> checkHit(e));
+	}
+	
+	@Override
+	public void draw(final Graphics2D g) {
+		if(this.isVisible()) {
+			if(!this.invulnerable || frameTime % flickeringSpeed < flickeringSpeed / 2) {
+				this.spritesMgr.drawCurrentSprite(g, position, screen.getTileSize());
+			}
+			
+			if(this.shieldProtected) {
+				this.spritesMgr.drawSprite(g, "shield", shieldPosition, screen.getTileSize());
+			}
+		}
 	}
 
 }

@@ -69,11 +69,11 @@ public class LogicsHandler implements Logics{
 	 * Defines how many seconds have to pass for the spawner to generate
 	 * another set of obstacles.
 	 */
-	private int spawnInterval = 3;
+	private double spawnInterval = 2.5;
 	/**
 	 * Defines the interval of each check for entities to clean.
 	 */
-	private int cleanInterval = 5;
+	private double cleanInterval = 5.0;
 	
 	/**
 	 * The frames passed since the last second.
@@ -99,7 +99,7 @@ public class LogicsHandler implements Logics{
 		EntityType.concreteGenericTypes
 		.forEach(e -> entities.put(e, new HashSet<>()));
 		
-		playerEntity = new PlayerInstance(this, entities);
+		playerEntity = new PlayerInstance(entities, () -> cleanEntities(t -> t.isGenerableEntity(), e -> true));
 		
 		displayController = new DisplayController(keyH,screen, g -> setGameState(g),
 				() -> gameState, () -> playerEntity.getCurrentScore());
