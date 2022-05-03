@@ -13,10 +13,10 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayRecords extends Display {
-	static final int optionTile = 8;
-	static final String title = "Records";
-	static final String records1 = "Length";
-	static final String records2 = "Money";
+	private static final int optionTile = 8;
+	private static final String title = "Records";
+	private static final String records1 = "Length";
+	private static final String records2 = "Money";
 	
 	//TODO SPOSTARE
 	static final Set<String> lengthRecords = new HashSet<>();

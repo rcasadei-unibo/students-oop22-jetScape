@@ -8,9 +8,9 @@ import game.frame.GameWindow;
 import game.utility.screen.Screen;
 
 public class DisplayHUD extends Display {
-	static final int scoreTile = 1;
-	static final int scoreShift = 3;
-	static final Font scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(32f);
+	private static final int scoreTile = 1;
+	private static final int scoreShift = 3;
+	private static final Font scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(32f);
 	private int score = 0;
 	
 	public DisplayHUD(final Screen gScreen) {

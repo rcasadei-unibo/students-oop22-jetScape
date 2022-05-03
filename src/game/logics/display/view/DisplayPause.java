@@ -8,8 +8,8 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayPause extends Display {
-	static final String title = "Paused";
-	static final GameState currentGS = GameState.PAUSED;
+	private static final String title = "Paused";
+	private static final GameState currentGS = GameState.PAUSED;
 
 	public DisplayPause(final Screen gScreen) {
 		super(gScreen);

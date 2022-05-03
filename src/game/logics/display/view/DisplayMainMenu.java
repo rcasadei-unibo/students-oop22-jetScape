@@ -8,8 +8,8 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayMainMenu extends Display {
-	static final String title = "JetScape";
-	static final GameState currentGS = GameState.MENU;
+	private static final String title = "JetScape";
+	private static final GameState currentGS = GameState.MENU;
 
 	public DisplayMainMenu(final Screen gScreen) {
 		super(gScreen);

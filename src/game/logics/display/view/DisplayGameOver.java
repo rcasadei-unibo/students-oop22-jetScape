@@ -8,11 +8,11 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayGameOver extends Display {
-	static final int textTile = 4;
-	static final int optionTile = 7;
-	static String title = "Game Over";
-	static String scoreString = "Your score was: ";
-	static final GameState currentGS = GameState.ENDGAME;
+	private static final int textTile = 4;
+	private static final int optionTile = 7;
+	private static String title = "Game Over";
+	private static String scoreString = "Your score was: ";
+	private static final GameState currentGS = GameState.ENDGAME;
 	int finalScore;
 
 	public DisplayGameOver(final Screen gScreen) {
@@ -29,8 +29,8 @@ public class DisplayGameOver extends Display {
 		
 		// TITLE
 		super.drawTitleText(g, title, Function.identity());
-		
-		// SCORE	
+
+		// SCORE
 		super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.scoreString + this.finalScore, x -> x,
 				DisplayGameOver.textTile * gScreen.getTileSize(), super.getTextShift());
 		
