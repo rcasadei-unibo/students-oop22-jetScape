@@ -93,7 +93,6 @@ public class DisplayController {
 			break;
 		case ENDGAME :
 			this.gameOverHandler.update();
-			this.gameOverDisplay.updateScore(getScore.get());
 			break;
 		default :
 			break;

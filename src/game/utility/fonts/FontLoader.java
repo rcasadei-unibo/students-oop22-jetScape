@@ -10,12 +10,12 @@ public class FontLoader {
 	public static final String defaultDir = System.getProperty("user.dir") + separator + 
 			"res" + separator + "game" + separator + "fonts" + separator;
 	private final Font debuggerFont;
-	private final Font gameFont;
+	private final Font titleFont;
 	private final Font optionsFont;
 	
 	public FontLoader() {
 		this.debuggerFont = this.loadFont(defaultDir + "debuggerFont.otf");
-		this.gameFont = this.loadFont(defaultDir + "titleFont.ttf");
+		this.titleFont = this.loadFont(defaultDir + "titleFont.ttf");
 		this.optionsFont = this.loadFont(defaultDir + "optionsFont.otf");
 	}
 	
@@ -33,8 +33,8 @@ public class FontLoader {
 		return debuggerFont;
 	}
 
-	public Font getGameFont() {
-		return gameFont;
+	public Font getTitleFont() {
+		return titleFont;
 	}
 
 	public Font getOptionsFont() {

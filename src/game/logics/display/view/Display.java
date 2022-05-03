@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import game.frame.GameWindow;
 import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
@@ -20,9 +21,9 @@ public abstract class Display {
 	protected final Map<String,GameState> options = new HashMap<>();
 	private final List<String> text = new ArrayList<>();
 	
-	protected static final Font titleFont = new Font("magneto", Font.PLAIN, 112);
-	protected static final Font textFont = new Font("calibri", Font.PLAIN, 48);
-	protected static final Font selectedTextFont = new Font("calibri", Font.BOLD, 64);
+	protected static final Font titleFont = GameWindow.fLoader.getTitleFont().deriveFont(112f);
+	protected static final Font textFont = GameWindow.fLoader.getOptionsFont().deriveFont(48f);
+	protected static final Font selectedTextFont = GameWindow.fLoader.getOptionsFont().deriveFont(64f);
 	
 	public Display(final Screen gScreen) {
 		super();

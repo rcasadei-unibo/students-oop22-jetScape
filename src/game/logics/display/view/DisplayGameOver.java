@@ -13,9 +13,7 @@ public class DisplayGameOver extends Display {
 	static final int textTile = 5;
 	static final int resultTile = 4;
 	static final String title = "Game Over";
-	static final String result = "Your score is";
 	static final GameState currentGS = GameState.ENDGAME;
-	private int score;
 
 	public DisplayGameOver(final Screen gScreen) {
 		super(gScreen);
@@ -43,18 +41,8 @@ public class DisplayGameOver extends Display {
 		//OPTIONS AND RESULT SHADOW
 		g.setColor(Color.darkGray);
 		super.drawText(g, textShift);
-		x = super.getCenteredX(gScreen, g, result + this.score);
-		g.drawString(result + this.score, x + textShift, gScreen.getTileSize() * resultTile);
-		
 		//OPTIONS AND RESULT
 		g.setColor(Color.white);
 		super.drawText(g,0);
-		x = super.getCenteredX(gScreen, g, result + this.score);
-		g.drawString(result + this.score, x, gScreen.getTileSize() * resultTile);
-	}
-	
-	public void updateScore(int score) {
-		this.score = score;
-	}
-	
+	}	
 }

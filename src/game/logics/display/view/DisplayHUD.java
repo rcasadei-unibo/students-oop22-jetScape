@@ -4,12 +4,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
+import game.frame.GameWindow;
 import game.utility.screen.Screen;
 
 public class DisplayHUD extends Display {
 	static final int scoreTile = 1;
 	static final int scoreShift = 3;
-	static final Font font = new Font("magneto",Font.PLAIN,32);
+	static final Font font = GameWindow.fLoader.getOptionsFont().deriveFont(32f);;
 	private int score = 0;
 	
 	public DisplayHUD(Screen gScreen) {
