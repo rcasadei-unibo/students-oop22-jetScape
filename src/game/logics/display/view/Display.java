@@ -20,14 +20,20 @@ public abstract class Display {
 	protected String firstOption = "";
 	protected final Map<String,GameState> options = new HashMap<>();
 	private final List<String> text = new ArrayList<>();
+	static final double titleScale = 5.14;
+	static final double selectedScale = 9;
+	static final double optionsScale = 12;
 	
-	protected static final Font titleFont = GameWindow.fLoader.getTitleFont().deriveFont(112f);
-	protected static final Font textFont = GameWindow.fLoader.getOptionsFont().deriveFont(48f);
-	protected static final Font selectedTextFont = GameWindow.fLoader.getOptionsFont().deriveFont(64f);
+	protected final Font titleFont;
+	protected final Font textFont;
+	protected final Font selectedTextFont;
 	
 	public Display(final Screen gScreen) {
 		super();
 		this.gScreen = gScreen;
+		this.titleFont = GameWindow.fLoader.getTitleFont().deriveFont((float)(gScreen.getHeight()/titleScale));
+		this.selectedTextFont = GameWindow.fLoader.getOptionsFont().deriveFont((float)(gScreen.getHeight()/selectedScale));
+		this.textFont = GameWindow.fLoader.getOptionsFont().deriveFont((float)(gScreen.getHeight()/optionsScale));
 	}
 	
 	public void buildText(final String firstOption) {
@@ -63,12 +69,12 @@ public abstract class Display {
 		int i = 0;
 		for(String option : this.text) {
 			if(option.equals(this.selectedOption)) {
-				g.setFont(DisplayMainMenu.selectedTextFont);
+				g.setFont(this.selectedTextFont);
 				String selected = "> "+option+" <";
 				g.drawString(selected, this.getCenteredX(gScreen, g, selected) + shift,
 						gScreen.getTileSize() * (this.textTile + i));
 			} else {
-				g.setFont(DisplayMainMenu.textFont);
+				g.setFont(this.textFont);
 				g.drawString(option, this.getCenteredX(gScreen, g, option) + shift,
 					gScreen.getTileSize() * (this.textTile + i));
 			}

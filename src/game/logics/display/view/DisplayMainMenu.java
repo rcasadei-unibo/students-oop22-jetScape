@@ -28,7 +28,7 @@ public class DisplayMainMenu extends Display {
 		this.selectedOption = selected;
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
-		g.setFont(Display.titleFont);
+		g.setFont(super.titleFont);
 		int x = super.getCenteredX(gScreen, g, title);
 		g.drawString(title, x + titleShift, gScreen.getTileSize() * titleTile);
 		

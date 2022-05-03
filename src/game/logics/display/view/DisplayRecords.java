@@ -55,7 +55,7 @@ public class DisplayRecords extends Display {
 		this.selectedOption = selected;
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
-		g.setFont(Display.titleFont);
+		g.setFont(super.titleFont);
 		final int titleXPosition = super.getCenteredX(gScreen, g, title);
 		g.drawString(title, titleXPosition + titleShift, gScreen.getTileSize() * titleTile);
 		
@@ -65,7 +65,7 @@ public class DisplayRecords extends Display {
 		
 		//RECORDS
 		g.setColor(Color.white);
-		g.setFont(Display.textFont);
+		g.setFont(super.textFont);
 		final int centerX = super.getCenteredX(gScreen, g, "");
 		final int recordsLeftPosition = super.getCenteredX(gScreen, g, records1);
 		

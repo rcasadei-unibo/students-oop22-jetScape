@@ -15,11 +15,14 @@ import game.frame.GameWindow;
  * @author Daniel Pellanda
  */
 public class Debugger {
-	
+	/**
+	 * debugger font scale 
+	 */
+	static final double fontScale = 57.6;
 	/**
 	 * Defines the default font for debugging features.
 	 */
-	public static final Font debugFont = GameWindow.fLoader.getDebuggerFont().deriveFont(10f);
+	public static final Font debugFont = GameWindow.fLoader.getDebuggerFont().deriveFont((float)(GameWindow.gameScreen.getHeight()/fontScale));
 	/**
 	 * Defines the default color for debugging features.
 	 */

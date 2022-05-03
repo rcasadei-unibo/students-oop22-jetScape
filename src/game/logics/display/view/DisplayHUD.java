@@ -10,11 +10,13 @@ import game.utility.screen.Screen;
 public class DisplayHUD extends Display {
 	static final int scoreTile = 1;
 	static final int scoreShift = 3;
-	static final Font font = GameWindow.fLoader.getOptionsFont().deriveFont(32f);;
+	static final double fontScale = 18;
+	private final Font font;
 	private int score = 0;
 	
 	public DisplayHUD(Screen gScreen) {
 		super(gScreen);
+		this.font = GameWindow.fLoader.getOptionsFont().deriveFont((float)(gScreen.getHeight()/fontScale));
 	}
 
 	public void drawScreen(Graphics2D g) {
