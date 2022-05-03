@@ -8,10 +8,12 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayGameOver extends Display {
+	static final int textTile = 4;
 	static final int optionTile = 7;
 	static String title = "Game Over";
+	static String scoreString = "Your score was: ";
 	static final GameState currentGS = GameState.ENDGAME;
-	static int finalScore;
+	int finalScore;
 
 	public DisplayGameOver(final Screen gScreen) {
 		super(gScreen);
@@ -22,18 +24,22 @@ public class DisplayGameOver extends Display {
 		this.buildTextOptions(firstOption);
 	}
 	
-	public void setFinalScore(final int finalScore) {
-		DisplayGameOver.finalScore = finalScore;
-	}
-	
 	public void drawScreen(final Graphics2D g, final String selected) {
 		this.selectedOption = selected;
 		
 		// TITLE
-		super.drawCenteredText(g, Display.FontChoose.TITLE_FONT, title, Function.identity());
+		super.drawTitleText(g, title, Function.identity());
+		
+		// SCORE	
+		super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.scoreString + this.finalScore, x -> x,
+				DisplayGameOver.textTile * gScreen.getTileSize(), super.getTextShift());
 		
 		// OPTIONS
 		super.drawOptions(g, DisplayGameOver.optionTile);
+	}
+
+	public void setFinalScore(final int finalScore) {
+		this.finalScore = finalScore;
 	}
 
 	@Override

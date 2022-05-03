@@ -53,7 +53,7 @@ public class DisplayRecords extends Display {
 		this.selectedOption = selected;
 		
 		// TITLE
-		super.drawCenteredText(g, Display.FontChoose.TITLE_FONT, title, Function.identity());
+		super.drawTitleText(g, title, Function.identity());
 		
 		// RECORDS
 		super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records1, x -> x - gScreen.getWidth()/4, gScreen.getTileSize()*3, 0);

@@ -22,16 +22,19 @@ public abstract class Display {
 	private final List<String> textOptions = new ArrayList<>();
 	
 	private static final Font titleFont = GameWindow.fLoader.getTitleFont().deriveFont(112f);
-	private static final Font textFont = GameWindow.fLoader.getOptionsFont().deriveFont(48f);
-	private static final Font selectedTextFont = GameWindow.fLoader.getOptionsFont().deriveFont(64f);
+	private static final Font textFont = GameWindow.fLoader.getOptionsFont().deriveFont(36f);
+	private static final Font optionFont = GameWindow.fLoader.getOptionsFont().deriveFont(48f);
+	private static final Font selectedOptionFont = GameWindow.fLoader.getOptionsFont().deriveFont(64f);
 	
 	private static final Color color = Color.white;
 	
-	private static final int textTile = 5;
-	private static final int textShift = 2;
+	private static final int optionTile = 5;
+	private static final int optionShift = 2;
 
 	private static final int titleTile = 2;
 	private static final int titleShift = 5;
+	
+	private static final int textShift = 2;
 	
 	public Display(final Screen gScreen) {
 		this.gScreen = gScreen;
@@ -86,20 +89,9 @@ public abstract class Display {
 		this.drawText(g, font, text, f.apply(this.getCenteredX(gScreen, g, text)), yPos, shift);
 	}
 	
-	protected void drawCenteredText(final Graphics2D g, final Display.FontChoose font,
-			final String text, final Function<Integer, Integer> function) {
-		switch(font) {
-			case TEXT_FONT:
-				this.drawCenteredText(g, Display.textFont, text, x -> x,
-						gScreen.getTileSize() * Display.textTile, Display.textShift);
-			break;
-			case TITLE_FONT:
-				this.drawCenteredText(g, Display.titleFont, text, x -> x,
-						gScreen.getTileSize() * Display.titleTile, Display.titleShift);
-			break;
-			default:
-			break;
-		}
+	protected void drawTitleText(final Graphics2D g, final String text, final Function<Integer, Integer> function) {
+		this.drawCenteredText(g, Display.titleFont, text, Function.identity(),
+				gScreen.getTileSize() * Display.titleTile, Display.titleShift);
 	}
 	
 	protected void drawOptions(final Graphics2D g, final int yTile) {
@@ -107,20 +99,20 @@ public abstract class Display {
 		for(final String option : this.textOptions) {
 			if(option.equals(this.selectedOption)) {
 				String selected = "> "+option+" <";
-				this.drawCenteredText(g, selectedTextFont, selected,
+				this.drawCenteredText(g, Display.selectedOptionFont, selected,
 						x -> x,
-						gScreen.getTileSize() * (i + yTile), Display.textShift);
+						gScreen.getTileSize() * (i + yTile), Display.optionShift);
 			} else {
-				this.drawCenteredText(g, Display.textFont, option,
+				this.drawCenteredText(g, Display.optionFont, option,
 						x -> x,
-						gScreen.getTileSize() * (i + yTile), Display.textShift);
+						gScreen.getTileSize() * (i + yTile), Display.optionShift);
 			}
 			i++;
 		}
 	}
 	
 	protected void drawOptions(final Graphics2D g) {
-		this.drawOptions(g, textTile);
+		this.drawOptions(g, Display.optionTile);
 	}
 
 	protected Font getTitleFont() {
@@ -133,7 +125,7 @@ public abstract class Display {
 		return Display.textFont;
 	}
 	
-	protected enum FontChoose {
-		TITLE_FONT, TEXT_FONT;
+	protected int getTextShift() {
+		return Display.textShift;
 	}
 }

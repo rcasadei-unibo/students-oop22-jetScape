@@ -8,8 +8,6 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayPause extends Display {
-	static final int titleTile = 2;
-	static final int titleShift = 3;
 	static final String title = "Paused";
 	static final GameState currentGS = GameState.PAUSED;
 
@@ -26,7 +24,7 @@ public class DisplayPause extends Display {
 		super.selectedOption = selected;
 
 		// TITLE
-		super.drawCenteredText(g, Display.FontChoose.TITLE_FONT, title, Function.identity());
+		super.drawTitleText(g, title, Function.identity());
 		
 		// OPTIONS
 		super.drawOptions(g);

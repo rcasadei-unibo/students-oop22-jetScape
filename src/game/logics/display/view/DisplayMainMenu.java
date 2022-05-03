@@ -26,7 +26,7 @@ public class DisplayMainMenu extends Display {
 		this.selectedOption = selected;
 		
 		// TITLE
-		super.drawCenteredText(g, Display.FontChoose.TITLE_FONT, title, Function.identity());
+		super.drawTitleText(g, title, Function.identity());
 		
 		// OPTIONS
 		super.drawOptions(g);
