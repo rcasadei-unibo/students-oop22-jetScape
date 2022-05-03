@@ -10,28 +10,28 @@ import game.utility.screen.Screen;
 public class DisplayHUD extends Display {
 	static final int scoreTile = 1;
 	static final int scoreShift = 3;
-	static final Font font = GameWindow.fLoader.getOptionsFont().deriveFont(32f);;
+	static final Font scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(32f);
 	private int score = 0;
 	
-	public DisplayHUD(Screen gScreen) {
+	public DisplayHUD(final Screen gScreen) {
 		super(gScreen);
 	}
 
-	public void drawScreen(Graphics2D g) {
-		int x = 0;
-		String score = "SCORE: ";
-		//SCORE SHADOW
-		g.setColor(Color.darkGray);
-		g.setFont(font);
-		x = 5*(this.getCenteredX(super.gScreen, g, score)/3);
-		g.drawString(score + this.score, x + scoreShift,
-				super.gScreen.getTileSize() * scoreTile);
-		//SCORE
-		g.setColor(Color.white);
-		g.drawString(score + this.score, x, super.gScreen.getTileSize() * scoreTile);
+	public void drawScreen(final Graphics2D g) {
+		String scoreString = "SCORE: " + this.score;
+		
+		// SCORE
+		super.drawCenteredText(g, scoreFont, scoreString, x -> 5*x/3,
+				super.gScreen.getTileSize() * scoreTile,
+				scoreShift);
 	}
 	
-	public void updateScore(int score) {
+	public void updateScore(final int score) {
 		this.score = score;
+	}
+	
+	@Override
+	protected Color getShiftColor() {
+		return Color.DARK_GRAY;
 	}
 }
