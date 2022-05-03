@@ -2,6 +2,7 @@ package game.logics.display.controller;
 
 import game.logics.display.handlers.DisplayHandler;
 import game.logics.display.handlers.MenuHandler;
+import game.logics.display.view.DisplayGameOver;
 import game.logics.display.view.DisplayHUD;
 import game.logics.display.view.DisplayMainMenu;
 import game.logics.display.view.DisplayRecords;
@@ -21,9 +22,11 @@ public class DisplayController {
 	private final DisplayPause pauseDisplay;
 	private final DisplayMainMenu mainMenuDisplay;
 	private final DisplayRecords recordsDisplay;
+	private final DisplayGameOver gameOverDisplay;
 	private final DisplayHandler pauseHandler;
 	private final DisplayHandler titleHandler;
 	private final DisplayHandler recordsHandler;
+	private final DisplayHandler gameOverHandler;
 
 	/* TO DO eventually add shop */
 	
@@ -37,10 +40,12 @@ public class DisplayController {
 		this.pauseDisplay = new DisplayPause(gScreen);
 		this.mainMenuDisplay = new DisplayMainMenu(gScreen);
 		this.recordsDisplay = new DisplayRecords(gScreen);
+		this.gameOverDisplay = new DisplayGameOver(gScreen);
 
 		this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
 		this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
 		this.recordsHandler = new MenuHandler(keyH, recordsDisplay, setState);
+		this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
 	}
 	
 	/*
@@ -59,6 +64,9 @@ public class DisplayController {
 			break;
 		case PAUSED :
 			this.pauseDisplay.drawScreen(g, pauseHandler.getSelectedOption());
+			break;
+		case GAMEOVER :
+			this.gameOverDisplay.drawScreen(g, gameOverHandler.getSelectedOption());
 			break;
 		default:
 			break;
@@ -82,6 +90,10 @@ public class DisplayController {
 			break;
 		case INGAME :
 			this.hud.updateScore(getScore.get());
+			break;
+		case GAMEOVER :
+			this.gameOverHandler.update();
+			this.gameOverDisplay.updateScore(getScore.get());
 			break;
 		default :
 			break;
