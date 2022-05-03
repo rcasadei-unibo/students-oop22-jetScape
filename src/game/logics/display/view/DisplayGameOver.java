@@ -6,26 +6,30 @@ import java.awt.Graphics2D;
 import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
-public class DisplayMainMenu extends Display {
+public class DisplayGameOver extends Display {
 	static final int titleTile = 2;
 	static final int titleShift = 5;
 	static final int textShift = 2;
-	static final String title = "JetScape";
-	static final GameState currentGS = GameState.MENU;
+	static final int textTile = 5;
+	static final int resultTile = 4;
+	static final String title = "Game Over";
+	static final String result = "Your score is";
+	static final GameState currentGS = GameState.ENDGAME;
+	private int score;
 
-	public DisplayMainMenu(final Screen gScreen) {
+	public DisplayGameOver(final Screen gScreen) {
 		super(gScreen);
 		
-		firstOption = "Start";
+		firstOption = "Retry";
 		this.options.put(firstOption, GameState.INGAME);
-		this.options.put("Shop", GameState.MENU);
-		this.options.put("Records", GameState.RECORDS);
-		this.options.put("Quit", GameState.EXIT);
+		this.options.put("Back to Menu", GameState.MENU);
 		this.buildText(firstOption);
+		super.setTextTile(DisplayGameOver.textTile);
 	}
 	
 	public void drawScreen(final Graphics2D g, final String selected) {
 		this.selectedOption = selected;
+		
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
 		g.setFont(Display.titleFont);
@@ -36,12 +40,21 @@ public class DisplayMainMenu extends Display {
 		g.setColor(Color.white);
 		g.drawString(title, x, gScreen.getTileSize() * titleTile);
 		
-		//OPTIONS SHADOW
+		//OPTIONS AND RESULT SHADOW
 		g.setColor(Color.darkGray);
 		super.drawText(g, textShift);
+		x = super.getCenteredX(gScreen, g, result + this.score);
+		g.drawString(result + this.score, x + textShift, gScreen.getTileSize() * resultTile);
 		
-		//OPTIONS
+		//OPTIONS AND RESULT
 		g.setColor(Color.white);
 		super.drawText(g,0);
+		x = super.getCenteredX(gScreen, g, result + this.score);
+		g.drawString(result + this.score, x, gScreen.getTileSize() * resultTile);
 	}
+	
+	public void updateScore(int score) {
+		this.score = score;
+	}
+	
 }
