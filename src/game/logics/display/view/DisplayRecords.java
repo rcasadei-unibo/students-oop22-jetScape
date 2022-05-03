@@ -13,7 +13,7 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayRecords extends Display {
-	static final int titleTile = 2;
+	static final int optionTile = 8;
 	static final String title = "Records";
 	static final String records1 = "Length";
 	static final String records2 = "Money";
@@ -71,7 +71,7 @@ public class DisplayRecords extends Display {
 		}
 		
 		//OPTIONS
-		super.drawOptions(g, 8);
+		super.drawOptions(g, DisplayRecords.optionTile);
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 public class DisplayGameOver extends Display {
-	static final int resultTile = 4;
+	static final int optionTile = 7;
 	static String title = "Game Over";
 	static final GameState currentGS = GameState.ENDGAME;
 	static int finalScore;
@@ -33,7 +33,7 @@ public class DisplayGameOver extends Display {
 		super.drawCenteredText(g, Display.FontChoose.TITLE_FONT, title, Function.identity());
 		
 		// OPTIONS
-		super.drawOptions(g);
+		super.drawOptions(g, DisplayGameOver.optionTile);
 	}
 
 	@Override

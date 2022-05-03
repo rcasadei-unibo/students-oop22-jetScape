@@ -34,14 +34,13 @@ public abstract class Display {
 	private static final int titleShift = 5;
 	
 	public Display(final Screen gScreen) {
-		//super();
 		this.gScreen = gScreen;
 	}
 	
 	public void buildTextOptions(final String firstOption) {
 		if(this.textOptions.isEmpty()) {
 			this.textOptions.add(firstOption);
-			for(String option : this.options.keySet().stream()
+			for(final String option : this.options.keySet().stream()
 					.filter(s -> s.compareTo(firstOption) != 0)
 					.collect(Collectors.toSet())) {
 				this.textOptions.add(option);
