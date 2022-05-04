@@ -19,10 +19,12 @@ public class DisplayRecords extends Display {
 	private static final String records2 = "Money";
 	
 	//TODO SPOSTARE
-	static final Set<String> lengthRecords = new HashSet<>();
-	static final Set<String> moneyRecords = new HashSet<>();
+	//private static final List<String> lengthRecords = new ArrayList<>();
+	//private static final List<String> moneyRecords = new ArrayList<>();
+	private static final Set<String> lengthRecords = new HashSet<>();
+	private static final Set<String> moneyRecords = new HashSet<>();
 
-	static final GameState currentGS = GameState.RECORDS;
+	private static final GameState currentGS = GameState.RECORDS;
 
 	public DisplayRecords(final Screen gScreen) {
 		super(gScreen);

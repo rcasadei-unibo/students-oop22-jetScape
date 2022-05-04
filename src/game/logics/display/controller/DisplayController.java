@@ -33,7 +33,6 @@ public class DisplayController {
 	public DisplayController(final KeyHandler keyH, final Screen gScreen, 
 			Consumer<GameState> setState, Supplier<GameState> getState,
 			Supplier<Integer> getScore) {
-		super();
 		this.getState = getState;
 		this.getScore = getScore;
 		this.hud = new DisplayHUD(gScreen);
