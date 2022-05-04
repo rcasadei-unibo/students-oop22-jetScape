@@ -211,6 +211,8 @@ public class LogicsHandler implements Logics{
 				case INGAME:
 					if (this.gameState == GameState.MENU) {
 						entities.get(EntityType.PLAYER).add(playerEntity);
+					} else if (this.gameState == GameState.ENDGAME) {
+						this.resetGame();
 					}
 					spawner.resume();
 					break;

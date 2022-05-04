@@ -6,23 +6,24 @@ import java.awt.Graphics2D;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
-public class DisplayMainMenu extends Display {
+public class DisplayGameOver extends Display {
 	static final int titleTile = 2;
 	static final int titleShift = 5;
 	static final int textShift = 2;
-	static final String title = "JetScape";
+	static final int textTile = 5;
+	static final int resultTile = 4;
+	static final String title = "Game Over";
 
-	public DisplayMainMenu(final Screen gScreen) {
+	public DisplayGameOver(final Screen gScreen) {
 		super(gScreen);
-		
-		this.options.add(MenuOption.START);
-		this.options.add(MenuOption.SHOP);
-		this.options.add(MenuOption.QUIT);
-		this.options.add(MenuOption.RECORDS);
+		this.options.add(MenuOption.RETRY);
+		this.options.add(MenuOption.MENU);
+		super.setTextTile(DisplayGameOver.textTile);
 	}
 	
 	public void drawScreen(final Graphics2D g, final MenuOption selected) {
 		this.selectedOption = selected;
+		
 		//TITLE SHADOW
 		g.setColor(Color.darkGray);
 		g.setFont(super.titleFont);
@@ -33,12 +34,11 @@ public class DisplayMainMenu extends Display {
 		g.setColor(Color.white);
 		g.drawString(title, x, gScreen.getTileSize() * titleTile);
 		
-		//OPTIONS SHADOW
+		//OPTIONS AND RESULT SHADOW
 		g.setColor(Color.darkGray);
 		super.drawText(g, textShift);
-		
-		//OPTIONS
+		//OPTIONS AND RESULT
 		g.setColor(Color.white);
 		super.drawText(g,0);
-	}
+	}	
 }
