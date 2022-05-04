@@ -10,6 +10,7 @@ import game.utility.screen.Screen;
 public class DisplayHUD extends Display {
 	private static final int scoreTile = 1;
 	private static final int scoreShift = 3;
+	private static final int textXTile = 10;
 	private static final Font scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(32f);
 	private int score = 0;
 	
@@ -21,9 +22,8 @@ public class DisplayHUD extends Display {
 		String scoreString = "SCORE: " + this.score;
 		
 		// SCORE
-		super.drawCenteredText(g, scoreFont, scoreString, x -> 5*x/3,
-				super.gScreen.getTileSize() * scoreTile,
-				scoreShift);
+		super.drawText(g, scoreFont, scoreString, super.gScreen.getTileSize() * textXTile,
+				super.gScreen.getTileSize() * scoreTile, scoreShift);
 	}
 	
 	public void updateScore(final int score) {

@@ -22,7 +22,7 @@ public abstract class Display {
 	private final List<String> textOptions = new ArrayList<>();
 	
 	private static final Font titleFont = GameWindow.fLoader.getTitleFont().deriveFont(112f);
-	private static final Font textFont = GameWindow.fLoader.getOptionsFont().deriveFont(36f);
+	private static final Font textFont = GameWindow.fLoader.getTextFont().deriveFont(36f);
 	private static final Font optionFont = GameWindow.fLoader.getOptionsFont().deriveFont(48f);
 	private static final Font selectedOptionFont = GameWindow.fLoader.getOptionsFont().deriveFont(64f);
 	
