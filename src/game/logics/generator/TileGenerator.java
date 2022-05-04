@@ -135,7 +135,7 @@ public class TileGenerator implements Generator{
 		this.interval = (long)(interval * GameWindow.milliSecond + intervalDecreaseDiff);
 		this.sleepInterval = this.interval;
 		
-		EntityType.concreteGenericTypes.stream().filter(e -> e.isGenerableEntity()).collect(Collectors.toList())
+		EntityType.genericTypes.stream().filter(e -> e.isGenerableEntity()).collect(Collectors.toList())
 		.forEach(e -> tileSets.put(e, new ArrayList<>()));
 	}
 	
@@ -271,7 +271,7 @@ public class TileGenerator implements Generator{
 		}while(continueSearch);
 		
 		if(!this.isWaiting()) {
-			tileSets.get(type).get(randomNumber).forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_SPAWN, "Spawned::" + e.toString()));
+			tileSets.get(type).get(randomNumber).forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_SPAWN, "spawned::" + e.toString()));
 			entities.get(type).addAll(tileSets.get(type).get(randomNumber));
 		}
 	}

@@ -128,10 +128,10 @@ public class ZapperInstance implements Zapper{
 		return this.hitbox;
 	}	
 	
-	public void hide() {
-		base1.hide();
-		base2.hide();
-		rays.forEach(r -> r.hide());
+	public void clean() {
+		base1.clean();
+		base2.clean();
+		rays.forEach(r -> r.clean());
 	}
 
 	@Override

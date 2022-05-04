@@ -86,17 +86,15 @@ public class PlayerInstance extends EntityInstance implements Player{
 	
 	private final KeyHandler keyH;
 	private final CollisionsHandler hitChecker;
-	private final Runnable cleaner;
 	
 	/**
 	 * Constructor used for initializing basic parts of the player entity.
 	 * 
 	 * @param l the logics handler which the entity is linked to
 	 */
-	public PlayerInstance(final Map<EntityType, Set<Entity>> entities, final Runnable cleaner) {
-		super();
+	public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
+		super(l);
 		this.keyH = GameWindow.keyHandler;
-		this.cleaner = cleaner;
 		
 		fallSpeed = baseFallSpeed / GameWindow.fpsLimit;
 		jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
@@ -153,19 +151,19 @@ public class PlayerInstance extends EntityInstance implements Player{
 	private void checkHit(final Entity entityHit) {
 		switch(entityHit.entityType()) {
 			case MISSILE: 
-				obstacleHit(PlayerStatus.BURNED);
-				entityHit.hide();
+				this.obstacleHit(PlayerStatus.BURNED);
+				entityHit.clean();
 				break;
 			case ZAPPER:
-				obstacleHit(PlayerStatus.ZAPPED);
+				this.obstacleHit(PlayerStatus.ZAPPED);
 				break;
 			case SHIELD:
 				this.shieldProtected = true;
-				entityHit.hide();
+				entityHit.clean();
 				break;
 			case TELEPORT:
 				score += 250;
-				cleaner.run();
+				cleaner.accept(t -> t.isGenerableEntity(), e -> true);
 			default:
 				break;
 		}

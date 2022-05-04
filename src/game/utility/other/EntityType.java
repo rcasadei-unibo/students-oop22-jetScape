@@ -6,19 +6,49 @@ public enum EntityType {
 	UNDEFINED, PLAYER, OBSTACLE, MISSILE, ZAPPER, ZAPPERBASE, ZAPPERRAY, PICKUP, SHIELD, TELEPORT;
 	
 	public static final List<EntityType> allTypes = List.of(EntityType.PLAYER, EntityType.OBSTACLE, EntityType.ZAPPER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.PICKUP, EntityType.SHIELD, EntityType.TELEPORT);
-	public static final List<EntityType> concreteTypes = List.of(EntityType.PLAYER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
-	public static final List<EntityType> concreteGenericTypes = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
+	public static final List<EntityType> genericTypes = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
 	
 	public boolean isGenerableEntity() {
-		return this.ordinal() > 1;
+		switch(this) {
+			case OBSTACLE:
+			case MISSILE:
+			case ZAPPER:
+			case ZAPPERBASE:
+			case ZAPPERRAY:
+			case PICKUP:
+			case SHIELD:
+			case TELEPORT:
+				return true;
+			default:
+				break;
+		}
+		return false;
 	}
 	
 	public boolean isObstacle() {
-		return this.ordinal() > 1 && this.ordinal() < 7;
+		switch(this) {
+			case OBSTACLE:
+			case MISSILE:
+			case ZAPPER:
+			case ZAPPERBASE:
+			case ZAPPERRAY:
+				return true;
+			default:
+				break;
+		}
+		return false;
 	}
 	
 	public boolean isPickUp() {
-		return this.ordinal() > 6;
+		switch(this) {
+			case PICKUP:
+			case SHIELD:
+			case TELEPORT:
+				return true;
+			default:
+				break;
+		}
+		return false;
 	}
 	
 	@Override

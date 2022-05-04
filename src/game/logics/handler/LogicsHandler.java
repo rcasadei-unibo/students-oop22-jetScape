@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -96,10 +97,10 @@ public class LogicsHandler implements Logics{
 		this.keyH = GameWindow.keyHandler;
 		this.debugger = GameWindow.debugger;
 		
-		EntityType.concreteGenericTypes
+		EntityType.genericTypes
 		.forEach(e -> entities.put(e, new HashSet<>()));
 		
-		playerEntity = new PlayerInstance(entities, () -> cleanEntities(t -> t.isGenerableEntity(), e -> true));
+		playerEntity = new PlayerInstance(this, entities);
 		
 		displayController = new DisplayController(keyH,screen, g -> setGameState(g),
 				() -> gameState, () -> playerEntity.getCurrentScore());
@@ -126,26 +127,24 @@ public class LogicsHandler implements Logics{
 		}
 	}
 	
-	private void resetEntities(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
-		synchronized(entities) {
-			entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
-			.forEach(e -> e.reset());
-		}
-	}
-	
-	private void cleanEntities(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
-		synchronized(entities) {
-			entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
-			.forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_CLEAN, "Cleaned::" + e.toString()));
-			this.resetEntities(typeCondition, entityCondition);
-			entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).map(e -> e.getValue()).collect(Collectors.toList())
-			.forEach(se -> se.removeIf(entityCondition));
-		}
+	public BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner(){
+		return new BiConsumer<Predicate<EntityType>,Predicate<Entity>>(){
+			public void accept(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
+				synchronized(entities) {
+					entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
+					.forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_CLEAN, "cleaned::" + e.toString()));
+					entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
+					.forEach(e -> e.reset());
+					entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).map(e -> e.getValue()).collect(Collectors.toList())
+					.forEach(se -> se.removeIf(entityCondition));
+				}
+			}
+		};
 	}
 	
 	private void resetGame() {
-		this.cleanEntities(t -> t != EntityType.PLAYER, e -> true);
-		this.resetEntities(t -> t == EntityType.PLAYER, e -> true);
+		this.getEntitiesCleaner().accept(t -> t != EntityType.PLAYER, e -> true);
+		playerEntity.reset();
 	}
 	
 	/**
@@ -162,7 +161,6 @@ public class LogicsHandler implements Logics{
 				keyH.resetKeyTyped();
 				break;
 			case KeyEvent.VK_R:
-				this.resetGame();
 				this.setGameState(GameState.INGAME);
 				keyH.resetKeyTyped();
 				break;
@@ -176,7 +174,7 @@ public class LogicsHandler implements Logics{
 	 */
 	private void updateCleaner() {
 		if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
-			this.cleanEntities(t -> t.isGenerableEntity(), e -> e.isOnClearArea());
+			this.getEntitiesCleaner().accept(t -> t.isGenerableEntity(), e -> e.isOnClearArea());
 		}
 	}
 	
@@ -209,6 +207,9 @@ public class LogicsHandler implements Logics{
 					}
 					break;
 				case INGAME:
+					if (this.gameState == GameState.ENDGAME) {
+						this.resetGame();
+					}
 					if (this.gameState == GameState.MENU) {
 						entities.get(EntityType.PLAYER).add(playerEntity);
 					}
@@ -223,7 +224,7 @@ public class LogicsHandler implements Logics{
 						}
 						spawner.stop();
 					}
-					this.cleanEntities(t -> true, e -> true);
+					this.getEntitiesCleaner().accept(t -> true, e -> true);
 					break;
 				case ENDGAME:
 					spawner.stop();

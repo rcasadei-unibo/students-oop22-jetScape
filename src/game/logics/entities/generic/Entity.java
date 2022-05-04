@@ -26,7 +26,6 @@ public interface Entity {
 	 */
 	static final double yLowLimit = 0.0;
 	
-	void hide();
 	/**
 	 * @return <code>true</code> if the entity is visible, <code>false</code> if the entity is hidden
 	 */
@@ -65,9 +64,13 @@ public interface Entity {
 	EntityType entityType();
 	
 	/**
-	 * Reset the current position of the obstacle, setting it to the starting one.
+	 * Reset the parameters of the entity.
 	 */
 	void reset();
+	/**
+	 * Reset the parameters and removes from the entities map.
+	 */
+	void clean();
 	/**
 	 * Updates entity parameters (called for each frame).
 	 */

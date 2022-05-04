@@ -13,6 +13,8 @@ import game.utility.sprites.Drawer;
 import java.awt.Graphics2D;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 /**
  * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
@@ -72,6 +74,7 @@ public abstract class EntityInstance implements Entity{
 	 */
 	protected final Drawer spritesMgr;
 	protected final Screen screen;
+	protected final BiConsumer<Predicate<EntityType>,Predicate<Entity>> cleaner;
 	
 	/**
 	 * Constructor that sets up entity default values (picked up from 
@@ -79,8 +82,9 @@ public abstract class EntityInstance implements Entity{
 	 * 
 	 * @param l the logics handler which the entity is linked to
 	 */
-	protected EntityInstance() {
+	protected EntityInstance(final Logics l) {
 		this.screen = GameWindow.gameScreen;
+		this.cleaner = l.getEntitiesCleaner();
 		entityTag = EntityType.UNDEFINED;
 		
 		spritesMgr = new DrawManager();
@@ -97,7 +101,7 @@ public abstract class EntityInstance implements Entity{
 	 * @param position the starting position of the entity in the environment
 	 */
 	protected EntityInstance(final Logics l, final Pair<Double,Double> position) {
-		this();
+		this(l);
 		this.position = position;
 		this.startPos = position.clone();
 	}
@@ -109,10 +113,6 @@ public abstract class EntityInstance implements Entity{
 	 */
 	protected void setVisibility(final boolean v) {
 		visible = v;
-	}
-	
-	public void hide() {
-		this.setVisibility(false);
 	}
 	
 	public boolean isVisible() {
@@ -154,7 +154,11 @@ public abstract class EntityInstance implements Entity{
 	public void reset() {
 		position.setX(startPos.getX());
 		position.setY(startPos.getY());
-		visible = true;
+	}
+	
+	public void clean() {
+		this.reset();
+		cleaner.accept(t -> this.entityType() == t, e -> this == e);
 	}
 	
 	/**

@@ -1,6 +1,11 @@
 package game.logics.handler;
 
 import java.awt.Graphics2D;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
+
+import game.logics.entities.generic.Entity;
+import game.utility.other.EntityType;
 
 /**
  * The <code>Logics</code> interface is used for accessing <code>LogicsHandler</code> methods.
@@ -21,6 +26,8 @@ public interface Logics {
 	static int getFrameTime() {
 		return LogicsHandler.frameTime;
 	}
+	
+	BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner();
 	
 	/**
 	 * Updates all the logical objects handled for a frame.
