@@ -7,26 +7,26 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
 public class DisplayRecords extends Display {
-	static final int titleTile = 2;
-	static final int titleShift = 5;
-	static final int textShift = 6;
-	static final String title = "Records";
-	static final String records1 = "Length";
-	static final String records2 = "Monetine";
+	private static final int optionTile = 8;
+	private static final String title = "Records";
+	private static final String records1 = "Length";
+	private static final String records2 = "Money";
 	
 	//TODO SPOSTARE
-	static final Set<String> lengthRecords = new HashSet<>();
-	static final Set<String> moneyRecords = new HashSet<>();
+	//private static final List<String> lengthRecords = new ArrayList<>();
+	//private static final List<String> moneyRecords = new ArrayList<>();
+	private static final Set<String> lengthRecords = new HashSet<>();
+	private static final Set<String> moneyRecords = new HashSet<>();
 
 	public DisplayRecords(final Screen gScreen) {
 		super(gScreen);
-		super.setTextTile(8);
-		
+
 		this.options.add(MenuOption.MENU);
 		
 		DisplayRecords.lengthRecords.add("1235");
@@ -49,42 +49,31 @@ public class DisplayRecords extends Display {
 		int i;
 
 		this.selectedOption = selected;
-		//TITLE SHADOW
-		g.setColor(Color.darkGray);
-		g.setFont(super.titleFont);
-		final int titleXPosition = super.getCenteredX(gScreen, g, title);
-		g.drawString(title, titleXPosition + titleShift, gScreen.getTileSize() * titleTile);
 		
-		//TITLE
-		g.setColor(Color.white);
-		g.drawString(title, titleXPosition, gScreen.getTileSize() * titleTile);
+		// TITLE
+		super.drawTitleText(g, title, Function.identity());
+
+		// RECORDS
+		super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records1, x -> x - gScreen.getWidth()/4, gScreen.getTileSize()*3, 0);
 		
-		//RECORDS
-		g.setColor(Color.white);
-		g.setFont(super.textFont);
-		final int centerX = super.getCenteredX(gScreen, g, "");
-		final int recordsLeftPosition = super.getCenteredX(gScreen, g, records1);
-		
-		g.drawString("Length", recordsLeftPosition - centerX/2, gScreen.getTileSize() * 3);
 		final List<String> recordList = this.listify(DisplayRecords.lengthRecords);
-		for( i = 0 ; i < recordList.size() ; i++) {
-			g.drawString(recordList.get(i), gScreen.getTileSize()*3, gScreen.getTileSize() * (3 + i+1));
+		for(i = 0 ; i < recordList.size() ; i++) {
+			super.drawText(g, super.getTextFont(), recordList.get(i), gScreen.getTileSize()*3, gScreen.getTileSize() * (3 + i+1), 0);
 		}
 		
-		final int recordsRightPosition = super.getCenteredX(gScreen, g, records2);
-		g.drawString("Monetine", recordsRightPosition + centerX/2, gScreen.getTileSize() * 3);
+		super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records2, x -> x + gScreen.getWidth()/4, gScreen.getTileSize()*3, 0);
+
 		final List<String> moneyList = this.listify(DisplayRecords.moneyRecords);
-		for( i = 0 ; i < moneyList.size() ; i++) {
-			g.drawString(moneyList.get(i), gScreen.getTileSize()*3 + gScreen.getWidth()/2, gScreen.getTileSize() * (3 + i+1));
+		for(i = 0 ; i < moneyList.size() ; i++) {
+			super.drawText(g, super.getTextFont(), moneyList.get(i), gScreen.getTileSize()*3 + gScreen.getWidth()/2, gScreen.getTileSize() * (3 + i+1), 0);
 		}
-		
-		//OPTIONS SHADOW
-		g.setColor(Color.darkGray);
-		super.drawText(g, textShift);
 		
 		//OPTIONS
-		g.setColor(Color.white);
-		super.drawText(g,0);
+		super.drawOptions(g, DisplayRecords.optionTile);
 	}
 	
+	@Override
+	protected Color getShiftColor() {
+		return Color.DARK_GRAY;
+	}
 }

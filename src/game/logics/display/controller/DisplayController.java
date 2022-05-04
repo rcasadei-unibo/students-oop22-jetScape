@@ -33,7 +33,6 @@ public class DisplayController {
 	public DisplayController(final KeyHandler keyH, final Screen gScreen, 
 			Consumer<GameState> setState, Supplier<GameState> getState,
 			Supplier<Integer> getScore) {
-		super();
 		this.getState = getState;
 		this.getScore = getScore;
 		this.hud = new DisplayHUD(gScreen);
@@ -51,7 +50,7 @@ public class DisplayController {
 	/*
 	 * displays the correct screen for the current game state
 	 */
-	public void drawScreen (Graphics2D g) {
+	public void drawScreen(Graphics2D g) {
 		switch(getState.get()) {
 		case MENU :
 			this.mainMenuDisplay.drawScreen(g, titleHandler.getSelectedOption());
@@ -77,7 +76,7 @@ public class DisplayController {
 	 * Updates the current screen (selected options or score), in menus changes game state
 	 * when you choose an option 
 	 */
-	public void updateScreen () {
+	public void updateScreen() {
 		switch(getState.get()) {
 		case MENU :
 			titleHandler.update();
@@ -92,6 +91,7 @@ public class DisplayController {
 			this.hud.updateScore(getScore.get());
 			break;
 		case ENDGAME :
+			this.gameOverDisplay.setFinalScore(getScore.get());
 			this.gameOverHandler.update();
 			break;
 		default :

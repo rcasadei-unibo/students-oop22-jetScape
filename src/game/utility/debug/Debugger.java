@@ -18,7 +18,7 @@ public class Debugger {
 	/**
 	 * debugger font scale 
 	 */
-	static final double fontScale = 57.6;
+	static final double fontScale = 52.3;
 	/**
 	 * Defines the default font for debugging features.
 	 */

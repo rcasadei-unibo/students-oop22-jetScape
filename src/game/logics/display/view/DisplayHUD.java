@@ -8,32 +8,34 @@ import game.frame.GameWindow;
 import game.utility.screen.Screen;
 
 public class DisplayHUD extends Display {
-	static final int scoreTile = 1;
-	static final int scoreShift = 3;
-	static final double fontScale = 18;
-	private final Font font;
+	private static final int scoreTile = 1;
+	private static final int scoreShift = 3;
+	private static final int textXTile = 10;
+	private static final double fontScale = 18;
+
+	private final Font scoreFont;
+
 	private int score = 0;
 	
-	public DisplayHUD(Screen gScreen) {
+	public DisplayHUD(final Screen gScreen) {
 		super(gScreen);
-		this.font = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
+		this.scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
 	}
 
-	public void drawScreen(Graphics2D g) {
-		int x = 0;
-		String score = "SCORE: ";
-		//SCORE SHADOW
-		g.setColor(Color.darkGray);
-		g.setFont(font);
-		x = 5*(this.getCenteredX(super.gScreen, g, score)/3);
-		g.drawString(score + this.score, x + scoreShift,
-				super.gScreen.getTileSize() * scoreTile);
-		//SCORE
-		g.setColor(Color.white);
-		g.drawString(score + this.score, x, super.gScreen.getTileSize() * scoreTile);
+	public void drawScreen(final Graphics2D g) {
+		String scoreString = "SCORE: " + this.score;
+		
+		// SCORE
+		super.drawText(g, scoreFont, scoreString, super.gScreen.getTileSize() * textXTile,
+				super.gScreen.getTileSize() * scoreTile, scoreShift);
 	}
 	
-	public void updateScore(int score) {
+	public void updateScore(final int score) {
 		this.score = score;
+	}
+	
+	@Override
+	protected Color getShiftColor() {
+		return Color.DARK_GRAY;
 	}
 }

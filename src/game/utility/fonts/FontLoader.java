@@ -12,11 +12,13 @@ public class FontLoader {
 	private final Font debuggerFont;
 	private final Font titleFont;
 	private final Font optionsFont;
+	private final Font textFont;
 	
 	public FontLoader() {
 		this.debuggerFont = this.loadFont(defaultDir + "debuggerFont.otf");
 		this.titleFont = this.loadFont(defaultDir + "titleFont.ttf");
 		this.optionsFont = this.loadFont(defaultDir + "optionsFont.otf");
+		this.textFont = this.loadFont(defaultDir + "textFont.ttf");
 	}
 	
 	private Font loadFont(String name) {
@@ -39,6 +41,10 @@ public class FontLoader {
 
 	public Font getOptionsFont() {
 		return optionsFont;
+	}
+
+	public Font getTextFont() {
+		return textFont;
 	}
 
 }
