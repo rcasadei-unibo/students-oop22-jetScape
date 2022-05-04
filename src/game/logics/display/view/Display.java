@@ -26,7 +26,7 @@ public abstract class Display {
 		super();
 		this.gScreen = gScreen;
 		this.titleFont = GameWindow.fLoader.getTitleFont()
-				.deriveFont(getScaledSize(textTile));
+				.deriveFont(getScaledSize(titleScale));
 		this.selectedTextFont = GameWindow.fLoader.getOptionsFont()
 				.deriveFont(getScaledSize(selectedScale));
 		this.textFont = GameWindow.fLoader.getOptionsFont()
