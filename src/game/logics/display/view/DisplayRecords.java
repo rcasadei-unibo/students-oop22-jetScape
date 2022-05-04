@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import game.utility.other.GameState;
+import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
 public class DisplayRecords extends Display {
@@ -23,15 +23,11 @@ public class DisplayRecords extends Display {
 	static final Set<String> lengthRecords = new HashSet<>();
 	static final Set<String> moneyRecords = new HashSet<>();
 
-	static final GameState currentGS = GameState.RECORDS;
-
 	public DisplayRecords(final Screen gScreen) {
 		super(gScreen);
 		super.setTextTile(8);
 		
-		firstOption = "Back to Menu";
-		this.options.put(firstOption, GameState.MENU);
-		this.buildText(firstOption);
+		this.options.add(MenuOption.MENU);
 		
 		DisplayRecords.lengthRecords.add("1235");
 		DisplayRecords.lengthRecords.add("150");
@@ -49,7 +45,7 @@ public class DisplayRecords extends Display {
 	}
 	
 	//game.utility.sprites.Drawer per caricare una sprite
-	public void drawScreen(final Graphics2D g, final String selected) {
+	public void drawScreen(final Graphics2D g, final MenuOption selected) {
 		int i;
 
 		this.selectedOption = selected;

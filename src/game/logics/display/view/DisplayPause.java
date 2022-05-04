@@ -3,7 +3,7 @@ package game.logics.display.view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import game.utility.other.GameState;
+import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
 public class DisplayPause extends Display {
@@ -11,18 +11,14 @@ public class DisplayPause extends Display {
 	static final int titleShift = 3;
 	static final int textShift = 2;
 	static final String title = "Paused";
-	static final GameState currentGS = GameState.PAUSED;
 
 	public DisplayPause(final Screen gScreen) {
 		super(gScreen);
-		
-		firstOption = "Resume";
-		this.options.put(firstOption, GameState.INGAME);
-		this.options.put("Back to menu", GameState.MENU);
-		this.buildText(firstOption);
+		this.options.add(MenuOption.RESUME);
+		this.options.add(MenuOption.MENU);
 	}
 
-	public void drawScreen(final Graphics2D g, final String selected) {
+	public void drawScreen(final Graphics2D g, final MenuOption selected) {
 		super.selectedOption = selected;		
 		//TITLE SHADOW
 		g.setColor(Color.black);

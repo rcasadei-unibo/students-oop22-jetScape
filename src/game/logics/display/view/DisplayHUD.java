@@ -16,7 +16,7 @@ public class DisplayHUD extends Display {
 	
 	public DisplayHUD(Screen gScreen) {
 		super(gScreen);
-		this.font = GameWindow.fLoader.getOptionsFont().deriveFont((float)(gScreen.getHeight()/fontScale));
+		this.font = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
 	}
 
 	public void drawScreen(Graphics2D g) {

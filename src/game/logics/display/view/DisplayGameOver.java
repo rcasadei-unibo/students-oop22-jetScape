@@ -3,7 +3,7 @@ package game.logics.display.view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import game.utility.other.GameState;
+import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
 public class DisplayGameOver extends Display {
@@ -13,19 +13,15 @@ public class DisplayGameOver extends Display {
 	static final int textTile = 5;
 	static final int resultTile = 4;
 	static final String title = "Game Over";
-	static final GameState currentGS = GameState.ENDGAME;
 
 	public DisplayGameOver(final Screen gScreen) {
 		super(gScreen);
-		
-		firstOption = "Retry";
-		this.options.put(firstOption, GameState.INGAME);
-		this.options.put("Back to Menu", GameState.MENU);
-		this.buildText(firstOption);
+		this.options.add(MenuOption.RETRY);
+		this.options.add(MenuOption.MENU);
 		super.setTextTile(DisplayGameOver.textTile);
 	}
 	
-	public void drawScreen(final Graphics2D g, final String selected) {
+	public void drawScreen(final Graphics2D g, final MenuOption selected) {
 		this.selectedOption = selected;
 		
 		//TITLE SHADOW
