@@ -1,73 +1,128 @@
 package game.logics.display.view;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
-import game.utility.other.GameState;
+import game.frame.GameWindow;
+import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
 public abstract class Display {
-	protected int textTile = 5;
 	protected final Screen gScreen;
-	protected String selectedOption;
-	protected String firstOption = "";
-	protected final Map<String,GameState> options = new HashMap<>();
-	private final List<String> text = new ArrayList<>();
+
+	protected final List<MenuOption> options;
+	protected MenuOption selectedOption;
+
+	private static final Color color = Color.white;
 	
-	public Display(Screen gScreen) {
-		super();
+	private static final double titleScale = 5.14;
+	private static final double selectedScale = 9;
+	private static final double optionsScale = 12;
+	private final Font titleFont;
+	private final Font optionsFont;
+	protected final Font textFont;
+	protected final Font selectedOptionsFont;
+	
+	protected int textTile = 5;
+	
+	private static final int optionTile = 5;
+	private static final int optionShift = 2;
+
+	private static final int titleTile = 2;
+	private static final int titleShift = 5;
+	
+	private static final int textShift = 2;
+	
+	public Display(final Screen gScreen) {
 		this.gScreen = gScreen;
+
+		this.titleFont = GameWindow.fLoader.getTitleFont()
+				.deriveFont(getScaledSize(titleScale));
+		this.optionsFont = GameWindow.fLoader.getOptionsFont()
+				.deriveFont(getScaledSize(optionsScale));
+		this.selectedOptionsFont = GameWindow.fLoader.getOptionsFont()
+				.deriveFont(getScaledSize(selectedScale));
+		this.textFont = GameWindow.fLoader.getTextFont()
+				.deriveFont(getScaledSize(optionsScale));
+
+		this.options = new ArrayList<>();
 	}
 	
-	public void buildText(String firstOption) {
-		if(this.text.isEmpty()) {
-			this.text.add(firstOption);
-			for(String option : this.options.keySet().stream()
-					.filter(s -> s.compareTo(firstOption) != 0)
-					.collect(Collectors.toSet())) {
-				this.text.add(option);
-			}
-		}
-	}
-	
-	public int getCenteredX(Screen gScreen, Graphics2D g, String text) {
-		int lenght = (int)g.getFontMetrics().getStringBounds(text,g).getWidth();
+	private int getCenteredX(final Screen gScreen, final Graphics2D g, final String text) {
+		int lenght = (int) g.getFontMetrics().getStringBounds(text,g).getWidth();
 		
 		return gScreen.getWidth()/2 - lenght/2;
 	}
 	
-	public Map<String,GameState> getOptions(){
+	public List<MenuOption> getOptions() {
 		return this.options;
 	}
 	
-	public String getFirstOption() {
-		return firstOption;
+	protected void drawText(final Graphics2D g, /*final Color color,*/ final Font font,
+			final String text, final int xPos, final int yPos, final int shift) {
+		g.setFont(font);
+	
+		if(shift != 0) {
+			g.setColor(this.getShiftColor());
+			g.drawString(text, xPos + shift, yPos);
+		}
+	
+		//g.setColor(color);
+		g.setColor(Display.color);
+		g.drawString(text, xPos, yPos);
 	}
 	
-	public List<String> getOrderedText(){
-		return text;
+	protected void drawCenteredText(final Graphics2D g, /*final Color color,*/ final Font font,
+			final String text, final Function<Integer, Integer> f, final int yPos, final int shift) {
+		g.setFont(font);
+		this.drawText(g, font, text, f.apply(this.getCenteredX(gScreen, g, text)), yPos, shift);
 	}
 	
-	protected void drawText(Graphics2D g, int shift) {
+	protected void drawTitleText(final Graphics2D g, final String text, final Function<Integer, Integer> function) {
+		this.drawCenteredText(g, this.titleFont, text, Function.identity(),
+				gScreen.getTileSize() * Display.titleTile, Display.titleShift);
+	}
+	
+	protected void drawOptions(final Graphics2D g, final int yTile) {
 		int i = 0;
-		for(String option : this.text) {
+		for(final MenuOption option : this.options) {
 			if(option.equals(this.selectedOption)) {
-				g.setFont(DisplayMainMenu.selectedTextFont);
 				String selected = "> "+option+" <";
-				g.drawString(selected, this.getCenteredX(gScreen, g, selected) + shift,
-						gScreen.getTileSize() * (textTile + i));
+				this.drawCenteredText(g, this.selectedOptionsFont, selected,
+						x -> x,
+						gScreen.getTileSize() * (i + yTile), Display.optionShift);
 			} else {
-				g.setFont(DisplayMainMenu.fontText);
-				g.drawString(option, this.getCenteredX(gScreen, g, option) + shift,
-					gScreen.getTileSize() * (textTile + i));
+				this.drawCenteredText(g, this.optionsFont, option.toString(),
+						x -> x,
+						gScreen.getTileSize() * (i + yTile), Display.optionShift);
 			}
 			i++;
 		}
 	}
 	
+	protected void drawOptions(final Graphics2D g) {
+		this.drawOptions(g, Display.optionTile);
+	}
+
+	protected Font getTitleFont() {
+		return this.titleFont;
+	}
 	
+	protected abstract Color getShiftColor();
+	
+	protected Font getTextFont() {
+		return this.textFont;
+	}
+	
+	protected int getTextShift() {
+		return Display.textShift;
+	}
+	
+	protected float getScaledSize(double scale) {
+		return (float)(gScreen.getHeight()/scale);
+	}
 }

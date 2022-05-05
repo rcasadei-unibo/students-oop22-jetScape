@@ -2,30 +2,28 @@ package game.logics.display.handlers;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
+import game.utility.other.MenuOption;
 
 public class MenuHandler implements DisplayHandler {
 	private final KeyHandler keyH;
 	private final Display display;
-	private final Map <String,GameState> options;
-	private final List<String> text;
+	private final List<MenuOption> options;
 	private final Consumer<GameState> setGameState;
 	
 	private int cursor = 0;
-	private String selectedOption;
+	private MenuOption selectedOption;
 
 	public MenuHandler(KeyHandler keyH, Display display, Consumer<GameState> setGameState) {
 		super();
 		this.keyH = keyH;
 		this.display = display;
 		this.options = display.getOptions();
-		this.selectedOption = display.getFirstOption();
-		this.text = display.getOrderedText();
+		this.selectedOption = options.get(0);
 		this.setGameState = setGameState;
 	}
 
@@ -40,7 +38,7 @@ public class MenuHandler implements DisplayHandler {
 				keyH.resetKeyTyped();
 				break;
 			case KeyEvent.VK_ENTER:
-				this.setGameState.accept(this.options.get(this.getSelectedOption()));
+				this.setGameState.accept(this.selectedOption.getOptionsGS());
 				keyH.resetKeyTyped();
 				break;
 			default:
@@ -48,7 +46,7 @@ public class MenuHandler implements DisplayHandler {
 		}
 	}
 	
-	public String getSelectedOption() {
+	public MenuOption getSelectedOption() {
 		this.updateSelectedOption();
 		return this.selectedOption;
 	
@@ -74,7 +72,7 @@ public class MenuHandler implements DisplayHandler {
     
     private void updateSelectedOption() {
     	int i = 0;
-		for (String s : this.text) {
+		for (MenuOption s : this.options) {
 			if(i == cursor) {
 				this.selectedOption = s;
 				break;

@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import game.frame.GameWindow;
+
 /**
  * The <code>Debugger</code> class is used to as a control panel
  * where you can check which debug functions are enabled or which not.
@@ -13,11 +15,14 @@ import java.util.Map;
  * @author Daniel Pellanda
  */
 public class Debugger {
-	
+	/**
+	 * debugger font scale 
+	 */
+	static final double fontScale = 52.3;
 	/**
 	 * Defines the default font for debugging features.
 	 */
-	public static final Font debugFont = new Font("Calibri", Font.PLAIN, 10);
+	public static final Font debugFont = GameWindow.fLoader.getDebuggerFont().deriveFont((float)(GameWindow.gameScreen.getHeight()/fontScale));
 	/**
 	 * Defines the default color for debugging features.
 	 */
