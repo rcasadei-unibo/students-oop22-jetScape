@@ -160,10 +160,6 @@ public class LogicsHandler implements Logics{
 				this.setGameState(GameState.PAUSED);
 				keyH.resetKeyTyped();
 				break;
-			case KeyEvent.VK_R:
-				this.setGameState(GameState.INGAME);
-				keyH.resetKeyTyped();
-				break;
 			default:
 				break;
 		}
@@ -212,8 +208,6 @@ public class LogicsHandler implements Logics{
 					}
 					if (this.gameState == GameState.MENU) {
 						entities.get(EntityType.PLAYER).add(playerEntity);
-					} else if (this.gameState == GameState.ENDGAME) {
-						this.resetGame();
 					}
 					spawner.resume();
 					break;
@@ -257,6 +251,7 @@ public class LogicsHandler implements Logics{
 			case INGAME:
 				if(playerEntity.hasDied()) {
 					this.setGameState(GameState.ENDGAME);
+					break;
 				}
 				this.updateDifficulty();
 				this.updateCleaner();

@@ -10,6 +10,7 @@ import java.util.Set;
 import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.generic.EntityInstance;
+import game.logics.entities.pickups.teleport.Teleport;
 import game.logics.handler.Logics;
 import game.logics.hitbox.PlayerHitbox;
 import game.logics.interactions.CollisionsHandler;
@@ -162,7 +163,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 				entityHit.clean();
 				break;
 			case TELEPORT:
-				score += 250;
+				score += Teleport.scoreIncrease;
 				cleaner.accept(t -> t.isGenerableEntity(), e -> true);
 			default:
 				break;

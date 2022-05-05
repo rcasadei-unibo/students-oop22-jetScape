@@ -22,6 +22,8 @@ public class TeleportInstance extends PickupInstance implements Teleport{
 	 */
 	private static final Color placeH = Color.red;
 	
+	private final int scoreInc = 250;
+	
 	public TeleportInstance(final Logics l, final Pair<Double, Double> position,  final Player player, final SpeedHandler speed) {
 		super(l, position, player, speed);
 		entityTag = EntityType.TELEPORT;
@@ -29,5 +31,9 @@ public class TeleportInstance extends PickupInstance implements Teleport{
 		spritesMgr.setPlaceH(placeH);
 		spritesMgr.addSprite("teleport", texturePath + "teleport.png");
 		spritesMgr.setAnimator(() -> "teleport");
+	}
+	
+	public int getScoreIncrease() {
+		return scoreInc;
 	}
 }
