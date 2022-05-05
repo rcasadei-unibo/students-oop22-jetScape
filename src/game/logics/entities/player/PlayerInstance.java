@@ -259,7 +259,7 @@ public class PlayerInstance extends EntityInstance implements Player{
 	public void reset() {
 		position.setX(xPosition);
 		position.setY(yGround);
-		status = PlayerStatus.WALK;
+		setStatus(PlayerStatus.WALK);
 		score = 0;
 		frameTime = 0;
 		
