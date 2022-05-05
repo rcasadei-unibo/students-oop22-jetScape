@@ -87,15 +87,10 @@ public class TileGenerator implements Generator{
 	 */
 	private final Map<EntityType, Set<Entity>> entities;
 	
-	
-	/**
-	 * Decides the odds for the generator to spawn a set of zappers
-	 */
-	private final int zapperOdds = 100;
 	/**
 	 * Decides the odds for the generator to spawn a set of missiles
 	 */
-	private final int missileOdds = 40;
+	private final int missileOdds = 30;
 	/**
 	 * Decides the odds for the generator to spawn a power up
 	 */
@@ -106,7 +101,7 @@ public class TileGenerator implements Generator{
 	 */
 	private final long interval;
 	private final long intervalDecreaseDiff = 40;
-	private final long minimalInterval = 40;
+	private final long minimalInterval = 20;
 
 	private final Thread generator = new Thread(this);
 	private boolean running = false;
@@ -239,7 +234,7 @@ public class TileGenerator implements Generator{
 	
 	private void spawnTile() {
 		int randomNumber;
-		randomNumber = r.nextInt() % (missileOdds + zapperOdds);
+		randomNumber = r.nextInt() % 100;
 		randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 		
 		if(randomNumber <= powerUpOdds) {

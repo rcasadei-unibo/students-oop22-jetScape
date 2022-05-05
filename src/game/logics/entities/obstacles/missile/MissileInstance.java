@@ -54,13 +54,13 @@ public class MissileInstance extends ObstacleInstance implements Missile{
 	 */
 	private final Pair<Double,Double> playerPosition;
 	
-	private final double yStartSpeed = yDefaultSpeed;
+	private double yStartSpeed = yDefaultSpeed;
 	private double ySpeed = yStartSpeed;
 	private double yAcceleration = yDefaultAcceleration;
 	private double yBrakingDivider = 3.5;
 	
 	private final double yBrakeDecrease = 1.0;
-	
+		
 	/**
 	 * The direction the missile was moving.
 	 */
