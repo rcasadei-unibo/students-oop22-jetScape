@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
+import game.frame.GameWindow;
 import game.utility.other.Pair;
 
 /**
@@ -65,6 +66,9 @@ public class Sprite {
 	public Sprite(final String name, final Color placeHolder, final String path) {
 		this(name, placeHolder);
 		image = Optional.ofNullable(Sprite.load(defaultDir + path));
+		if(image.isPresent()) {
+			image = Optional.of(Sprite.scale(image.get(), GameWindow.gameScreen.getTileSize()));
+		}
 	}
 	
 	/**
@@ -81,6 +85,21 @@ public class Sprite {
 			e.printStackTrace();
 		}
 		return loaded;
+	}
+	
+	/**
+	 * Scales a <code>BufferedImage</code> of a sprite and returns it.
+	 * 
+	 * @param imageToScale the image to scale
+	 * @param side the length of the square side of the new scaled image
+	 * @return a <code>BufferedImage</code> containing the scaled image of the sprite
+	 */
+	public static BufferedImage scale(final BufferedImage imageToScale, final int side) {
+		BufferedImage scaled = new BufferedImage(side, side, imageToScale.getType());
+		Graphics2D g = scaled.createGraphics();
+		g.drawImage(imageToScale, 0, 0, side, side, null);
+		g.dispose();
+		return scaled;
 	}
 	
 	/**

@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The <code>GameWindow</code> class manages both the panel representing 
@@ -54,6 +56,9 @@ public class GameWindow extends JPanel implements Runnable{
 	 * Shows at how many "Frames Per Second" is currently running the game.
 	 */
 	public static int fps = 0;
+	
+	private List<Long> drawTimePerFrame = new ArrayList<>();
+	private long averageDrawTime = 0;
 	
 	/**
 	 * Stores the screen information (resolution, size of each tile, etc).
@@ -126,16 +131,23 @@ public class GameWindow extends JPanel implements Runnable{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
+		long timeBeforeDraw = System.nanoTime();
 		Graphics2D board = (Graphics2D)g;
 		
 		// Draws logical parts of the game
 		logH.drawAll(board);
 		
+		board.setColor(Debugger.debugColor);
+		board.setFont(Debugger.debugFont);
+		
 		// Draws FPS meter if enabled by debugger
 		if(debugger.isFeatureEnabled(Debugger.Option.FPS_METER)){
-			board.setColor(Debugger.debugColor);
-			board.setFont(Debugger.debugFont);
 			board.drawString("FPS: " + fps, 3, 8);
+		}
+		// Draws average draw time if enabled by debugger
+		if(debugger.isFeatureEnabled(Debugger.Option.DRAW_TIME)) {
+			drawTimePerFrame.add(System.nanoTime() - timeBeforeDraw);
+			board.drawString("AVG-DRAW: " + averageDrawTime + "ns", 3, gameScreen.getHeight() - 5);
 		}
 		
 		board.dispose();
@@ -160,14 +172,18 @@ public class GameWindow extends JPanel implements Runnable{
 			// Gets current system time
 			long timer = System.nanoTime();
 			
-			// Updates FPS meter each second passed
+			// Updates parameters for each second passed
 			if(drawTime > nanoSecond) {
 				fps = fpsCount;
 				drawTime = 0;
 				fpsCount = 0;
 				
-				// Prints FPS on console
-				debugger.printLog(Debugger.Option.LOG_FPS, "FPS: " + fps);
+				long drawTimeSum = 0;
+				for(long draw : drawTimePerFrame) {
+					drawTimeSum += draw;
+				}
+				averageDrawTime = drawTimeSum / (drawTimePerFrame.size() > 0 ? drawTimePerFrame.size() : 1);
+				drawTimePerFrame.clear();
 			}
 			
 			/// RUNS EACH FRAME ///

@@ -23,7 +23,7 @@ public class Debugger {
 	 */
 	public static final Color debugColor = Color.white;
 	
-	public enum Option{ FPS_METER, ENTITY_COORDINATES, NEXT_SPAWN_TIMER,
+	public enum Option{ FPS_METER, DRAW_TIME, ENTITY_COORDINATES, NEXT_SPAWN_TIMER,
 		DIFFICULTY_LEVEL, HITBOX, LOG_FPS, LOG_CLEAN, LOG_SPAWN, LOG_HITCHECK};
 	
 	/**
@@ -49,11 +49,11 @@ public class Debugger {
 		this.debugMode = mode;
 		
 		optionEnabled.put(Option.FPS_METER, true);
+		optionEnabled.put(Option.DRAW_TIME, true);
 		optionEnabled.put(Option.ENTITY_COORDINATES, true);
 		optionEnabled.put(Option.NEXT_SPAWN_TIMER, true);
 		optionEnabled.put(Option.DIFFICULTY_LEVEL, true);
 		optionEnabled.put(Option.HITBOX, false);
-		optionEnabled.put(Option.LOG_FPS, false);
 		optionEnabled.put(Option.LOG_CLEAN, false);
 		optionEnabled.put(Option.LOG_SPAWN, false);
 		optionEnabled.put(Option.LOG_HITCHECK, false);
