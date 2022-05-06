@@ -70,7 +70,7 @@ public class LogicsHandler implements Logics{
 	 * Defines how many seconds have to pass for the spawner to generate
 	 * another set of obstacles.
 	 */
-	private double spawnInterval = 2.5;
+	private double spawnInterval = 2.8;
 	/**
 	 * Defines the interval of each check for entities to clean.
 	 */
