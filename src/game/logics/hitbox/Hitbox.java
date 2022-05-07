@@ -6,6 +6,15 @@ import java.awt.Graphics2D;
 
 import game.utility.other.Pair;
 
+/**
+ * The <code>Hitbox</code> interface is used for accessing <code>HitboxInstace</code> methods.
+ * 
+ * <p>
+ * The <code>HitboxInstance</code> class represents a generic entity's group of hitboxes
+ * </p>
+ * 
+ * @author Giacomo Amadio
+ */
 public interface Hitbox {
 	/**
 	 * Translates all this entity's Rectangles the indicated distance,

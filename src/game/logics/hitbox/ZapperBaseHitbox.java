@@ -3,6 +3,12 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
+/**
+ * The <code>ZapperBaseHitbox</code> class represents a ZapperBase's  hitbox in
+ * the game environment.
+ * 
+ * @author Giacomo Amadio
+ */
 public class ZapperBaseHitbox extends HitboxInstance {
 	static final double rectangleX = 5;
 	static final double rectangleY = 5;

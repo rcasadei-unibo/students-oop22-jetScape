@@ -3,6 +3,12 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
+/**
+ * The <code>MissileHitbox</code> class represents a missile's hitbox in
+ * the game environment.
+ * 
+ * @author Giacomo Amadio
+ */
 public class MissileHitbox extends HitboxInstance{
 	static final double rectangleX = 0;
 	static final double rectangleY = 13;

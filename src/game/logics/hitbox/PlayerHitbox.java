@@ -3,6 +3,12 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 import game.utility.screen.Screen;
 
+/**
+ * The <code>PlayerHitbox</code> class represents a player's hitbox in
+ * the game environment.
+ * 
+ * @author Giacomo Amadio
+ */
 public class PlayerHitbox extends HitboxInstance {
 	static final double rectangle1X = 16;
 	static final double rectangle1Y = 24;

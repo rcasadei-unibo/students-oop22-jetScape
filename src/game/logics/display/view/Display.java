@@ -16,20 +16,35 @@ public abstract class Display {
 
 	protected final List<MenuOption> options;
 	protected MenuOption selectedOption;
-
+	/**
+	 * All text main color 
+	 */
 	private static final Color color = Color.white;
 	
 	private static final double titleScale = 5.14;
 	private static final double selectedScale = 9;
 	private static final double optionsScale = 12;
+	
+	/**
+	 * Fonts for every type of text
+	 */
 	private final Font titleFont;
 	private final Font optionsFont;
 	protected final Font textFont;
 	protected final Font selectedOptionsFont;
 	
+	/**
+	 * default writing tile for text
+	 */
 	protected int textTile = 5;
 	
+	/**
+	 * default writing tile for options
+	 */
 	private static final int optionTile = 5;
+	/**
+	 * options shadow shift 
+	 */
 	private static final int optionShift = 2;
 
 	private static final int titleTile = 2;
@@ -51,13 +66,18 @@ public abstract class Display {
 
 		this.options = new ArrayList<>();
 	}
-	
+	/**
+	 * @return the ordinate's value such as the given string is centered in the current screen
+	 */
 	private int getCenteredX(final Screen gScreen, final Graphics2D g, final String text) {
 		int lenght = (int) g.getFontMetrics().getStringBounds(text,g).getWidth();
 		
 		return gScreen.getWidth()/2 - lenght/2;
 	}
 	
+	/**
+	 * @return Display's menu options 
+	 */
 	public List<MenuOption> getOptions() {
 		return this.options;
 	}
@@ -121,7 +141,9 @@ public abstract class Display {
 	protected int getTextShift() {
 		return Display.textShift;
 	}
-	
+	/**
+	 * @return font's scaled size based on screen height 
+	 */
 	protected float getScaledSize(double scale) {
 		return (float)(gScreen.getHeight()/scale);
 	}

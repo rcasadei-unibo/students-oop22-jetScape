@@ -8,20 +8,33 @@ import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.MenuOption;
-
+/**
+ * The <code>MenuHandler</code> class manages <class>Display</class> menus
+ * 
+ * @author Giacomo Amadio
+ */
 public class MenuHandler implements DisplayHandler {
 	private final KeyHandler keyH;
-	private final Display display;
-	private final List<MenuOption> options;
 	private final Consumer<GameState> setGameState;
 	
+	/**
+	 * current display's menu options
+	 */
+	private final List<MenuOption> options;
+	
+	/**
+	 * current cursor index
+	 */
 	private int cursor = 0;
+	
+	/**
+	 * current selected option
+	 */
 	private MenuOption selectedOption;
 
 	public MenuHandler(KeyHandler keyH, Display display, Consumer<GameState> setGameState) {
 		super();
 		this.keyH = keyH;
-		this.display = display;
 		this.options = display.getOptions();
 		this.selectedOption = options.get(0);
 		this.setGameState = setGameState;
@@ -52,10 +65,9 @@ public class MenuHandler implements DisplayHandler {
 	
 	}
 	
-	public Display getDisplay() {
-		return this.display;
-	}
-	
+	/**
+	 * moves the cursor up 
+	 */
 	private void goUp () {
 		this.cursor--;
 		if(this.cursor < 0) {
@@ -63,6 +75,9 @@ public class MenuHandler implements DisplayHandler {
 		}
 	}
 	
+	/**
+	 * moves the cursor down 
+	 */
     private void goDown () {
 		this.cursor++;
 		if(this.cursor > this.options.size() - 1) {
@@ -70,15 +85,11 @@ public class MenuHandler implements DisplayHandler {
 		}
 	}
     
+    /**
+     * updates the selected option
+     */
     private void updateSelectedOption() {
-    	int i = 0;
-		for (MenuOption s : this.options) {
-			if(i == cursor) {
-				this.selectedOption = s;
-				break;
-			}
-			i++;
-		}
+    	this.selectedOption = this.options.get(this.cursor);
     }
 
 }
