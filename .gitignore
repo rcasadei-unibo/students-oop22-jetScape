@@ -2,7 +2,3 @@ bin/
 .metadata/
 .settings/
 *.project
-*.classpath
-*.jar
-*.lnk
-*.bat
