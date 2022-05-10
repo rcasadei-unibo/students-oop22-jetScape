@@ -19,6 +19,8 @@ public class DisplayRecords extends Display {
 	private static final String records1 = "Length";
 	private static final String records2 = "Money";
 	
+	private final Records records;
+	
 	//TODO SPOSTARE
 	//private static final List<String> lengthRecords = new ArrayList<>();
 	//private static final List<String> moneyRecords = new ArrayList<>();
@@ -27,9 +29,11 @@ public class DisplayRecords extends Display {
 
 	public DisplayRecords(final Screen gScreen, final Records records) {
 		super(gScreen);
+		this.records = records;
 
 		this.options.add(MenuOption.MENU);
 		
+		//TODO
 		DisplayRecords.lengthRecords.add("1235");
 		DisplayRecords.lengthRecords.add("150");
 		DisplayRecords.lengthRecords.add("1500");

@@ -16,19 +16,20 @@ import game.logics.records.Records;
 
 public class JSONWriter implements Jsonable, Serializable {
 
-    private final static Map<String,Object> recordsMap = new HashMap<>();
-    private String name;
-    private int age;
-    
 	private static final long serialVersionUID = 1L;
-	
+
 	private final JsonObject json = new JsonObject();
 	private final Records records;
 	
+	// Do not change path without updating .gitignore tracked file
 	private static final String sep = File.separator;
 	private static final String filePath = "res" + sep + "game" + sep + "records.json";
 	private static final File file = new File(filePath);
 	
+    private final static Map<String,Object> recordsMap = new HashMap<>();
+    private String name;
+    private int age;
+    
 	public JSONWriter(final Records records) {
 		this.records = records;
 	}
@@ -88,6 +89,9 @@ public class JSONWriter implements Jsonable, Serializable {
 	}
 	
 	@Override
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toJson() {
         final StringWriter writable = new StringWriter();
         try {
@@ -97,10 +101,12 @@ public class JSONWriter implements Jsonable, Serializable {
         return writable.toString();
 	}
 
-	@Override
 	//TODO
+	@Override
+	/**
+	 * {@inheritDoc}
+	 */
 	public void toJson(final Writer writer) throws IOException {
-		// TODO Auto-generated method stub
 		
 		Records.getKeySet().forEach(key -> {
 			json.put(key, recordsMap.get(key));
@@ -108,12 +114,11 @@ public class JSONWriter implements Jsonable, Serializable {
 		
         json.put("name", name);
         json.put("age", age);
-       // json.put("position", this.getPosition());
-       // json.put("skills", this.getSkills());
-       // json.put("salary", this.getSalary());
+        // json.put("position", this.getPosition());
+        // json.put("skills", this.getSkills());
+        // json.put("salary", this.getSalary());
         
         // Writes the object physically
         json.toJson(writer);
 	}
-
 }

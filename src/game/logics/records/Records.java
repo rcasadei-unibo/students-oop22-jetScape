@@ -18,6 +18,7 @@ public class Records {
 
     private final JSONWriter writer = new JSONWriter(this);
 
+    // Statistics list
     private String name;
     private int age;
 
