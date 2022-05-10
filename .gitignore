@@ -1,8 +1,10 @@
 bin/
 .metadata/
 .settings/
+res/game/data/records.json
 *.project
 *.classpath
 *.jar
 *.lnk
 *.bat
+
