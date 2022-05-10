@@ -14,21 +14,31 @@ import game.utility.screen.Screen;
 import java.awt.Graphics2D;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
+/**
+ * The <code>DisplayController</code> class helps <class>LogicsHandler</class> to update
+ * and draw the correct <class>Display</class> on the screen
+ * 
+ * @author Giacomo Amadio
+ */
 public class DisplayController {
 	private final Supplier<GameState> getState;
 	private final Supplier<Integer> getScore;
+	/**
+	 * Screen's displays
+	 */
 	private final DisplayHUD hud;
 	private final DisplayPause pauseDisplay;
 	private final DisplayMainMenu mainMenuDisplay;
 	private final DisplayRecords recordsDisplay;
 	private final DisplayGameOver gameOverDisplay;
+	/**
+	 * Handlers for every display with a menu  
+	 */
 	private final DisplayHandler pauseHandler;
 	private final DisplayHandler titleHandler;
 	private final DisplayHandler recordsHandler;
 	private final DisplayHandler gameOverHandler;
-
-	/* TO DO eventually add shop */
+	/* TODO eventually add shop */
 	
 	public DisplayController(final KeyHandler keyH, final Screen gScreen, 
 			Consumer<GameState> setState, Supplier<GameState> getState,
@@ -47,7 +57,7 @@ public class DisplayController {
 		this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
 	}
 	
-	/*
+	/**
 	 * displays the correct screen for the current game state
 	 */
 	public void drawScreen(Graphics2D g) {
@@ -72,7 +82,7 @@ public class DisplayController {
 		}
 	}
 	
-	/*
+	/**
 	 * Updates the current screen (selected options or score), in menus changes game state
 	 * when you choose an option 
 	 */

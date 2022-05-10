@@ -10,6 +10,12 @@ import game.logics.entities.player.PlayerInstance;
 import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
 
+/**
+ * The <code>CollisionsHandler</code> class helps <class>LogicsHandler</class> to manage
+ * collision between player and various entities
+ *  
+ * @author Giacomo Amadio
+ */ 
 public class CollisionsHandler {
 	private final CollisionsChecker cChecker; 
 	
@@ -17,6 +23,9 @@ public class CollisionsHandler {
 		this.cChecker = new CollisionsChecker(entities, p);
 	}
 	
+	/**
+	 * if some kind of collision happens, starts the procedure to handle it 
+	 */
 	public void interact(final Consumer<Entity> action) {
 		this.cChecker.updateCollisions();
 		var entity = this.cChecker.getNextToHandle();
