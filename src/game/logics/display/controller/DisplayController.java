@@ -6,6 +6,7 @@ import game.logics.display.view.DisplayGameOver;
 import game.logics.display.view.DisplayHUD;
 import game.logics.display.view.DisplayMainMenu;
 import game.logics.display.view.DisplayRecords;
+import game.logics.records.Records;
 import game.logics.display.view.DisplayPause;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
@@ -42,13 +43,13 @@ public class DisplayController {
 	
 	public DisplayController(final KeyHandler keyH, final Screen gScreen, 
 			Consumer<GameState> setState, Supplier<GameState> getState,
-			Supplier<Integer> getScore) {
+			Supplier<Integer> getScore, Records records) {
 		this.getState = getState;
 		this.getScore = getScore;
 		this.hud = new DisplayHUD(gScreen);
 		this.pauseDisplay = new DisplayPause(gScreen);
 		this.mainMenuDisplay = new DisplayMainMenu(gScreen);
-		this.recordsDisplay = new DisplayRecords(gScreen);
+		this.recordsDisplay = new DisplayRecords(gScreen, records);
 		this.gameOverDisplay = new DisplayGameOver(gScreen);
 
 		this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);

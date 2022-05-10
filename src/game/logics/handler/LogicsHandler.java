@@ -33,6 +33,7 @@ import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
 import game.logics.interactions.SpeedHandler;
+import game.logics.records.Records;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
@@ -86,6 +87,8 @@ public class LogicsHandler implements Logics{
 	private final Screen screen;
 	private final KeyHandler keyH;
 	private final Debugger debugger;
+
+	private final Records records;
 	
 	/**
 	 * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -97,15 +100,18 @@ public class LogicsHandler implements Logics{
 		this.keyH = GameWindow.keyHandler;
 		this.debugger = GameWindow.debugger;
 		
+		records = new Records();
+		
 		EntityType.genericTypes
 		.forEach(e -> entities.put(e, new HashSet<>()));
 		
 		playerEntity = new PlayerInstance(this, entities);
 		
 		displayController = new DisplayController(keyH,screen, g -> setGameState(g),
-				() -> gameState, () -> playerEntity.getCurrentScore());
+				() -> gameState, () -> playerEntity.getCurrentScore(), records);
 		
 		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
+		
 		this.initializeSpawner();
 	}
 
@@ -223,6 +229,7 @@ public class LogicsHandler implements Logics{
 					this.getEntitiesCleaner().accept(t -> true, e -> true);
 					break;
 				case ENDGAME:
+					this.records.update();
 					spawner.stop();
 					break;
 				case PAUSED:

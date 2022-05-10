@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+import game.logics.records.Records;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
@@ -24,7 +25,7 @@ public class DisplayRecords extends Display {
 	private static final Set<String> lengthRecords = new HashSet<>();
 	private static final Set<String> moneyRecords = new HashSet<>();
 
-	public DisplayRecords(final Screen gScreen) {
+	public DisplayRecords(final Screen gScreen, final Records records) {
 		super(gScreen);
 
 		this.options.add(MenuOption.MENU);
