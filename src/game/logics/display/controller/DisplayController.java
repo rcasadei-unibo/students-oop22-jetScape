@@ -50,7 +50,7 @@ public class DisplayController {
 		this.pauseDisplay = new DisplayPause(gScreen);
 		this.mainMenuDisplay = new DisplayMainMenu(gScreen);
 		this.recordsDisplay = new DisplayRecords(gScreen, records);
-		this.gameOverDisplay = new DisplayGameOver(gScreen);
+		this.gameOverDisplay = new DisplayGameOver(gScreen, records);
 
 		this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
 		this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
@@ -102,7 +102,8 @@ public class DisplayController {
 			this.hud.updateScore(getScore.get());
 			break;
 		case ENDGAME :
-			this.gameOverDisplay.setFinalScore(getScore.get());
+			//TODO move parameter inside class to centralize getters
+			this.gameOverDisplay.setRecords(getScore.get());
 			this.gameOverHandler.update();
 			break;
 		default :
