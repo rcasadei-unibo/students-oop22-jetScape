@@ -19,13 +19,8 @@ public class DisplayGameOver extends Display {
 	private static String recordScoreString = "NEW RECORD";
 	private static String[] playingRecordScoreString = {"BARRY COULD", "LIVE LONGER"};
 	
-	private static int playingRecordScore = 0; // higher score obtained by playing consecutively
-	private static boolean isNewPlayingRecordScore = false;
-
-	private final int recordScore; // absolute new record
-	private boolean isNewRecordScore = false;
-
-	int finalScore;
+	//private int recordScore; // absolute new record
+	private int finalScore;
 
 	public DisplayGameOver(final Screen gScreen, final Records records) {
 		super(gScreen);
@@ -33,14 +28,21 @@ public class DisplayGameOver extends Display {
 		
 		this.options.add(MenuOption.RETRY);
 		this.options.add(MenuOption.MENU);
-		
-		// Reads record
-		// TODO Check if this work and if it is good
-		this.recordScore = this.records.getRecordScore();
 	}
 	
+	/**
+	 *  Reads record and score from {@link Records}.
+	 */
+	private void updateRecords() {
+		// TODO Check if this work and if it is good
+		this.finalScore = this.records.getScore();
+		//this.recordScore = this.records.getRecordScore();
+	}
+
 	public void drawScreen(final Graphics2D g, final MenuOption selected) {
 		this.selectedOption = selected;
+		
+		this.updateRecords();
 
 		// TITLE
 		super.drawTitleText(g, title, Function.identity());
@@ -50,10 +52,10 @@ public class DisplayGameOver extends Display {
 				DisplayGameOver.textTile * gScreen.getTileSize(), super.getTextShift());
 		
 		// RECORD
-		if(this.isNewRecordScore) {
+		if(records.isNewRecordScore()) {
 			super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.recordScoreString, x -> x/2,
 					(DisplayGameOver.textTile + 1) * gScreen.getTileSize(), super.getTextShift());
-		} else if(isNewPlayingRecordScore) {
+		} else if(records.isNewPlayingRecordScore()) {
 			super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[0], x -> x/2,
 					(DisplayGameOver.textTile + 1) * gScreen.getTileSize(), super.getTextShift());
 			super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[1], x -> x/2,
@@ -62,33 +64,6 @@ public class DisplayGameOver extends Display {
 
 		// OPTIONS
 		super.drawOptions(g, DisplayGameOver.optionTile);
-	}
-
-	/*  TODO Move this method inside records
-	 *  substituting it with getter methods .isNewAbsoluteRecordScore() & .isNewPlayingRecordScore()
-	 */
-	/**
-	 * This method checks if the new finalScore is a new record and only in this case saves it.
-	 * @param finalScore
-	 *   final score in the current game
-	 */
-	public void setRecords(final int finalScore) {
-		
-		this.finalScore = finalScore;
-		
-		if (finalScore > DisplayGameOver.playingRecordScore) {
-			DisplayGameOver.isNewPlayingRecordScore = true;
-			DisplayGameOver.playingRecordScore = finalScore;
-		} else if (finalScore < DisplayGameOver.playingRecordScore) {
-			DisplayGameOver.isNewPlayingRecordScore = false;
-		}
-
-		if (finalScore > this.recordScore) {
-			this.isNewRecordScore = true;
-			//StatisticsReader.writeRecord(finalScore); // TODO write new record
-		} else if (finalScore < this.recordScore) {
-			this.isNewRecordScore = false;
-		}
 	}
 
 	@Override

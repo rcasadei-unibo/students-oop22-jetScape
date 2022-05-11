@@ -1,6 +1,7 @@
 package game.logics.records;
 
 import game.logics.entities.player.Player;
+import game.logics.entities.player.Player.PlayerDeath;
 import game.utility.input.JSONWriter;
 import game.logics.handler.Logics.GameID;
 
@@ -8,9 +9,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 public class Records {
 
+	// Data for building JSON data table
     private final static Set<String> keySet = new HashSet<>();
     private final static Map<String, Object> recordsMap = new HashMap<>();
 
@@ -27,9 +30,18 @@ public class Records {
     // TODO complete list
     private String name;
     private int age;
-    private int recordScore;
     // private String[] position;
     // private Map<String, Integer> salary;
+    
+    // Data read from game
+    private int score;
+	private PlayerDeath causeOfDeath;
+
+	private static int playingRecordScore = 0; // higher score obtained by playing consecutively
+	private static boolean newPlayingRecordScore = false;
+
+	private int recordScore; // absolute new record
+	private boolean newRecordScore = false;
 
     //TODO
     public Records(final Player player) {
@@ -46,27 +58,6 @@ public class Records {
     	
     	this.writer.build();
     }
-
-	// getters and setters
-    public String getName() {
-    	return this.name;
-    }
-    
-    public int getAge() {
-    	return this.age;
-    }
-    
-    public int getRecordScore() {
-    	return this.recordScore;
-    }
-    
-    public void setName(final String name) {
-    	this.name = name;
-    }
-    
-    public void setAge(final int age) {
-    	this.age = age;
-    }
     
     public static Set<String> getKeySet() {
     	return Records.keySet;
@@ -75,6 +66,10 @@ public class Records {
     public static Map<String,Object> getRecordsMap() {
 		return Records.recordsMap;
 	}
+    
+    /****************************************/
+    /***    In and to file operations    ***/
+    /****************************************/
 
     /**
      * Read from file
@@ -125,4 +120,80 @@ public class Records {
     public void update() {
         this.writer.write();
     }
+    
+    /****************************************/
+    /***   Calculate and check records   ***/
+    /****************************************/
+    
+	/*  TODO Move this method inside records
+	 *  substituting it with getter methods .isNewAbsoluteRecordScore() & .isNewPlayingRecordScore()
+	 */
+	/**
+	 * This method checks if the new finalScore is a new record and only in this case saves it.
+	 * @param finalScore
+	 *   final score in the current game
+	 */
+	public void checkScoreRecord(final int finalScore) {
+		
+		this.score = finalScore;
+		
+		if (finalScore > Records.playingRecordScore) {
+			Records.newPlayingRecordScore = true;
+			Records.playingRecordScore = finalScore;
+		} else if (finalScore < Records.playingRecordScore) {
+			Records.newPlayingRecordScore = false;
+		}
+
+		if (finalScore > this.recordScore) {
+			this.newRecordScore = true;
+			this.setRecordScore(finalScore);
+			//StatisticsReader.writeRecord(finalScore); // TODO write new record
+		} else if (finalScore < this.recordScore) {
+			this.newRecordScore = false;
+		}
+	}
+    
+    /****************************************/
+    /*** Getters & Setters from / to file ***/
+    /****************************************/
+
+    public String getName() {
+    	return this.name;
+    }
+    
+    public int getAge() {
+    	return this.age;
+    }
+    
+    public int getRecordScore() {
+    	return this.recordScore;
+    }
+
+    public void setName(final String name) {
+    	this.name = name;
+    }
+    
+    public void setAge(final int age) {
+    	this.age = age;
+    }
+    
+    public void setRecordScore(int recordScore) {
+    	this.recordScore = recordScore;
+    }
+    
+    /****************************************/
+    /*** Getters & Setters from / to game ***/
+    /****************************************/
+    
+    public int getScore() {
+    	return this.score;
+    }
+
+	public boolean isNewRecordScore() {
+		return this.newRecordScore;
+	}
+
+	public boolean isNewPlayingRecordScore() {
+		return Records.newPlayingRecordScore;
+	}
 }
