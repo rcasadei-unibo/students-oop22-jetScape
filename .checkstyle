@@ -4,7 +4,10 @@
   <local-check-config name="Ruleset" location="config/checkstyle/checkstyle.xml" type="project" description="">
     <additional-data name="protect-config-file" value="false"/>
   </local-check-config>
-  <fileset name="all" enabled="true" check-config-name="Google Checks" local="false">
+  <fileset name="all" enabled="false" check-config-name="Sun Checks" local="false">
     <file-match-pattern match-pattern="." include-pattern="true"/>
+  </fileset>
+  <fileset name="Ruleset" enabled="true" check-config-name="Ruleset" local="true">
+    <file-match-pattern match-pattern=".java$" include-pattern="true"/>
   </fileset>
 </fileset-config>
