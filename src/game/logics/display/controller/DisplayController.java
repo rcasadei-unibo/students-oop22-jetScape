@@ -111,7 +111,7 @@ public class DisplayController {
 				break;
 			case ENDGAME :
 				//this.gameOverDisplay.setRecords(getScore.get());
-				//this.records.fetch(gameID);
+				this.records.fetch(gameID);
 				this.gameOverHandler.update();
 				break;
 			default :

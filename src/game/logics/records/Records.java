@@ -2,6 +2,7 @@ package game.logics.records;
 
 import game.logics.entities.player.Player;
 import game.utility.input.JSONWriter;
+import game.logics.handler.Logics.GameID;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,16 +83,40 @@ public class Records {
     	this.writer.read();
     }
     
+	private static GameID IDGame = new GameID();
+
+	private boolean checkAndSet(final GameID newGameID) {
+
+		final BiPredicate<GameID, GameID> checkIfNew =
+				(oldID,newID) -> oldID.getGameDate() != newID.getGameDate();
+		boolean isNewID = false;
+
+    	if(!newGameID.isGamePlayed()) {
+    		isNewID = true;
+    	} else if(checkIfNew.test(IDGame, newGameID)) {
+        	isNewID = true;
+        	Records.IDGame = newGameID;
+    	}
+    	return isNewID;
+	}
+
     /**
-     * Get records in game, calling the data getters
+     * Get data for updating in game, calling the data getters
      */
-    //TODO
-    public void fetch() {
+	//TODO add new records
+    public void fetch(final GameID gameID) {
+
+    	//Pair<Integer, Date> gameID = getGameID.get();
+    	
+    	// Only if new gameID
+    	if(this.checkAndSet(gameID)) {
+    		if(player.hasDied()) {
+    			this.score = player.getCurrentScore();
+    			System.out.println(score);
+    			this.causeOfDeath = player.getCauseOfDeath();
+	    	}
         //this.getScore();
-    	/*if(player.hasDied()) {
-    		this.setScore(player.getCurrentScore());
-    		player.getCauseOfDeath();
-    	}*/
+    	}
     }
    
     /**
