@@ -23,7 +23,7 @@ public class JSONWriter implements Jsonable, Serializable {
 	
 	// Do not change path without updating .gitignore tracked file
 	private static final String sep = File.separator;
-	private static final String filePath = "res" + sep + "game" + sep + "records.json";
+	private static final String filePath = "res" + sep + "game" + sep + "data" + sep + "records.json";
 	private static final File file = new File(filePath);
 	
     private final static Map<String,Object> recordsMap = new HashMap<>();
