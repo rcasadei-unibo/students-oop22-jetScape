@@ -46,7 +46,7 @@ import game.utility.other.GameState;
  * 
  * @author Daniel Pellanda
  */
-public class LogicsHandler implements Logics{
+public class LogicsHandler implements Logics {
 	
 	/**
 	 * Contains the current active entities on the game environment.
@@ -100,12 +100,12 @@ public class LogicsHandler implements Logics{
 		this.keyH = GameWindow.keyHandler;
 		this.debugger = GameWindow.debugger;
 		
-		records = new Records();
-		
 		EntityType.genericTypes
 		.forEach(e -> entities.put(e, new HashSet<>()));
 		
 		playerEntity = new PlayerInstance(this, entities);
+		
+		records = new Records(playerEntity);
 		
 		displayController = new DisplayController(keyH,screen, g -> setGameState(g),
 				() -> gameState, () -> playerEntity.getCurrentScore(), records);

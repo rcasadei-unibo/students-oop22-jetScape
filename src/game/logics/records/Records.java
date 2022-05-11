@@ -1,5 +1,6 @@
 package game.logics.records;
 
+import game.logics.entities.player.Player;
 import game.utility.input.JSONWriter;
 
 import java.util.HashMap;
@@ -12,25 +13,29 @@ public class Records {
     private final static Set<String> keySet = new HashSet<>();
     private final static Map<String, Object> recordsMap = new HashMap<>();
 
-    //TODO
+    private final JSONWriter writer = new JSONWriter(this);
+
+    private final Player player;
+    
+    //TODO complete list
+    // List of keys for JSON files
     private final static String keyName = "name";
     private final static String keyAge = "age";
 
-    private final JSONWriter writer = new JSONWriter(this);
-
-    // Statistics list
+    // Statistics and records list
+    // TODO complete list
     private String name;
     private int age;
-
-  //  private String[] position;
-  //  private Map<String, Integer> salary;
+    private int recordScore;
+    // private String[] position;
+    // private Map<String, Integer> salary;
 
     //TODO
-    public Records() {
-
+    public Records(final Player player) {
+    	this.player = player;
     }
     
-    // Set as singleton
+    // TODO Set (maybe) with singleton
     public void build() {
     	keySet.add(keyName);
     	keySet.add(keyAge);
@@ -41,13 +46,17 @@ public class Records {
     	this.writer.build();
     }
 
-	//..getters setters
+	// getters and setters
     public String getName() {
     	return this.name;
     }
     
     public int getAge() {
     	return this.age;
+    }
+    
+    public int getRecordScore() {
+    	return this.recordScore;
     }
     
     public void setName(final String name) {
@@ -70,15 +79,25 @@ public class Records {
      * Read from file
      */
     public void refresh() {
-    	
+    	this.writer.read();
+    }
+    
+    /**
+     * Get records in game, calling the data getters
+     */
+    //TODO
+    public void fetch() {
+        //this.getScore();
+    	/*if(player.hasDied()) {
+    		this.setScore(player.getCurrentScore());
+    		player.getCauseOfDeath();
+    	}*/
     }
    
     /**
      * Write to file
      */
-    //TODO
     public void update() {
-        
         this.writer.write();
-    }    
+    }
 }
