@@ -15,20 +15,20 @@ public class DisplayGameOver extends Display {
 	private static String scoreString = "Your score was: ";
 	private static String recordString = "NEW RECORD";
 	private static String[] playingRecordString = {"BARRY COULD", "LIVE LONGER"};
-	
+
 	private static int playingRecord = 0; // higher score obtained by playing consecutively
 	private static boolean isNewPlayingRecord = false;
 
 	private final int record; // absolute new record
 	private boolean isNewRecord = false;
 
-	int finalScore;
+	private int finalScore;
 
 	public DisplayGameOver(final Screen gScreen) {
 		super(gScreen);
 		this.options.add(MenuOption.RETRY);
 		this.options.add(MenuOption.MENU);
-			
+
 		this.record = 0;//StatisticsReader.getRecord(); // TODO read record
 	}
 	
@@ -79,5 +79,5 @@ public class DisplayGameOver extends Display {
 	@Override
 	protected Color getShiftColor() {
 		return Color.DARK_GRAY;
-	}	
+	}
 }

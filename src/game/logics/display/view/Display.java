@@ -16,23 +16,24 @@ public abstract class Display {
 
 	protected final List<MenuOption> options;
 	protected MenuOption selectedOption;
+
 	/**
-	 * All text main color 
+	 * All text main color.
 	 */
-	private static final Color color = Color.white;
-	
+	private static final Color COLOR = Color.white;
+
 	private static final double titleScale = 5.14;
 	private static final double selectedScale = 9;
 	private static final double optionsScale = 12;
-	
-	/**
+
+	/*
 	 * Fonts for every type of text
 	 */
 	private final Font titleFont;
 	private final Font optionsFont;
-	protected final Font textFont;
-	protected final Font selectedOptionsFont;
-	
+	private final Font textFont;
+	private final Font selectedOptionsFont;
+
 	/**
 	 * default writing tile for text
 	 */
@@ -70,7 +71,7 @@ public abstract class Display {
 	 * @return the ordinate's value such as the given string is centered in the current screen
 	 */
 	private int getCenteredX(final Screen gScreen, final Graphics2D g, final String text) {
-		int lenght = (int) g.getFontMetrics().getStringBounds(text,g).getWidth();
+		final int lenght = (int) g.getFontMetrics().getStringBounds(text,g).getWidth();
 		
 		return gScreen.getWidth()/2 - lenght/2;
 	}
@@ -92,7 +93,7 @@ public abstract class Display {
 		}
 	
 		//g.setColor(color);
-		g.setColor(Display.color);
+		g.setColor(Display.COLOR);
 		g.drawString(text, xPos, yPos);
 	}
 	
@@ -111,7 +112,7 @@ public abstract class Display {
 		int i = 0;
 		for(final MenuOption option : this.options) {
 			if(option.equals(this.selectedOption)) {
-				String selected = "> "+option+" <";
+				final String selected = "> " + option + " <";
 				this.drawCenteredText(g, this.selectedOptionsFont, selected,
 						x -> x,
 						gScreen.getTileSize() * (i + yTile), Display.optionShift);
@@ -123,7 +124,7 @@ public abstract class Display {
 			i++;
 		}
 	}
-	
+
 	protected void drawOptions(final Graphics2D g) {
 		this.drawOptions(g, Display.optionTile);
 	}
@@ -131,20 +132,21 @@ public abstract class Display {
 	protected Font getTitleFont() {
 		return this.titleFont;
 	}
-	
+
 	protected abstract Color getShiftColor();
-	
+
 	protected Font getTextFont() {
 		return this.textFont;
 	}
-	
+
 	protected int getTextShift() {
 		return Display.textShift;
 	}
+
 	/**
 	 * @return font's scaled size based on screen height 
 	 */
-	protected float getScaledSize(double scale) {
-		return (float)(gScreen.getHeight()/scale);
+	protected float getScaledSize(final double scale) {
+		return (float) (gScreen.getHeight() / scale);
 	}
 }
