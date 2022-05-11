@@ -10,9 +10,9 @@ import game.logics.entities.generic.Entity;
  * 
  * @author Daniel Pellanda
  */
-public interface Player extends Entity{
+public interface Player extends Entity {
 
-	enum PlayerStatus{ 
+	enum PlayerStatus {
 		WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
 		public static boolean hasChanged = false;
 		public static boolean landing = false;
@@ -30,6 +30,16 @@ public interface Player extends Entity{
 			return this.ordinal() > 3;
 		}
 		
+		@Override
+		public String toString() {
+			return super.toString().toLowerCase();
+		}
+	}
+	
+	public enum PlayerDeath {
+		BURNED, ZAPPED, NONE;
+		
+		@Override
 		public String toString() {
 			return super.toString().toLowerCase();
 		}
@@ -49,7 +59,23 @@ public interface Player extends Entity{
 	
 	static final double animationSpeed = 7;
 	
+	/**
+	 * Return <code>true</code> if the player has died, <code>false</code> otherwise.
+	 * 
+	 * @return if the player has died.
+	 */
 	boolean hasDied();
 	
+	/**
+	 * Return the actual value of the score, it doesn't matter if Barry is alive or not.
+	 * @return current score
+	 */
 	int getCurrentScore();
+	
+	/**
+	 * This method is used to get the current cause of death, if any.
+	 *   If Barry is still alive, returns <code>Player.PlayerDeath.NONE</code>
+	 * @return a PlayerDeath instance with the cause of death
+	 */
+	public PlayerDeath getCauseOfDeath();
 }

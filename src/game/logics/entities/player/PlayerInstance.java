@@ -24,7 +24,7 @@ import game.utility.other.Pair;
  * 
  * @author Daniel Pellanda
  */
-public class PlayerInstance extends EntityInstance implements Player{
+public class PlayerInstance extends EntityInstance implements Player {
 	
 	/**
 	 * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
@@ -73,6 +73,8 @@ public class PlayerInstance extends EntityInstance implements Player{
 	 * A enumerable describing the current status of the player.
 	 */
 	private PlayerStatus status;
+	private PlayerDeath causeOfDeath;
+
 	
 	/**
 	 * Decides which sprite should be displayed.
@@ -145,7 +147,8 @@ public class PlayerInstance extends EntityInstance implements Player{
 				this.shieldProtected = false;
 				return;
 			}
-			setStatus(statusAfterHit);
+			this.setStatus(statusAfterHit);
+			this.setCauseOfDeathIfDead();
 		}
 	}
 	
@@ -246,13 +249,40 @@ public class PlayerInstance extends EntityInstance implements Player{
 			this.score++;
 		}
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getCurrentScore() {
 		return this.score;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean hasDied() {
 		return status == PlayerStatus.DEAD;
+	}
+	
+	private void setCauseOfDeathIfDead() {
+		switch(status) {
+			case BURNED:
+				causeOfDeath = Player.PlayerDeath.BURNED;
+				break;
+			case ZAPPED:
+				causeOfDeath = Player.PlayerDeath.ZAPPED;
+				break;
+			default:
+				causeOfDeath = Player.PlayerDeath.NONE;
+				break;
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Player.PlayerDeath getCauseOfDeath() {
+		return this.causeOfDeath;
 	}
 	
 	@Override
@@ -301,5 +331,4 @@ public class PlayerInstance extends EntityInstance implements Player{
 			}
 		}
 	}
-
 }
