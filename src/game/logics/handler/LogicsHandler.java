@@ -89,6 +89,7 @@ public class LogicsHandler implements Logics {
 	private final Debugger debugger;
 
 	private final Records records;
+	private final GameID gameID;
 	
 	/**
 	 * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -99,6 +100,7 @@ public class LogicsHandler implements Logics {
 		this.screen = GameWindow.gameScreen;
 		this.keyH = GameWindow.keyHandler;
 		this.debugger = GameWindow.debugger;
+		this.gameID = new GameID();
 		
 		EntityType.genericTypes
 		.forEach(e -> entities.put(e, new HashSet<>()));
@@ -107,8 +109,9 @@ public class LogicsHandler implements Logics {
 		
 		records = new Records(playerEntity);
 		
+		//TODO check if it works
 		displayController = new DisplayController(keyH,screen, g -> setGameState(g),
-				() -> gameState, () -> playerEntity.getCurrentScore(), records);
+				() -> gameState, () -> playerEntity.getCurrentScore(), gameID, records);
 		
 		spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
 		
@@ -209,6 +212,10 @@ public class LogicsHandler implements Logics {
 					}
 					break;
 				case INGAME:
+					this.gameID.generateNewGameID();
+					if (!this.gameID.isGamePlayed()) {
+						this.gameID.setGamePlayed();
+					}
 					if (this.gameState == GameState.ENDGAME) {
 						this.resetGame();
 					}

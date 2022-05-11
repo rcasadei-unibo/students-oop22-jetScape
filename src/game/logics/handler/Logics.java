@@ -1,6 +1,8 @@
 package game.logics.handler;
 
 import java.awt.Graphics2D;
+import java.util.Date;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -39,4 +41,48 @@ public interface Logics {
 	 * @param g the graphics drawer
 	 */
 	void drawAll(Graphics2D g);
+
+	/**
+	 * This class models a GameID, a game identifier that is used to refer to the actual game.
+	 * @author davide
+	 *
+	 */
+	public class GameID {
+
+		private int gameNumber = 0;
+		private Optional<Date> gameDate = Optional.empty();
+		private boolean gamePlayed = false;
+		
+		/**
+		 * Builds a new GameID when the game begins.
+		 */
+		public GameID() {
+			
+		}
+		
+		public int getGameID() {
+			return this.gameNumber;
+		}
+		
+		public Optional<Date> getGameDate() {
+			return this.gameDate;
+		}
+		
+		private int setGameID() {
+			return this.gameNumber;
+		}
+		
+		protected void generateNewGameID() {
+			this.gameNumber = this.setGameID() + 1;
+			this.gameDate = Optional.of(new Date());
+		}
+		
+		public void setGamePlayed() {
+			this.gamePlayed = true;
+		}
+		
+		public boolean isGamePlayed() {
+			return this.gamePlayed;
+		}
+	}
 }
