@@ -12,7 +12,7 @@ import game.utility.screen.Screen;
  * 
  * <p>This class extends {@link Display}.</p>
  */
-public class DisplayMainMenu extends Display {
+public class DisplayMainMenu extends Display implements MenuDisplay {
 
     private static final String GAME_NAME = "JetScape";
 
@@ -29,6 +29,9 @@ public class DisplayMainMenu extends Display {
         this.getOptions().add(MenuOption.RECORDS);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
         this.setSelectedOption(selected);
 

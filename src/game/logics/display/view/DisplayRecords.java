@@ -17,7 +17,7 @@ import game.utility.screen.Screen;
  * 
  * <p>This class extends {@link Display}.</p>
  */
-public class DisplayRecords extends Display {
+public class DisplayRecords extends Display implements MenuDisplay {
     private static final int optionTile = 8;
     private static final String TITLE = "Records";
     private static final String records1 = "Length";
@@ -55,6 +55,9 @@ public class DisplayRecords extends Display {
     }
 
     //game.utility.sprites.Drawer per caricare una sprite
+    /**
+     * {@inheritDoc}
+     */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
         int i;
 

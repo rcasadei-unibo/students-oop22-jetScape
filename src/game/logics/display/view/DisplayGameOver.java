@@ -12,7 +12,7 @@ import game.utility.screen.Screen;
  * 
  * <p>This class extends {@link Display}.</p>
  */
-public class DisplayGameOver extends Display {
+public class DisplayGameOver extends Display implements MenuDisplay {
 
 	private static final int textTile = 3;
 	private static final int optionTile = 7;
@@ -41,6 +41,9 @@ public class DisplayGameOver extends Display {
 		this.record = 0;//StatisticsReader.getRecord(); // TODO read record
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void drawScreen(final Graphics2D g, final MenuOption selected) {
 		this.setSelectedOption(selected);
 
@@ -52,10 +55,10 @@ public class DisplayGameOver extends Display {
 				DisplayGameOver.textTile * gScreen.getTileSize(), super.getTextShift());
 
 		// RECORD
-		if(this.isNewRecord) {
+		if (this.isNewRecord) {
 			super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.recordString, x -> x/2,
 					(DisplayGameOver.textTile + 1) * gScreen.getTileSize(), super.getTextShift());
-		} else if(isNewPlayingRecord) {
+		} else if (isNewPlayingRecord) {
 			super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordString[0], x -> x/2,
 					(DisplayGameOver.textTile + 1) * gScreen.getTileSize(), super.getTextShift());
 			super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordString[1], x -> x/2,
@@ -65,6 +68,15 @@ public class DisplayGameOver extends Display {
 		// OPTIONS
 		super.drawOptions(g, DisplayGameOver.optionTile);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	//TODO remove magic setting from here
+	/*public void drawScreen(final Graphics2D g) {
+		this.setSelectedOption(Optional.of(MenuOption.RETRY));
+		this.drawScreen(g, Optional.of(this.getSelectedOption()));
+	}*/
 
 	public void setFinalScore(final int finalScore) {
 
@@ -86,6 +98,9 @@ public class DisplayGameOver extends Display {
 	}
 
 	@Override
+	/**
+	 * {@inheritDoc}
+	 */
 	protected Color getShiftColor() {
 		return Color.DARK_GRAY;
 	}

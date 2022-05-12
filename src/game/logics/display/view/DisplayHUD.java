@@ -32,6 +32,9 @@ public class DisplayHUD extends Display {
 		this.scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void drawScreen(final Graphics2D g) {
 		final String scoreString = "SCORE: " + this.score;
 

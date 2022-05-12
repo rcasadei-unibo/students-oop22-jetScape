@@ -72,7 +72,7 @@ public abstract class Display {
 
     /**
      * Class constructor: load fonts with {@link game.utility.fonts.FontLoader}.
-     * @param gScreen
+     * @param gScreen {@link Screen} instance passed to get screen informations.
      */
     public Display(final Screen gScreen) {
         this.gScreen = gScreen;

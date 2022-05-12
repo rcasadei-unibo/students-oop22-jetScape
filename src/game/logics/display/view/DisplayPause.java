@@ -12,7 +12,7 @@ import game.utility.screen.Screen;
  * 
  * <p>This class extends {@link Display}.</p>
  */
-public class DisplayPause extends Display {
+public class DisplayPause extends Display implements MenuDisplay {
 
     private static final String TITLE = "Paused";
 
@@ -27,6 +27,9 @@ public class DisplayPause extends Display {
         this.getOptions().add(MenuOption.MENU);
      }
 
+    /**
+     * {@inheritDoc}
+     */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
         this.setSelectedOption(selected);
 
