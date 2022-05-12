@@ -6,13 +6,14 @@ import java.awt.Graphics2D;
 import game.frame.GameWindow;
 import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.entities.player.Player;
+import game.logics.handler.AbstractLogics;
 import game.logics.handler.Logics;
 import game.logics.hitbox.MissileHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
-public class MissileInstance extends ObstacleInstance implements Missile{
+public class MissileInstance extends ObstacleInstance implements Missile {
 
     /**
      * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
@@ -103,14 +104,14 @@ public class MissileInstance extends ObstacleInstance implements Missile{
         if(this.isOnSpawnArea()) {
             if(position.getY() > playerPosition.getY()) {
                 if(lastDir != Direction.UP) {
-                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * Logics.getDifficultyLevel();
+                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
                 }
                 position.setY(position.getY() - ySpeed / GameWindow.fpsLimit);
                 ySpeed += yAcceleration / GameWindow.fpsLimit;
                 lastDir = Direction.UP;
             } else if(position.getY() < playerPosition.getY()) {
                 if(lastDir != Direction.DOWN) {
-                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * Logics.getDifficultyLevel();
+                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
                 }
                 position.setY(position.getY() + ySpeed / GameWindow.fpsLimit);
                 ySpeed += yAcceleration  / GameWindow.fpsLimit;

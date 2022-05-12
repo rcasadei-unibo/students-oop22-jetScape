@@ -1,7 +1,7 @@
 package game.logics.interactions;
 
 import game.frame.GameWindow;
-import game.logics.handler.Logics;
+import game.logics.handler.AbstractLogics;
 
 public class SpeedHandler {
     
@@ -20,7 +20,7 @@ public class SpeedHandler {
     
     public SpeedHandler(final double xSpeed, final double xSpeedIncDifficulty, final double xAcceleration) {
         this.xStartSpeed = xSpeed;
-        this.xSpeed = xStartSpeed + xSpeedIncDifficulty * Logics.getDifficultyLevel();
+        this.xSpeed = xStartSpeed + xSpeedIncDifficulty * AbstractLogics.getDifficultyLevel();
         this.xSpeedIncDifficulty = xSpeedIncDifficulty;
         this.xAcceleration = xAcceleration;
     }
@@ -32,7 +32,7 @@ public class SpeedHandler {
     }
     
     public double getXSpeed() {
-        return xSpeed + xSpeedIncDifficulty * Logics.getDifficultyLevel();
+        return xSpeed + xSpeedIncDifficulty * AbstractLogics.getDifficultyLevel();
     }
     
     public void applyAcceleration() {

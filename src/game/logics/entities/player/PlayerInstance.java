@@ -11,6 +11,7 @@ import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.entities.pickups.teleport.Teleport;
+import game.logics.handler.AbstractLogics;
 import game.logics.handler.Logics;
 import game.logics.hitbox.PlayerHitbox;
 import game.logics.interactions.CollisionsHandler;
@@ -41,11 +42,11 @@ public class PlayerInstance extends EntityInstance implements Player{
      * The horizontal position where the player will be.
      */
     private final double xPosition = screen.getTileSize() * xRelativePosition;
-    private final Pair<Double,Double> shieldPosition = new Pair<>(0.0,0.0);
+    private final Pair<Double, Double> shieldPosition = new Pair<>(0.0,0.0);
     
     private boolean shieldProtected = false;
     private boolean invulnerable = false;
-            
+    
     /**
      * The current player's score.
      */
@@ -133,7 +134,11 @@ public class PlayerInstance extends EntityInstance implements Player{
         spritesMgr.addSprite("dead1", texturePath + "barrydead1.png");
         spritesMgr.addSprite("shield", texturePath + "barryshield.png");
         spritesMgr.setAnimator(() -> {
-            int spriteSwitcher = status == PlayerStatus.FALL || status == PlayerStatus.JUMP ? (this.spriteSwitcher % 2 + 1) : status == PlayerStatus.DEAD ? 1 : this.spriteSwitcher % 4 + 1;
+            final int spriteSwitcher = status == PlayerStatus.FALL
+                    || status == PlayerStatus.JUMP
+                    ? this.spriteSwitcher % 2 + 1
+                    : status == PlayerStatus.DEAD
+                            ? 1 : this.spriteSwitcher % 4 + 1;
             return status.toString() + spriteSwitcher;
         });
     }
@@ -233,8 +238,8 @@ public class PlayerInstance extends EntityInstance implements Player{
     private void updateInvulnerableTimer() {
         if(this.invulnerable) {
             if(this.invulnerableTimer == -1) {
-                this.invulnerableTimer = Logics.getFrameTime();
-            } else if(Logics.getFrameTime() - this.invulnerableTimer >= invicibilityTime * GameWindow.fpsLimit) {
+                this.invulnerableTimer = AbstractLogics.getFrameTime();
+            } else if(AbstractLogics.getFrameTime() - this.invulnerableTimer >= invicibilityTime * GameWindow.fpsLimit) {
                 this.invulnerable = false;
                 this.invulnerableTimer = -1;
             }

@@ -40,12 +40,12 @@ import game.utility.other.EntityType;
 import game.utility.other.GameState;
 
 /**
- * The <code>LogicsHandler</code> class helps <class>GameWindow</class> to update
+ * The <code>LogicsHandler</code> class helps {@link GameWindow} to update
  * and draw logical parts of the game like the Interface, Entities, Collisions, etc....
  * 
  * @author Daniel Pellanda
  */
-public class LogicsHandler implements Logics{
+public class LogicsHandler extends AbstractLogics implements Logics {
     
     /**
      * Contains the current active entities on the game environment.
@@ -76,13 +76,6 @@ public class LogicsHandler implements Logics{
      */
     private double cleanInterval = 5.0;
     
-    /**
-     * The frames passed since the last second.
-     */
-    static int frameTime = 0;
-    
-    static int difficultyLevel = 1;
-        
     private final Screen screen;
     private final KeyHandler keyH;
     private final Debugger debugger;
@@ -92,7 +85,9 @@ public class LogicsHandler implements Logics{
      * initialize each entity category on the entities map and initialize the obstacle spawner.
      * 
      */
-    public LogicsHandler() {        
+    public LogicsHandler() {
+        super();
+
         this.screen = GameWindow.gameScreen;
         this.keyH = GameWindow.keyHandler;
         this.debugger = GameWindow.debugger;
@@ -102,7 +97,7 @@ public class LogicsHandler implements Logics{
         
         playerEntity = new PlayerInstance(this, entities);
         
-        displayController = new DisplayController(keyH,screen, g -> setGameState(g),
+        displayController = new DisplayController(keyH, screen, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore());
         
         spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
@@ -169,31 +164,27 @@ public class LogicsHandler implements Logics{
      * Removes all entities that are on the "clear area" [x < -tile size].
      */
     private void updateCleaner() {
-        if(frameTime % GameWindow.fpsLimit * cleanInterval == 0) {
+        if(super.getFrameTime() % GameWindow.fpsLimit * cleanInterval == 0) {
             this.getEntitiesCleaner().accept(t -> t.isGenerableEntity(), e -> e.isOnClearArea());
         }
-    }
-    
-    private void updateTimers() {
-        frameTime++;
     }
     
     private void updateDifficulty() {
         final int increaseDiffPerScore = 250;
         
-        difficultyLevel = playerEntity.getCurrentScore() / increaseDiffPerScore + 1;
+        super.setDifficultyLevel(playerEntity.getCurrentScore() / increaseDiffPerScore + 1);
     }
     
     private void drawDifficultyLevel(final Graphics2D g) {
         if(debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
             g.setColor(Debugger.debugColor);
             g.setFont(Debugger.debugFont);
-            g.drawString("DIFFICULTY: " + difficultyLevel, 3, 26);
+            g.drawString("DIFFICULTY: " + super.getDifficultyLevel(), 3, 26);
         }
     }
     
     private void setGameState(final GameState gs) {
-        if(this.gameState != gs) {
+        if (this.gameState != gs) {
             switch (gs) {
                 case EXIT:
                     final String quitMessage = "Are you sure to quit the game?";
@@ -237,7 +228,10 @@ public class LogicsHandler implements Logics{
             this.gameState = gs;
         }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     public void updateAll() {
         switch(this.gameState) {
             case EXIT:
@@ -263,9 +257,12 @@ public class LogicsHandler implements Logics{
         }
         this.displayController.updateScreen();
         this.checkKeyboardInput();
-        this.updateTimers();
-    }        
-    
+        super.updateTimer();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void drawAll(final Graphics2D g) {
         switch(this.gameState) {
             case ENDGAME: 
