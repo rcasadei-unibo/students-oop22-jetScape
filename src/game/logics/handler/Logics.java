@@ -20,69 +20,69 @@ import game.utility.other.EntityType;
  * @author Daniel Pellanda
  */
 public interface Logics {
-	
-	static int getDifficultyLevel() {
-		return LogicsHandler.difficultyLevel;
-	}
-	
-	static int getFrameTime() {
-		return LogicsHandler.frameTime;
-	}
-	
-	BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner();
-	
-	/**
-	 * Updates all the logical objects handled for a frame.
-	 */
-	void updateAll();
-	
-	/**
-	 * Draws all visible and drawable object handled for a frame.
-	 * @param g the graphics drawer
-	 */
-	void drawAll(Graphics2D g);
+    
+    static int getDifficultyLevel() {
+        return LogicsHandler.difficultyLevel;
+    }
+    
+    static int getFrameTime() {
+        return LogicsHandler.frameTime;
+    }
+    
+    BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner();
+    
+    /**
+     * Updates all the logical objects handled for a frame.
+     */
+    void updateAll();
+    
+    /**
+     * Draws all visible and drawable object handled for a frame.
+     * @param g the graphics drawer
+     */
+    void drawAll(Graphics2D g);
 
-	/**
-	 * This class models a GameID, a game identifier that is used to refer to the actual game.
-	 * @author davide
-	 *
-	 */
-	public class GameID {
+    /**
+     * This class models a GameID, a game identifier that is used to refer to the actual game.
+     * @author davide
+     *
+     */
+    public class GameID {
 
-		private int gameNumber = 0;
-		private Optional<Date> gameDate = Optional.empty();
-		private boolean gamePlayed = false;
-		
-		/**
-		 * Builds a new GameID when the game begins.
-		 */
-		public GameID() {
-			
-		}
-		
-		public int getGameID() {
-			return this.gameNumber;
-		}
-		
-		public Optional<Date> getGameDate() {
-			return this.gameDate;
-		}
-		
-		private int setGameID() {
-			return this.gameNumber;
-		}
-		
-		protected void generateNewGameID() {
-			this.gameNumber = this.setGameID() + 1;
-			this.gameDate = Optional.of(new Date());
-		}
-		
-		public void setGamePlayed() {
-			this.gamePlayed = true;
-		}
-		
-		public boolean isGamePlayed() {
-			return this.gamePlayed;
-		}
-	}
+        private int gameNumber = 0;
+        private Optional<Date> gameDate = Optional.empty();
+        private boolean gamePlayed = false;
+        
+        /**
+         * Builds a new GameID when the game begins.
+         */
+        public GameID() {
+            
+        }
+        
+        public int getGameID() {
+            return this.gameNumber;
+        }
+        
+        public Optional<Date> getGameDate() {
+            return this.gameDate;
+        }
+        
+        private int setGameID() {
+            return this.gameNumber;
+        }
+        
+        protected void generateNewGameID() {
+            this.gameNumber = this.setGameID() + 1;
+            this.gameDate = Optional.of(new Date());
+        }
+        
+        public void setGamePlayed() {
+            this.gamePlayed = true;
+        }
+        
+        public boolean isGamePlayed() {
+            return this.gamePlayed;
+        }
+    }
 }
