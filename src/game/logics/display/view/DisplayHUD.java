@@ -13,49 +13,49 @@ import game.utility.screen.Screen;
  * <p>This class extends {@link Display}.</p>
  */
 public class DisplayHUD extends Display {
-	private static final int scoreTile = 1;
-	private static final int scoreShift = 3;
-	private static final int textXTile = 10;
-	private static final double fontScale = 18;
-	private final Font scoreFont;
+    private static final int scoreTile = 1;
+    private static final int scoreShift = 3;
+    private static final int textXTile = 10;
+    private static final double fontScale = 18;
+    private final Font scoreFont;
 
-	private int score;
-	
+    private int score;
+    
     /**
      * {@link DisplayHUD} constructor: loads scoreFont.
      * @param gScreen
      */
-	public DisplayHUD(final Screen gScreen) {
-		super(gScreen);
+    public DisplayHUD(final Screen gScreen) {
+        super(gScreen);
 
-		this.score = 0;
-		this.scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
-	}
+        this.score = 0;
+        this.scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void drawScreen(final Graphics2D g) {
-		final String scoreString = "SCORE: " + this.score;
+    /**
+     * {@inheritDoc}
+     */
+    public void drawScreen(final Graphics2D g) {
+        final String scoreString = "SCORE: " + this.score;
 
-		// SCORE
-		super.drawText(g, scoreFont, scoreString, super.gScreen.getTileSize() * textXTile,
-				super.gScreen.getTileSize() * scoreTile, scoreShift);
-	}
+        // SCORE
+        super.drawText(g, scoreFont, scoreString, super.gScreen.getTileSize() * textXTile,
+                super.gScreen.getTileSize() * scoreTile, scoreShift);
+    }
 
-	/**
-	 * Update internal score to be shown.
-	 * @param score
-	 */
-	public void updateScore(final int score) {
-		this.score = score;
-	}
+    /**
+     * Update internal score to be shown.
+     * @param score
+     */
+    public void updateScore(final int score) {
+        this.score = score;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Color getShiftColor() {
-		return Color.DARK_GRAY;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Color getShiftColor() {
+        return Color.DARK_GRAY;
+    }
 }

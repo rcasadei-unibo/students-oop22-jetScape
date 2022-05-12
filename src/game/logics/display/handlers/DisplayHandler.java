@@ -12,13 +12,13 @@ import game.utility.other.MenuOption;
  * @author Giacomo Amadio
  */
 public interface DisplayHandler {
-	/**
-	 * updates the menu cursor position  
-	 */
-	public void update();
-	
-	/**
-	 * @return current selected option
-	 */
-	public MenuOption getSelectedOption();
+    /**
+     * updates the menu cursor position  
+     */
+    public void update();
+    
+    /**
+     * @return current selected option
+     */
+    public MenuOption getSelectedOption();
 }

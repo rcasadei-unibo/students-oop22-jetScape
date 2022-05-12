@@ -19,5 +19,5 @@ import game.logics.entities.obstacles.generic.Obstacle;
  * @author Daniel Pellanda
  */
 public interface ZapperRay extends Obstacle{
-	
+    
 }

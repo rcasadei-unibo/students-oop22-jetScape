@@ -16,19 +16,19 @@ import game.utility.other.Pair;
  * @author Giacomo Amadio
  */
 public interface Hitbox {
-	/**
-	 * Translates all this entity's Rectangles the indicated distance,
-	 * to the right along the X coordinate axis, and downward along the Y coordinate axis.
-	 */
-	public void updatePosition(Pair<Double,Double> newPos);
-	
-	/**
-	 * @return all this entity's rectangles
-	 */
-	public Set<Rectangle> getRectangles();
-	
-	/**
-	 * draws the hitboxes
-	 */
-	public void draw (Graphics2D g);
+    /**
+     * Translates all this entity's Rectangles the indicated distance,
+     * to the right along the X coordinate axis, and downward along the Y coordinate axis.
+     */
+    public void updatePosition(Pair<Double,Double> newPos);
+    
+    /**
+     * @return all this entity's rectangles
+     */
+    public Set<Rectangle> getRectangles();
+    
+    /**
+     * draws the hitboxes
+     */
+    public void draw (Graphics2D g);
 }
