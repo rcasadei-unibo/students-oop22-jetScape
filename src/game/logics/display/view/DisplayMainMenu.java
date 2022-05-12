@@ -42,10 +42,10 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
         super.drawOptions(g);
     }
 
-    @Override
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Color getShiftColor() {
         return Color.DARK_GRAY;
     }

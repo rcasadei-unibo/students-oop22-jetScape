@@ -193,11 +193,12 @@ public abstract class Display {
     }
 
     /**
-     * Abstract method that is used to get chosen shift color from the child classes.
-     * @return chosen Color
+     * Abstract method that is used to get chosen shift {@link Color} from
+     * the child classes.
+     *
+     * @return chosen shift {@link Color}, usually {@code Color.DARK_GRAY}
      */
     protected abstract Color getShiftColor();
-
 
     /**
      * Get standard title font.

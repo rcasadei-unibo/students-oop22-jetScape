@@ -90,10 +90,10 @@ public class DisplayRecords extends Display implements MenuDisplay {
         super.drawOptions(g, DisplayRecords.optionTile);
     }
 
-    @Override
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Color getShiftColor() {
         return Color.DARK_GRAY;
     }

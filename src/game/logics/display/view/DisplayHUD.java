@@ -51,6 +51,9 @@ public class DisplayHUD extends Display {
 		this.score = score;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Color getShiftColor() {
 		return Color.DARK_GRAY;
