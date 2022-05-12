@@ -1,4 +1,4 @@
-\package game.logics.entities.pickups.shield;
+package game.logics.entities.pickups.shield;
 
 import java.awt.Color;
 
