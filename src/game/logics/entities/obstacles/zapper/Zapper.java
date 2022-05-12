@@ -7,10 +7,10 @@ import game.logics.entities.obstacles.generic.Obstacle;
 import game.utility.other.Pair;
 
 public interface Zapper extends Obstacle{
-	
-	ZapperBase getPaired(ZapperBase z);
-	
-	Pair<ZapperBase,ZapperBase> getBothBases();
-	
-	Set<Entity> getEntitiesSet();
+    
+    ZapperBase getPaired(ZapperBase z);
+    
+    Pair<ZapperBase,ZapperBase> getBothBases();
+    
+    Set<Entity> getEntitiesSet();
 }

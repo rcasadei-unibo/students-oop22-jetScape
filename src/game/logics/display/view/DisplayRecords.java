@@ -13,70 +13,94 @@ import game.logics.records.Records;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
-public class DisplayRecords extends Display {
+
+/**
+ * <p>This class is used to display statistics and records.</p>
+ * 
+ * <p>This class extends {@link Display}.</p>
+ */
+public class DisplayRecords extends Display implements MenuDisplay {
+
     private static final int optionTile = 8;
-    private static final String title = "Records";
+    private static final String TITLE = "Records";
     private static final String records1 = "Length";
     private static final String records2 = "Money";
-    
+
     private final Records records;
-    
+
     //TODO SPOSTARE
     //private static final List<String> lengthRecords = new ArrayList<>();
     //private static final List<String> moneyRecords = new ArrayList<>();
     private static final Set<String> lengthRecords = new HashSet<>();
     private static final Set<String> moneyRecords = new HashSet<>();
 
+    /**
+     * {@link DisplayRecords} constructor: add options to be shown.
+     * @param gScreen
+     */
     public DisplayRecords(final Screen gScreen, final Records records) {
+
         super(gScreen);
         this.records = records;
 
-        this.options.add(MenuOption.MENU);
+        this.getOptions().add(MenuOption.MENU);
         
-        //TODO
+        //TODO remove these
         DisplayRecords.lengthRecords.add("1235");
         DisplayRecords.lengthRecords.add("150");
         DisplayRecords.lengthRecords.add("1500");
-        
+
         DisplayRecords.moneyRecords.add("3500");
     }
-    
+
     //TODO SPOSTARE IN CLASSE APPOSITA
     private final List<String> listify(final Set<String> set) {
-        List<String> returnList = new ArrayList<>();
+        final List<String> returnList = new ArrayList<>();
         returnList.addAll(List.copyOf(set));
         Collections.sort(returnList);
         return returnList;
     }
-    
+
+
     //game.utility.sprites.Drawer per caricare una sprite
+    /**
+     * {@inheritDoc}
+     */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
         int i;
 
-        this.selectedOption = selected;
-        
+        this.setSelectedOption(selected);
+
         // TITLE
-        super.drawTitleText(g, title, Function.identity());
+        super.drawTitleText(g, TITLE, Function.identity());
 
         // RECORDS
-        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records1, x -> x - gScreen.getWidth()/4, gScreen.getTileSize()*3, 0);
-        
+        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records1,
+                x -> x - gScreen.getWidth() / 4, gScreen.getTileSize() * 3, 0);
+
         final List<String> recordList = this.listify(DisplayRecords.lengthRecords);
         for(i = 0 ; i < recordList.size() ; i++) {
-            super.drawText(g, super.getTextFont(), recordList.get(i), gScreen.getTileSize()*3, gScreen.getTileSize() * (3 + i+1), 0);
+            super.drawText(g, super.getTextFont(), recordList.get(i),
+                    gScreen.getTileSize() * 3, gScreen.getTileSize() * (3  +  i + 1), 0);
         }
-        
-        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records2, x -> x + gScreen.getWidth()/4, gScreen.getTileSize()*3, 0);
+
+        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records2,
+                x -> x + gScreen.getWidth() / 4, gScreen.getTileSize() * 3, 0);
 
         final List<String> moneyList = this.listify(DisplayRecords.moneyRecords);
         for(i = 0 ; i < moneyList.size() ; i++) {
-            super.drawText(g, super.getTextFont(), moneyList.get(i), gScreen.getTileSize()*3 + gScreen.getWidth()/2, gScreen.getTileSize() * (3 + i+1), 0);
+            super.drawText(g, super.getTextFont(), moneyList.get(i),
+                    gScreen.getTileSize() * 3 + gScreen.getWidth() / 2,
+                    gScreen.getTileSize() * (3  +  i + 1), 0);
         }
         
         //OPTIONS
         super.drawOptions(g, DisplayRecords.optionTile);
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Color getShiftColor() {
         return Color.DARK_GRAY;

@@ -14,121 +14,121 @@ import game.utility.other.Pair;
 
 public class MissileInstance extends ObstacleInstance implements Missile{
 
-	/**
-	 * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
-	 * where <code>MissileInstance</code> sprites can be found.
-	 */
-	private static final String spritePath = "missile" + System.getProperty("file.separator");
-	/**
-	 * If sprites are missing, they will be replace by a rectangle of the color specified in
-	 * <code>MissileInstance.placeH</code>.
-	 */
-	private static final Color placeH = Color.red;
-	
-	private enum Direction { UP, DOWN };
-	
-	/**
-	 * The horizontal position of the missile warning.
-	 */
-	private final double warnDefaultX = screen.getWidth() - screen.getTileSize() * 1.5;
-	/**
-	 * The position of the missile warning is drawn.
-	 */
-	private Pair<Double,Double> warnPosition;
-	
-	/**
-	 * The position when the warning should start flickering.
-	 */
-	private final double warnFlickRange = screen.getWidth() + screen.getTileSize() * 4;
-	/**
-	 * The flickering speed of the missile warning when a missile is about to appear.
-	 */
-	private final int warnFlickSpeed = 10;
-	/**
-	 * How many frames have passed since between a second and another.
-	 */
-	private int frameTime = 0;
-	
-	/**
-	 * A reference to the player's position.
-	 */
-	private final Pair<Double,Double> playerPosition;
-	
-	private double yStartSpeed = yDefaultSpeed;
-	private double ySpeed = yStartSpeed;
-	private double yAcceleration = yDefaultAcceleration;
-	private double yBrakingDivider = 3.5;
-	
-	private final double yBrakeDecrease = 1.0;
-		
-	/**
-	 * The direction the missile was moving.
-	 */
-	private Direction lastDir = Direction.UP;
-	
-	public MissileInstance(final Logics l, final Pair<Double,Double> pos, final Player player, final SpeedHandler speed) {
-		super(l, pos, speed);
-		
-		entityTag = EntityType.MISSILE;
-		
-		warnPosition = new Pair<>(warnDefaultX, position.getY());
-		playerPosition = player.getPosition();
-		
-		spritesMgr.setPlaceH(placeH);
-		spritesMgr.addSprite("warn", spritePath + "warn.png");
-		spritesMgr.addSprite("missile", spritePath + "missile.png");
-		spritesMgr.setAnimator(() -> "missile");
-		this.hitbox = new MissileHitbox(pos, screen);
-		this.hitboxSet.add(this.hitbox);
-	}
-	
-	private void updateFrameTime() {
-		frameTime++;
-		if(frameTime >= GameWindow.fpsLimit) {
-			frameTime = 0;
-		}
-	}
-	
-	@Override
-	public void reset() {
-		super.reset();
-		ySpeed = yStartSpeed;
-	}
-	
-	@Override
-	public void update() {
-		super.update();
-		updateFrameTime();
-		
-		if(this.isOnSpawnArea()) {
-			if(position.getY() > playerPosition.getY()) {
-				if(lastDir != Direction.UP) {
-					ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * Logics.getDifficultyLevel();
-				}
-				position.setY(position.getY() - ySpeed / GameWindow.fpsLimit);
-				ySpeed += yAcceleration / GameWindow.fpsLimit;
-				lastDir = Direction.UP;
-			} else if(position.getY() < playerPosition.getY()) {
-				if(lastDir != Direction.DOWN) {
-					ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * Logics.getDifficultyLevel();
-				}
-				position.setY(position.getY() + ySpeed / GameWindow.fpsLimit);
-				ySpeed += yAcceleration  / GameWindow.fpsLimit;
-				lastDir = Direction.DOWN;
-			}
-		}
-		warnPosition.setY(position.getY());
-	}
-	
-	@Override
-	public void draw(final Graphics2D g) {
-		super.draw(g);
-		if(!this.isVisible()) return;
-		
-		if(position.getX() > screen.getWidth()) {
-			if(position.getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
-				spritesMgr.drawSprite(g, "warn", warnPosition, screen.getTileSize());
-			}
-		}
-	}
+    /**
+     * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
+     * where <code>MissileInstance</code> sprites can be found.
+     */
+    private static final String spritePath = "missile" + System.getProperty("file.separator");
+    /**
+     * If sprites are missing, they will be replace by a rectangle of the color specified in
+     * <code>MissileInstance.placeH</code>.
+     */
+    private static final Color placeH = Color.red;
+    
+    private enum Direction { UP, DOWN };
+    
+    /**
+     * The horizontal position of the missile warning.
+     */
+    private final double warnDefaultX = screen.getWidth() - screen.getTileSize() * 1.5;
+    /**
+     * The position of the missile warning is drawn.
+     */
+    private Pair<Double,Double> warnPosition;
+    
+    /**
+     * The position when the warning should start flickering.
+     */
+    private final double warnFlickRange = screen.getWidth() + screen.getTileSize() * 4;
+    /**
+     * The flickering speed of the missile warning when a missile is about to appear.
+     */
+    private final int warnFlickSpeed = 10;
+    /**
+     * How many frames have passed since between a second and another.
+     */
+    private int frameTime = 0;
+    
+    /**
+     * A reference to the player's position.
+     */
+    private final Pair<Double,Double> playerPosition;
+    
+    private double yStartSpeed = yDefaultSpeed;
+    private double ySpeed = yStartSpeed;
+    private double yAcceleration = yDefaultAcceleration;
+    private double yBrakingDivider = 3.5;
+    
+    private final double yBrakeDecrease = 1.0;
+        
+    /**
+     * The direction the missile was moving.
+     */
+    private Direction lastDir = Direction.UP;
+    
+    public MissileInstance(final Logics l, final Pair<Double,Double> pos, final Player player, final SpeedHandler speed) {
+        super(l, pos, speed);
+        
+        entityTag = EntityType.MISSILE;
+        
+        warnPosition = new Pair<>(warnDefaultX, position.getY());
+        playerPosition = player.getPosition();
+        
+        spritesMgr.setPlaceH(placeH);
+        spritesMgr.addSprite("warn", spritePath + "warn.png");
+        spritesMgr.addSprite("missile", spritePath + "missile.png");
+        spritesMgr.setAnimator(() -> "missile");
+        this.hitbox = new MissileHitbox(pos, screen);
+        this.hitboxSet.add(this.hitbox);
+    }
+    
+    private void updateFrameTime() {
+        frameTime++;
+        if(frameTime >= GameWindow.fpsLimit) {
+            frameTime = 0;
+        }
+    }
+    
+    @Override
+    public void reset() {
+        super.reset();
+        ySpeed = yStartSpeed;
+    }
+    
+    @Override
+    public void update() {
+        super.update();
+        updateFrameTime();
+        
+        if(this.isOnSpawnArea()) {
+            if(position.getY() > playerPosition.getY()) {
+                if(lastDir != Direction.UP) {
+                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * Logics.getDifficultyLevel();
+                }
+                position.setY(position.getY() - ySpeed / GameWindow.fpsLimit);
+                ySpeed += yAcceleration / GameWindow.fpsLimit;
+                lastDir = Direction.UP;
+            } else if(position.getY() < playerPosition.getY()) {
+                if(lastDir != Direction.DOWN) {
+                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * Logics.getDifficultyLevel();
+                }
+                position.setY(position.getY() + ySpeed / GameWindow.fpsLimit);
+                ySpeed += yAcceleration  / GameWindow.fpsLimit;
+                lastDir = Direction.DOWN;
+            }
+        }
+        warnPosition.setY(position.getY());
+    }
+    
+    @Override
+    public void draw(final Graphics2D g) {
+        super.draw(g);
+        if(!this.isVisible()) return;
+        
+        if(position.getX() > screen.getWidth()) {
+            if(position.getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
+                spritesMgr.drawSprite(g, "warn", warnPosition, screen.getTileSize());
+            }
+        }
+    }
 }

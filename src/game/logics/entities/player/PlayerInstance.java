@@ -73,9 +73,12 @@ public class PlayerInstance extends EntityInstance implements Player {
      * A enumerable describing the current status of the player.
      */
     private PlayerStatus status;
+
+    /**
+     * A enumerable describing the cause of death of the player, if any.
+     */
     private PlayerDeath causeOfDeath;
 
-    
     /**
      * Decides which sprite should be displayed.
      */
@@ -89,13 +92,14 @@ public class PlayerInstance extends EntityInstance implements Player {
     
     private final KeyHandler keyH;
     private final CollisionsHandler hitChecker;
-    
+
     /**
      * Constructor used for initializing basic parts of the player entity.
      * 
      * @param l the logics handler which the entity is linked to
      */
     public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
+
         super(l);
         this.keyH = GameWindow.keyHandler;
         
@@ -139,7 +143,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             return status.toString() + spriteSwitcher;
         });
     }
-    
+
     private void obstacleHit(final PlayerStatus statusAfterHit) {
         if(!this.invulnerable && !status.isInDyingAnimation()) {
             if(this.shieldProtected) {
@@ -151,7 +155,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             this.setCauseOfDeathIfDead();
         }
     }
-    
+
     private void checkHit(final Entity entityHit) {
         switch(entityHit.entityType()) {
             case MISSILE: 
@@ -172,11 +176,13 @@ public class PlayerInstance extends EntityInstance implements Player {
                 break;
         }
     }
-    
+
     private void jump() {
         fallMultiplier = initialFallMultiplier;
 
-        position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof ? position.getY() - jumpSpeed * jumpMultiplier : yRoof);
+        position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof
+                ? position.getY() - jumpSpeed * jumpMultiplier
+                : yRoof);
         setStatus(PlayerStatus.JUMP);
     }
     
@@ -210,7 +216,7 @@ public class PlayerInstance extends EntityInstance implements Player {
         status.changeStatus(newStatus);
         status = newStatus;
     }
-    
+
     /**
      * Updates the sprite that should be display during the animation.
      */
@@ -232,7 +238,7 @@ public class PlayerInstance extends EntityInstance implements Player {
         }
         frameTime++;
     }
-    
+
     private void updateInvulnerableTimer() {
         if(this.invulnerable) {
             if(this.invulnerableTimer == -1) {
@@ -243,10 +249,10 @@ public class PlayerInstance extends EntityInstance implements Player {
             }
         }
     }
-    
+
     private void updateScore() {
-        if(frameTime % 2 == 0) {
-            this.score++;
+        if (frameTime % 2 == 0) {
+            this.score ++;
         }
     }
 
@@ -263,7 +269,7 @@ public class PlayerInstance extends EntityInstance implements Player {
     public boolean hasDied() {
         return status == PlayerStatus.DEAD;
     }
-    
+
     private void setCauseOfDeathIfDead() {
         switch(status) {
             case BURNED:
@@ -277,17 +283,18 @@ public class PlayerInstance extends EntityInstance implements Player {
                 break;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public Player.PlayerDeath getCauseOfDeath() {
         return this.causeOfDeath;
     }
-    
+
     @Override
     public void reset() {
         position.setX(xPosition);
+
         position.setY(yGround);
         setStatus(PlayerStatus.WALK);
         score = 0;
@@ -296,7 +303,7 @@ public class PlayerInstance extends EntityInstance implements Player {
         invulnerable = false;
         shieldProtected = false;
     }
-    
+
     @Override
     public void update() {
         super.update();

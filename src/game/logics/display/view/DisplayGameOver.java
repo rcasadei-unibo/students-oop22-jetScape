@@ -8,28 +8,41 @@ import game.logics.records.Records;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
-public class DisplayGameOver extends Display {
+/**
+ * <p>This class contains what it is shown when Barry dies.</p>
+ * 
+ * <p>This class extends {@link Display}.</p>
+ */
+public class DisplayGameOver extends Display implements MenuDisplay {
 
-    private final Records records;
-
-    private static final int textTile = 3;
-    private static final int optionTile = 7;
+    private static final int TEXT_TILE = 3;
+    private static final int OPTION_TILE = 7;
     private static String title = "Game Over";
     private static String scoreString = "Your score was: ";
     private static String recordScoreString = "NEW RECORD";
     private static String[] playingRecordScoreString = {"BARRY COULD", "LIVE LONGER"};
-    
+
+    private final Records records;
+
+    private static int playingRecord = 0; // higher score obtained by playing consecutively
+    private static boolean isNewPlayingRecord = false;
+
     //private int recordScore; // absolute new record
+    private boolean isNewRecord = false;
     private int finalScore;
 
+    /**
+     * {@link DisplayGameOver} constructor: add options to be shown.
+     * @param gScreen
+     */
     public DisplayGameOver(final Screen gScreen, final Records records) {
         super(gScreen);
         this.records = records;
-        
-        this.options.add(MenuOption.RETRY);
-        this.options.add(MenuOption.MENU);
+
+        this.getOptions().add(MenuOption.RETRY);
+        this.getOptions().add(MenuOption.MENU);
     }
-    
+
     /**
      *  Reads record and score from {@link Records}.
      */
@@ -39,9 +52,12 @@ public class DisplayGameOver extends Display {
         //this.recordScore = this.records.getRecordScore();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
-        this.selectedOption = selected;
-        
+
+        this.setSelectedOption(selected);
         this.updateRecords();
 
         // TITLE
@@ -49,25 +65,38 @@ public class DisplayGameOver extends Display {
 
         // SCORE
         super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.scoreString + this.finalScore, x -> x,
-                DisplayGameOver.textTile * gScreen.getTileSize(), super.getTextShift());
-        
+
+        DisplayGameOver.TEXT_TILE * gScreen.getTileSize(), super.getTextShift());
+
         // RECORD
         if(records.isNewRecordScore()) {
-            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.recordScoreString, x -> x/2,
-                    (DisplayGameOver.textTile + 1) * gScreen.getTileSize(), super.getTextShift());
+            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.recordScoreString, x -> x / 2,
+                    (DisplayGameOver.TEXT_TILE + 1) * gScreen.getTileSize(), super.getTextShift());
         } else if(records.isNewPlayingRecordScore()) {
-            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[0], x -> x/2,
-                    (DisplayGameOver.textTile + 1) * gScreen.getTileSize(), super.getTextShift());
-            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[1], x -> x/2,
-                    (DisplayGameOver.textTile + 2) * gScreen.getTileSize(), super.getTextShift());
+            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[0], x -> x / 2,
+                    (DisplayGameOver.TEXT_TILE + 1) * gScreen.getTileSize(), super.getTextShift());
+            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[1], x -> x / 2,
+                    (DisplayGameOver.TEXT_TILE + 2) * gScreen.getTileSize(), super.getTextShift());
         }
 
         // OPTIONS
-        super.drawOptions(g, DisplayGameOver.optionTile);
+        super.drawOptions(g, DisplayGameOver.OPTION_TILE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    //TODO remove magic setting from here
+    /*public void drawScreen(final Graphics2D g) {
+        this.setSelectedOption(Optional.of(MenuOption.RETRY));
+        this.drawScreen(g, Optional.of(this.getSelectedOption()));
+    }*/
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Color getShiftColor() {
         return Color.DARK_GRAY;
-    }    
+    }
 }

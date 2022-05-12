@@ -90,18 +90,19 @@ public class LogicsHandler implements Logics {
 
     private final Records records;
     private final GameID gameID;
-    
+ 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
      * initialize each entity category on the entities map and initialize the obstacle spawner.
      * 
      */
-    public LogicsHandler() {        
+    public LogicsHandler() {   
+   
         this.screen = GameWindow.gameScreen;
         this.keyH = GameWindow.keyHandler;
         this.debugger = GameWindow.debugger;
         this.gameID = new GameID();
-        
+
         EntityType.genericTypes
         .forEach(e -> entities.put(e, new HashSet<>()));
         
@@ -110,7 +111,7 @@ public class LogicsHandler implements Logics {
         records = new Records(playerEntity);
         
         //TODO check if it works
-        displayController = new DisplayController(keyH,screen, g -> setGameState(g),
+        displayController = new DisplayController(keyH, screen, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore(), gameID, records);
         
         spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);

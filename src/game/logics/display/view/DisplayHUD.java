@@ -7,35 +7,55 @@ import java.awt.Graphics2D;
 import game.frame.GameWindow;
 import game.utility.screen.Screen;
 
+/**
+ * <p>This class contains what is shown when playing, so the score.</p>
+ * 
+ * <p>This class extends {@link Display}.</p>
+ */
 public class DisplayHUD extends Display {
-	private static final int scoreTile = 1;
-	private static final int scoreShift = 3;
-	private static final int textXTile = 10;
-	private static final double fontScale = 18;
+    private static final int scoreTile = 1;
+    private static final int scoreShift = 3;
+    private static final int textXTile = 10;
+    private static final double fontScale = 18;
+    private final Font scoreFont;
 
-	private final Font scoreFont;
+    private int score;
+    
+    /**
+     * {@link DisplayHUD} constructor: loads scoreFont.
+     * @param gScreen
+     */
+    public DisplayHUD(final Screen gScreen) {
+        super(gScreen);
 
-	private int score = 0;
-	
-	public DisplayHUD(final Screen gScreen) {
-		super(gScreen);
-		this.scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
-	}
+        this.score = 0;
+        this.scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
+    }
 
-	public void drawScreen(final Graphics2D g) {
-		String scoreString = "SCORE: " + this.score;
-		
-		// SCORE
-		super.drawText(g, scoreFont, scoreString, super.gScreen.getTileSize() * textXTile,
-				super.gScreen.getTileSize() * scoreTile, scoreShift);
-	}
-	
-	public void updateScore(final int score) {
-		this.score = score;
-	}
-	
-	@Override
-	protected Color getShiftColor() {
-		return Color.DARK_GRAY;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public void drawScreen(final Graphics2D g) {
+        final String scoreString = "SCORE: " + this.score;
+
+        // SCORE
+        super.drawText(g, scoreFont, scoreString, super.gScreen.getTileSize() * textXTile,
+                super.gScreen.getTileSize() * scoreTile, scoreShift);
+    }
+
+    /**
+     * Update internal score to be shown.
+     * @param score
+     */
+    public void updateScore(final int score) {
+        this.score = score;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Color getShiftColor() {
+        return Color.DARK_GRAY;
+    }
 }

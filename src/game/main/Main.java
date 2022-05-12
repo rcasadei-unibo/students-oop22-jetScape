@@ -1,15 +1,28 @@
 package game.main;
 
-import game.frame.GameHandler;
 import game.frame.Game;
+import game.frame.GameHandler;
 
-public class Main {
-	
-	///		STARTING MODE
-	static final boolean debugMode = false;
+/**
+ * Main class.
+ *
+ */
+public final class Main {
 
-	public static void main(String[] args) {
-		Game g = new GameHandler(debugMode);
-		g.initialize();
-	}
+    /**
+     *  Starting mode.
+     */
+    static final boolean DEBUG_MODE = false;
+
+    private Main() {
+    }
+
+    /**
+     * Main method.
+     * @param args parameters passed from cli
+     */
+    public static void main(final String[] args) {
+        final Game g = new GameHandler(DEBUG_MODE);
+        g.initialize();
+    }
 }

@@ -14,9 +14,9 @@ import game.logics.interactions.SpeedHandler;
  */
 public abstract interface Obstacle extends Entity{
 
-	/**
-	 * @return the movement information of the obstacle
-	 */
-	SpeedHandler getSpeedHandler();
-	
+    /**
+     * @return the movement information of the obstacle
+     */
+    SpeedHandler getSpeedHandler();
+    
 }

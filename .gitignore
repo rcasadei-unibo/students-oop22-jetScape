@@ -1,7 +1,5 @@
 bin/
 .metadata/
 .settings/
-res/game/data/records.json
+res/game/data/
 *.project
-*.lnk
-*.bat

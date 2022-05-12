@@ -18,11 +18,11 @@ import game.logics.entities.obstacles.generic.Obstacle;
  * @author Daniel Pellanda
  */
 public interface ZapperBase extends Obstacle{
-	
-	/**
-	 * Sets the master class where all the zapper entities are managed.
-	 * 
-	 * @param zap the <code>ZapperBaseInstance</code> to pair with this object
-	 */
-	void setMaster(Zapper zap);
+    
+    /**
+     * Sets the master class where all the zapper entities are managed.
+     * 
+     * @param zap the <code>ZapperBaseInstance</code> to pair with this object
+     */
+    void setMaster(Zapper zap);
 }
