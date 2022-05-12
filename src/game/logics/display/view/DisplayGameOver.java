@@ -7,6 +7,11 @@ import java.util.function.Function;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
+/**
+ * <p>This class contains what it is shown when Barry dies.</p>
+ * 
+ * <p>This class extends {@link Display}.</p>
+ */
 public class DisplayGameOver extends Display {
 
 	private static final int textTile = 3;
@@ -24,16 +29,20 @@ public class DisplayGameOver extends Display {
 
 	private int finalScore;
 
+    /**
+     * {@link DisplayGameOver} constructor: add options to be shown.
+     * @param gScreen
+     */
 	public DisplayGameOver(final Screen gScreen) {
 		super(gScreen);
-		this.options.add(MenuOption.RETRY);
-		this.options.add(MenuOption.MENU);
+		this.getOptions().add(MenuOption.RETRY);
+		this.getOptions().add(MenuOption.MENU);
 
 		this.record = 0;//StatisticsReader.getRecord(); // TODO read record
 	}
 	
 	public void drawScreen(final Graphics2D g, final MenuOption selected) {
-		this.selectedOption = selected;
+		this.setSelectedOption(selected);
 
 		// TITLE
 		super.drawTitleText(g, title, Function.identity());
@@ -41,7 +50,7 @@ public class DisplayGameOver extends Display {
 		// SCORE
 		super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.scoreString + this.finalScore, x -> x,
 				DisplayGameOver.textTile * gScreen.getTileSize(), super.getTextShift());
-		
+
 		// RECORD
 		if(this.isNewRecord) {
 			super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.recordString, x -> x/2,
@@ -58,9 +67,9 @@ public class DisplayGameOver extends Display {
 	}
 
 	public void setFinalScore(final int finalScore) {
-		
+
 		this.finalScore = finalScore;
-		
+
 		if (finalScore > DisplayGameOver.playingRecord) {
 			DisplayGameOver.isNewPlayingRecord = true;
 			DisplayGameOver.playingRecord = finalScore;

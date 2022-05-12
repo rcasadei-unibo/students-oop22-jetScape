@@ -11,14 +11,19 @@ import game.frame.GameWindow;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
+/**
+ * Abstract class that contains useful methods for draw text on screen.
+ *
+ * @author davide
+ */
 public abstract class Display {
     protected final Screen gScreen;
 
     /*
      * List of options to be displayed.
      */
-    protected final List<MenuOption> options;
-    protected MenuOption selectedOption;
+    private final List<MenuOption> options;
+    private MenuOption selectedOption;
 
     /**
      * All text main color.
@@ -65,6 +70,10 @@ public abstract class Display {
     private static final int titleShift = 5;
     private static final int textShift = 2;
 
+    /**
+     * Class constructor: load fonts with {@link game.utility.fonts.FontLoader}.
+     * @param gScreen
+     */
     public Display(final Screen gScreen) {
         this.gScreen = gScreen;
 
@@ -80,7 +89,12 @@ public abstract class Display {
         this.options = new ArrayList<>();
     }
     /**
-     * @return the ordinate's value such as the given string is centered in the current screen
+     * Calculates the ordinate's value such as the given string is centered in
+     * the current screen.
+     * @param gScreen
+     * @param g
+     * @param text the string be centered
+     * @return this ordinate's value
      */
     private int getCenteredX(final Screen gScreen, final Graphics2D g, final String text) {
 
@@ -90,10 +104,27 @@ public abstract class Display {
     }
 
     /**
+     * Get list of menu options.
      * @return Display's menu options 
      */
     public List<MenuOption> getOptions() {
         return this.options;
+    }
+
+    /**
+     * Get selected option.
+     * @return Display's selected option 
+     */
+    protected MenuOption getSelectedOption() {
+        return this.selectedOption;
+    }
+
+    /**
+     * Set selected option.
+     * @param selectedOption Display's new selected option 
+     */
+    protected void setSelectedOption(final MenuOption selectedOption) {
+        this.selectedOption = selectedOption;
     }
 
     protected void drawText(final Graphics2D g, /*final Color color,*/ final Font font,

@@ -12,9 +12,14 @@ import java.util.function.Function;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
+/**
+ * <p>This class is used to display statistics and records.</p>
+ * 
+ * <p>This class extends {@link Display}.</p>
+ */
 public class DisplayRecords extends Display {
     private static final int optionTile = 8;
-    private static final String title = "Records";
+    private static final String TITLE = "Records";
     private static final String records1 = "Length";
     private static final String records2 = "Money";
 
@@ -24,11 +29,16 @@ public class DisplayRecords extends Display {
     private static final Set<String> lengthRecords = new HashSet<>();
     private static final Set<String> moneyRecords = new HashSet<>();
 
+    /**
+     * {@link DisplayRecords} constructor: add options to be shown.
+     * @param gScreen
+     */
     public DisplayRecords(final Screen gScreen) {
         super(gScreen);
 
-        this.options.add(MenuOption.MENU);
+        this.getOptions().add(MenuOption.MENU);
 
+        //TODO remove these
         DisplayRecords.lengthRecords.add("1235");
         DisplayRecords.lengthRecords.add("150");
         DisplayRecords.lengthRecords.add("1500");
@@ -48,10 +58,10 @@ public class DisplayRecords extends Display {
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
         int i;
 
-        this.selectedOption = selected;
+        this.setSelectedOption(selected);
 
         // TITLE
-        super.drawTitleText(g, title, Function.identity());
+        super.drawTitleText(g, TITLE, Function.identity());
 
         // RECORDS
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records1,
@@ -78,6 +88,9 @@ public class DisplayRecords extends Display {
     }
 
     @Override
+    /**
+     * {@inheritDoc}
+     */
     protected Color getShiftColor() {
         return Color.DARK_GRAY;
     }

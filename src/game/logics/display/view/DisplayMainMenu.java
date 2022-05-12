@@ -7,31 +7,43 @@ import java.util.function.Function;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
 
+/**
+ * <p>This class is used to display the main menu.</p>
+ * 
+ * <p>This class extends {@link Display}.</p>
+ */
 public class DisplayMainMenu extends Display {
 
-	private static final String title = "JetScape";
+    private static final String GAME_NAME = "JetScape";
 
-	public DisplayMainMenu(final Screen gScreen) {
-		super(gScreen);
+    /**
+     * {@link DisplayMainMenu} constructor: add options to be shown.
+     * @param gScreen
+     */
+    public DisplayMainMenu(final Screen gScreen) {
+        super(gScreen);
 
-		this.options.add(MenuOption.START);
-		this.options.add(MenuOption.SHOP);
-		this.options.add(MenuOption.QUIT);
-		this.options.add(MenuOption.RECORDS);
-	}
-	
-	public void drawScreen(final Graphics2D g, final MenuOption selected) {
-		this.selectedOption = selected;
-		
-		// TITLE
-		super.drawTitleText(g, title, Function.identity());
-		
-		// OPTIONS
-		super.drawOptions(g);
-	}
-	
-	@Override
-	protected Color getShiftColor() {
-		return Color.DARK_GRAY;
-	}
+        this.getOptions().add(MenuOption.START);
+        this.getOptions().add(MenuOption.SHOP);
+        this.getOptions().add(MenuOption.QUIT);
+        this.getOptions().add(MenuOption.RECORDS);
+    }
+
+    public void drawScreen(final Graphics2D g, final MenuOption selected) {
+        this.setSelectedOption(selected);
+
+        // TITLE
+        super.drawTitleText(g, GAME_NAME, Function.identity());
+
+        // OPTIONS
+        super.drawOptions(g);
+    }
+
+    @Override
+    /**
+     * {@inheritDoc}
+     */
+    protected Color getShiftColor() {
+        return Color.DARK_GRAY;
+    }
 }
