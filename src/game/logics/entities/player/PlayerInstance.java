@@ -71,11 +71,6 @@ public class PlayerInstance extends EntityInstance implements Player{
     private double fallMultiplier = initialFallMultiplier;
     
     /**
-     * A enumerable describing the current status of the player.
-     */
-    private PlayerStatus status;
-    
-    /**
      * Decides which sprite should be displayed.
      */
     private int spriteSwitcher = 1;
@@ -88,6 +83,33 @@ public class PlayerInstance extends EntityInstance implements Player{
     
     private final KeyHandler keyH;
     private final CollisionsHandler hitChecker;
+    
+    /**
+     * A enumerable describing the current status of the player.
+     */
+    private enum PlayerStatus{ 
+        WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
+        
+        public boolean isInDyingAnimation() {
+            switch(this) {
+            	case ZAPPED:
+            		return true;
+            	case BURNED:
+            		return true;
+            	case DEAD:
+            		return true;
+            	default:
+            		break;
+            }
+            return false;
+        }
+        
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
+    }
+    private PlayerStatus status;
+	private boolean statusChanged = false;
     
     /**
      * Constructor used for initializing basic parts of the player entity.
@@ -209,7 +231,7 @@ public class PlayerInstance extends EntityInstance implements Player{
      * @param newStatus the new status
      */
     private void setStatus(final PlayerStatus newStatus) {
-        status.changeStatus(newStatus);
+        statusChanged = status != newStatus;
         status = newStatus;
     }
     
@@ -217,16 +239,16 @@ public class PlayerInstance extends EntityInstance implements Player{
      * Updates the sprite that should be display during the animation.
      */
     private void updateSprite() {
-        if(PlayerStatus.hasChanged) {
+        if(this.statusChanged) {
             frameTime = 0;
             spriteSwitcher = 0;
-            PlayerStatus.hasChanged = false;
+            this.statusChanged = false;
         }
         else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
-            if(PlayerStatus.dying && spriteSwitcher >= 7) {
+            if(status.isInDyingAnimation() && spriteSwitcher >= 7) {
                 setStatus(PlayerStatus.DEAD);
             }
-            if(PlayerStatus.landing && spriteSwitcher >= 3) {
+            if(status == PlayerStatus.LAND && spriteSwitcher >= 3) {
                 setStatus(PlayerStatus.WALK);
             }
             frameTime = 0;

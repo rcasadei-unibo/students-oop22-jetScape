@@ -3,7 +3,7 @@ package game.logics.interactions;
 import game.frame.GameWindow;
 import game.logics.handler.AbstractLogics;
 
-public class SpeedHandler {
+public class SpeedHandler implements Cloneable{
     
     public static final double baseXSpeed = 250;
     public static final double baseXSpeedIncDiff = 10;

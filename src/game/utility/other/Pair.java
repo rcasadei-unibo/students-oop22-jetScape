@@ -4,7 +4,7 @@ package game.utility.other;
  * A standard generic Pair<X,Y>, with getters, hashCode, equals, and toString well implemented. 
  */
 
-public class Pair<X,Y> {
+public class Pair<X,Y> implements Cloneable{
     
     private X x;
     private Y y;

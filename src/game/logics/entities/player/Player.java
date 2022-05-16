@@ -11,29 +11,6 @@ import game.logics.entities.generic.Entity;
  * @author Daniel Pellanda
  */
 public interface Player extends Entity{
-
-    enum PlayerStatus{ 
-        WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
-        public static boolean hasChanged = false;
-        public static boolean landing = false;
-        public static boolean dying = false;
-        
-        public void changeStatus(final PlayerStatus newAction) {
-            if(this != newAction) {
-                hasChanged = true;
-                landing = newAction == PlayerStatus.LAND;
-                dying = newAction == PlayerStatus.BURNED || newAction == PlayerStatus.ZAPPED;
-            }
-        }
-        
-        public boolean isInDyingAnimation() {
-            return this.ordinal() > 3;
-        }
-        
-        public String toString() {
-            return super.toString().toLowerCase();
-        }
-    }
     
     static final double baseFallSpeed = 50.0;
     static final double baseJumpSpeed = 20.0;

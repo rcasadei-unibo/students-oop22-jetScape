@@ -251,8 +251,7 @@ public class TileGenerator implements Generator{
     }
 
     private void spawnTile() {
-        int randomNumber;
-        randomNumber = r.nextInt() % 100;
+        int randomNumber = r.nextInt() % 100;
         randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 
         if (randomNumber <= powerUpOdds) {
@@ -320,14 +319,6 @@ public class TileGenerator implements Generator{
     private void invokeSleep(final long interval) {
         try {
             Thread.sleep(interval > 0 ? interval : 0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void invokeWait() {
-        try {
-            generator.wait();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -408,7 +399,11 @@ public class TileGenerator implements Generator{
             
             synchronized(generator) {
                 while (this.isWaiting()) {
-                    this.invokeWait();
+                	try {
+                        generator.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     if (!this.isRunning()) {
                         continue;
                     }
