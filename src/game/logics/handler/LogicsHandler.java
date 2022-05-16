@@ -10,14 +10,11 @@ import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
-import org.json.simple.parser.ParseException;
-
 import java.awt.Graphics2D;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import game.frame.GameHandler;
 import game.frame.GameWindow;
@@ -70,7 +67,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * Defines how many seconds have to pass for the spawner to generate
      * another set of obstacles.
      */
-    private double spawnInterval = 2.8;
+    private double spawnInterval = 3.3;
     /**
      * Defines the interval of each check for entities to clean.
      */
@@ -116,7 +113,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog((Component)GameHandler.gameWindow, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        } catch (ParseException | IOException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog((Component)GameHandler.gameWindow, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
