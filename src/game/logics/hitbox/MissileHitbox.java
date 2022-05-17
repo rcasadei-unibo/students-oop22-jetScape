@@ -1,7 +1,6 @@
 package game.logics.hitbox;
 
 import game.utility.other.Pair;
-import game.utility.screen.Screen;
 
 public class MissileHitbox extends HitboxInstance{
 	static final double rectangleX = 0;
@@ -9,8 +8,8 @@ public class MissileHitbox extends HitboxInstance{
 	static final double rectangleW = 30;
 	static final double rectangleH = 5;
 
-	public MissileHitbox(Pair<Double, Double> startingPos, Screen gScreen) {
-		super(startingPos, gScreen);
+	public MissileHitbox(Pair<Double, Double> startingPos) {
+		super(startingPos);
 		super.addRectangle(rectangleX, rectangleY, rectangleW, rectangleH);
 	}
 

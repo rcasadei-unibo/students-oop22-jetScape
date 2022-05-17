@@ -11,8 +11,6 @@ import game.utility.sprites.DrawManager;
 import game.utility.sprites.Drawer;
 
 import java.awt.Graphics2D;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
@@ -65,7 +63,6 @@ public abstract class EntityInstance implements Entity{
 	private boolean onSpawnArea = true;
 	
 	protected Hitbox hitbox ;
-	protected Set<Hitbox> hitboxSet = new HashSet<>();
 	
 	/**
 	 * Manages the sprites of the object.
@@ -143,8 +140,8 @@ public abstract class EntityInstance implements Entity{
 		return position.getY();
 	}
 	
-	public Set<Hitbox> getHitbox() {
-		return this.hitboxSet;
+	public Hitbox getHitbox() {
+		return this.hitbox;
 	}
 	
 	public EntityType entityType() {

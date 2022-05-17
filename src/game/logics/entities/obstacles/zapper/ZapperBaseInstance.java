@@ -58,8 +58,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase{
 	public ZapperBaseInstance(final Logics l, final Pair<Double,Double> position, final SpeedHandler s) {
 		super(l, position, s);
 		entityTag = EntityType.ZAPPERBASE;
-		this.hitbox = new ZapperBaseHitbox(position, screen);
-		this.hitboxSet.add(this.hitbox);
+		this.hitbox = new ZapperBaseHitbox(position);
 	}
 	
 	public void setMaster(final Zapper zap) {
