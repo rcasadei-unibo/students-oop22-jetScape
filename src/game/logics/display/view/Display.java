@@ -50,10 +50,10 @@ public abstract class Display {
     private final Font textFont;
     private final Font selectedOptionsFont;
 
-    /**
-     * Default writing tile for text.
-     */
-    private int textTile = 5;
+//    /**
+//     * Default writing tile for text.
+//     */
+//    private int textTile = 5;
 
     /**
      * Default writing tile for options.
