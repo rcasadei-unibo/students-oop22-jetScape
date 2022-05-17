@@ -37,46 +37,95 @@ public interface Logics {
      */
     void drawAll(Graphics2D g);
 
+    public static class Game {
+
+        private static int numbersOfGamesPlayed = 0;
+        private static GameUID actualGame;
+
+        public Game(final GameUID newGame) {
+            Game.actualGame = newGame;
+        }
+
+        public int getNumbersOfGamesPlayed() {
+            return Game.numbersOfGamesPlayed;
+        }
+
+        public GameUID getActualGame() {
+           return actualGame;
+        }
+
+        void setActualGame(final GameUID newGameID) {
+            Game.actualGame = newGameID;
+        }
+    }
+
     /**
-     * This class models a GameID, a game identifier that is used to refer to the actual game.
-     * @author davide
+     * This class models a GameID, a unique game identifier that is used to
+     * refer to the actual game.
      *
      */
-    public class GameID {
+    public class GameUID {
 
-        private int gameNumber = 0;
-        private Optional<Date> gameDate = Optional.empty();
-        private boolean gamePlayed = false;
+        private Date gameStartDate = new Date();
+        private Optional<Date> gameEndDate = Optional.empty();
+        private boolean gameEnded = false;
+        private final int gameNumber;
+
+        /**
+         * Builds the first GameUID at the first game played.
+         * The unique identifier is set here.
+         */
+        public GameUID() {
+            this.gameNumber = 0;
+        }
 
         /**
          * Builds a new GameID when the game begins.
+         * The unique identifier is set here.
+         *
+         * @param game Game general informations
          */
-        public GameID() {
+        public GameUID(final Game game) {
+            this.gameNumber = game.getNumbersOfGamesPlayed() + 1;
         }
-        
-        public int getGameID() {
+
+        public Date getGameStartDate() {
+            return this.gameStartDate;
+        }
+
+        public Optional<Date> getGameEndDate() {
+            return this.gameEndDate;
+        }
+
+        public void setGameEnded(final Date endGameDate) {
+           if (!this.gameEnded) {
+               this.gameEndDate = Optional.of(endGameDate);
+               this.gameEnded = true;
+           }
+        }
+
+        public int getUID() {
             return this.gameNumber;
         }
 
-        public Optional<Date> getGameDate() {
-            return this.gameDate;
-        }
+        public long getGameDuration() {
+            // Calculates time difference in seconds
+            return (this.getGameEndDate().get().getTime()
+                    - this.getGameStartDate().getTime()) / 1000;
 
-        private int setGameID() {
-            return this.gameNumber;
-        }
-
-        protected void generateNewGameID() {
-            this.gameNumber = this.setGameID() + 1;
-            this.gameDate = Optional.of(new Date());
-        }
-
-        public void setGamePlayed() {
-            this.gamePlayed = true;
-        }
-
-        public boolean isGamePlayed() {
-            return this.gamePlayed;
+            /*
+            // Calculate time difference in
+            // seconds, minutes, hours, years and days
+            long difference_In_Seconds
+                = (difference_In_Time
+                   / 1000)
+                  % 60;
+  
+            long difference_In_Minutes
+                = (difference_In_Time
+                   / (1000 * 60))
+                  % 60;
+            */
         }
     }
 }

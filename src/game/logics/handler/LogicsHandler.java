@@ -29,6 +29,7 @@ import game.logics.entities.player.PlayerInstance;
 import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
+import game.logics.handler.Logics.Game;
 import game.logics.interactions.SpeedHandler;
 import game.logics.records.Records;
 import game.utility.debug.Debugger;
@@ -78,8 +79,8 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     private final KeyHandler keyH;
     private final Debugger debugger;
 
-    private final Records records;
-    private final GameID gameID;
+    private static Records records;
+    private static Game game;
 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -93,18 +94,16 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.keyH = GameWindow.GAME_KEYHANDLER;
         this.debugger = GameWindow.GAME_DEBUGGER;
 
-        this.gameID = new GameID();
-
         EntityType.genericTypes
-        .forEach(e -> entities.put(e, new HashSet<>()));
+                .forEach(e -> entities.put(e, new HashSet<>()));
 
+        game = new Game(new GameUID(game));
         playerEntity = new PlayerInstance(this, entities);
-
         records = new Records(playerEntity);
 
         //TODO check if it works
         displayController = new DisplayController(keyH, screen, g -> setGameState(g),
-                () -> gameState, () -> playerEntity.getCurrentScore(), gameID, records);
+                () -> gameState, () -> playerEntity.getCurrentScore(), () -> game.getActualGame(), records);
 
         spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
 
@@ -202,10 +201,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     }
                     break;
                 case INGAME:
-                    this.gameID.generateNewGameID();
-                    if (!this.gameID.isGamePlayed()) {
-                        this.gameID.setGamePlayed();
-                    }
+                    LogicsHandler.game.setActualGame(new GameUID(LogicsHandler.game));
+                    /*this.gameID.generateNewGameUID();
+                    if (!LogicsHandler.game.isGamePlayed()) {
+                        LogicsHandler.game.setGamePlayed();
+                    }*/
                     if (this.gameState == GameState.ENDGAME) {
                         this.resetGame();
                     }
@@ -227,7 +227,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case ENDGAME:
                     spawner.stop();
-                    this.records.update();
+                    LogicsHandler.records.update();
                     break;
                 case PAUSED:
                     if(this.gameState != GameState.INGAME) {

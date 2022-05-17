@@ -9,7 +9,7 @@ import game.logics.display.view.DisplayMainMenu;
 import game.logics.display.view.DisplayPause;
 import game.logics.display.view.DisplayRecords;
 
-import game.logics.handler.Logics.GameID;
+import game.logics.handler.Logics.GameUID;
 import game.logics.records.Records;
 
 import game.utility.input.keyboard.KeyHandler;
@@ -17,7 +17,6 @@ import game.utility.other.GameState;
 import game.utility.screen.Screen;
 
 import java.awt.Graphics2D;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -30,8 +29,8 @@ import java.util.function.Supplier;
 public class DisplayController {
     private final Supplier<GameState> getState;
     private final Supplier<Integer> getScore;
-    
-    private final GameID gameID;
+    private final Supplier<GameUID> getGame;
+
     private final Records records;
 
     /*
@@ -63,11 +62,10 @@ public class DisplayController {
      */
     public DisplayController(final KeyHandler keyH, final Screen gScreen, 
             final Consumer<GameState> setState, final Supplier<GameState> getState,
-            final Supplier<Integer> getScore, final GameID gameID, final Records records) {
-
+            final Supplier<Integer> getScore, final Supplier<GameUID> getGame, final Records records) {
         this.getState = getState;
         this.getScore = getScore;
-        this.gameID = gameID;
+        this.getGame = getGame;
         this.records = records;
 
         this.hud = new DisplayHUD(gScreen);
@@ -82,7 +80,7 @@ public class DisplayController {
         this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
     }
 
-    /**
+	/**
      * Displays the correct screen for the current game state.
      * @param g
      */
@@ -133,7 +131,7 @@ public class DisplayController {
                 break;
             case ENDGAME :
                 //this.gameOverDisplay.setRecords(getScore.get());
-                this.records.fetch(gameID);
+                this.records.fetch(this.getGame);
                 this.gameOverHandler.update();
                 break;
             default :
