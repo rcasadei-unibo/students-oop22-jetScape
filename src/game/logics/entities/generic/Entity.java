@@ -8,9 +8,9 @@ import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
- * The <code>Entity</code> interface is used for accessing <code>EntityInstance</code> methods.
+ * The {@link Entity} interface is used for accessing {@link EntityInstance} methods.
  * 
- * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
+ * The abstract class {@link EntityInstance} is used to define all the common parts of each entity
  * like their position, entity relationship, visibility, on screen presence, etc...
  */
 public interface Entity {

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The <code>GameWindow</code> class manages both the panel representing 
+ * The {@link GameWindow} class manages both the panel representing 
  * the game window and the execution of the game.
  * 
  * <p>
@@ -48,12 +48,12 @@ public class GameWindow extends JPanel implements Runnable {
      * Defines the cap for the "Frames Per Second". 
      * 
      * <p>
-     * The game loop (coded in <code>GameWindow.run()</code>) is executed as many times as
-     * specified in <code>fpsLimit</code> each second.
+     * The game loop (coded in <code>{@link GameWindow}.run()</code>) is executed as many times as
+     * specified in <code>{@link GameWindow}.FPS_LIMIT</code> each second.
      * </p>
      * 
      * <p>
-     * E.G.: if <code>fpsLimit</code> value is 60, it means that the game loop will be
+     * E.G.: if <code>FPS_LIMIT</code> value is 60, it means that the game loop will be
      * executed 60 times per second.
      * </p>
      * 
@@ -89,8 +89,8 @@ public class GameWindow extends JPanel implements Runnable {
     private boolean gameRunning = false;
 
     /**
-     * Basic constructor that sets <code>JPanel</code> attributes and sets up the <code>Logics</code> handler
-     * and the <code>Debugger</code>.
+     * Basic constructor that sets {@link JPanel} attributes and sets up the {@link Logics} handler
+     * and the {@link Debugger}.
      */
     public GameWindow() {
         super();

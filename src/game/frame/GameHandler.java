@@ -6,12 +6,12 @@ import game.utility.screen.Screen;
 import game.utility.sprites.Sprite;
 
 /**
- * The <code>GameHandler</code> class is used to create and handle
+ * The {@link GameHandler} class is used to create and handle
  * the frame where the window of the game is going to take place
- * (which will be handled by the <code>GameWindow</code> class).
+ * (which will be handled by the {@link GameWindow} class).
  * 
  * <p>
- * You can use <code>GameHandler.initialize()</code> for allowing
+ * You can use <code>{@link GameHandler}.initialize()</code> for allowing
  * the game to start.
  * </p>
  * 
@@ -38,16 +38,16 @@ public class GameHandler implements Game {
      */
     public static final boolean DEBUG_MODE = false;
     /**
-     * The <code>{@link JFrame}</code> where the game window will be contained.
+     * The {@link JFrame} where the game window will be contained.
      */
     public static final JFrame GAME_FRAME = new JFrame();
     /**
-     * The <code>{@link GameWindow}</code> where the game will run.
+     * The {@link GameWindow} where the game will run.
      */
     public static final GameWindow GAME_WINDOW = new GameWindow();
 
     /**
-     * Basic constructor that creates a <code>JFrame</code> with a <code>GameWindow</code>
+     * Basic constructor that creates a {@link JFrame} with a {@link GameWindow}
      * attached to it.
      */
     public GameHandler() {
