@@ -6,6 +6,7 @@ import java.util.Set;
 
 import game.logics.entities.generic.Entity;
 import game.logics.hitbox.Hitbox;
+import game.logics.hitbox.ZapperHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -18,7 +19,8 @@ public class ZapperInstance implements Zapper {
     private final ZapperBase base1;
     private final ZapperBase base2;
     private final Set<ZapperRay> rays;
-    private final Set<Hitbox> hitbox;
+
+    private final Hitbox hitbox;
 
     /**
      * @param base1 the first {@link ZapperBase} of the zapper
@@ -29,10 +31,7 @@ public class ZapperInstance implements Zapper {
         this.base1 = base1;
         this.base2 = base2;
         this.rays = rays;
-        this.hitbox = new HashSet<>();
-        this.rays.forEach(entity -> this.hitbox.addAll(entity.getHitboxSet()));
-        this.hitbox.addAll(this.base1.getHitboxSet());
-        this.hitbox.addAll(this.base2.getHitboxSet());
+        this.hitbox = new ZapperHitbox(base1, base2, rays, base1.getPosition());
     }
 
     /**
@@ -144,7 +143,7 @@ public class ZapperInstance implements Zapper {
      * {@inheritDoc}
      */
     @Override
-    public Set<Hitbox> getHitboxSet() {
+    public Hitbox getHitbox() {
         return this.hitbox;
     }
     /**

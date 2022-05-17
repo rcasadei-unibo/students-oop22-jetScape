@@ -1,7 +1,6 @@
 package game.logics.entities.generic;
 
 import java.awt.Graphics2D;
-import java.util.Set;
 
 import game.frame.GameWindow;
 import game.logics.hitbox.Hitbox;
@@ -46,9 +45,9 @@ public interface Entity {
      */
     Pair<Double, Double> getPosition();
     /**
-     * @return A <code>{@link Hitbox}</code> set representing all the <code>{@link Hitbox}</code> used by the entity
+     * @return the hitbox of the entity
      */
-    Set<Hitbox> getHitboxSet();
+    Hitbox getHitbox();
     /**
      * @return a string representing the entity's category
      */

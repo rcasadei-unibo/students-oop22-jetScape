@@ -19,8 +19,7 @@ public abstract class PickupInstance extends EntityInstance implements Pickup{
         this.player = player;
         this.movement = speed.clone();
         
-        this.setHitbox(new PickableHitbox(position, GameWindow.GAME_SCREEN));
-        this.getHitboxSet().add(this.getHitbox());
+        this.setHitbox(new PickableHitbox(position));
     }
 
     @Override

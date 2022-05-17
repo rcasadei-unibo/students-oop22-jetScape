@@ -123,8 +123,7 @@ public class PlayerInstance extends EntityInstance implements Player{
         fallSpeed = baseFallSpeed / GameWindow.FPS_LIMIT;
         jumpSpeed = baseJumpSpeed / GameWindow.FPS_LIMIT;
 
-        this.setHitbox(new PlayerHitbox(this.getPosition(), GameWindow.GAME_SCREEN));
-        this.getHitboxSet().add(this.getHitbox());
+        this.setHitbox(new PlayerHitbox(this.getPosition()));
         hitChecker = new CollisionsHandler(entities, this);
 
         status = PlayerStatus.WALK;

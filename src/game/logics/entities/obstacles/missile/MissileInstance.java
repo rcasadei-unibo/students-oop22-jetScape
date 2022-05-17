@@ -87,8 +87,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
         warnPosition = new Pair<>(warnDefaultX, this.getPosition().getY());
         playerPosition = player.getPosition();
 
-        this.setHitbox(new MissileHitbox(pos, GameWindow.GAME_SCREEN));
-        this.getHitboxSet().add(this.getHitbox());
+        this.setHitbox(new MissileHitbox(pos));
 
         final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(PLACE_HOLDER);

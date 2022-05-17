@@ -2,7 +2,6 @@ package game.logics.entities.obstacles.zapper;
 
 import java.awt.Color;
 
-import game.frame.GameWindow;
 import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.handler.Logics;
 import game.logics.hitbox.ZapperRayHorizontalHitbox;
@@ -67,11 +66,10 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay {
         updateRotation();
 
         if (this.rotation.equals("vertical")) {
-            this.setHitbox(new ZapperRayVerticalHitbox(p, GameWindow.GAME_SCREEN));
+            this.setHitbox(new ZapperRayVerticalHitbox(p));
         } else {
-            this.setHitbox(new ZapperRayHorizontalHitbox(p, GameWindow.GAME_SCREEN));
+            this.setHitbox(new ZapperRayHorizontalHitbox(p));
         }
-        this.getHitboxSet().add(this.getHitbox());
 
         final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(PLACE_HOLDER);
@@ -94,3 +92,4 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay {
     }
 
 }
+
