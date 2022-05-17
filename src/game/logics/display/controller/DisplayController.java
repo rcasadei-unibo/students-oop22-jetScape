@@ -80,7 +80,7 @@ public class DisplayController {
         this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
     }
 
-	/**
+    /**
      * Displays the correct screen for the current game state.
      * @param g
      */

@@ -3,13 +3,15 @@ package game.logics.records;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.Player.PlayerDeath;
 import game.utility.input.JSONWriter;
-import game.logics.handler.Logics.GameID;
+import game.logics.handler.Logics.Game;
+import game.logics.handler.Logics.GameUID;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiPredicate;
+//import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 
 public class Records {
 
@@ -19,15 +21,19 @@ public class Records {
 
     private final JSONWriter writer = new JSONWriter(this);
 
+    private final Game game;
     private final Player player;
+	private GameUID oldGameUID;
 
     //TODO complete list
+	//TODO change
     // List of keys for JSON files
     private final static String keyName = "name";
     private final static String keyAge = "age";
 
     // Statistics and records list
     // TODO complete list
+	//TODO change
     private String name;
     private int age;
     // private String[] position;
@@ -40,16 +46,19 @@ public class Records {
     private static int playingRecordScore = 0; // higher score obtained by playing consecutively
     private static boolean newPlayingRecordScore = false;
 
-    private int recordScore; // absolute new record
+    private int recordScore; // absolute new score record
     private boolean newRecordScore = false;
 
-    //TODO
-    public Records(final Player player) {
+    public Records(final Game game, final Player player) {
+        this.game = game;
+        this.oldGameUID = game.getActualGame();
+        //game.getNumbersOfGamesPlayed();
         this.player = player;
     }
 
     // TODO Set (maybe) with singleton
     public void build() {
+    	//TODO change
     	keySet.add(keyName);
     	keySet.add(keyAge);
     	
@@ -68,7 +77,7 @@ public class Records {
 	}
     
     /****************************************/
-    /***    In and to file operations    ***/
+    /***    In and to file operations     ***/
     /****************************************/
 
     /**
@@ -78,9 +87,10 @@ public class Records {
     	this.writer.read();
     }
     
-	private static GameID IDGame = new GameID();
+	//private static GameID IDGame = new GameID();
 
-	private boolean checkAndSet(final GameID newGameID) {
+/*
+    private boolean checkAndSet(final GameID newGameID) {
 
 		final BiPredicate<GameID, GameID> checkIfNew =
 				(oldID,newID) -> oldID.getGameDate() != newID.getGameDate();
@@ -93,25 +103,28 @@ public class Records {
             Records.IDGame = newGameID;
         }
         return isNewID;
-    }
+    }*/
 
     /**
      * Get data for updating in game, calling the data getters
      */
 	//TODO add new records
-    public void fetch(final GameID gameID) {
+    public void fetch(final Supplier<GameUID> gameUID) {
 
         //System.out.println(gameID.isGamePlayed());
         //gameID.getGameDate().ifPresent(System.out::println);
 
-        // Only if new gameID
-        if (this.checkAndSet(gameID)) {
+        // Only if new gameUID (new game)
+        //if (this.checkAndSet(gameUID)) {
+        final GameUID newGameUID = gameUID.get();
+        if (oldGameUID.getUID() != newGameUID.getUID()) {
             if(player.hasDied()) {
                 this.score = player.getCurrentScore();
                 System.out.println(score);
                 this.causeOfDeath = player.getCauseOfDeath();
             }
-        //this.getScore();
+            oldGameUID = newGameUID;
+            //this.getScore();
         }
     }
 
@@ -158,10 +171,12 @@ public class Records {
     /*** Getters & Setters from / to file ***/
     /****************************************/
 
+	//TODO remove
     public String getName() {
     	return this.name;
     }
     
+	//TODO remove
     public int getAge() {
     	return this.age;
     }

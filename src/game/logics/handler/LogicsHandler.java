@@ -97,11 +97,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         EntityType.genericTypes
                 .forEach(e -> entities.put(e, new HashSet<>()));
 
-        game = new Game(new GameUID(game));
+        game = new Game(new GameUID());
         playerEntity = new PlayerInstance(this, entities);
-        records = new Records(playerEntity);
+        records = new Records(game, playerEntity);
 
-        //TODO check if it works
         displayController = new DisplayController(keyH, screen, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore(), () -> game.getActualGame(), records);
 
@@ -202,10 +201,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case INGAME:
                     LogicsHandler.game.setActualGame(new GameUID(LogicsHandler.game));
-                    /*this.gameID.generateNewGameUID();
-                    if (!LogicsHandler.game.isGamePlayed()) {
-                        LogicsHandler.game.setGamePlayed();
-                    }*/
+                    //this.gameID.generateNewGameUID();
                     if (this.gameState == GameState.ENDGAME) {
                         this.resetGame();
                     }
@@ -227,6 +223,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case ENDGAME:
                     spawner.stop();
+                    //TODO check
                     LogicsHandler.records.update();
                     break;
                 case PAUSED:

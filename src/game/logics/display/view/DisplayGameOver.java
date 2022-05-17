@@ -24,11 +24,11 @@ public class DisplayGameOver extends Display implements MenuDisplay {
 
     private final Records records;
 
-    private static int playingRecord = 0; // higher score obtained by playing consecutively
-    private static boolean isNewPlayingRecord = false;
+    //private static int playingRecord = 0; // higher score obtained by playing consecutively
+    //private static boolean isNewPlayingRecord = false;
 
     //private int recordScore; // absolute new record
-    private boolean isNewRecord = false;
+    //private boolean isNewRecord = false;
     private int finalScore;
 
     /**
