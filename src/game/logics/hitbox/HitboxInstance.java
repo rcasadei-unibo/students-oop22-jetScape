@@ -27,7 +27,7 @@ public abstract class HitboxInstance implements Hitbox{
      * map that associates a rectangle with a pair of 
      * coordinates which origin is the actual sprite position 
      */
-    protected final Map<Rectangle, Pair<Double,Double>> hitboxes;
+    private final Map<Rectangle, Pair<Double,Double>> hitboxes;
     private final Pair<Double,Double> startingPos;
     protected final Set<Rectangle> rectangles;
     
@@ -48,7 +48,7 @@ public abstract class HitboxInstance implements Hitbox{
      * @return set this entity component rectangle 
      */
     public Set<Rectangle> getRectangles() {
-        return Collections.unmodifiableSet(this.hitboxes.keySet());
+        return Collections.unmodifiableSet(this.rectangles);
     }
     
     public void draw(Graphics2D g) {

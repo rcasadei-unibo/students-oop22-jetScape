@@ -50,7 +50,7 @@ public class CollisionsChecker {
                 entities.forEach(entity -> {
                     if(this.collides(entity.getHitbox())) {
                         this.collisions.add(entity);
-                        }
+                    }
                 });
             }        
         });
