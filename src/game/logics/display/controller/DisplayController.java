@@ -64,6 +64,7 @@ public class DisplayController {
     public DisplayController(final KeyHandler keyH, final Screen gScreen, 
             final Consumer<GameState> setState, final Supplier<GameState> getState,
             final Supplier<Integer> getScore, final GameID gameID, final Records records) {
+
         this.getState = getState;
         this.getScore = getScore;
         this.gameID = gameID;

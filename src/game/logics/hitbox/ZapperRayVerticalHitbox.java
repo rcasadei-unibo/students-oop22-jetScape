@@ -1,7 +1,6 @@
 package game.logics.hitbox;
 
 import game.utility.other.Pair;
-import game.utility.screen.Screen;
 
 /**
  * The <code>ZapperRayVerticalHitbox</code> class represents a missile ZapperRayVertical's hitbox in
@@ -15,9 +14,8 @@ public class ZapperRayVerticalHitbox extends HitboxInstance {
     static final double rectangleW = 20;
     static final double rectangleH = 32;
 
-    public ZapperRayVerticalHitbox(Pair<Double, Double> startingPos, Screen gScreen) {
-        super(startingPos, gScreen);
+    public ZapperRayVerticalHitbox(Pair<Double, Double> startingPos) {
+        super(startingPos);
         super.addRectangle(rectangleX, rectangleY, rectangleW, rectangleH);
     }
-
 }

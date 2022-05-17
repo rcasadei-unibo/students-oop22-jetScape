@@ -88,9 +88,9 @@ public class PlayerInstance extends EntityInstance implements Player {
      * A enumerable describing the current status of the player.
      */
     private PlayerStatus status;
-	private boolean statusChanged = false;
+    private boolean statusChanged = false;
 
-	private PlayerDeath causeOfDeath;
+    private PlayerDeath causeOfDeath;
 
     /**
      * Constructor used for initializing basic parts of the player entity.
@@ -100,17 +100,17 @@ public class PlayerInstance extends EntityInstance implements Player {
     public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
         super(l);
         this.keyH = GameWindow.GAME_KEYHANDLER;
-        
+
         this.fallSpeed = baseFallSpeed / GameWindow.FPS_LIMIT;
         this.jumpSpeed = baseJumpSpeed / GameWindow.FPS_LIMIT;
         
         position = new Pair<>(xPosition, yGround);
         
-        hitbox = new PlayerHitbox(position, screen);
-        hitboxSet.add(this.hitbox);
+        hitbox = new PlayerHitbox(position);
         this.hitChecker = new CollisionsHandler(entities, this);
         
         this.status = PlayerStatus.WALK;
+
         entityTag = EntityType.PLAYER;
         
         spritesMgr.setPlaceH(placeH);
@@ -257,14 +257,14 @@ public class PlayerInstance extends EntityInstance implements Player {
             this.score++;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public int getCurrentScore() {
         return this.score;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -292,7 +292,7 @@ public class PlayerInstance extends EntityInstance implements Player {
     public Player.PlayerDeath getCauseOfDeath() {
         return this.causeOfDeath;
     }
-    
+
     @Override
     public void reset() {
         position.setX(xPosition);
@@ -339,6 +339,4 @@ public class PlayerInstance extends EntityInstance implements Player {
             }
         }
     }
-
 }
-

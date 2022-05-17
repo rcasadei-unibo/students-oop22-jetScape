@@ -73,11 +73,10 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
         spritesMgr.addSprite("horizontal", spritePath + "zapperray_horr.png");
         spritesMgr.setAnimator(() -> rotation);
         if(this.rotation.equals("vertical")) {
-            this.hitbox = new ZapperRayVerticalHitbox(p, screen);
+            this.hitbox = new ZapperRayVerticalHitbox(p);
         } else {
-            this.hitbox = new ZapperRayHorizontalHitbox(p, screen);
+            this.hitbox = new ZapperRayHorizontalHitbox(p);
         }
-        this.hitboxSet.add(this.hitbox);
     }
     
     /**

@@ -1,7 +1,6 @@
 package game.logics.hitbox;
 
 import game.utility.other.Pair;
-import game.utility.screen.Screen;
 
 /**
  * The <code>ZapperBaseHitbox</code> class represents a ZapperBase's  hitbox in
@@ -15,9 +14,9 @@ public class ZapperBaseHitbox extends HitboxInstance {
     static final double rectangleW = 22;
     static final double rectangleH = 22;
 
-    public ZapperBaseHitbox(Pair<Double, Double> startingPos, Screen gScreen) {
-        super(startingPos, gScreen);
+    public ZapperBaseHitbox(Pair<Double, Double> startingPos) {
+        super(startingPos);
         addRectangle(rectangleX,rectangleY,rectangleW,rectangleH);
     }
-
 }
+

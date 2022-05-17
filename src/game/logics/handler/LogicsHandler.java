@@ -92,6 +92,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.screen = GameWindow.GAME_SCREEN;
         this.keyH = GameWindow.GAME_KEYHANDLER;
         this.debugger = GameWindow.GAME_DEBUGGER;
+
         this.gameID = new GameID();
 
         EntityType.genericTypes
@@ -183,6 +184,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     
     private void drawDifficultyLevel(final Graphics2D g) {
         if (debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
+
             g.setColor(Debugger.debugColor);
             g.setFont(Debugger.debugFont);
             g.drawString("DIFFICULTY: " + super.getDifficultyLevel(), 3, 26);
@@ -280,8 +282,14 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case PAUSED:
             case INGAME:
                 synchronized(entities) {
-                    entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
-                    entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().forEach(hitbox -> hitbox.draw(g))));
+                    entities.entrySet().stream().sorted((e1, e2) ->
+                            Integer.compare(e2.getKey().ordinal(),
+                                    e1.getKey().ordinal()))
+                                            .collect(Collectors.toList())
+                                            .forEach(e -> e.getValue()
+                                                    .forEach(se -> se.draw(g)));
+
+                    entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
                     entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
                 spawner.drawNextSpawnTimer(g);
@@ -293,4 +301,3 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.displayController.drawScreen(g);
     }
 }
-
