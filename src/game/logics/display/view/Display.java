@@ -77,13 +77,13 @@ public abstract class Display {
     public Display(final Screen gScreen) {
         this.gScreen = gScreen;
 
-        this.titleFont = GameWindow.fLoader.getTitleFont()
+        this.titleFont = GameWindow.GAME_FONTLOADER.getTitleFont()
                 .deriveFont(getScaledSize(TITLE_SCALE));
-        this.optionsFont = GameWindow.fLoader.getOptionsFont()
+        this.optionsFont = GameWindow.GAME_FONTLOADER.getOptionsFont()
                 .deriveFont(getScaledSize(OPTIONS_SCALE));
-        this.selectedOptionsFont = GameWindow.fLoader.getOptionsFont()
+        this.selectedOptionsFont = GameWindow.GAME_FONTLOADER.getOptionsFont()
                 .deriveFont(getScaledSize(SELECTED_SCALE));
-        this.textFont = GameWindow.fLoader.getTextFont()
+        this.textFont = GameWindow.GAME_FONTLOADER.getTextFont()
                 .deriveFont(getScaledSize(OPTIONS_SCALE));
 
         this.options = new ArrayList<>();

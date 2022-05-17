@@ -54,7 +54,7 @@ public abstract class HitboxInstance implements Hitbox{
     }
     
     public void draw(Graphics2D g) {
-        if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.HITBOX)) {
+        if(GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.HITBOX)) {
             this.hitboxes.forEach((hitbox, startPos) -> {
                 g.setColor(Color.MAGENTA);
                 g.draw(hitbox);

@@ -36,7 +36,7 @@ public class SpeedHandler implements Cloneable{
     }
     
     public void applyAcceleration() {
-        xSpeed += xAcceleration / GameWindow.fpsLimit;
+        xSpeed += xAcceleration / GameWindow.FPS_LIMIT;
     }
     
     public void resetSpeed() {

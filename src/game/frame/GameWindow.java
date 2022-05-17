@@ -26,18 +26,24 @@ import java.util.List;
  * The execution loop is handled by a thread implemented in this class.
  * As long as this thread is alive the game will continue to run.
  * </p>
- * 
- * @author Daniel Pellanda
- * 
  */
-public class GameWindow extends JPanel implements Runnable{
+public class GameWindow extends JPanel implements Runnable {
 
     private static final long serialVersionUID = 1L;
-    
-    public static final long nanoSecond = 1000000000;
-    public static final long microSecond = 1000000;
-    public static final long milliSecond = 1000;
-    
+
+    /**
+     * Represents how many nanoseconds are in a second.
+     */
+    public static final long NANO_SECOND = 1000000000;
+    /**
+     * Represents how many microseconds are in a second.
+     */
+    public static final long MICRO_SECOND = 1000000;
+    /**
+     * Represents how many milliseconds are in a second.
+     */
+    public static final long MILLI_SECOND = 1000;
+
     /**
      * Defines the cap for the "Frames Per Second". 
      * 
@@ -52,62 +58,55 @@ public class GameWindow extends JPanel implements Runnable{
      * </p>
      * 
      */
-    public static final int fpsLimit = 60;
-    /**
-     * Shows at how many "Frames Per Second" is currently running the game.
-     */
-    public static int fps = 0;
-    
+    public static final int FPS_LIMIT = 60;
+    private int fps = 0;
     private List<Long> drawTimePerFrame = new ArrayList<>();
     private long averageDrawTime = 0;
-    
+
     /**
      * Stores the screen information (resolution, size of each tile, etc).
      */
-    public static final Screen gameScreen = new ScreenHandler();
+    public static final Screen GAME_SCREEN = new ScreenHandler();
     /**
      * Listens the press of keys of the keyboard.
      */
-    public static final KeyHandler keyHandler = new KeyHandler();
+    public static final KeyHandler GAME_KEYHANDLER = new KeyHandler();
+    /**
+     * Loads and stores the font used in the game.
+     */
+    public static final FontLoader GAME_FONTLOADER = new FontLoader();
     /**
      * Manages enabling and disabling of Debug Features.
      */
-    public static Debugger debugger;
-    /**
-     * Loads and stores the font used in the game
-     */
-    public static FontLoader fLoader = new FontLoader();
+    public static final Debugger GAME_DEBUGGER = new Debugger(GameHandler.DEBUG_MODE);
+
     /**
      * Handles the logic part of the game (entities, interface, game state, etc). 
      */
     private final Logics logH;
-    
+
     private final Thread gameLoop = new Thread(this);
     private boolean gameRunning = false;
-    
+
     /**
      * Basic constructor that sets <code>JPanel</code> attributes and sets up the <code>Logics</code> handler
      * and the <code>Debugger</code>.
-     * 
-     * @param debug starting mode for the <code>Debugger</code>
      */
-    public GameWindow(final boolean debug) {
+    public GameWindow() {
         super();
-        
+
         /// Sets up the basic JPanel parameters /// 
-        this.setPreferredSize(gameScreen.getScreenSize());
+        this.setPreferredSize(GAME_SCREEN.getScreenSize());
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
-        
+
         /// Links the keyboard listener to the JPanel ///
-        this.addKeyListener(keyHandler);
-        
-        /// Sets up Debugger and Logics handler ///
-        debugger = new Debugger(debug);
+        this.addKeyListener(GAME_KEYHANDLER);
+
         this.logH = new LogicsHandler();
     }
-    
+
     /**
      * Begins the execution of the game loop.
      */
@@ -115,11 +114,14 @@ public class GameWindow extends JPanel implements Runnable{
         gameRunning = true;
         gameLoop.start();
     }
-    
+
+    /**
+     * Ends the execution of the game loop and closes the game.
+     */
     public void stopGame() {
         gameRunning = false;
     }
-    
+
     /**
      * Updates the class parameters for each frame.
      */
@@ -127,88 +129,93 @@ public class GameWindow extends JPanel implements Runnable{
         // Updates Logics parameters
         logH.updateAll();
     }
-    
+
     /**
      * Decides what to draw for each frame.
      */
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        
-        long timeBeforeDraw = System.nanoTime();
-        Graphics2D board = (Graphics2D)g;
-        
+
+        final int fpsMeterX = 3;
+        final int fpsMeterY = 8;
+        final int drawTimeX = 3;
+        final int drawTimeY = GAME_SCREEN.getHeight() - 5;
+
+        final long timeBeforeDraw = System.nanoTime();
+        Graphics2D board = (Graphics2D) g;
+
         // Draws logical parts of the game
         logH.drawAll(board);
-        
+
         board.setColor(Debugger.debugColor);
         board.setFont(Debugger.debugFont);
-        
+
         // Draws FPS meter if enabled by debugger
-        if(debugger.isFeatureEnabled(Debugger.Option.FPS_METER)){
-            board.drawString("FPS: " + fps, 3, 8);
+        if (GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.FPS_METER)) {
+            board.drawString("FPS: " + fps, fpsMeterX, fpsMeterY);
         }
         // Draws average draw time if enabled by debugger
-        if(debugger.isFeatureEnabled(Debugger.Option.DRAW_TIME)) {
+        if (GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.DRAW_TIME)) {
             drawTimePerFrame.add(System.nanoTime() - timeBeforeDraw);
-            board.drawString("AVG-DRAW: " + averageDrawTime + "ns", 3, gameScreen.getHeight() - 5);
+            board.drawString("AVG-DRAW: " + averageDrawTime + "ns", drawTimeX, drawTimeY);
         }
-        
+
         board.dispose();
     }
-    
+
     /**
      * Runs the loop, keeping the game alive.
      */
     @Override
     public void run() {
         // Defines how many nanoseconds have to pass until the next execution loop
-        double drawInterval = nanoSecond / fpsLimit;
+        double drawInterval = NANO_SECOND / FPS_LIMIT;
         // System time after interval has passed
         double nextDraw = System.nanoTime() + drawInterval;
         // Nanoseconds passed from the current loop
         long drawTime = 0;
         // FPS counted for the current second
         int fpsCount = 0;
-        
-        while(gameLoop.isAlive() && gameRunning) {
-            
+
+        while (gameLoop.isAlive() && gameRunning) {
+
             // Gets current system time
             long timer = System.nanoTime();
-            
+
             // Updates parameters for each second passed
-            if(drawTime > nanoSecond) {
+            if (drawTime > NANO_SECOND) {
                 fps = fpsCount;
                 drawTime = 0;
                 fpsCount = 0;
-                
+
                 long drawTimeSum = 0;
-                for(long draw : drawTimePerFrame) {
+                for (long draw : drawTimePerFrame) {
                     drawTimeSum += draw;
                 }
                 averageDrawTime = drawTimeSum / (drawTimePerFrame.size() > 0 ? drawTimePerFrame.size() : 1);
                 drawTimePerFrame.clear();
             }
-            
+
             /// RUNS EACH FRAME ///
             update();
             repaint();
-            
+
             fpsCount++;
             try {
                 // Thread sleeps until it's next loop time
                 double sleepTime = nextDraw - System.nanoTime();
-                sleepTime = sleepTime < 0 ? 0 : sleepTime / microSecond;
+                sleepTime = sleepTime < 0 ? 0 : sleepTime / MICRO_SECOND;
                 Thread.sleep((long) sleepTime);
-                
+
                 // Sets up the next loop time for the next frame
                 nextDraw = System.nanoTime() + drawInterval;
             } catch (InterruptedException e) {
-                JOptionPane.showMessageDialog((Component)this, "An error occured! \n Details: \n\n" + e.getMessage() , "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog((Component) this, "An error occured! \n Details: \n\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
                 System.exit(-1);
             }
-            
+
             // Adds the time passed since the last second 
             drawTime += System.nanoTime() - timer;
         }

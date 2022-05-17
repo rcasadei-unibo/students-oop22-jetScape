@@ -118,10 +118,10 @@ public class PlayerInstance extends EntityInstance implements Player{
      */
     public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
         super(l);
-        this.keyH = GameWindow.keyHandler;
+        this.keyH = GameWindow.GAME_KEYHANDLER;
         
-        fallSpeed = baseFallSpeed / GameWindow.fpsLimit;
-        jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
+        fallSpeed = baseFallSpeed / GameWindow.FPS_LIMIT;
+        jumpSpeed = baseJumpSpeed / GameWindow.FPS_LIMIT;
         
         position = new Pair<>(xPosition, yGround);
         
@@ -244,7 +244,7 @@ public class PlayerInstance extends EntityInstance implements Player{
             spriteSwitcher = 0;
             this.statusChanged = false;
         }
-        else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
+        else if(frameTime >= GameWindow.FPS_LIMIT / animationSpeed) {
             if(status.isInDyingAnimation() && spriteSwitcher >= 7) {
                 setStatus(PlayerStatus.DEAD);
             }
@@ -261,7 +261,7 @@ public class PlayerInstance extends EntityInstance implements Player{
         if(this.invulnerable) {
             if(this.invulnerableTimer == -1) {
                 this.invulnerableTimer = AbstractLogics.getFrameTime();
-            } else if(AbstractLogics.getFrameTime() - this.invulnerableTimer >= invicibilityTime * GameWindow.fpsLimit) {
+            } else if(AbstractLogics.getFrameTime() - this.invulnerableTimer >= invicibilityTime * GameWindow.FPS_LIMIT) {
                 this.invulnerable = false;
                 this.invulnerableTimer = -1;
             }

@@ -85,7 +85,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     
     private void updateFrameTime() {
         frameTime++;
-        if(frameTime >= GameWindow.fpsLimit) {
+        if(frameTime >= GameWindow.FPS_LIMIT) {
             frameTime = 0;
         }
     }
@@ -106,15 +106,15 @@ public class MissileInstance extends ObstacleInstance implements Missile {
                 if(lastDir != Direction.UP) {
                     ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
                 }
-                position.setY(position.getY() - ySpeed / GameWindow.fpsLimit);
-                ySpeed += yAcceleration / GameWindow.fpsLimit;
+                position.setY(position.getY() - ySpeed / GameWindow.FPS_LIMIT);
+                ySpeed += yAcceleration / GameWindow.FPS_LIMIT;
                 lastDir = Direction.UP;
             } else if(position.getY() < playerPosition.getY()) {
                 if(lastDir != Direction.DOWN) {
                     ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
                 }
-                position.setY(position.getY() + ySpeed / GameWindow.fpsLimit);
-                ySpeed += yAcceleration  / GameWindow.fpsLimit;
+                position.setY(position.getY() + ySpeed / GameWindow.FPS_LIMIT);
+                ySpeed += yAcceleration  / GameWindow.FPS_LIMIT;
                 lastDir = Direction.DOWN;
             }
         }

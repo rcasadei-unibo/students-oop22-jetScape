@@ -114,7 +114,7 @@ public class TileGenerator implements Generator{
     private long sleepTimeLeft = 0;
     private long sleepInterval;
 
-    private final Random r = new Random();
+    private static final Random rng = new Random();
 
     /**
      * Constructor that sets up the entities structure where obstacles will be
@@ -126,7 +126,7 @@ public class TileGenerator implements Generator{
     public TileGenerator(final int tileSize, final Map<EntityType, Set<Entity>> entities, final double interval) {
         this.entities = entities;
         this.tileSize = tileSize;
-        this.interval = (long) (interval * GameWindow.milliSecond + intervalDecreaseDiff);
+        this.interval = (long) (interval * GameWindow.MILLI_SECOND + intervalDecreaseDiff);
         this.sleepInterval = this.interval;
 
         EntityType.genericTypes.stream().filter(e -> e.isGenerableEntity()).collect(Collectors.toList())
@@ -251,11 +251,11 @@ public class TileGenerator implements Generator{
     }
 
     private void spawnTile() {
-        int randomNumber = r.nextInt() % 100;
+        int randomNumber = rng.nextInt() % 100;
         randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 
         if (randomNumber <= powerUpOdds) {
-            randomNumber = r.nextInt() % 2;
+            randomNumber = rng.nextInt() % 2;
             randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
             randomNumber += EntityType.PICKUP.ordinal() + 1;
             spawnSet(EntityType.values()[randomNumber]);
@@ -271,7 +271,7 @@ public class TileGenerator implements Generator{
         int randomNumber;
         do {
             continueSearch = false;
-            randomNumber = r.nextInt() % tileSets.get(type).size();
+            randomNumber = rng.nextInt() % tileSets.get(type).size();
             randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 
             for (final Entity e : tileSets.get(type).get(randomNumber)) {
@@ -283,7 +283,7 @@ public class TileGenerator implements Generator{
         } while (continueSearch);
 
         if (!this.isWaiting()) {
-            tileSets.get(type).get(randomNumber).forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_SPAWN, "spawned::" + e.toString()));
+            tileSets.get(type).get(randomNumber).forEach(e -> GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_SPAWN, "spawned::" + e.toString()));
             entities.get(type).addAll(tileSets.get(type).get(randomNumber));
         }
     }
@@ -356,7 +356,7 @@ public class TileGenerator implements Generator{
         waiting = true;
 
         synchronized(this) {
-            final long timePassed = System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep;
+            final long timePassed = System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeBeforeSleep;
             remainingTimeToSleep = sleepInterval - timePassed;
         }
     }
@@ -368,20 +368,20 @@ public class TileGenerator implements Generator{
                 generator.notify();
                 
                 synchronized(this) {
-                    final long timePassed = System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep;
+                    final long timePassed = System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeBeforeSleep;
                     sleepTimeLeft = sleepInterval - timePassed > 0 ? sleepInterval - timePassed : 0;
                     remainingTimeToSleep = timePassed < sleepInterval ? remainingTimeToSleep - sleepTimeLeft : remainingTimeToSleep;
-                    systemTimeAfterPaused = System.nanoTime() / GameWindow.microSecond; 
+                    systemTimeAfterPaused = System.nanoTime() / GameWindow.MICRO_SECOND; 
                 }
             }
         }
     }
 
     public void drawNextSpawnTimer(final Graphics2D g) {
-        if (GameWindow.debugger.isFeatureEnabled(Debugger.Option.NEXT_SPAWN_TIMER)) {
+        if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.NEXT_SPAWN_TIMER)) {
             synchronized(this) {
-                final long expectedTimer = sleepInterval - (System.nanoTime() / GameWindow.microSecond - systemTimeBeforeSleep);
-                final long remainingTime = remainingTimeToSleep + sleepTimeLeft - (System.nanoTime() / GameWindow.microSecond - systemTimeAfterPaused);
+                final long expectedTimer = sleepInterval - (System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeBeforeSleep);
+                final long remainingTime = remainingTimeToSleep + sleepTimeLeft - (System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeAfterPaused);
                 final long timer = !this.isWaiting() ? remainingTime > 0 ? remainingTime : expectedTimer  : remainingTimeToSleep;
 
                 g.setColor(Debugger.debugColor);
@@ -420,7 +420,7 @@ public class TileGenerator implements Generator{
             }
 
             synchronized(this) {
-                systemTimeBeforeSleep = System.nanoTime() / GameWindow.microSecond;
+                systemTimeBeforeSleep = System.nanoTime() / GameWindow.MICRO_SECOND;
                 sleepInterval =  interval - intervalDecreaseDiff * AbstractLogics.getDifficultyLevel() > minimum
                     ? interval - intervalDecreaseDiff * AbstractLogics.getDifficultyLevel()
                     : minimum;

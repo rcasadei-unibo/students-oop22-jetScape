@@ -85,9 +85,9 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     public LogicsHandler() {
         super();
 
-        this.screen = GameWindow.gameScreen;
-        this.keyH = GameWindow.keyHandler;
-        this.debugger = GameWindow.debugger;
+        this.screen = GameWindow.GAME_SCREEN;
+        this.keyH = GameWindow.GAME_KEYHANDLER;
+        this.debugger = GameWindow.GAME_DEBUGGER;
         
         EntityType.genericTypes
         .forEach(e -> entities.put(e, new HashSet<>()));
@@ -111,10 +111,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         try {
             spawner.initialize();
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog((Component)GameHandler.gameWindow, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component)GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog((Component)GameHandler.gameWindow, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component)GameHandler.GAME_WINDOW, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -124,7 +124,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             public void accept(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
                 synchronized(entities) {
                     entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
-                    .forEach(e -> GameWindow.debugger.printLog(Debugger.Option.LOG_CLEAN, "cleaned::" + e.toString()));
+                    .forEach(e -> GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_CLEAN, "cleaned::" + e.toString()));
                     entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
                     .forEach(e -> e.reset());
                     entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).map(e -> e.getValue()).collect(Collectors.toList())
@@ -161,7 +161,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * Removes all entities that are on the "clear area" [x < -tile size].
      */
     private void updateCleaner() {
-        if(super.getFrameTime() % GameWindow.fpsLimit * cleanInterval == 0) {
+        if(super.getFrameTime() % GameWindow.FPS_LIMIT * cleanInterval == 0) {
             this.getEntitiesCleaner().accept(t -> t.isGenerableEntity(), e -> e.isOnClearArea());
         }
     }
@@ -186,7 +186,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 case EXIT:
                     final String quitMessage = "Are you sure to quit the game?";
                     final String quitTitle = "Quit Game";
-                    if(JOptionPane.showConfirmDialog((Component)GameHandler.gameWindow, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+                    if(JOptionPane.showConfirmDialog((Component)GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
                         return;
                     }
                     break;
@@ -203,7 +203,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     if(this.gameState == GameState.PAUSED) {
                         final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
                         final String title = "Return to main menu";
-                        if(JOptionPane.showConfirmDialog((Component)GameHandler.gameWindow, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+                        if(JOptionPane.showConfirmDialog((Component)GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
                             return;
                         }
                         spawner.stop();
@@ -233,7 +233,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         switch(this.gameState) {
             case EXIT:
                 spawner.terminate();
-                GameHandler.gameWindow.stopGame();
+                GameHandler.GAME_WINDOW.stopGame();
                 System.exit(0);
                 break;
             case ENDGAME:
