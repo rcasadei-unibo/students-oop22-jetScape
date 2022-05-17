@@ -22,7 +22,7 @@ public class Debugger {
     /**
      * Defines the default font for debugging features.
      */
-    public static final Font debugFont = GameWindow.fLoader.getDebuggerFont().deriveFont((float)(GameWindow.gameScreen.getHeight()/fontScale));
+    public static final Font debugFont = GameWindow.GAME_FONTLOADER.getDebuggerFont().deriveFont((float)(GameWindow.GAME_SCREEN.getHeight()/fontScale));
     /**
      * Defines the default color for debugging features.
      */

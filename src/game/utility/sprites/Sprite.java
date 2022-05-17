@@ -67,7 +67,7 @@ public class Sprite {
         this(name, placeHolder);
         image = Optional.ofNullable(Sprite.load(defaultDir + path));
         if(image.isPresent()) {
-            image = Optional.of(Sprite.scale(image.get(), GameWindow.gameScreen.getTileSize()));
+            image = Optional.of(Sprite.scale(image.get(), GameWindow.GAME_SCREEN.getTileSize()));
         }
     }
     

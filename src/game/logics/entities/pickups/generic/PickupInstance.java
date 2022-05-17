@@ -35,7 +35,7 @@ public abstract class PickupInstance extends EntityInstance implements Pickup{
         super.update();
         
         if(position.getX() > -screen.getTileSize() * 2) {
-            position.setX(position.getX() - movement.getXSpeed() / GameWindow.fpsLimit);
+            position.setX(position.getX() - movement.getXSpeed() / GameWindow.FPS_LIMIT);
         }
         this.hitbox.updatePosition(position);
     }

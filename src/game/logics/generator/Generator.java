@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import org.json.simple.parser.ParseException;
+import com.github.cliftonlabs.json_simple.JsonException;
 
 import game.logics.entities.obstacles.missile.Missile;
 import game.logics.entities.obstacles.zapper.ZapperBase;
@@ -80,7 +80,7 @@ public interface Generator extends Runnable{
      * @throws IOException if json file reading fails
      * @throws FileNotFoundException if json file cannot be found
      */
-    void initialize() throws FileNotFoundException, IOException, ParseException;
+    void initialize() throws FileNotFoundException, JsonException, Exception;
     
     /**
      * Start the generation of obstacles [Starts thread].

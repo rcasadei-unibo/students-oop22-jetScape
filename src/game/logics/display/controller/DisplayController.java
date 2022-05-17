@@ -51,6 +51,16 @@ public class DisplayController {
     private final DisplayHandler gameOverHandler;
     /* TODO eventually add shop */
 
+    /**
+     * {@link DisplayController} builder: builds all displayed cards and
+     * all {@MenuHandler} needed instances.
+     *
+     * @param keyH
+     * @param gScreen
+     * @param setState Consumer to set new value of State
+     * @param getState Supplier to get new value from State
+     * @param getScore Supplier to get new value of Score
+     */
     public DisplayController(final KeyHandler keyH, final Screen gScreen, 
             final Consumer<GameState> setState, final Supplier<GameState> getState,
             final Supplier<Integer> getScore, final GameID gameID, final Records records) {

@@ -29,7 +29,7 @@ public class DisplayHUD extends Display {
         super(gScreen);
 
         this.score = 0;
-        this.scoreFont = GameWindow.fLoader.getOptionsFont().deriveFont(getScaledSize(fontScale));
+        this.scoreFont = GameWindow.GAME_FONTLOADER.getOptionsFont().deriveFont(getScaledSize(fontScale));
     }
 
     /**

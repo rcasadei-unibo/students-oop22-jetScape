@@ -32,3 +32,4 @@ public class ShieldInstance extends PickupInstance implements Shield{
     }
 
 }
+

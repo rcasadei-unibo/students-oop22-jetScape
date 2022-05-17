@@ -11,6 +11,7 @@ import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.generic.EntityInstance;
 import game.logics.entities.pickups.teleport.Teleport;
+import game.logics.handler.AbstractLogics;
 import game.logics.handler.Logics;
 import game.logics.hitbox.PlayerHitbox;
 import game.logics.interactions.CollisionsHandler;
@@ -41,11 +42,11 @@ public class PlayerInstance extends EntityInstance implements Player {
      * The horizontal position where the player will be.
      */
     private final double xPosition = screen.getTileSize() * xRelativePosition;
-    private final Pair<Double,Double> shieldPosition = new Pair<>(0.0,0.0);
+    private final Pair<Double, Double> shieldPosition = new Pair<>(0.0,0.0);
     
     private boolean shieldProtected = false;
     private boolean invulnerable = false;
-            
+    
     /**
      * The current player's score.
      */
@@ -70,16 +71,6 @@ public class PlayerInstance extends EntityInstance implements Player {
     private double fallMultiplier = initialFallMultiplier;
     
     /**
-     * A enumerable describing the current status of the player.
-     */
-    private PlayerStatus status;
-
-    /**
-     * A enumerable describing the cause of death of the player, if any.
-     */
-    private PlayerDeath causeOfDeath;
-
-    /**
      * Decides which sprite should be displayed.
      */
     private int spriteSwitcher = 1;
@@ -94,25 +85,32 @@ public class PlayerInstance extends EntityInstance implements Player {
     private final CollisionsHandler hitChecker;
 
     /**
+     * A enumerable describing the current status of the player.
+     */
+    private PlayerStatus status;
+	private boolean statusChanged = false;
+
+	private PlayerDeath causeOfDeath;
+
+    /**
      * Constructor used for initializing basic parts of the player entity.
      * 
      * @param l the logics handler which the entity is linked to
      */
     public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
-
         super(l);
-        this.keyH = GameWindow.keyHandler;
+        this.keyH = GameWindow.GAME_KEYHANDLER;
         
-        fallSpeed = baseFallSpeed / GameWindow.fpsLimit;
-        jumpSpeed = baseJumpSpeed / GameWindow.fpsLimit;
+        this.fallSpeed = baseFallSpeed / GameWindow.FPS_LIMIT;
+        this.jumpSpeed = baseJumpSpeed / GameWindow.FPS_LIMIT;
         
         position = new Pair<>(xPosition, yGround);
         
         hitbox = new PlayerHitbox(position, screen);
         hitboxSet.add(this.hitbox);
-        hitChecker = new CollisionsHandler(entities, this);
+        this.hitChecker = new CollisionsHandler(entities, this);
         
-        status = PlayerStatus.WALK;
+        this.status = PlayerStatus.WALK;
         entityTag = EntityType.PLAYER;
         
         spritesMgr.setPlaceH(placeH);
@@ -139,11 +137,15 @@ public class PlayerInstance extends EntityInstance implements Player {
         spritesMgr.addSprite("dead1", texturePath + "barrydead1.png");
         spritesMgr.addSprite("shield", texturePath + "barryshield.png");
         spritesMgr.setAnimator(() -> {
-            int spriteSwitcher = status == PlayerStatus.FALL || status == PlayerStatus.JUMP ? (this.spriteSwitcher % 2 + 1) : status == PlayerStatus.DEAD ? 1 : this.spriteSwitcher % 4 + 1;
+            final int spriteSwitcher = status == PlayerStatus.FALL
+                    || status == PlayerStatus.JUMP
+                    ? this.spriteSwitcher % 2 + 1
+                    : status == PlayerStatus.DEAD
+                            ? 1 : this.spriteSwitcher % 4 + 1;
             return status.toString() + spriteSwitcher;
         });
     }
-
+    
     private void obstacleHit(final PlayerStatus statusAfterHit) {
         if(!this.invulnerable && !status.isInDyingAnimation()) {
             if(this.shieldProtected) {
@@ -152,10 +154,10 @@ public class PlayerInstance extends EntityInstance implements Player {
                 return;
             }
             this.setStatus(statusAfterHit);
-            this.setCauseOfDeathIfDead();
+            this.setCauseOfDeath(statusAfterHit);
         }
     }
-
+    
     private void checkHit(final Entity entityHit) {
         switch(entityHit.entityType()) {
             case MISSILE: 
@@ -176,7 +178,7 @@ public class PlayerInstance extends EntityInstance implements Player {
                 break;
         }
     }
-
+    
     private void jump() {
         fallMultiplier = initialFallMultiplier;
 
@@ -213,7 +215,7 @@ public class PlayerInstance extends EntityInstance implements Player {
      * @param newStatus the new status
      */
     private void setStatus(final PlayerStatus newStatus) {
-        status.changeStatus(newStatus);
+        statusChanged = status != newStatus;
         status = newStatus;
     }
 
@@ -221,16 +223,16 @@ public class PlayerInstance extends EntityInstance implements Player {
      * Updates the sprite that should be display during the animation.
      */
     private void updateSprite() {
-        if(PlayerStatus.hasChanged) {
+        if(this.statusChanged) {
             frameTime = 0;
             spriteSwitcher = 0;
-            PlayerStatus.hasChanged = false;
+            this.statusChanged = false;
         }
-        else if(frameTime >= GameWindow.fpsLimit / animationSpeed) {
-            if(PlayerStatus.dying && spriteSwitcher >= 7) {
+        else if(frameTime >= GameWindow.FPS_LIMIT / animationSpeed) {
+            if(status.isInDyingAnimation() && spriteSwitcher >= 7) {
                 setStatus(PlayerStatus.DEAD);
             }
-            if(PlayerStatus.landing && spriteSwitcher >= 3) {
+            if(status == PlayerStatus.LAND && spriteSwitcher >= 3) {
                 setStatus(PlayerStatus.WALK);
             }
             frameTime = 0;
@@ -238,24 +240,24 @@ public class PlayerInstance extends EntityInstance implements Player {
         }
         frameTime++;
     }
-
+    
     private void updateInvulnerableTimer() {
         if(this.invulnerable) {
             if(this.invulnerableTimer == -1) {
-                this.invulnerableTimer = Logics.getFrameTime();
-            } else if(Logics.getFrameTime() - this.invulnerableTimer >= invicibilityTime * GameWindow.fpsLimit) {
+                this.invulnerableTimer = AbstractLogics.getFrameTime();
+            } else if(AbstractLogics.getFrameTime() - this.invulnerableTimer >= invicibilityTime * GameWindow.FPS_LIMIT) {
                 this.invulnerable = false;
                 this.invulnerableTimer = -1;
             }
         }
     }
-
+    
     private void updateScore() {
-        if (frameTime % 2 == 0) {
-            this.score ++;
+        if(frameTime % 2 == 0) {
+            this.score++;
         }
     }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -270,8 +272,8 @@ public class PlayerInstance extends EntityInstance implements Player {
         return status == PlayerStatus.DEAD;
     }
 
-    private void setCauseOfDeathIfDead() {
-        switch(status) {
+    private void setCauseOfDeath(final PlayerStatus deathCause) {
+        switch(deathCause) {
             case BURNED:
                 causeOfDeath = Player.PlayerDeath.BURNED;
                 break;
@@ -290,11 +292,10 @@ public class PlayerInstance extends EntityInstance implements Player {
     public Player.PlayerDeath getCauseOfDeath() {
         return this.causeOfDeath;
     }
-
+    
     @Override
     public void reset() {
         position.setX(xPosition);
-
         position.setY(yGround);
         setStatus(PlayerStatus.WALK);
         score = 0;
@@ -303,7 +304,7 @@ public class PlayerInstance extends EntityInstance implements Player {
         invulnerable = false;
         shieldProtected = false;
     }
-
+    
     @Override
     public void update() {
         super.update();
@@ -338,4 +339,6 @@ public class PlayerInstance extends EntityInstance implements Player {
             }
         }
     }
+
 }
+

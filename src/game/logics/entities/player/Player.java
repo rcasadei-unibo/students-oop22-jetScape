@@ -12,47 +12,18 @@ import game.logics.entities.generic.Entity;
  */
 public interface Player extends Entity {
 
-    enum PlayerStatus {
-        WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
-
-        public static boolean hasChanged = false;
-        public static boolean landing = false;
-        public static boolean dying = false;
-        
-        public void changeStatus(final PlayerStatus newAction) {
-            if (this != newAction) {
-                hasChanged = true;
-                landing = newAction == PlayerStatus.LAND;
-                dying = newAction == PlayerStatus.BURNED || newAction == PlayerStatus.ZAPPED;
-            }
-        }
-        
-        public boolean isInDyingAnimation() {
-            return this.ordinal() > 3;
-        }
-
-        @Override
-        public String toString() {
-            return super.toString().toLowerCase();
-        }
-    }
-
-    public enum PlayerDeath {
-        BURNED, ZAPPED, NONE;
-    }
-
     static final double baseFallSpeed = 50.0;
     static final double baseJumpSpeed = 20.0;
     static final double initialJumpMultiplier = 1.0;
     static final double initialFallMultiplier = 0.3;
     static final double jumpMultiplierIncrease = 0.6;
     static final double fallMultiplierIncrease = 0.15;
-    
+
     static final double xRelativePosition = 2.11;
-    
+
     static final int flickeringSpeed = 10;
     static final int invicibilityTime = 2;
-    
+
     static final double animationSpeed = 7;
 
     /**
@@ -73,5 +44,35 @@ public interface Player extends Entity {
      *   If Barry is still alive, returns <code>Player.PlayerDeath.NONE</code>
      * @return a PlayerDeath instance with the cause of death
      */
-    public PlayerDeath getCauseOfDeath();
+    PlayerDeath getCauseOfDeath();
+
+    /**
+     * A enumerable describing the current status of the player.
+     */
+    enum PlayerStatus {
+        WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
+
+        public static boolean hasChanged = false;
+
+        public boolean isInDyingAnimation() {
+            switch (this) {
+               case ZAPPED:
+               case BURNED:
+               case DEAD:
+                   return true;
+               default:
+                   break;
+            }
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
+    }
+
+    enum PlayerDeath {
+        BURNED, ZAPPED, NONE;
+    }
 }

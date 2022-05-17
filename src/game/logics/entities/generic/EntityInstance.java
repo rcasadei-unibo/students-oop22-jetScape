@@ -83,7 +83,7 @@ public abstract class EntityInstance implements Entity{
      * @param l the logics handler which the entity is linked to
      */
     protected EntityInstance(final Logics l) {
-        this.screen = GameWindow.gameScreen;
+        this.screen = GameWindow.GAME_SCREEN;
         this.cleaner = l.getEntitiesCleaner();
         entityTag = EntityType.UNDEFINED;
         
@@ -185,7 +185,6 @@ public abstract class EntityInstance implements Entity{
     }
     
     public void update() {
-        currentFPS = GameWindow.fps;
         updateFlags();
     }
     
@@ -196,11 +195,11 @@ public abstract class EntityInstance implements Entity{
     }
     
     public void drawCoordinates(final Graphics2D g) {
-        if(GameWindow.debugger.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
+        if(GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
             g.setColor(Debugger.debugColor);
             g.setFont(Debugger.debugFont);
-            g.drawString("X:" + Math.round(this.getX()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), Math.round(this.getY()) + Math.round(screen.getTileSize()));
-            g.drawString("Y:" + Math.round(this.getY()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), 10 + Math.round(this.getY()) + Math.round(screen.getTileSize()));
+            g.drawString("X:" + Math.round(this.getX()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), Math.round(this.getY()) + screen.getTileSize());
+            g.drawString("Y:" + Math.round(this.getY()), Math.round(this.getX()) + Math.round(screen.getTileSize() * 0.88), 10 + Math.round(this.getY()) + screen.getTileSize());
         }
     }
     

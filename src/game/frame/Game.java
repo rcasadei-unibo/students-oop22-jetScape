@@ -15,9 +15,10 @@ package game.frame;
  * the game to start.
  * </p>
  *
- * @author Daniel Pellanda
  */
 public interface Game {
-
+    /**
+     * Allows the game to start by beginning the execution of the game window thread.
+     */
     void initialize();
 }

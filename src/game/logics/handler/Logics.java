@@ -23,14 +23,6 @@ import java.util.function.Predicate;
  */
 public interface Logics {
 
-    static int getDifficultyLevel() {
-        return LogicsHandler.difficultyLevel;
-    }
-
-    static int getFrameTime() {
-        return LogicsHandler.frameTime;
-    }
-
     BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner();
 
     /**

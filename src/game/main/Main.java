@@ -9,11 +9,6 @@ import game.frame.GameHandler;
  */
 public final class Main {
 
-    /**
-     *  Starting mode.
-     */
-    static final boolean DEBUG_MODE = false;
-
     private Main() {
     }
 
@@ -22,7 +17,7 @@ public final class Main {
      * @param args parameters passed from cli
      */
     public static void main(final String[] args) {
-        final Game g = new GameHandler(DEBUG_MODE);
+        final Game g = new GameHandler();
         g.initialize();
     }
 }
