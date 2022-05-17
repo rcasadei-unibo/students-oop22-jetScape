@@ -2,8 +2,13 @@ package game.logics.entities.obstacles.missile;
 
 import game.logics.entities.obstacles.generic.Obstacle;
 
-public interface Missile extends Obstacle{
+/**
+ * An Interface for accessing {@link MissileInstance} methods.
+ * 
+ * <p>
+ * The class {@link MissileInstance} is used for defining missile obstacle in the environment.
+ * </p>
+ */
+public interface Missile extends Obstacle {
 
-    static final double yDefaultSpeed = 0;
-    static final double yDefaultAcceleration = 400;
 }

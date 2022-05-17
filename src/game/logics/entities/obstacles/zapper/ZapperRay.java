@@ -16,8 +16,7 @@ import game.logics.entities.obstacles.generic.Obstacle;
  * Each <code>ZapperRayInstance</code> needs to be paired to the 2 <code>ZapperBaseInstance</code> that compose
  * the trap.
  * 
- * @author Daniel Pellanda
  */
-public interface ZapperRay extends Obstacle{
-    
+public interface ZapperRay extends Obstacle {
+
 }

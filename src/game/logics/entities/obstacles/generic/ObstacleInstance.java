@@ -8,17 +8,15 @@ import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
- * The abstract class <code>ObstacleInstance</code> is used to define the common parts of each obstacle.
- * 
- * @author Daniel Pellanda
+ * The abstract class {@link ObstacleInstance} is used to define the common parts of each obstacle.
  */
-public abstract class ObstacleInstance extends EntityInstance implements Obstacle{
+public abstract class ObstacleInstance extends EntityInstance implements Obstacle {
 
     /**
      * Defines the movement parameters of the obstacle.
      */
-    protected SpeedHandler movement;
-    
+    private SpeedHandler movement;
+
     /**
      * Constructor that sets up obstacle default values (picked up from 
      * {@link Logics}), defines it's bounds in the environment and allows to set it's
@@ -29,28 +27,37 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
      * @param obstacleType the type of obstacle to create
      * @param speed the {@link SpeedHandler} to use for the obstacle
      */
-    protected ObstacleInstance(final Logics l, final Pair<Double, Double> position, final EntityType obstacleType, final SpeedHandler speed){
+    protected ObstacleInstance(final Logics l, final Pair<Double, Double> position, final EntityType obstacleType, final SpeedHandler speed) {
         super(l, position, obstacleType);
         movement = speed.clone();
     }
-    
+
+    /**
+     * @return the {@link SpeedHandler} used by the obstacle.
+     */
     public SpeedHandler getSpeedHandler() {
         return movement;
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void reset() {
         super.reset();
         movement.resetSpeed();
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update() {
         super.update();
-        
-        if(this.getPosition().getX() > -GameWindow.GAME_SCREEN.getTileSize() * 2) {
-        	this.getPosition().setX(this.getPosition().getX() - movement.getXSpeed() / GameWindow.FPS_LIMIT);
-            if(!this.isOnSpawnArea()) {
+
+        if (this.getPosition().getX() > -GameWindow.GAME_SCREEN.getTileSize() * 2) {
+            this.getPosition().setX(this.getPosition().getX() - movement.getXSpeed() / GameWindow.FPS_LIMIT);
+            if (!this.isOnSpawnArea()) {
                 movement.applyAcceleration();
             }
         }

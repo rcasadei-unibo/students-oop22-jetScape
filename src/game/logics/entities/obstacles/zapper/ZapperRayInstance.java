@@ -11,38 +11,36 @@ import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
- * The class <code>ZapperRayInstance</code> represents one part of the most common
+ * The class {@link ZapperRayInstance} represents one part of the most common
  * type of obstacle that can be encountered during the game.
  * 
- * <code>ZapperRay</code> is one of the central parts of a Zapper obstacle, an electric trap
+ * {@link ZapperRay} is one of the central parts of a Zapper obstacle, an electric trap
  * that can be get the player killed when he hits it.
- * Each Zapper is composed by 2 <code>ZapperBase</code> and as many <code>ZapperRay</code> as
+ * Each Zapper is composed by 2 {@link ZapperBase} and as many {@link ZapperRay} as
  * the size of the trap.
  * 
- * Each <code>ZapperRayInstance</code> needs to be paired to the 2 <code>ZapperBaseInstance</code> that compose
+ * Each {@link ZapperRayInstance} needs to be paired to the 2 {@link ZapperBaseInstance} that compose
  * the trap.
- * 
- * @author Daniel Pellanda
  */
-public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
+public class ZapperRayInstance extends ObstacleInstance implements ZapperRay {
 
     /**
-     * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
-     * where <code>ZapperRayInstance</code> sprites can be found.
+     * Specifies the path within the sprite folder [specified in {@link Sprite} class]
+     * where {@link ZapperRayInstance} sprites can be found.
      */
-    private static final String spritePath = "zapperray" + System.getProperty("file.separator");
+    private static final String SPRITE_PATH = "zapperray" + System.getProperty("file.separator");
     /**
      * If sprites are missing, they will be replace by a rectangle of the color specified in
-     * <code>ZapperRayInstance.placeH</code>.
+     * <code>{@link ZapperRayInstance}.PLACE_HOLDER</code>.
      */
-    private static final Color placeH = Color.yellow;
-    
+    private static final Color PLACE_HOLDER = Color.yellow;
+
     /**
-     * The first <code>ZapperBase</code> paired.
+     * The first {@link ZapperBase} paired.
      */
     private final ZapperBase electrode1;
     /**
-     * The second <code>ZapperBase</code> paired.
+     * The second {@link ZapperBase} paired.
      */
     private final ZapperBase electrode2;
 
@@ -51,40 +49,39 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
      */
     private String rotation = "diagonal-left";
 
-    
     /**
      * Constructor used for initializing basic parts of the obstacle.
-     * It also pairs the <code>ZapperBase</code> objects given to the object.
+     * It also pairs the {@link ZapperBase} objects given to the object.
      * 
      * @param l the logics handler which the entity is linked to
      * @param p the starting position of the obstacle in the environment
-     * @param e1 the first <code>ZapperBase</code> to pair
-     * @param e2 the second <code>ZapperBase</code> to pair
+     * @param e1 the first {@link ZapperBase} to pair
+     * @param e2 the second {@link ZapperBase} to pair
      */
-    public ZapperRayInstance(final Logics l, final Pair<Double,Double> p, final ZapperBase e1, final ZapperBase e2) {
+     public ZapperRayInstance(final Logics l, final Pair<Double, Double> p, final ZapperBase e1, final ZapperBase e2) {
         super(l, p, EntityType.ZAPPERRAY, e1.getSpeedHandler());
-        
+
         electrode1 = e1;
-        electrode2 = e2;    
-        
+        electrode2 = e2;
+
         updateRotation();
-        
-        if(this.rotation.equals("vertical")) {
+
+        if (this.rotation.equals("vertical")) {
             this.setHitbox(new ZapperRayVerticalHitbox(p, GameWindow.GAME_SCREEN));
         } else {
             this.setHitbox(new ZapperRayHorizontalHitbox(p, GameWindow.GAME_SCREEN));
         }
         this.getHitboxSet().add(this.getHitbox());
-        
+
         final var spritesMgr = this.getSpriteManager();
-        spritesMgr.setPlaceH(placeH);
-        spritesMgr.addSprite("vertical", spritePath + "zapperray_vert.png");
-        spritesMgr.addSprite("horizontal", spritePath + "zapperray_horr.png");
+        spritesMgr.setPlaceH(PLACE_HOLDER);
+        spritesMgr.addSprite("vertical", SPRITE_PATH + "zapperray_vert.png");
+        spritesMgr.addSprite("horizontal", SPRITE_PATH + "zapperray_horr.png");
         spritesMgr.setAnimator(() -> rotation);
     }
-    
+
     /**
-     * Updates the object rotation, depending of the position of the paired <code>ZapperBase</code> objects.
+     * Updates the object rotation, depending of the position of the paired {@link ZapperBase} objects.
      */
     private void updateRotation() {
         if (Math.round(electrode1.getPosition().getX()) == Math.round(electrode2.getPosition().getX())) {
