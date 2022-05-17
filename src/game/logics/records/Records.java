@@ -13,14 +13,14 @@ import java.util.function.BiPredicate;
 
 public class Records {
 
-	// Data for building JSON data table
+    // Data for building JSON data table
     private final static Set<String> keySet = new HashSet<>();
     private final static Map<String, Object> recordsMap = new HashMap<>();
 
     private final JSONWriter writer = new JSONWriter(this);
 
     private final Player player;
-    
+
     //TODO complete list
     // List of keys for JSON files
     private final static String keyName = "name";
@@ -32,22 +32,22 @@ public class Records {
     private int age;
     // private String[] position;
     // private Map<String, Integer> salary;
-    
+
     // Data read from game
     private int score;
-	private PlayerDeath causeOfDeath;
+    private PlayerDeath causeOfDeath;
 
-	private static int playingRecordScore = 0; // higher score obtained by playing consecutively
-	private static boolean newPlayingRecordScore = false;
+    private static int playingRecordScore = 0; // higher score obtained by playing consecutively
+    private static boolean newPlayingRecordScore = false;
 
-	private int recordScore; // absolute new record
-	private boolean newRecordScore = false;
+    private int recordScore; // absolute new record
+    private boolean newRecordScore = false;
 
     //TODO
     public Records(final Player player) {
-    	this.player = player;
+        this.player = player;
     }
-    
+
     // TODO Set (maybe) with singleton
     public void build() {
     	keySet.add(keyName);
@@ -86,14 +86,14 @@ public class Records {
 				(oldID,newID) -> oldID.getGameDate() != newID.getGameDate();
 		boolean isNewID = false;
 
-    	if(!newGameID.isGamePlayed()) {
-    		isNewID = true;
-    	} else if(checkIfNew.test(IDGame, newGameID)) {
-        	isNewID = true;
-        	Records.IDGame = newGameID;
-    	}
-    	return isNewID;
-	}
+        if (!newGameID.isGamePlayed()) {
+            isNewID = true;
+        } else if(checkIfNew.test(IDGame, newGameID)) {
+            isNewID = true;
+            Records.IDGame = newGameID;
+        }
+        return isNewID;
+    }
 
     /**
      * Get data for updating in game, calling the data getters
@@ -101,30 +101,31 @@ public class Records {
 	//TODO add new records
     public void fetch(final GameID gameID) {
 
-    	//Pair<Integer, Date> gameID = getGameID.get();
-    	
-    	// Only if new gameID
-    	if(this.checkAndSet(gameID)) {
-    		if(player.hasDied()) {
-    			this.score = player.getCurrentScore();
-    			System.out.println(score);
-    			this.causeOfDeath = player.getCauseOfDeath();
-	    	}
+        //System.out.println(gameID.isGamePlayed());
+        //gameID.getGameDate().ifPresent(System.out::println);
+
+        // Only if new gameID
+        if (this.checkAndSet(gameID)) {
+            if(player.hasDied()) {
+                this.score = player.getCurrentScore();
+                System.out.println(score);
+                this.causeOfDeath = player.getCauseOfDeath();
+            }
         //this.getScore();
-    	}
+        }
     }
-   
+
     /**
      * Write to file
      */
     public void update() {
         this.writer.write();
     }
-    
+
     /****************************************/
-    /***   Calculate and check records   ***/
+    /***   Calculate and check records    ***/
     /****************************************/
-    
+
 	/*  TODO Move this method inside records
 	 *  substituting it with getter methods .isNewAbsoluteRecordScore() & .isNewPlayingRecordScore()
 	 */
