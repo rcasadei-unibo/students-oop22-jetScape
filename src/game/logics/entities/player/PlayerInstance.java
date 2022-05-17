@@ -125,8 +125,7 @@ public class PlayerInstance extends EntityInstance implements Player{
         
         position = new Pair<>(xPosition, yGround);
         
-        hitbox = new PlayerHitbox(position, screen);
-        hitboxSet.add(this.hitbox);
+        hitbox = new PlayerHitbox(position);
         hitChecker = new CollisionsHandler(entities, this);
         
         status = PlayerStatus.WALK;

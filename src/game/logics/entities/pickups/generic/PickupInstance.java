@@ -18,8 +18,7 @@ public abstract class PickupInstance extends EntityInstance implements Pickup{
         super(l, position);
         this.player = player;
         this.movement = speed.clone();
-        this.hitbox = new PickableHitbox(position, screen);
-        this.hitboxSet.add(this.hitbox);
+        this.hitbox = new PickableHitbox(position);
         
         entityTag = EntityType.PICKUP;
     }

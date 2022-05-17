@@ -1,7 +1,6 @@
 package game.logics.hitbox;
 
 import game.utility.other.Pair;
-import game.utility.screen.Screen;
 
 /**
  * The <code>PlayerHitbox</code> class represents a player's hitbox in
@@ -19,11 +18,9 @@ public class PlayerHitbox extends HitboxInstance {
     static final double rectangle2W = 13;
     static final double rectangle2H = 21;
 
-
-    public PlayerHitbox(Pair<Double,Double> startingPos, Screen gScreen) {
-        super(startingPos, gScreen);
+    public PlayerHitbox(Pair<Double,Double> startingPos) {
+        super(startingPos);
         super.addRectangle(rectangle1X, rectangle1Y, rectangle1W, rectangle1H);
         super.addRectangle(rectangle2X, rectangle2Y, rectangle2W, rectangle2H);
     }
-    
 }

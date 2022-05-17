@@ -30,7 +30,7 @@ public class CollisionsChecker {
         super();
         this.entities = entities;
         this.collisions = new  LinkedBlockingQueue<>();
-        this.player = p.getHitbox().stream().findFirst().get();
+        this.player = p.getHitbox();
     }
     
     /**
@@ -48,11 +48,9 @@ public class CollisionsChecker {
         this.entities.forEach((type, entities) -> {
             if(!type.equals(EntityType.PLAYER)) {
                 entities.forEach(entity -> {
-                    entity.getHitbox().forEach(hitbox -> {
-                        if(this.collides(hitbox)) {
-                            this.collisions.add(entity);
+                    if(this.collides(entity.getHitbox())) {
+                        this.collisions.add(entity);
                         }
-                    });
                 });
             }        
         });
@@ -73,7 +71,4 @@ public class CollisionsChecker {
         }
         return false;
     }
-    
-    
-
 }

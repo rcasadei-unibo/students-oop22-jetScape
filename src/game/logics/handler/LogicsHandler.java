@@ -1,3 +1,4 @@
+
 package game.logics.handler;
 
 import java.util.HashMap;
@@ -267,7 +268,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case INGAME:
                 synchronized(entities) {
                     entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
-                    entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().forEach(hitbox -> hitbox.draw(g))));
+                    entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
                     entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
                 spawner.drawNextSpawnTimer(g);
