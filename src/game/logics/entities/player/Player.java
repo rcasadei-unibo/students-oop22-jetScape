@@ -10,8 +10,8 @@ import game.logics.entities.generic.Entity;
  * 
  * @author Daniel Pellanda
  */
-public interface Player extends Entity{
-    
+public interface Player extends Entity {
+	
     static final double baseFallSpeed = 50.0;
     static final double baseJumpSpeed = 20.0;
     static final double initialJumpMultiplier = 1.0;

@@ -89,7 +89,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.keyH = GameWindow.GAME_KEYHANDLER;
         this.debugger = GameWindow.GAME_DEBUGGER;
         
-        EntityType.genericTypes
+        EntityType.ALL_ENTITY_TYPE
         .forEach(e -> entities.put(e, new HashSet<>()));
         
         playerEntity = new PlayerInstance(this, entities);
@@ -267,7 +267,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case INGAME:
                 synchronized(entities) {
                     entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
-                    entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().forEach(hitbox -> hitbox.draw(g))));
+                    entities.forEach((s, se) -> se.forEach(e -> e.getHitboxSet().forEach(hitbox -> hitbox.draw(g))));
                     entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
                 spawner.drawNextSpawnTimer(g);

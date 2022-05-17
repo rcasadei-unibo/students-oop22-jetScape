@@ -2,6 +2,7 @@ package game.logics.entities.obstacles.zapper;
 
 import java.awt.Color;
 
+import game.frame.GameWindow;
 import game.logics.entities.obstacles.generic.ObstacleInstance;
 import game.logics.handler.Logics;
 import game.logics.hitbox.ZapperRayHorizontalHitbox;
@@ -61,37 +62,37 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay{
      * @param e2 the second <code>ZapperBase</code> to pair
      */
     public ZapperRayInstance(final Logics l, final Pair<Double,Double> p, final ZapperBase e1, final ZapperBase e2) {
-        super(l, p, e1.getSpeedHandler());
-        entityTag = EntityType.ZAPPERRAY;
+        super(l, p, EntityType.ZAPPERRAY, e1.getSpeedHandler());
         
         electrode1 = e1;
         electrode2 = e2;    
         
         updateRotation();
+        
+        if(this.rotation.equals("vertical")) {
+            this.setHitbox(new ZapperRayVerticalHitbox(p, GameWindow.GAME_SCREEN));
+        } else {
+            this.setHitbox(new ZapperRayHorizontalHitbox(p, GameWindow.GAME_SCREEN));
+        }
+        this.getHitboxSet().add(this.getHitbox());
+        
+        final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(placeH);
         spritesMgr.addSprite("vertical", spritePath + "zapperray_vert.png");
         spritesMgr.addSprite("horizontal", spritePath + "zapperray_horr.png");
         spritesMgr.setAnimator(() -> rotation);
-        if(this.rotation.equals("vertical")) {
-            this.hitbox = new ZapperRayVerticalHitbox(p, screen);
-        } else {
-            this.hitbox = new ZapperRayHorizontalHitbox(p, screen);
-        }
-        this.hitboxSet.add(this.hitbox);
     }
     
     /**
      * Updates the object rotation, depending of the position of the paired <code>ZapperBase</code> objects.
      */
     private void updateRotation() {
-        if(electrode1.getX() == electrode2.getX()) {
+        if (Math.round(electrode1.getPosition().getX()) == Math.round(electrode2.getPosition().getX())) {
             rotation = "vertical";
-        } else if(electrode1.getY() == electrode2.getY()) {
+        } else if (Math.round(electrode1.getPosition().getY()) == Math.round(electrode2.getPosition().getY())) {
             rotation = "horizontal";
-        } else if((electrode1.getX() > electrode2.getX() && electrode1.getY() < electrode2.getY()) || (electrode1.getX() < electrode2.getX() && electrode1.getY() > electrode2.getY())) {
-            rotation = "diagonal-right";
         } else {
-            rotation = "diagonal-left";
+            rotation = "undefined";
         }
     }
 

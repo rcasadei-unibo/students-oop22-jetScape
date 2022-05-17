@@ -30,7 +30,7 @@ public class CollisionsChecker {
         super();
         this.entities = entities;
         this.collisions = new  LinkedBlockingQueue<>();
-        this.player = p.getHitbox().stream().findFirst().get();
+        this.player = p.getHitboxSet().stream().findFirst().get();
     }
     
     /**
@@ -48,7 +48,7 @@ public class CollisionsChecker {
         this.entities.forEach((type, entities) -> {
             if(!type.equals(EntityType.PLAYER)) {
                 entities.forEach(entity -> {
-                    entity.getHitbox().forEach(hitbox -> {
+                    entity.getHitboxSet().forEach(hitbox -> {
                         if(this.collides(hitbox)) {
                             this.collisions.add(entity);
                         }

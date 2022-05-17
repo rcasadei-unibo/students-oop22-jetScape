@@ -31,7 +31,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     /**
      * The horizontal position of the missile warning.
      */
-    private final double warnDefaultX = screen.getWidth() - screen.getTileSize() * 1.5;
+    private final double warnDefaultX = GameWindow.GAME_SCREEN.getWidth() - GameWindow.GAME_SCREEN.getTileSize() * 1.5;
     /**
      * The position of the missile warning is drawn.
      */
@@ -40,7 +40,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     /**
      * The position when the warning should start flickering.
      */
-    private final double warnFlickRange = screen.getWidth() + screen.getTileSize() * 4;
+    private final double warnFlickRange = GameWindow.GAME_SCREEN.getWidth() + GameWindow.GAME_SCREEN.getTileSize() * 4;
     /**
      * The flickering speed of the missile warning when a missile is about to appear.
      */
@@ -68,19 +68,19 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     private Direction lastDir = Direction.UP;
     
     public MissileInstance(final Logics l, final Pair<Double,Double> pos, final Player player, final SpeedHandler speed) {
-        super(l, pos, speed);
-        
-        entityTag = EntityType.MISSILE;
-        
-        warnPosition = new Pair<>(warnDefaultX, position.getY());
+        super(l, pos, EntityType.MISSILE, speed);
+
+        warnPosition = new Pair<>(warnDefaultX, this.getPosition().getY());
         playerPosition = player.getPosition();
         
+        this.setHitbox(new MissileHitbox(pos, GameWindow.GAME_SCREEN));
+        this.getHitboxSet().add(this.getHitbox());
+        
+        final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(placeH);
         spritesMgr.addSprite("warn", spritePath + "warn.png");
         spritesMgr.addSprite("missile", spritePath + "missile.png");
         spritesMgr.setAnimator(() -> "missile");
-        this.hitbox = new MissileHitbox(pos, screen);
-        this.hitboxSet.add(this.hitbox);
     }
     
     private void updateFrameTime() {
@@ -102,23 +102,23 @@ public class MissileInstance extends ObstacleInstance implements Missile {
         updateFrameTime();
         
         if(this.isOnSpawnArea()) {
-            if(position.getY() > playerPosition.getY()) {
+            if(this.getPosition().getY() > playerPosition.getY()) {
                 if(lastDir != Direction.UP) {
                     ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
                 }
-                position.setY(position.getY() - ySpeed / GameWindow.FPS_LIMIT);
+                this.getPosition().setY(this.getPosition().getY() - ySpeed / GameWindow.FPS_LIMIT);
                 ySpeed += yAcceleration / GameWindow.FPS_LIMIT;
                 lastDir = Direction.UP;
-            } else if(position.getY() < playerPosition.getY()) {
+            } else if(this.getPosition().getY() < playerPosition.getY()) {
                 if(lastDir != Direction.DOWN) {
                     ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
                 }
-                position.setY(position.getY() + ySpeed / GameWindow.FPS_LIMIT);
+                this.getPosition().setY(this.getPosition().getY() + ySpeed / GameWindow.FPS_LIMIT);
                 ySpeed += yAcceleration  / GameWindow.FPS_LIMIT;
                 lastDir = Direction.DOWN;
             }
         }
-        warnPosition.setY(position.getY());
+        warnPosition.setY(this.getPosition().getY());
     }
     
     @Override
@@ -126,9 +126,9 @@ public class MissileInstance extends ObstacleInstance implements Missile {
         super.draw(g);
         if(!this.isVisible()) return;
         
-        if(position.getX() > screen.getWidth()) {
-            if(position.getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
-                spritesMgr.drawSprite(g, "warn", warnPosition, screen.getTileSize());
+        if(this.getPosition().getX() > GameWindow.GAME_SCREEN.getWidth()) {
+            if(this.getPosition().getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
+                this.getSpriteManager().drawSprite(g, "warn", warnPosition, GameWindow.GAME_SCREEN.getTileSize());
             }
         }
     }

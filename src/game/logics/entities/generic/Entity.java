@@ -3,6 +3,7 @@ package game.logics.entities.generic;
 import java.awt.Graphics2D;
 import java.util.Set;
 
+import game.frame.GameWindow;
 import game.logics.hitbox.Hitbox;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -12,20 +13,18 @@ import game.utility.other.Pair;
  * 
  * The abstract class <code>EntityInstance</code> is used to define all the common parts of each entity
  * like their position, entity relationship, visibility, on screen presence, etc...
- * 
- * @author Daniel Pellanda
  */
 public interface Entity {
-    
     /**
-     * Defines the top Y position the entity can go by moving.
+     * An utility variable used to correct the higher draw bound of the entity.
      */
-    static final double yTopLimit = 0.0;
+    double Y_TOP_LIMIT = 0;
     /**
-     * Defines the bottom Y position the entity can go by moving.
+     * An utility variable used to correct the lower draw bound of the entity.
      */
-    static final double yLowLimit = 0.0;
-    
+    double Y_LOW_LIMIT = GameWindow.GAME_SCREEN.getHeight() - (GameWindow.GAME_SCREEN.getTileSize() * 2);
+
+
     /**
      * @return <code>true</code> if the entity is visible, <code>false</code> if the entity is hidden
      */
@@ -45,24 +44,16 @@ public interface Entity {
     /**
      * @return the entity's position
      */
-    Pair<Double,Double> getPosition();
+    Pair<Double, Double> getPosition();
     /**
-     * @return the X coordinate of the entity's position
+     * @return A <code>{@link Hitbox}</code> set representing all the <code>{@link Hitbox}</code> used by the entity
      */
-    double getX();
-    /**
-     * @return the Y coordinate of the entity's position
-     */
-    double getY();
-    /**
-     * @return the hitbox of the entity
-     */    
-    Set<Hitbox> getHitbox();
+    Set<Hitbox> getHitboxSet();
     /**
      * @return a string representing the entity's category
      */
     EntityType entityType();
-    
+
     /**
      * Reset the parameters of the entity.
      */

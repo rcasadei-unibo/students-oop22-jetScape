@@ -25,9 +25,9 @@ public class TeleportInstance extends PickupInstance implements Teleport{
     private final int scoreInc = 250;
     
     public TeleportInstance(final Logics l, final Pair<Double, Double> position,  final Player player, final SpeedHandler speed) {
-        super(l, position, player, speed);
-        entityTag = EntityType.TELEPORT;
+        super(l, position, EntityType.TELEPORT, player, speed);
         
+        final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(placeH);
         spritesMgr.addSprite("teleport", texturePath + "teleport.png");
         spritesMgr.setAnimator(() -> "teleport");

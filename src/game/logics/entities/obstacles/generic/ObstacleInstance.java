@@ -21,16 +21,17 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
     
     /**
      * Constructor that sets up obstacle default values (picked up from 
-     * <code>Logics</code>), defines it's bounds in the environment and allows to set it's
+     * {@link Logics}), defines it's bounds in the environment and allows to set it's
      * starting position.
      * 
      * @param l the logics handler which the entity is linked to
-     * @param sPosition the starting position of the obstacle in the environment
+     * @param position the starting position of the obstacle in the environment
+     * @param obstacleType the type of obstacle to create
+     * @param speed the {@link SpeedHandler} to use for the obstacle
      */
-    protected ObstacleInstance(final Logics l, final Pair<Double,Double> p, final SpeedHandler s){
-        super(l, p);
-        entityTag = EntityType.OBSTACLE;
-        movement = s.clone();
+    protected ObstacleInstance(final Logics l, final Pair<Double, Double> position, final EntityType obstacleType, final SpeedHandler speed){
+        super(l, position, obstacleType);
+        movement = speed.clone();
     }
     
     public SpeedHandler getSpeedHandler() {
@@ -47,12 +48,12 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
     public void update() {
         super.update();
         
-        if(position.getX() > -screen.getTileSize() * 2) {
-            position.setX(position.getX() - movement.getXSpeed() / GameWindow.FPS_LIMIT);
+        if(this.getPosition().getX() > -GameWindow.GAME_SCREEN.getTileSize() * 2) {
+        	this.getPosition().setX(this.getPosition().getX() - movement.getXSpeed() / GameWindow.FPS_LIMIT);
             if(!this.isOnSpawnArea()) {
                 movement.applyAcceleration();
             }
         }
-        this.hitbox.updatePosition(this.position);
+        this.getHitbox().updatePosition(this.getPosition());
     }
 }

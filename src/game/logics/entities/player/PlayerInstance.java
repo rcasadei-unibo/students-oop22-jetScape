@@ -41,7 +41,7 @@ public class PlayerInstance extends EntityInstance implements Player{
     /**
      * The horizontal position where the player will be.
      */
-    private final double xPosition = screen.getTileSize() * xRelativePosition;
+    private static final double xPosition = GameWindow.GAME_SCREEN.getTileSize() * xRelativePosition;
     private final Pair<Double, Double> shieldPosition = new Pair<>(0.0,0.0);
     
     private boolean shieldProtected = false;
@@ -83,7 +83,7 @@ public class PlayerInstance extends EntityInstance implements Player{
     
     private final KeyHandler keyH;
     private final CollisionsHandler hitChecker;
-    
+
     /**
      * A enumerable describing the current status of the player.
      */
@@ -110,28 +110,26 @@ public class PlayerInstance extends EntityInstance implements Player{
     }
     private PlayerStatus status;
 	private boolean statusChanged = false;
-    
+
     /**
      * Constructor used for initializing basic parts of the player entity.
      * 
      * @param l the logics handler which the entity is linked to
      */
     public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
-        super(l);
+        super(l, new Pair<>(xPosition, Y_LOW_LIMIT), EntityType.PLAYER);
         this.keyH = GameWindow.GAME_KEYHANDLER;
-        
+
         fallSpeed = baseFallSpeed / GameWindow.FPS_LIMIT;
         jumpSpeed = baseJumpSpeed / GameWindow.FPS_LIMIT;
-        
-        position = new Pair<>(xPosition, yGround);
-        
-        hitbox = new PlayerHitbox(position, screen);
-        hitboxSet.add(this.hitbox);
+
+        this.setHitbox(new PlayerHitbox(this.getPosition(), GameWindow.GAME_SCREEN));
+        this.getHitboxSet().add(this.getHitbox());
         hitChecker = new CollisionsHandler(entities, this);
-        
+
         status = PlayerStatus.WALK;
-        entityTag = EntityType.PLAYER;
-        
+
+        final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(placeH);
         spritesMgr.addSprite("walk1", texturePath + "barrywalk1.png");
         spritesMgr.addSprite("walk2", texturePath + "barrywalk2.png");
@@ -191,7 +189,7 @@ public class PlayerInstance extends EntityInstance implements Player{
                 break;
             case TELEPORT:
                 score += Teleport.scoreIncrease;
-                cleaner.accept(t -> t.isGenerableEntity(), e -> true);
+                this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
             default:
                 break;
         }
@@ -200,18 +198,18 @@ public class PlayerInstance extends EntityInstance implements Player{
     private void jump() {
         fallMultiplier = initialFallMultiplier;
 
-        position.setY(position.getY() - jumpSpeed * jumpMultiplier > yRoof ? position.getY() - jumpSpeed * jumpMultiplier : yRoof);
+        this.getPosition().setY(this.getPosition().getY() - jumpSpeed * jumpMultiplier > Y_TOP_LIMIT ? this.getPosition().getY() - jumpSpeed * jumpMultiplier : Y_TOP_LIMIT);
         setStatus(PlayerStatus.JUMP);
     }
     
     private boolean fall() {
         jumpMultiplier = initialJumpMultiplier;
         
-        if(position.getY() + fallSpeed * fallMultiplier < yGround) {
-            position.setY(position.getY() + fallSpeed * fallMultiplier);
+        if(this.getPosition().getY() + fallSpeed * fallMultiplier < Y_LOW_LIMIT) {
+        	this.getPosition().setY(this.getPosition().getY() + fallSpeed * fallMultiplier);
             return true;
         }
-        position.setY(yGround);
+        this.getPosition().setY(Y_LOW_LIMIT);
         return false;
     }
     
@@ -284,8 +282,7 @@ public class PlayerInstance extends EntityInstance implements Player{
     
     @Override
     public void reset() {
-        position.setX(xPosition);
-        position.setY(yGround);
+        super.reset();
         setStatus(PlayerStatus.WALK);
         score = 0;
         frameTime = 0;
@@ -310,9 +307,10 @@ public class PlayerInstance extends EntityInstance implements Player{
             fallMultiplier += fallMultiplierIncrease * 4;
         }
     
-        shieldPosition.setX(position.getX() + screen.getTileSize() / 16);
-        shieldPosition.setY(position.getY());
-        this.hitbox.updatePosition(position);
+        shieldPosition.setX(this.getPosition().getX() + GameWindow.GAME_SCREEN.getTileSize() / 16);
+        shieldPosition.setY(this.getPosition().getY());
+        
+        this.getHitbox().updatePosition(this.getPosition());
         this.hitChecker.interact(e -> checkHit(e));
     }
     
@@ -320,11 +318,11 @@ public class PlayerInstance extends EntityInstance implements Player{
     public void draw(final Graphics2D g) {
         if(this.isVisible()) {
             if(!this.invulnerable || frameTime % flickeringSpeed < flickeringSpeed / 2) {
-                this.spritesMgr.drawCurrentSprite(g, position, screen.getTileSize());
+                this.getSpriteManager().drawCurrentSprite(g, this.getPosition(), GameWindow.GAME_SCREEN.getTileSize());
             }
             
             if(this.shieldProtected) {
-                this.spritesMgr.drawSprite(g, "shield", shieldPosition, screen.getTileSize());
+                this.getSpriteManager().drawSprite(g, "shield", shieldPosition, GameWindow.GAME_SCREEN.getTileSize());
             }
         }
     }

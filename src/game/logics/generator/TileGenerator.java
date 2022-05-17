@@ -129,7 +129,7 @@ public class TileGenerator implements Generator{
         this.interval = (long) (interval * GameWindow.MILLI_SECOND + intervalDecreaseDiff);
         this.sleepInterval = this.interval;
 
-        EntityType.genericTypes.stream().filter(e -> e.isGenerableEntity()).collect(Collectors.toList())
+        EntityType.ALL_ENTITY_TYPE.stream().filter(e -> e.isGenerableEntity()).collect(Collectors.toList())
         .forEach(e -> tileSets.put(e, new ArrayList<>()));
     }
     
@@ -257,7 +257,7 @@ public class TileGenerator implements Generator{
         if (randomNumber <= powerUpOdds) {
             randomNumber = rng.nextInt() % 2;
             randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
-            randomNumber += EntityType.PICKUP.ordinal() + 1;
+            randomNumber += EntityType.SHIELD.ordinal();
             spawnSet(EntityType.values()[randomNumber]);
         } else if (randomNumber <= missileOdds) {
             spawnSet(EntityType.MISSILE);

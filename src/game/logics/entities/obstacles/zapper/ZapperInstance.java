@@ -22,9 +22,9 @@ public class ZapperInstance implements Zapper{
         this.base2 = base2;
         this.rays = rays;
         this.hitbox = new HashSet<>();
-        this.rays.forEach(entity -> this.hitbox.addAll(entity.getHitbox()));
-        this.hitbox.addAll(this.base1.getHitbox());
-        this.hitbox.addAll(this.base2.getHitbox());
+        this.rays.forEach(entity -> this.hitbox.addAll(entity.getHitboxSet()));
+        this.hitbox.addAll(this.base1.getHitboxSet());
+        this.hitbox.addAll(this.base2.getHitboxSet());
     }
     
     public ZapperBase getPaired(final ZapperBase z) {
@@ -56,16 +56,6 @@ public class ZapperInstance implements Zapper{
         return base1.getPosition();
     }
     
-    @Override
-    public double getX() {
-        return base1.getX();
-    }
-
-    @Override
-    public double getY() {
-        return base1.getY();
-    }
-
     @Override
     public EntityType entityType() {
         return EntityType.ZAPPER;
@@ -124,7 +114,7 @@ public class ZapperInstance implements Zapper{
     }
     
     @Override
-    public Set<Hitbox> getHitbox() {
+    public Set<Hitbox> getHitboxSet() {
         return this.hitbox;
     }    
     
@@ -163,6 +153,6 @@ public class ZapperInstance implements Zapper{
     }
 
     public String toString() {
-        return entityType().toString() + "[X:"+(int)base1.getX()+"-Y:"+(int)base1.getY()+"]";
+        return entityType().toString() + "[X:" + Math.round(base1.getPosition().getX()) + "-Y:" + Math.round(base1.getPosition().getY()) + "]";
     }
 }
