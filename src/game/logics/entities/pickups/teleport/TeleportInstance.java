@@ -24,7 +24,7 @@ public class TeleportInstance extends PickupInstance implements Teleport {
     private static final String SPRITE_PATH = "teleport" + System.getProperty("file.separator");
     /**
      * If sprites are missing, they will be replace by a rectangle of the color specified in
-     * <code>{@link TeleportInstance}.placeH</code>.
+     * <code>{@link TeleportInstance}.PLACE_HOLDER</code>.
      */
     private static final Color PLACE_HOLDER = Color.red;
 
