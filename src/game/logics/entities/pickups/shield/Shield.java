@@ -8,7 +8,7 @@ import game.logics.entities.pickups.generic.Pickup;
  * <p>
  * The class {@link ShieldInstance} is used for defining a shield pickup in the environment.
  * 
- * A shield is a bonus item that can be picked up by the player for obtaining a one-time
+ * A shield is a bonus item that can be picked up by the player granting a one-time
  * protection from any hit from any obstacle.
  * </p>
  */
