@@ -211,7 +211,7 @@ public class PlayerInstance extends EntityInstance implements Player {
     }
 
     private void controlPlayer() {
-        if (keyH.input.get(KeyEvent.VK_SPACE)) {
+        if (keyH.getCurrentInput(KeyEvent.VK_SPACE)) {
             jump();
             jumpMultiplier += JUMP_MULTIPLIER_INCREASE;
         } else if (status != PlayerStatus.WALK) {
