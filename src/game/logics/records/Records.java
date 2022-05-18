@@ -23,7 +23,7 @@ public class Records {
 
     private final GameInfoHandler game;
     private final Player player;
-	private GameInfo oldGameInfo;
+    private GameInfo oldGameInfo;
 
     //TODO complete list
 	//TODO change
@@ -40,7 +40,7 @@ public class Records {
     // private Map<String, Integer> salary;
 
     // Data read from game
-    private int score;
+    //private int score;
     private PlayerDeath causeOfDeath;
 
     private static int playingRecordScore = 0; // higher score obtained by playing consecutively
@@ -59,23 +59,23 @@ public class Records {
     // TODO Set (maybe) with singleton
     public void build() {
     	//TODO change
-    	keySet.add(keyName);
-    	keySet.add(keyAge);
-    	
-    	recordsMap.put(keyName, name);
-    	recordsMap.put(keyAge, age);
-    	
-    	this.writer.build();
-    }
+        keySet.add(keyName);
+        keySet.add(keyAge);
     
+        recordsMap.put(keyName, name);
+        recordsMap.put(keyAge, age);
+
+        this.writer.build();
+    }
+
     public static Set<String> getKeySet() {
-    	return Records.keySet;
+        return Records.keySet;
     }
-    
+
     public static Map<String,Object> getRecordsMap() {
-		return Records.recordsMap;
-	}
-    
+        return Records.recordsMap;
+    }
+
     /****************************************/
     /***    In and to file operations     ***/
     /****************************************/
@@ -84,16 +84,15 @@ public class Records {
      * Read from file
      */
     public void refresh() {
-    	this.writer.read();
+        this.writer.read();
     }
-    
 
 /*
     private boolean checkAndSet(final GameUID newGameUID) {
 
-		final BiPredicate<GameUID, GameUID> checkIfNew =
-				(oldUID,newUID) -> oldUID.getGameDate() != newUID.getGameDate();
-		boolean isNewUID = false;
+        final BiPredicate<GameUID, GameUID> checkIfNew =
+                (oldUID,newUID) -> oldUID.getGameDate() != newUID.getGameDate();
+        boolean isNewUID = false;
 
         if (!newGameUID.isGamePlayed()) {
             isNewUID = true;
@@ -104,11 +103,27 @@ public class Records {
         return isNewUID;
     }*/
 
-    public void postGameEnded(Supplier<GameInfo> getGameInfo) {
-    
+    /**
+     * Declares game ended: sets game end date and gets final score.
+     *
+     * @param getGameInfo Supplier of GameInfo to check
+     */
+    public void announceGameEnded(final Supplier<GameInfo> getGameInfo) {
+
         final GameInfo newGameInfo = getGameInfo.get();
-        newGameInfo.setGameEnded();
-        this.fetch(newGameInfo);
+
+        // if different --> new game
+        //if (oldGameInfo.getUID() != newGameInfo.getUID()) {
+            if (!newGameInfo.isGameEnded()) {
+
+                final int score = player.getCurrentScore();
+                System.out.println(score);
+                newGameInfo.setGameEnded(score);
+                this.fetch(newGameInfo);
+            }
+        //    oldGameInfo = newGameInfo;
+        //}
+        
     }
 
     /**
@@ -122,15 +137,13 @@ public class Records {
 
         // Only if new gameUID (new game)
         //if (this.checkAndSet(gameUID)) {
-        if (oldGameInfo.getUID() != newGameInfo.getUID()) {
             if(player.hasDied()) {
-                this.score = player.getCurrentScore();
-                System.out.println(score);
                 this.causeOfDeath = player.getCauseOfDeath();
+                //System.out.println(causeOfDeath);
             }
-            oldGameInfo = newGameInfo;
+            this.checkScore(newGameInfo.getFinalScore());
             //this.getScore();
-        }
+        //}
     }
 
     /**
@@ -147,31 +160,32 @@ public class Records {
 	/*  TODO Move this method inside records
 	 *  substituting it with getter methods .isNewAbsoluteRecordScore() & .isNewPlayingRecordScore()
 	 */
-	/**
-	 * This method checks if the new finalScore is a new record and only in this case saves it.
-	 * @param finalScore
-	 *   final score in the current game
-	 */
-	public void checkScoreRecords(final int finalScore) {
-		
-		this.score = finalScore;
-		
-		if (finalScore > Records.playingRecordScore) {
-			Records.newPlayingRecordScore = true;
-			Records.playingRecordScore = finalScore;
-		} else if (finalScore < Records.playingRecordScore) {
-			Records.newPlayingRecordScore = false;
-		}
+    /**
+     * This method checks if the new finalScore is a new record and only in this case saves it.
+     * @param finalScore
+     *   final score in the current game
+     */
 
-		if (finalScore > this.recordScore) {
-			this.newRecordScore = true;
-			this.setRecordScore(finalScore);
-			//StatisticsReader.writeRecord(finalScore); // TODO write new record
-		} else if (finalScore < this.recordScore) {
-			this.newRecordScore = false;
-		}
-	}
-    
+    public void checkScore(final int finalScore) {
+
+        //this.score = finalScore;
+
+        if (finalScore > Records.playingRecordScore) {
+            Records.newPlayingRecordScore = true;
+            Records.playingRecordScore = finalScore;
+        } else if (finalScore < Records.playingRecordScore) {
+            Records.newPlayingRecordScore = false;
+        }
+
+        if (finalScore > this.recordScore) {
+            this.newRecordScore = true;
+            this.setRecordScore(finalScore);
+            //StatisticsReader.writeRecord(finalScore); // TODO write new record
+        } else if (finalScore < this.recordScore) {
+            this.newRecordScore = false;
+        }
+    }
+
     /****************************************/
     /*** Getters & Setters from / to file ***/
     /****************************************/
@@ -180,41 +194,42 @@ public class Records {
     public String getName() {
     	return this.name;
     }
-    
+
 	//TODO remove
     public int getAge() {
     	return this.age;
     }
-    
+
     public int getRecordScore() {
-    	return this.recordScore;
+        return this.recordScore;
     }
 
     public void setName(final String name) {
-    	this.name = name;
+        this.name = name;
     }
-    
+
     public void setAge(final int age) {
     	this.age = age;
     }
-    
+
     public void setRecordScore(int recordScore) {
-    	this.recordScore = recordScore;
+        this.recordScore = recordScore;
     }
-    
+
     /****************************************/
     /*** Getters & Setters from / to game ***/
     /****************************************/
-    
+
     public int getScore() {
-    	return this.score;
+       // return this.score;
+        return this.game.getActualGame().getFinalScore();
     }
 
-	public boolean isNewRecordScore() {
-		return this.newRecordScore;
-	}
+    public boolean isNewRecordScore() {
+        return this.newRecordScore;
+    }
 
-	public boolean isNewPlayingRecordScore() {
-		return Records.newPlayingRecordScore;
-	}
+    public boolean isNewPlayingRecordScore() {
+        return Records.newPlayingRecordScore;
+    }
 }

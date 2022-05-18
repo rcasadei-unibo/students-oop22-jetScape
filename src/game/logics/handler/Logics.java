@@ -70,10 +70,12 @@ public interface Logics {
      */
     public class GameInfo {
 
+        private final int gameNumber;
+
         private Date gameStartDate = new Date();
         private Optional<Date> gameEndDate = Optional.empty();
         private boolean gameEnded = false;
-        private final int gameNumber;
+        private int finalScore;
 
         /**
          * Builds the first GameUID at the first game played.
@@ -115,11 +117,16 @@ public interface Logics {
         /**
          * This method sets the game as ended.
          */
-        public void setGameEnded() {
+        public void setGameEnded(final int score) {
            if (!this.gameEnded) {
                this.gameEndDate = Optional.of(new Date());
+               this.finalScore = score;
                this.gameEnded = true;
            }
+        }
+
+        public int getFinalScore() {
+            return this.finalScore;
         }
 
         /**
@@ -154,6 +161,10 @@ public interface Logics {
                    / (1000 * 60))
                   % 60;
             */
+        }
+
+        public boolean isGameEnded() {
+            return this.gameEnded;
         }
     }
 }
