@@ -7,28 +7,31 @@ import java.awt.Graphics2D;
 import game.utility.other.Pair;
 
 /**
- * The <code>Hitbox</code> interface is used for accessing <code>HitboxInstace</code> methods.
+ * The {@link Hitbox} interface is used for accessing {@link HitboxInstace} methods.
  * 
  * <p>
- * The <code>HitboxInstance</code> class represents a generic entity's group of hitboxes
+ * The {@link HitboxInstance} class represents a generic entity's group of hitboxes
  * </p>
- * 
- * @author Giacomo Amadio
  */
 public interface Hitbox {
+    // TODO: complete newPos parameter
     /**
      * Translates all this entity's Rectangles the indicated distance,
      * to the right along the X coordinate axis, and downward along the Y coordinate axis.
+     * @param newPos
      */
-    public void updatePosition(Pair<Double,Double> newPos);
-    
+    void updatePosition(Pair<Double, Double> newPos);
+
     /**
      * @return all this entity's rectangles
      */
-    public Set<Rectangle> getRectangles();
-    
+    Set<Rectangle> getRectangles();
+
+    // TODO: complete g parameter
     /**
-     * draws the hitboxes
+     * draws the hitboxes.
+     * 
+     * @param g
      */
-    public void draw (Graphics2D g);
+    void draw(Graphics2D g);
 }

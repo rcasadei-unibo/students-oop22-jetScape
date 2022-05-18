@@ -13,10 +13,12 @@ import game.utility.screen.Screen;
 
 /**
  * Abstract class that contains useful methods for draw text on screen.
- *
- * @author davide
  */
 public abstract class Display {
+    // TODO: Change to private and protected getters and setters
+    /**
+     * private.
+     */
     protected final Screen gScreen;
 
     /*
@@ -66,9 +68,9 @@ public abstract class Display {
     /**
      * options shadow shift.
      */
-    private static final int optionShift = 2;
-    private static final int titleShift = 5;
-    private static final int textShift = 2;
+    private static final int OPTIONS_SHIFT = 2;
+    private static final int TITLE_SHIFT = 5;
+    private static final int TEXT_SHIFT = 2;
 
     /**
      * Class constructor: load fonts with {@link game.utility.fonts.FontLoader}.
@@ -127,6 +129,16 @@ public abstract class Display {
         this.selectedOption = selectedOption;
     }
 
+    // TODO: Add javadoc
+    /**
+     * .
+     * @param g
+     * @param font
+     * @param text
+     * @param xPos
+     * @param yPos
+     * @param shift
+     */
     protected void drawText(final Graphics2D g, /*final Color color,*/ final Font font,
             final String text, final int xPos, final int yPos, final int shift) {
         g.setFont(font);
@@ -141,15 +153,32 @@ public abstract class Display {
         g.drawString(text, xPos, yPos);
     }
 
+    // TODO: Add javadoc
+    /**
+     * .
+     * @param g
+     * @param font
+     * @param text
+     * @param f
+     * @param yPos
+     * @param shift
+     */
     protected void drawCenteredText(final Graphics2D g, /*final Color color,*/ final Font font,
             final String text, final Function<Integer, Integer> f, final int yPos, final int shift) {
         g.setFont(font);
         this.drawText(g, font, text, f.apply(this.getCenteredX(gScreen, g, text)), yPos, shift);
     }
 
+    // TODO: Add javadoc
+    /**
+     * .
+     * @param g
+     * @param text
+     * @param function
+     */
     protected void drawTitleText(final Graphics2D g, final String text, final Function<Integer, Integer> function) {
         this.drawCenteredText(g, this.titleFont, text, Function.identity(),
-                gScreen.getTileSize() * Display.TTITLE_TILE, Display.titleShift);
+                gScreen.getTileSize() * Display.TTITLE_TILE, Display.TITLE_SHIFT);
     }
 
     /**
@@ -164,11 +193,11 @@ public abstract class Display {
                 final String selected = "> " + option + " <";
                 this.drawCenteredText(g, this.selectedOptionsFont, selected,
                         x -> x,
-                        gScreen.getTileSize() * (i + yTile), Display.optionShift);
+                        gScreen.getTileSize() * (i + yTile), Display.OPTIONS_SHIFT);
             } else {
                 this.drawCenteredText(g, this.optionsFont, option.toString(),
                         x -> x,
-                        gScreen.getTileSize() * (i + yTile), Display.optionShift);
+                        gScreen.getTileSize() * (i + yTile), Display.OPTIONS_SHIFT);
             }
             i++;
         }
@@ -221,6 +250,6 @@ public abstract class Display {
      * @return Display.textShift
      */
     protected int getTextShift() {
-        return Display.textShift;
+        return Display.TEXT_SHIFT;
     }
 }

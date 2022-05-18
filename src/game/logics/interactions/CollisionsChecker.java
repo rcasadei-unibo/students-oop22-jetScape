@@ -13,26 +13,29 @@ import game.logics.hitbox.Hitbox;
 import game.utility.other.EntityType;
 
 /**
- * The <code>CollisionsChecker</code> class helps <class>CollisionsHandler</class> to detect
- * collisions between player and other entities
- *  
- * @author Giacomo Amadio
+ * The {@link CollisionsChecker} class helps {@link CollisionsHandler} to detect
+ * collisions between player and other entities.
  */ 
 public class CollisionsChecker {
     private final Map<EntityType, Set<Entity>> entities;
     private final Hitbox player;
     /**
-     * collisions queue of hits to handle
+     * collisions queue of hits to handle.
      */
-    private final Queue<Entity> collisions ;
-    
-    public CollisionsChecker(Map<EntityType, Set<Entity>> entities, PlayerInstance p) {
+    private final Queue<Entity> collisions;
+    // TODO: complete javadoc
+    /**
+     * .
+     * @param entities
+     * @param p
+     */
+    public CollisionsChecker(final Map<EntityType, Set<Entity>> entities, final PlayerInstance p) {
         super();
         this.entities = entities;
         this.collisions = new  LinkedBlockingQueue<>();
         this.player = p.getHitbox();
     }
-    
+
     /**
      * @return Optional of the fist entity hit else Optional empty 
      */
@@ -42,28 +45,28 @@ public class CollisionsChecker {
 
     /**
      * if there are some contacts, adds in the collisions queue all 
-     * the entities that are touching the player 
+     * the entities that are touching the player .
      */
     public void updateCollisions() {
         this.entities.forEach((type, entities) -> {
-            if(!type.equals(EntityType.PLAYER)) {
+            if (!type.equals(EntityType.PLAYER)) {
                 entities.forEach(entity -> {
-                    if(this.collides(entity.getHitbox())) {
+                    if (this.collides(entity.getHitbox())) {
                         this.collisions.add(entity);
                     }
                 });
-            }        
+            }
         });
     }
-    
+
+    // TODO: complete @param entity
     /**
-     * @param Hitbox entity
-     * 
-     * @return true if the entity hitbox collides with the player ones  
+     * @param entity
+     * @return true if the entity hitbox collides with the player ones
      */
-    private boolean collides(Hitbox entity) {
-        for(Rectangle hitbox : player.getRectangles()) {
-            for(Rectangle target : entity.getRectangles()) {
+    private boolean collides(final Hitbox entity) {
+        for (Rectangle hitbox : player.getRectangles()) {
+            for (Rectangle target : entity.getRectangles()) {
                 if (hitbox.intersects(target)) {
                     return true;
                 }

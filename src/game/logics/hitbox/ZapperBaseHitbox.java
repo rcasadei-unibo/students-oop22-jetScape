@@ -3,20 +3,23 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 
 /**
- * The <code>ZapperBaseHitbox</code> class represents a ZapperBase's  hitbox in
+ * The {@link ZapperBaseHitbox} class represents a ZapperBase's  hitbox in
  * the game environment.
- * 
- * @author Giacomo Amadio
  */
 public class ZapperBaseHitbox extends HitboxInstance {
-    static final double rectangleX = 5;
-    static final double rectangleY = 5;
-    static final double rectangleW = 22;
-    static final double rectangleH = 22;
+    static final double RECTANGLE_X = 5;
+    static final double RECTANGLE_Y = 5;
+    static final double RECTANGLE_W = 22;
+    static final double RECTANGLE_H = 22;
 
-    public ZapperBaseHitbox(Pair<Double, Double> startingPos) {
+    // TODO: add javadoc
+    /**
+     * .
+     * @param startingPos
+     */
+    public ZapperBaseHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);
-        addRectangle(rectangleX,rectangleY,rectangleW,rectangleH);
+        addRectangle(RECTANGLE_X, RECTANGLE_Y, RECTANGLE_W, RECTANGLE_H);
     }
 }
 

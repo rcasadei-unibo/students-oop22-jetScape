@@ -15,10 +15,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * The <code>DisplayController</code> class helps {@link LogicsHandler}
+ * The {@link DisplayController} class helps {@link LogicsHandler}
  * to update and draw the correct {@link Display} on the screen.
- *
- * @author Giacomo Amadio
  */
 public class DisplayController {
     private final Supplier<GameState> getState;
@@ -38,7 +36,7 @@ public class DisplayController {
     private final DisplayHandler titleHandler;
     private final DisplayHandler recordsHandler;
     private final DisplayHandler gameOverHandler;
-    /* TODO eventually add shop */
+    // TODO: eventually add shop 
 
     /**
      * {@link DisplayController} builder: builds all displayed cards and

@@ -70,17 +70,15 @@ public class DisplayGameOver extends Display implements MenuDisplay {
         super.drawOptions(g, DisplayGameOver.OPTION_TILE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //TODO remove magic setting from here
+    // TODO: remove magic setting from here
     /*public void drawScreen(final Graphics2D g) {
         this.setSelectedOption(Optional.of(MenuOption.RETRY));
         this.drawScreen(g, Optional.of(this.getSelectedOption()));
     }*/
-
+    /**
+     * {@inheritDoc}
+     */
     public void setFinalScore(final int finalScore) {
-
         this.finalScore = finalScore;
 
         if (finalScore > DisplayGameOver.playingRecord) {

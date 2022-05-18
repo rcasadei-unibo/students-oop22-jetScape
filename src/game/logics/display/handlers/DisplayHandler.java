@@ -3,22 +3,20 @@ package game.logics.display.handlers;
 import game.utility.other.MenuOption;
 
 /**
- * The <code>DisplayHandler</code> interface is used for accessing <code>MenuHandler</code> methods.
+ * The {@link DisplayHandler} interface is used for accessing {@link MenuHandler} methods.
  * 
  * <p>
- * The <code>MenuHandler</code> class manages <class>Display</class> menus
+ * The {@link MenuHandler} class manages {@link Display} menus
  * </p>
- * 
- * @author Giacomo Amadio
  */
 public interface DisplayHandler {
     /**
-     * updates the menu cursor position  
+     * updates the menu cursor position.
      */
-    public void update();
-    
+    void update();
+
     /**
      * @return current selected option
      */
-    public MenuOption getSelectedOption();
+    MenuOption getSelectedOption();
 }

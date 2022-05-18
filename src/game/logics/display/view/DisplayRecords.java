@@ -18,16 +18,16 @@ import game.utility.screen.Screen;
  * <p>This class extends {@link Display}.</p>
  */
 public class DisplayRecords extends Display implements MenuDisplay {
-    private static final int optionTile = 8;
+    private static final int OPTION_TILE = 8;
     private static final String TITLE = "Records";
-    private static final String records1 = "Length";
-    private static final String records2 = "Money";
+    private static final String RECORDS1 = "Length";
+    private static final String RECORDS2 = "Money";
 
-    //TODO SPOSTARE
+    //TODO: SPOSTARE
     //private static final List<String> lengthRecords = new ArrayList<>();
     //private static final List<String> moneyRecords = new ArrayList<>();
-    private static final Set<String> lengthRecords = new HashSet<>();
-    private static final Set<String> moneyRecords = new HashSet<>();
+    private static final Set<String> LENGTH_RECORDS = new HashSet<>();
+    private static final Set<String> MONEY_RECORDS = new HashSet<>();
 
     /**
      * {@link DisplayRecords} constructor: add options to be shown.
@@ -38,16 +38,16 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
         this.getOptions().add(MenuOption.MENU);
 
-        //TODO remove these
-        DisplayRecords.lengthRecords.add("1235");
-        DisplayRecords.lengthRecords.add("150");
-        DisplayRecords.lengthRecords.add("1500");
+        // TODO: remove these
+        DisplayRecords.LENGTH_RECORDS.add("1235");
+        DisplayRecords.LENGTH_RECORDS.add("150");
+        DisplayRecords.LENGTH_RECORDS.add("1500");
 
-        DisplayRecords.moneyRecords.add("3500");
+        DisplayRecords.MONEY_RECORDS.add("3500");
     }
 
-    //TODO SPOSTARE IN CLASSE APPOSITA
-    private final List<String> listify(final Set<String> set) {
+    // TODO: SPOSTARE IN CLASSE APPOSITA
+    private List<String> listify(final Set<String> set) {
         final List<String> returnList = new ArrayList<>();
         returnList.addAll(List.copyOf(set));
         Collections.sort(returnList);
@@ -67,19 +67,19 @@ public class DisplayRecords extends Display implements MenuDisplay {
         super.drawTitleText(g, TITLE, Function.identity());
 
         // RECORDS
-        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records1,
+        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS1,
                 x -> x - gScreen.getWidth() / 4, gScreen.getTileSize() * 3, 0);
 
-        final List<String> recordList = this.listify(DisplayRecords.lengthRecords);
+        final List<String> recordList = this.listify(DisplayRecords.LENGTH_RECORDS);
         for (i = 0; i < recordList.size(); i++) {
             super.drawText(g, super.getTextFont(), recordList.get(i),
                     gScreen.getTileSize() * 3, gScreen.getTileSize() * (3 + i + 1), 0);
         }
 
-        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.records2,
+        super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS2,
                 x -> x + gScreen.getWidth() / 4, gScreen.getTileSize() * 3, 0);
 
-        final List<String> moneyList = this.listify(DisplayRecords.moneyRecords);
+        final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
         for (i = 0; i < moneyList.size(); i++) {
             super.drawText(g, super.getTextFont(), moneyList.get(i),
                     gScreen.getTileSize() * 3 + gScreen.getWidth() / 2,
@@ -87,7 +87,7 @@ public class DisplayRecords extends Display implements MenuDisplay {
         }
 
         //OPTIONS
-        super.drawOptions(g, DisplayRecords.optionTile);
+        super.drawOptions(g, DisplayRecords.OPTION_TILE);
     }
 
     /**
