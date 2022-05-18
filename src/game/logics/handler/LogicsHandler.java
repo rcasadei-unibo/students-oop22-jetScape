@@ -1,4 +1,3 @@
-
 package game.logics.handler;
 
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import game.logics.entities.player.PlayerInstance;
 import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
-import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
@@ -38,46 +36,33 @@ import game.utility.other.EntityType;
 import game.utility.other.GameState;
 
 /**
- * The <code>LogicsHandler</code> class helps {@link GameWindow} to update
+ * The {@link LogicsHandler} class helps {@link GameWindow} to update
  * and draw logical parts of the game like the Interface, Entities, Collisions, etc....
  * 
- * @author Daniel Pellanda
  */
 public class LogicsHandler extends AbstractLogics implements Logics {
-    
     /**
      * Contains the current active entities on the game environment.
      */
     private final Map<EntityType, Set<Entity>> entities = new HashMap<>();
-    
+
     /**
      * Generates sets of obstacles on the environment.
      */
     private final Generator spawner;
-    
+
     private final DisplayController displayController;
-    
     private GameState gameState = GameState.MENU;
-    
+
     /**
      * A reference to the player's entity.
      */
     private final Player playerEntity;
-    
-    /**
-     * Defines how many seconds have to pass for the spawner to generate
-     * another set of obstacles.
-     */
-    private double spawnInterval = 3.3;
-    /**
-     * Defines the interval of each check for entities to clean.
-     */
-    private double cleanInterval = 5.0;
-    
+
     private final Screen screen;
     private final KeyHandler keyH;
     private final Debugger debugger;
-    
+
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
      * initialize each entity category on the entities map and initialize the obstacle spawner.
@@ -89,41 +74,44 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.screen = GameWindow.GAME_SCREEN;
         this.keyH = GameWindow.GAME_KEYHANDLER;
         this.debugger = GameWindow.GAME_DEBUGGER;
-        
+
         EntityType.ALL_ENTITY_TYPE
         .forEach(e -> entities.put(e, new HashSet<>()));
-        
+
         playerEntity = new PlayerInstance(this, entities);
-        
+
         displayController = new DisplayController(keyH, screen, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore());
-        
-        spawner = new TileGenerator(entities, spawnInterval);
+
+        spawner = new TileGenerator(entities, super.getSpawningInteval());
         this.initializeSpawner();
     }
 
     private void initializeSpawner() {
-        spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 10.0, 5000.0)));
-        spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 15.0, 0)));
-        spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
-        spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));
-        spawner.setTeleportCreator(p -> new TeleportInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));
-        
+        spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.MISSILE)));
+        spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, super.getEntityMovementInfo(EntityType.ZAPPERBASE)));
+        spawner.setZapperRayCreator((b, p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
+        spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.SHIELD)));
+        spawner.setTeleportCreator(p -> new TeleportInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.TELEPORT)));
+
         try {
             spawner.initialize();
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog((Component)GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog((Component)GameHandler.GAME_WINDOW, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "An error occured while trying to load tiles.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
-    
-    public BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner(){
-        return new BiConsumer<Predicate<EntityType>,Predicate<Entity>>(){
+
+    /**
+     * {@inheritDoc}
+     */
+    public BiConsumer<Predicate<EntityType>, Predicate<Entity>> getEntitiesCleaner() {
+        return new BiConsumer<Predicate<EntityType>, Predicate<Entity>>() {
             public void accept(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
-                synchronized(entities) {
+                synchronized (entities) {
                     entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
                     .forEach(e -> GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_CLEAN, "cleaned::" + e.toString()));
                     entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
@@ -134,17 +122,17 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             }
         };
     }
-    
+
     private void resetGame() {
         this.getEntitiesCleaner().accept(t -> t != EntityType.PLAYER, e -> true);
         playerEntity.reset();
     }
-    
+
     /**
      * Handles the commands executed for each key pressed.
      */
     private void checkKeyboardInput() {
-        switch(keyH.getKeyTyped()) {
+        switch (keyH.getKeyTyped()) {
             case KeyEvent.VK_Z:
                 debugger.setDebugMode(!debugger.isDebugModeOn());
                 keyH.resetKeyTyped();
@@ -157,37 +145,40 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 break;
         }
     }
-    
+
     /**
      * Removes all entities that are on the "clear area" [x < -tile size].
      */
     private void updateCleaner() {
-        if(super.getFrameTime() % GameWindow.FPS_LIMIT * cleanInterval == 0) {
+        if (super.getFrameTime() % GameWindow.FPS_LIMIT * super.getCleanerActivityInterval() == 0) {
             this.getEntitiesCleaner().accept(t -> t.isGenerableEntity(), e -> e.isOnClearArea());
         }
     }
-    
+
     private void updateDifficulty() {
         final int increaseDiffPerScore = 250;
-        
+
         super.setDifficultyLevel(playerEntity.getCurrentScore() / increaseDiffPerScore + 1);
     }
-    
+
     private void drawDifficultyLevel(final Graphics2D g) {
-        if(debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
+        final int difficultyMeterXLocation = 3;
+        final int difficultyMeterYLocation = 26;
+
+        if (debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
             g.setColor(Debugger.debugColor);
             g.setFont(Debugger.debugFont);
-            g.drawString("DIFFICULTY: " + super.getDifficultyLevel(), 3, 26);
+            g.drawString("DIFFICULTY: " + super.getDifficultyLevel(), difficultyMeterXLocation, difficultyMeterYLocation);
         }
     }
-    
+
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
                 case EXIT:
                     final String quitMessage = "Are you sure to quit the game?";
                     final String quitTitle = "Quit Game";
-                    if(JOptionPane.showConfirmDialog((Component)GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+                    if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
                         return;
                     }
                     break;
@@ -201,10 +192,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     spawner.resume();
                     break;
                 case MENU:
-                    if(this.gameState == GameState.PAUSED) {
+                    if (this.gameState == GameState.PAUSED) {
                         final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
                         final String title = "Return to main menu";
-                        if(JOptionPane.showConfirmDialog((Component)GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+                        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
                             return;
                         }
                         spawner.stop();
@@ -215,7 +206,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     spawner.stop();
                     break;
                 case PAUSED:
-                    if(this.gameState != GameState.INGAME) {
+                    if (this.gameState != GameState.INGAME) {
                         return;
                     }
                     spawner.pause();
@@ -231,7 +222,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * {@inheritDoc}
      */
     public void updateAll() {
-        switch(this.gameState) {
+        switch (this.gameState) {
             case EXIT:
                 spawner.terminate();
                 GameHandler.GAME_WINDOW.stopGame();
@@ -241,13 +232,13 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 playerEntity.update();
                 break;
             case INGAME:
-                if(playerEntity.hasDied()) {
+                if (playerEntity.hasDied()) {
                     this.setGameState(GameState.ENDGAME);
                     break;
                 }
                 this.updateDifficulty();
                 this.updateCleaner();
-                synchronized(entities) {
+                synchronized (entities) {
                     entities.forEach((s, se) -> se.forEach(e -> e.update()));
                 }
             default:
@@ -262,11 +253,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * {@inheritDoc}
      */
     public void drawAll(final Graphics2D g) {
-        switch(this.gameState) {
+        switch (this.gameState) {
             case ENDGAME: 
             case PAUSED:
             case INGAME:
-                synchronized(entities) {
+                synchronized (entities) {
                     entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
                     entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
                     entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
@@ -278,5 +269,5 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         }
         this.displayController.drawScreen(g);
     }
-    
+
 }

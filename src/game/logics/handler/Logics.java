@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
- * The <code>Logics</code> interface is used for accessing
+ * The {@link Logics} interface is used for accessing
  * {@link LogicsHandler} methods.
  *
  * <p>
@@ -16,11 +16,13 @@ import java.util.function.Predicate;
  * logical parts of the game like the Interface, Entities, Collisions, etc....
  * </p>
  *
- * @author Daniel Pellanda
  */
 public interface Logics {
 
-    BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner();
+    /**
+     * @return a {@link BiConsumer} that can be used to clean up current active entities in the environment
+     */
+    BiConsumer<Predicate<EntityType>, Predicate<Entity>> getEntitiesCleaner();
 
     /**
      * Updates all the logical objects handled for a frame.
