@@ -105,18 +105,24 @@ public class Records {
         return isNewID;
     }*/
 
+    public void postGameEnded(Supplier<GameUID> getGameUID) {
+    
+        final GameUID newGameUID = getGameUID.get();
+        newGameUID.setGameEnded();
+        this.fetch(newGameUID);
+    }
+
     /**
      * Get data for updating in game, calling the data getters
      */
 	//TODO add new records
-    public void fetch(final Supplier<GameUID> gameUID) {
+    private void fetch(final GameUID newGameUID) {
 
-        //System.out.println(gameID.isGamePlayed());
-        //gameID.getGameDate().ifPresent(System.out::println);
+        //System.out.println(gameUID.isGamePlayed());
+        //gameUID.getGameDate().ifPresent(System.out::println);
 
         // Only if new gameUID (new game)
         //if (this.checkAndSet(gameUID)) {
-        final GameUID newGameUID = gameUID.get();
         if (oldGameUID.getUID() != newGameUID.getUID()) {
             if(player.hasDied()) {
                 this.score = player.getCurrentScore();
@@ -147,7 +153,7 @@ public class Records {
 	 * @param finalScore
 	 *   final score in the current game
 	 */
-	public void checkScoreRecord(final int finalScore) {
+	public void checkScoreRecords(final int finalScore) {
 		
 		this.score = finalScore;
 		

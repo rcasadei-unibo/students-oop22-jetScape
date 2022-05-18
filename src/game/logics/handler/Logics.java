@@ -37,6 +37,10 @@ public interface Logics {
      */
     void drawAll(Graphics2D g);
 
+    /**
+     * This class models a Game, the GameUID handler: this class keeps a
+     *   reference to the actual UID of the current game.
+     */
     public static class Game {
 
         private static int numbersOfGamesPlayed = 0;
@@ -89,25 +93,49 @@ public interface Logics {
             this.gameNumber = game.getNumbersOfGamesPlayed() + 1;
         }
 
+        /**
+         * This method is used to get when a game has started.
+         *
+         * @return Date representing the time when the game started
+         */
         public Date getGameStartDate() {
             return this.gameStartDate;
         }
 
+        /**
+         * This method is used to get when a game is over, if it is over.
+         *
+         * @return Optional<Date> Date representing the time when the game ended,
+         *   if ended, otherwise returns Optional.empty()
+         */
         public Optional<Date> getGameEndDate() {
             return this.gameEndDate;
         }
 
-        public void setGameEnded(final Date endGameDate) {
+        /**
+         * This method sets the game as ended.
+         */
+        public void setGameEnded() {
            if (!this.gameEnded) {
-               this.gameEndDate = Optional.of(endGameDate);
+               this.gameEndDate = Optional.of(new Date());
                this.gameEnded = true;
            }
         }
 
+        /**
+         * Getter method to receive the Unique IDentifier.
+         * @return int the UID
+         */
         public int getUID() {
             return this.gameNumber;
         }
 
+        /**
+         * This method calculates the time elapsed from when the game started
+         *   until it ended
+         *
+         * @return the time elapsed, or better the time difference
+         */
         public long getGameDuration() {
             // Calculates time difference in seconds
             return (this.getGameEndDate().get().getTime()
@@ -120,7 +148,7 @@ public interface Logics {
                 = (difference_In_Time
                    / 1000)
                   % 60;
-  
+
             long difference_In_Minutes
                 = (difference_In_Time
                    / (1000 * 60))

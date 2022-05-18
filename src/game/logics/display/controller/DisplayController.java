@@ -60,7 +60,7 @@ public class DisplayController {
      * @param getState Supplier to get new value from State
      * @param getScore Supplier to get new value of Score
      */
-    public DisplayController(final KeyHandler keyH, final Screen gScreen, 
+    public DisplayController(final KeyHandler keyH, final Screen gScreen,
             final Consumer<GameState> setState, final Supplier<GameState> getState,
             final Supplier<Integer> getScore, final Supplier<GameUID> getGame, final Records records) {
         this.getState = getState;
@@ -131,7 +131,8 @@ public class DisplayController {
                 break;
             case ENDGAME :
                 //this.gameOverDisplay.setRecords(getScore.get());
-                this.records.fetch(this.getGame);
+                //this.records.fetch(this.getGame);
+                this.records.postGameEnded(this.getGame);
                 this.gameOverHandler.update();
                 break;
             default :
