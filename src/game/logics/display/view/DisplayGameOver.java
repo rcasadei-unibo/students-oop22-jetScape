@@ -46,7 +46,7 @@ public class DisplayGameOver extends Display implements MenuDisplay {
     /**
      *  Reads record and score from {@link Records}.
      */
-    private void updateRecords() {
+    private void readRecords() {
         // TODO Check if this work and if it is good
         this.finalScore = this.records.getScore();
         //this.recordScore = this.records.getRecordScore();
@@ -58,7 +58,7 @@ public class DisplayGameOver extends Display implements MenuDisplay {
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
 
         this.setSelectedOption(selected);
-        this.updateRecords();
+        this.readRecords();
 
         // TITLE
         super.drawTitleText(g, title, Function.identity());

@@ -41,25 +41,25 @@ public interface Logics {
      * This class models a Game, the GameUID handler: this class keeps a
      *   reference to the actual UID of the current game.
      */
-    public static class Game {
+    public static class GameInfoHandler {
 
         private static int numbersOfGamesPlayed = 0;
-        private static GameUID actualGame;
+        private static GameInfo actualGame;
 
-        public Game(final GameUID newGame) {
-            Game.actualGame = newGame;
+        public GameInfoHandler(final GameInfo newGame) {
+            GameInfoHandler.actualGame = newGame;
         }
 
         public int getNumbersOfGamesPlayed() {
-            return Game.numbersOfGamesPlayed;
+            return GameInfoHandler.numbersOfGamesPlayed;
         }
 
-        public GameUID getActualGame() {
+        public GameInfo getActualGame() {
            return actualGame;
         }
 
-        void setActualGame(final GameUID newGameID) {
-            Game.actualGame = newGameID;
+        void setActualGame(final GameInfo newGameID) {
+            GameInfoHandler.actualGame = newGameID;
         }
     }
 
@@ -68,7 +68,7 @@ public interface Logics {
      * refer to the actual game.
      *
      */
-    public class GameUID {
+    public class GameInfo {
 
         private Date gameStartDate = new Date();
         private Optional<Date> gameEndDate = Optional.empty();
@@ -79,17 +79,17 @@ public interface Logics {
          * Builds the first GameUID at the first game played.
          * The unique identifier is set here.
          */
-        public GameUID() {
+        public GameInfo() {
             this.gameNumber = 0;
         }
 
         /**
-         * Builds a new GameID when the game begins.
+         * Builds a new GameInfo when the game begins.
          * The unique identifier is set here.
          *
          * @param game Game general informations
          */
-        public GameUID(final Game game) {
+        public GameInfo(final GameInfoHandler game) {
             this.gameNumber = game.getNumbersOfGamesPlayed() + 1;
         }
 

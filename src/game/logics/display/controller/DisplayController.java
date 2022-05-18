@@ -9,7 +9,7 @@ import game.logics.display.view.DisplayMainMenu;
 import game.logics.display.view.DisplayPause;
 import game.logics.display.view.DisplayRecords;
 
-import game.logics.handler.Logics.GameUID;
+import game.logics.handler.Logics.GameInfo;
 import game.logics.records.Records;
 
 import game.utility.input.keyboard.KeyHandler;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 public class DisplayController {
     private final Supplier<GameState> getState;
     private final Supplier<Integer> getScore;
-    private final Supplier<GameUID> getGame;
+    private final Supplier<GameInfo> getGame;
 
     private final Records records;
 
@@ -62,7 +62,7 @@ public class DisplayController {
      */
     public DisplayController(final KeyHandler keyH, final Screen gScreen,
             final Consumer<GameState> setState, final Supplier<GameState> getState,
-            final Supplier<Integer> getScore, final Supplier<GameUID> getGame, final Records records) {
+            final Supplier<Integer> getScore, final Supplier<GameInfo> getGame, final Records records) {
         this.getState = getState;
         this.getScore = getScore;
         this.getGame = getGame;

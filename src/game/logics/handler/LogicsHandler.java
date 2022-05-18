@@ -29,7 +29,7 @@ import game.logics.entities.player.PlayerInstance;
 import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
-import game.logics.handler.Logics.Game;
+import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.interactions.SpeedHandler;
 import game.logics.records.Records;
 import game.utility.debug.Debugger;
@@ -80,7 +80,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     private final Debugger debugger;
 
     private static Records records;
-    private static Game game;
+    private static GameInfoHandler game;
 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -97,7 +97,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         EntityType.genericTypes
                 .forEach(e -> entities.put(e, new HashSet<>()));
 
-        game = new Game(new GameUID());
+        game = new GameInfoHandler(new GameInfo());
         playerEntity = new PlayerInstance(this, entities);
         records = new Records(game, playerEntity);
 
@@ -200,7 +200,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     }
                     break;
                 case INGAME:
-                    LogicsHandler.game.setActualGame(new GameUID(LogicsHandler.game));
+                    LogicsHandler.game.setActualGame(new GameInfo(LogicsHandler.game));
                     //this.gameID.generateNewGameUID();
                     if (this.gameState == GameState.ENDGAME) {
                         this.resetGame();

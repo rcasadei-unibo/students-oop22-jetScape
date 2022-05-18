@@ -3,8 +3,8 @@ package game.logics.records;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.Player.PlayerDeath;
 import game.utility.input.JSONWriter;
-import game.logics.handler.Logics.Game;
-import game.logics.handler.Logics.GameUID;
+import game.logics.handler.Logics.GameInfoHandler;
+import game.logics.handler.Logics.GameInfo;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,9 +21,9 @@ public class Records {
 
     private final JSONWriter writer = new JSONWriter(this);
 
-    private final Game game;
+    private final GameInfoHandler game;
     private final Player player;
-	private GameUID oldGameUID;
+	private GameInfo oldGameInfo;
 
     //TODO complete list
 	//TODO change
@@ -49,9 +49,9 @@ public class Records {
     private int recordScore; // absolute new score record
     private boolean newRecordScore = false;
 
-    public Records(final Game game, final Player player) {
+    public Records(final GameInfoHandler game, final Player player) {
         this.game = game;
-        this.oldGameUID = game.getActualGame();
+        this.oldGameInfo = game.getActualGame();
         //game.getNumbersOfGamesPlayed();
         this.player = player;
     }
@@ -87,49 +87,48 @@ public class Records {
     	this.writer.read();
     }
     
-	//private static GameID IDGame = new GameID();
 
 /*
-    private boolean checkAndSet(final GameID newGameID) {
+    private boolean checkAndSet(final GameUID newGameUID) {
 
-		final BiPredicate<GameID, GameID> checkIfNew =
-				(oldID,newID) -> oldID.getGameDate() != newID.getGameDate();
-		boolean isNewID = false;
+		final BiPredicate<GameUID, GameUID> checkIfNew =
+				(oldUID,newUID) -> oldUID.getGameDate() != newUID.getGameDate();
+		boolean isNewUID = false;
 
-        if (!newGameID.isGamePlayed()) {
-            isNewID = true;
-        } else if(checkIfNew.test(IDGame, newGameID)) {
-            isNewID = true;
-            Records.IDGame = newGameID;
+        if (!newGameUID.isGamePlayed()) {
+            isNewUID = true;
+        } else if(checkIfNew.test(UIDGame, newGameUID)) {
+            isNewUID = true;
+            Records.UIDGame = newGameUID;
         }
-        return isNewID;
+        return isNewUID;
     }*/
 
-    public void postGameEnded(Supplier<GameUID> getGameUID) {
+    public void postGameEnded(Supplier<GameInfo> getGameInfo) {
     
-        final GameUID newGameUID = getGameUID.get();
-        newGameUID.setGameEnded();
-        this.fetch(newGameUID);
+        final GameInfo newGameInfo = getGameInfo.get();
+        newGameInfo.setGameEnded();
+        this.fetch(newGameInfo);
     }
 
     /**
      * Get data for updating in game, calling the data getters
      */
 	//TODO add new records
-    private void fetch(final GameUID newGameUID) {
+    private void fetch(final GameInfo newGameInfo) {
 
         //System.out.println(gameUID.isGamePlayed());
         //gameUID.getGameDate().ifPresent(System.out::println);
 
         // Only if new gameUID (new game)
         //if (this.checkAndSet(gameUID)) {
-        if (oldGameUID.getUID() != newGameUID.getUID()) {
+        if (oldGameInfo.getUID() != newGameInfo.getUID()) {
             if(player.hasDied()) {
                 this.score = player.getCurrentScore();
                 System.out.println(score);
                 this.causeOfDeath = player.getCauseOfDeath();
             }
-            oldGameUID = newGameUID;
+            oldGameInfo = newGameInfo;
             //this.getScore();
         }
     }
