@@ -98,7 +98,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         displayController = new DisplayController(keyH, screen, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore());
         
-        spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
+        spawner = new TileGenerator(entities, spawnInterval);
         this.initializeSpawner();
     }
 
