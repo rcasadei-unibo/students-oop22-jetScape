@@ -166,8 +166,8 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         final int difficultyMeterYLocation = 26;
 
         if (debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
-            g.setColor(Debugger.debugColor);
-            g.setFont(Debugger.debugFont);
+            g.setColor(Debugger.DEBUG_COLOR);
+            g.setFont(Debugger.DEBUG_FONT);
             g.drawString("DIFFICULTY: " + super.getDifficultyLevel(), difficultyMeterXLocation, difficultyMeterYLocation);
         }
     }

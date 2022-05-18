@@ -201,8 +201,8 @@ public abstract class EntityInstance implements Entity {
         final int yShiftDrawnY = yShiftDrawnX + 10;
 
         if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
-            g.setColor(Debugger.debugColor);
-            g.setFont(Debugger.debugFont);
+            g.setColor(Debugger.DEBUG_COLOR);
+            g.setFont(Debugger.DEBUG_FONT);
 
             g.drawString("X:" + Math.round(position.getX()), xShift, yShiftDrawnX);
             g.drawString("Y:" + Math.round(position.getY()), xShift, yShiftDrawnY);

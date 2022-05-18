@@ -419,8 +419,8 @@ public class TileGenerator implements Generator {
                 final long remainingTime = remainingTimeToSleep + sleepTimeLeft - (System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeAfterPaused);
                 final long timer = !this.isWaiting() ? remainingTime > 0 ? remainingTime : expectedTimer  : remainingTimeToSleep;
 
-                g.setColor(Debugger.debugColor);
-                g.setFont(Debugger.debugFont);
+                g.setColor(Debugger.DEBUG_COLOR);
+                g.setFont(Debugger.DEBUG_FONT);
                 g.drawString("NEXT: " + timer + "ms", spawnTimerXLocation, spawnTimerYLocation);
             }
         }
