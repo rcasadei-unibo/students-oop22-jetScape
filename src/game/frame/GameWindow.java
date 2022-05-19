@@ -83,9 +83,9 @@ public class GameWindow extends JPanel implements Runnable {
     /**
      * Handles the logic part of the game (entities, interface, game state, etc). 
      */
-    private final Logics logH;
+    private final transient Logics logH;
 
-    private final Thread gameLoop = new Thread(this);
+    private final transient Thread gameLoop = new Thread(this);
     private boolean gameRunning;
 
     /**

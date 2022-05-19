@@ -307,7 +307,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             fallMultiplier += FALL_MULTIPLIER_INCREASE * 4;
         }
 
-        shieldPosition.setX(this.getPosition().getX() + GameWindow.GAME_SCREEN.getTileSize() / 16);
+        shieldPosition.setX(this.getPosition().getX() + GameWindow.GAME_SCREEN.getTileSize() / 16.0);
         shieldPosition.setY(this.getPosition().getY());
 
         this.getHitbox().updatePosition(this.getPosition());
