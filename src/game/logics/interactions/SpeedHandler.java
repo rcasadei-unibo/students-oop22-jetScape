@@ -7,7 +7,7 @@ import game.logics.handler.AbstractLogics;
 /**
  * PLACEHOLDER JAVADOC.
  */
-public class SpeedHandler implements Cloneable {
+public class SpeedHandler {
 
 //    public static final double baseXSpeed = 250;
 //    public static final double baseXSpeedIncDiff = 10;

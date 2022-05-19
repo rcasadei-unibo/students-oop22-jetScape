@@ -6,7 +6,7 @@ package game.utility.other;
  *  @param <X> the first type of the pair
  *  @param <Y> the second type of the pair
  */
-public class Pair<X, Y> implements Cloneable {
+public class Pair<X, Y> {
 
     private X x;
     private Y y;
