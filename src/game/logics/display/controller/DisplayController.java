@@ -130,9 +130,6 @@ public class DisplayController {
                 this.hud.updateScore(getScore.get());
                 break;
             case ENDGAME :
-                //this.gameOverDisplay.setRecords(getScore.get());
-                //this.records.fetch(this.getGame);
-                this.records.announceGameEnded(this.getGame);
                 this.gameOverHandler.update();
                 break;
             default :

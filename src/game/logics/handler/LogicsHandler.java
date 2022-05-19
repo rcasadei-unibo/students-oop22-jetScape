@@ -223,7 +223,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case ENDGAME:
                     spawner.stop();
-                    //TODO check
+                    //this.gameOverDisplay.setRecords(getScore.get());
+                    //this.records.fetch(this.getGame);
+                    LogicsHandler.records.announceGameEnded(() -> game.getActualGame());
+                    System.out.println(LogicsHandler.records.getRecordScore());
                     LogicsHandler.records.update();
                     break;
                 case PAUSED:

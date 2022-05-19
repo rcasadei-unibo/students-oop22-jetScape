@@ -2,6 +2,7 @@ package game.logics.records;
 
 import game.logics.entities.player.Player;
 import game.logics.entities.player.Player.PlayerDeath;
+import game.utility.input.JSONReader;
 import game.utility.input.JSONWriter;
 import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.handler.Logics.GameInfo;
@@ -15,27 +16,16 @@ import java.util.function.Supplier;
 
 public class Records {
 
-    // Data for building JSON data table
-    private final static Set<String> keySet = new HashSet<>();
-    private final static Map<String, Object> recordsMap = new HashMap<>();
-
-    private final JSONWriter writer = new JSONWriter(this);
-
     private final GameInfoHandler game;
     private final Player player;
-    private GameInfo oldGameInfo;
-
-    //TODO complete list
-	//TODO change
-    // List of keys for JSON files
-    private final static String keyName = "name";
-    private final static String keyAge = "age";
+    private final JSONWriter writer;
+    private final JSONReader reader;
+    //private GameInfo oldGameInfo;
 
     // Statistics and records list
     // TODO complete list
-	//TODO change
-    private String name;
-    private int age;
+    private int burnedTimes;
+    private int zappedTimes;
     // private String[] position;
     // private Map<String, Integer> salary;
 
@@ -51,29 +41,13 @@ public class Records {
 
     public Records(final GameInfoHandler game, final Player player) {
         this.game = game;
-        this.oldGameInfo = game.getActualGame();
+        
+        this.writer = new JSONWriter(this);
+        this.reader = new JSONReader(this);
+
+        //this.oldGameInfo = game.getActualGame();
         //game.getNumbersOfGamesPlayed();
         this.player = player;
-    }
-
-    // TODO Set (maybe) with singleton
-    public void build() {
-    	//TODO change
-        keySet.add(keyName);
-        keySet.add(keyAge);
-    
-        recordsMap.put(keyName, name);
-        recordsMap.put(keyAge, age);
-
-        this.writer.build();
-    }
-
-    public static Set<String> getKeySet() {
-        return Records.keySet;
-    }
-
-    public static Map<String,Object> getRecordsMap() {
-        return Records.recordsMap;
     }
 
     /****************************************/
@@ -84,9 +58,8 @@ public class Records {
      * Read from file
      */
     public void refresh() {
-        this.writer.read();
+        this.reader.read();
     }
-
 /*
     private boolean checkAndSet(final GameUID newGameUID) {
 
@@ -121,9 +94,8 @@ public class Records {
                 newGameInfo.setGameEnded(score);
                 this.fetch(newGameInfo);
             }
-        //    oldGameInfo = newGameInfo;
+            //oldGameInfo = newGameInfo;
         //}
-        
     }
 
     /**
@@ -137,8 +109,18 @@ public class Records {
 
         // Only if new gameUID (new game)
         //if (this.checkAndSet(gameUID)) {
-            if(player.hasDied()) {
+            if (player.hasDied()) {
                 this.causeOfDeath = player.getCauseOfDeath();
+                switch (this.causeOfDeath) {
+                    case BURNED:
+                        this.burnedTimes ++;
+                        break;
+                    case ZAPPED:
+                        this.zappedTimes ++;
+                        break;
+                    default:
+                        break;
+                }
                 //System.out.println(causeOfDeath);
             }
             this.checkScore(newGameInfo.getFinalScore());
@@ -165,7 +147,6 @@ public class Records {
      * @param finalScore
      *   final score in the current game
      */
-
     public void checkScore(final int finalScore) {
 
         //this.score = finalScore;
@@ -190,26 +171,26 @@ public class Records {
     /*** Getters & Setters from / to file ***/
     /****************************************/
 
-	//TODO remove
-    public String getName() {
-    	return this.name;
+    public int getBurnedTimes() {
+        return this.burnedTimes;
     }
 
-	//TODO remove
-    public int getAge() {
-    	return this.age;
+    public int getZappedTimes() {
+        return this.zappedTimes;
     }
+
+/*
+    public void setBurnedTimes(final int readBurnedTimes) {
+        this.burnedTimes = readBurnedTimes;
+    }
+
+    public void setZappedTimes(final int readZappedTimes) {
+        this.zappedTimes = readZappedTimes;
+    }
+*/
 
     public int getRecordScore() {
         return this.recordScore;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public void setAge(final int age) {
-    	this.age = age;
     }
 
     public void setRecordScore(int recordScore) {

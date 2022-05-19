@@ -47,8 +47,8 @@ public class DisplayGameOver extends Display implements MenuDisplay {
      *  Reads record and score from {@link Records}.
      */
     private void readRecords() {
-        // TODO Check if this work and if it is good
         this.finalScore = this.records.getScore();
+        //TODO uncomment and use this info
         //this.recordScore = this.records.getRecordScore();
     }
 
