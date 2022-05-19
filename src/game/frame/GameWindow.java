@@ -59,9 +59,9 @@ public class GameWindow extends JPanel implements Runnable {
      * 
      */
     public static final int FPS_LIMIT = 60;
-    private int fps = 0;
+    private int fps;
     private final List<Long> drawTimePerFrame = new ArrayList<>();
-    private long averageDrawTime = 0;
+    private long averageDrawTime;
 
     /**
      * Stores the screen information (resolution, size of each tile, etc).
@@ -213,7 +213,6 @@ public class GameWindow extends JPanel implements Runnable {
             } catch (InterruptedException e) {
                 JOptionPane.showMessageDialog((Component) this, "An error occured! \n Details: \n\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                System.exit(-1);
             }
 
             // Adds the time passed since the last second 

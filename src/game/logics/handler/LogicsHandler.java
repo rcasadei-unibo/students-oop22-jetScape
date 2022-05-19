@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
+import com.github.cliftonlabs.json_simple.JsonException;
+
 import java.awt.Graphics2D;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
@@ -32,6 +34,7 @@ import game.logics.generator.TileGenerator;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
+import game.utility.other.FormatException;
 import game.utility.other.GameState;
 
 /**
@@ -96,8 +99,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        } catch (Exception e) {
+        } catch (JsonException e) {
             JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "An error occured while trying to load tiles.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (FormatException e) {
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file has an incorrect format.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -169,33 +175,40 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         }
     }
 
+    private void quitGame() {
+        final String quitMessage = "Are you sure to quit the game?";
+        final String quitTitle = "Quit Game";
+        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return;
+        }
+    }
+
+    private void quitToMainMenu() {
+        final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
+        final String title = "Return to main menu";
+        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+            return;
+        }
+        spawner.stop();
+    }
+
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
                 case EXIT:
-                    final String quitMessage = "Are you sure to quit the game?";
-                    final String quitTitle = "Quit Game";
-                    if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-                        return;
-                    }
+                    this.quitGame();
                     break;
                 case INGAME:
                     if (this.gameState == GameState.ENDGAME) {
                         this.resetGame();
-                    }
-                    if (this.gameState == GameState.MENU) {
+                    } else if (this.gameState == GameState.MENU) {
                         entities.get(EntityType.PLAYER).add(playerEntity);
                     }
                     spawner.resume();
                     break;
                 case MENU:
                     if (this.gameState == GameState.PAUSED) {
-                        final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
-                        final String title = "Return to main menu";
-                        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
-                            return;
-                        }
-                        spawner.stop();
+                        this.quitToMainMenu();
                     }
                     this.getEntitiesCleaner().accept(t -> true, e -> true);
                     break;
@@ -223,7 +236,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case EXIT:
                 spawner.terminate();
                 GameHandler.GAME_WINDOW.stopGame();
-                System.exit(0);
+                GameHandler.GAME_FRAME.dispose();
                 break;
             case ENDGAME:
                 playerEntity.update();

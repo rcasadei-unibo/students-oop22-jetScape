@@ -56,13 +56,13 @@ public class PlayerInstance extends EntityInstance implements Player {
     public static final double X_POSITION = GameWindow.GAME_SCREEN.getTileSize() * X_RELATIVE_POSITION;
     private final Pair<Double, Double> shieldPosition = new Pair<>(0.0, 0.0);
 
-    private boolean shieldProtected = false;
-    private boolean invulnerable = false;
+    private boolean shieldProtected;
+    private boolean invulnerable;
 
     /**
      * The current player's score.
      */
-    private int score = 0;
+    private int score;
     /**
      * The current jump speed of the player.
      */
@@ -89,14 +89,14 @@ public class PlayerInstance extends EntityInstance implements Player {
     /**
      * How many frames have passed since between a second and another.
      */
-    private int frameTime = 0;
+    private int frameTime;
     private int invulnerableTimer = -1;
 
     private final KeyHandler keyH;
     private final CollisionsHandler hitChecker;
 
     private PlayerStatus status;
-    private boolean statusChanged = false;
+    private boolean statusChanged;
 
     /**
      * Constructor used for initializing basic parts of the player entity.

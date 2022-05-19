@@ -54,7 +54,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     /**
      * How many frames have passed since between a second and another.
      */
-    private int frameTime = 0;
+    private int frameTime;
 
     /**
      * A reference to the player's position.

@@ -43,7 +43,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase {
      */
     private String rotation = "up";
 
-    private boolean hasMaster = false;
+    private boolean hasMaster;
 
     /**
      * Constructor used for initializing basic parts of the obstacle

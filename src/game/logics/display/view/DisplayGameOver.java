@@ -20,11 +20,11 @@ public class DisplayGameOver extends Display implements MenuDisplay {
     private static String recordString = "NEW RECORD";
     private static String[] playingRecordString = {"BARRY COULD", "LIVE LONGER"};
 
-    private static int playingRecord = 0; // higher score obtained by playing consecutively
-    private static boolean isNewPlayingRecord = false;
+    private static int playingRecord; // higher score obtained by playing consecutively
+    private static boolean isNewPlayingRecord;
 
     private final int record; // absolute new record
-    private boolean isNewRecord = false;
+    private boolean isNewRecord;
 
     private int finalScore;
 

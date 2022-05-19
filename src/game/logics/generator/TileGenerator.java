@@ -33,6 +33,7 @@ import game.logics.entities.pickups.teleport.Teleport;
 import game.logics.handler.AbstractLogics;
 import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
+import game.utility.other.FormatException;
 import game.utility.other.Pair;
 
 /**
@@ -102,15 +103,15 @@ public class TileGenerator implements Generator {
     private static final long MINIMAL_INTERVAL = 20;
 
     private final Thread generator = new Thread(this);
-    private boolean running = false;
-    private boolean waiting = false;
+    private boolean running;
+    private boolean waiting;
 
     private final int tileSize;
 
-    private long systemTimeBeforeSleep = 0;
-    private long systemTimeAfterPaused = 0;
-    private long remainingTimeToSleep = 0;
-    private long sleepTimeLeft = 0;
+    private long systemTimeBeforeSleep;
+    private long systemTimeAfterPaused;
+    private long remainingTimeToSleep;
+    private long sleepTimeLeft;
     private long sleepInterval;
 
     private static final Random RNG = new Random();
@@ -132,11 +133,98 @@ public class TileGenerator implements Generator {
         .forEach(e -> tileSets.put(e, new ArrayList<>()));
     }
 
-    private Object checkParse(final Object parsed) throws Exception {
+    private Object checkParse(final Object parsed) throws FormatException {
         if (parsed == null) {
-            throw new Exception("Json Parse returned null when it was expecting an Object.");
+            throw new FormatException("Json Parse returned null when it was expecting an Object.");
         }
         return parsed;
+    }
+
+    private void loadZappers(final JsonArray types) throws FormatException {
+
+        for (int i = 0; i < types.size(); i++) {
+            final JsonArray zsets = (JsonArray) checkParse(types.get(i));
+            final Set<Entity> tile = new HashSet<>();
+
+            for (int j = 0; j < zsets.size(); j++) {
+                final JsonArray set = (JsonArray) checkParse(zsets.get(j));
+
+                if (set.size() >= 2) {
+                    final Set<ZapperRay> tmp = new HashSet<>();
+
+                    final JsonObject b1 = (JsonObject) checkParse(set.get(0));
+                    final JsonObject b2 = (JsonObject) checkParse(set.get(1));
+
+                    final ZapperBase base1 = createZBase.get().apply(new Pair<>(
+                            Double.parseDouble((String) b1.get("x")) * tileSize,
+                            Double.parseDouble((String) b1.get("y")) * tileSize));
+                    final ZapperBase base2 = createZBase.get().apply(new Pair<>(
+                            Double.parseDouble((String) b2.get("x")) * tileSize,
+                            Double.parseDouble((String) b2.get("y")) * tileSize));
+
+                    for (int h = 2; h < set.size(); h++) {
+                        final JsonObject ray = (JsonObject) checkParse(set.get(h));
+                        tmp.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
+                                Double.parseDouble((String) ray.get("x")) * tileSize,
+                                Double.parseDouble((String) ray.get("y")) * tileSize)));
+                    }
+                    final Zapper master = new ZapperInstance(base1, base2, tmp);
+
+                    base1.setMaster(master);
+                    base2.setMaster(master);
+                    tile.add(master);
+                }
+            }
+            tileSets.get(EntityType.ZAPPER).add(tile);
+        }
+    }
+
+    private void loadMissiles(final JsonArray types) throws FormatException {
+        for (int i = 0; i < types.size(); i++) {
+            final JsonArray sets = (JsonArray) checkParse(types.get(i));
+            final Set<Entity> tmp = new HashSet<>();
+
+            for (int j = 0; j < sets.size(); j++) {
+                final JsonObject missile = (JsonObject) checkParse(sets.get(j));
+
+                tmp.add(createMissile.get().apply(new Pair<>(
+                    Double.parseDouble((String) missile.get("x")) * tileSize,
+                    Double.parseDouble((String) missile.get("y")) * tileSize)));
+            }
+            tileSets.get(EntityType.MISSILE).add(tmp);
+        }
+    }
+
+    private void loadShields(final JsonArray types) throws FormatException {
+       for (int i = 0; i < types.size(); i++) {
+            final JsonArray sets = (JsonArray) checkParse(types.get(i));
+            final Set<Entity> tmp = new HashSet<>();
+
+            for (int j = 0; j < sets.size(); j++) {
+                final JsonObject shield = (JsonObject) checkParse(sets.get(j));
+
+                tmp.add(createShield.get().apply(new Pair<>(
+                    Double.parseDouble((String) shield.get("x")) * tileSize,
+                    Double.parseDouble((String) shield.get("y")) * tileSize)));
+            }
+            tileSets.get(EntityType.SHIELD).add(tmp);
+        }
+    }
+
+    private void loadTeleport(final JsonArray types) throws FormatException {
+       for (int i = 0; i < types.size(); i++) {
+            final JsonArray sets = (JsonArray) checkParse(types.get(i));
+            final Set<Entity> tmp = new HashSet<>();
+
+            for (int j = 0; j < sets.size(); j++) {
+                final JsonObject teleport = (JsonObject) checkParse(sets.get(j));
+
+                tmp.add(createTeleport.get().apply(new Pair<>(
+                    Double.parseDouble((String) teleport.get("x")) * tileSize,
+                    Double.parseDouble((String) teleport.get("y")) * tileSize)));
+            }
+            tileSets.get(EntityType.TELEPORT).add(tmp);
+        }
     }
 
     /**
@@ -146,106 +234,31 @@ public class TileGenerator implements Generator {
      * @throws FileNotFoundException if json file cannot be found
      * @throws Exception if json file is not correctly formatted
      */
-    private void loadTiles() throws FileNotFoundException, JsonException, Exception {
+    private void loadTiles() throws FileNotFoundException, JsonException, FormatException {
         final Object parsed = Jsoner.deserialize(new FileReader(TILES_PATH));
         final JsonObject allTiles = (JsonObject) checkParse(parsed);
 
         ///        LOADING ZAPPERS        ///
         if (createZBase.isPresent() && createZRay.isPresent()) {
             final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.ZAPPER.toString()));
-
-            for (int i = 0; i < types.size(); i++) {
-                final JsonArray zsets = (JsonArray) checkParse(types.get(i));
-                final Set<Entity> tile = new HashSet<>();
-
-                for (int j = 0; j < zsets.size(); j++) {
-                    final JsonArray set = (JsonArray) checkParse(zsets.get(j));
-
-                    if (set.size() >= 2) {
-                        final Set<ZapperRay> tmp = new HashSet<>();
-
-                        final JsonObject b1 = (JsonObject) checkParse(set.get(0));
-                        final JsonObject b2 = (JsonObject) checkParse(set.get(1));
-
-                        final ZapperBase base1 = createZBase.get().apply(new Pair<>(
-                                Double.parseDouble((String) b1.get("x")) * tileSize,
-                                Double.parseDouble((String) b1.get("y")) * tileSize));
-                        final ZapperBase base2 = createZBase.get().apply(new Pair<>(
-                                Double.parseDouble((String) b2.get("x")) * tileSize,
-                                Double.parseDouble((String) b2.get("y")) * tileSize));
-
-                        for (int h = 2; h < set.size(); h++) {
-                            final JsonObject ray = (JsonObject) checkParse(set.get(h));
-                            tmp.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
-                                    Double.parseDouble((String) ray.get("x")) * tileSize,
-                                    Double.parseDouble((String) ray.get("y")) * tileSize)));
-                        }
-                        final Zapper master = new ZapperInstance(base1, base2, tmp);
-
-                        base1.setMaster(master);
-                        base2.setMaster(master);
-                        tile.add(master);
-                    }
-                }
-                tileSets.get(EntityType.ZAPPER).add(tile);
-            }
+            this.loadZappers(types);
         }
-
         ///        LOADING MISSILES    ///
         if (createMissile.isPresent()) {
             final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.MISSILE.toString()));
-
-            for (int i = 0; i < types.size(); i++) {
-                final JsonArray sets = (JsonArray) checkParse(types.get(i));
-                final Set<Entity> tmp = new HashSet<>();
-
-                for (int j = 0; j < sets.size(); j++) {
-                    final JsonObject missile = (JsonObject) checkParse(sets.get(j));
-
-                    tmp.add(createMissile.get().apply(new Pair<>(
-                        Double.parseDouble((String) missile.get("x")) * tileSize,
-                        Double.parseDouble((String) missile.get("y")) * tileSize)));
-                }
-                tileSets.get(EntityType.MISSILE).add(tmp);
-            }
+            this.loadMissiles(types);
         }
 
         ///        LOADING SHIELDS     ///
         if (createShield.isPresent()) {
             final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.SHIELD.toString()));
-
-            for (int i = 0; i < types.size(); i++) {
-                final JsonArray sets = (JsonArray) checkParse(types.get(i));
-                final Set<Entity> tmp = new HashSet<>();
-
-                for (int j = 0; j < sets.size(); j++) {
-                    final JsonObject shield = (JsonObject) checkParse(sets.get(j));
-
-                    tmp.add(createShield.get().apply(new Pair<>(
-                        Double.parseDouble((String) shield.get("x")) * tileSize,
-                        Double.parseDouble((String) shield.get("y")) * tileSize)));
-                }
-                tileSets.get(EntityType.SHIELD).add(tmp);
-            }
+            this.loadShields(types);
         }
 
         ///        LOADING TELEPORTS      ///
         if (createTeleport.isPresent()) {
             final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.TELEPORT.toString()));
-
-            for (int i = 0; i < types.size(); i++) {
-                final JsonArray sets = (JsonArray) checkParse(types.get(i));
-                final Set<Entity> tmp = new HashSet<>();
-
-                for (int j = 0; j < sets.size(); j++) {
-                    final JsonObject teleport = (JsonObject) checkParse(sets.get(j));
-
-                    tmp.add(createTeleport.get().apply(new Pair<>(
-                        Double.parseDouble((String) teleport.get("x")) * tileSize,
-                        Double.parseDouble((String) teleport.get("y")) * tileSize)));
-                }
-                tileSets.get(EntityType.TELEPORT).add(tmp);
-            }
+            this.loadTeleport(types);
         }
     }
 
@@ -343,7 +356,7 @@ public class TileGenerator implements Generator {
     /**
      * {@inheritDoc}
      */
-    public void initialize() throws FileNotFoundException, JsonException, Exception {
+    public void initialize() throws FileNotFoundException, JsonException, FormatException {
         this.loadTiles();
         this.start();
     }
@@ -394,7 +407,7 @@ public class TileGenerator implements Generator {
         synchronized (generator) {
             if (this.isWaiting()) {
                 waiting = false;
-                generator.notify();
+                generator.notifyAll();
 
                 synchronized (this) {
                     final long timePassed = System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeBeforeSleep;
