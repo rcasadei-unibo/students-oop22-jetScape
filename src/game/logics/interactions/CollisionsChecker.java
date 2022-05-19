@@ -23,9 +23,10 @@ public class CollisionsChecker {
      * collisions queue of hits to handle.
      */
     private final Queue<Entity> collisions;
-    // TODO: complete javadoc
+
     /**
-     * .
+     * initializes the queue that stores collisions between the 
+     * {@link PlayerInstance}  p and {@link Entity}.
      * @param entities
      * @param p
      */
@@ -59,10 +60,10 @@ public class CollisionsChecker {
         });
     }
 
-    // TODO: complete @param entity
+
     /**
-     * @param entity
-     * @return true if the entity hitbox collides with the player ones
+     * @param entity {@link Hitbox}
+     * @return true if the entity's {@link Hitbox} collides with the player one
      */
     private boolean collides(final Hitbox entity) {
         for (Rectangle hitbox : player.getRectangles()) {

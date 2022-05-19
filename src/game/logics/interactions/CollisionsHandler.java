@@ -17,9 +17,9 @@ import game.utility.other.EntityType;
 public class CollisionsHandler {
     private final CollisionsChecker cChecker; 
 
-    // TODO: Add javadoc
     /**
-     * .
+     *  Instantiates {@link CollisionsChecker} between {@link PlayerInstance} p 
+     *  and {@link Entity} to keep track of collisions.
      * @param entities
      * @param p
      */
@@ -27,10 +27,9 @@ public class CollisionsHandler {
         this.cChecker = new CollisionsChecker(entities, p);
     }
 
-    // TODO: complete action parameter
     /**
-     * if some kind of collision happens, starts the procedure to handle it .
-     * @param action
+     * if some kind of collision happens, performs an action given the entity hit .
+     * @param action takes the entity hit and performs the correct action
      */
     public void interact(final Consumer<Entity> action) {
         this.cChecker.updateCollisions();
