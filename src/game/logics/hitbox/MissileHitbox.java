@@ -12,9 +12,10 @@ public class MissileHitbox extends HitboxInstance {
     static final double RECTANGLE_W = 30;
     static final double RECTANGLE_H = 5;
 
-    // TODO: complete javadoc
     /**
-     * .
+     * initializes {@link game.logics.entities.obstacles.missile.Missile Missile}
+     * {@link Hitbox} in the starting position.
+     * 
      * @param startingPos
      */
     public MissileHitbox(final Pair<Double, Double> startingPos) {

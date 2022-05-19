@@ -1,9 +1,11 @@
 package game.logics.hitbox;
 
+
 import game.utility.other.Pair;
 
 /**
- * The {@link ZapperBaseHitbox} class represents a ZapperBase's  hitbox in
+ * The {@link ZapperBaseHitbox} class represents a 
+ * {@link game.logics.entities.obstacles.zapper.ZapperBase ZapperBase} hitbox in
  * the game environment.
  */
 public class ZapperBaseHitbox extends HitboxInstance {
@@ -12,9 +14,10 @@ public class ZapperBaseHitbox extends HitboxInstance {
     static final double RECTANGLE_W = 22;
     static final double RECTANGLE_H = 22;
 
-    // TODO: add javadoc
     /**
-     * .
+     * initializes the {@link game.logics.entities.obstacles.zapper.ZapperBase ZapperBase}
+     * {@link Hitbox} in the specified position.
+    * 
      * @param startingPos
      */
     public ZapperBaseHitbox(final Pair<Double, Double> startingPos) {

@@ -14,11 +14,11 @@ import game.utility.other.Pair;
  * </p>
  */
 public interface Hitbox {
-    // TODO: complete newPos parameter
     /**
      * Translates all this entity's Rectangles the indicated distance,
      * to the right along the X coordinate axis, and downward along the Y coordinate axis.
-     * @param newPos
+     * 
+     * @param newPos of the {@link Entity}
      */
     void updatePosition(Pair<Double, Double> newPos);
 
@@ -27,11 +27,10 @@ public interface Hitbox {
      */
     Set<Rectangle> getRectangles();
 
-    // TODO: complete g parameter
     /**
-     * draws the hitboxes.
+     * draws the hitbox.
      * 
-     * @param g
+     * @param g {@link Graphics2D} 
      */
     void draw(Graphics2D g);
 }

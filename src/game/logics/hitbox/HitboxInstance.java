@@ -14,7 +14,8 @@ import game.utility.debug.Debugger;
 import game.utility.other.Pair;
 
 /**
- * The {@link HitboxInstance} class represents a generic entity's group of hitboxes.
+ * The {@link HitboxInstance} class represents a 
+ * {@link game.logics.entities.generic.Entity Entity} hitbox.
  */
 public abstract class HitboxInstance implements Hitbox {
     /**
@@ -27,15 +28,14 @@ public abstract class HitboxInstance implements Hitbox {
      */
     private final Map<Rectangle, Pair<Double, Double>> hitboxes;
     private final Pair<Double, Double> startingPos;
-
-    // TODO: change to private and add protected getters and setters.
     /**
-     * .
+     * used to represent safely group of {@link Hitbox}, forcing to update
+     * each entity of such individually.
      */
-    protected final Set<Rectangle> rectangles;
-    // TODO: add javadoc
+    private final Set<Rectangle> rectangles;
+
     /**
-     * .
+     * initializes a {@link game.logics.entities.generic.Entity Entity} hitbox.
      * @param startingPos
      */
     public HitboxInstance(final Pair<Double, Double> startingPos) {
@@ -54,12 +54,14 @@ public abstract class HitboxInstance implements Hitbox {
                     (int) (newPos.getY() + scale.getY()));
         });
     }
+
     /**
      * @return set this entity component rectangle 
      */
     public Set<Rectangle> getRectangles() {
         return Collections.unmodifiableSet(this.rectangles);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -71,9 +73,9 @@ public abstract class HitboxInstance implements Hitbox {
             });
         }
     }
-    // TODO: complete javadoc parameters.
+
     /**
-     * puts the new entry in the hitbox map.
+     * adds the rectangle of the specified dimensions in the hitbox.
      * 
      * @param width
      * @param height
@@ -90,14 +92,22 @@ public abstract class HitboxInstance implements Hitbox {
         this.rectangles.addAll(this.hitboxes.keySet());
     }
 
-    // TODO: complete javadoc
     /**
      * scales the hitbox dimension using the current screen tile's size.
      * 
      * @param x 
-     * @return .
+     * @return scaled x
      */
     private double scale(final double x) {
         return (GameWindow.GAME_SCREEN.getTileSize() * (x / SPRITE_DIMENSIONS));
+    }
+
+    /**
+     * adds the specified hitbox to the group (to use only with groups of entities).
+     * 
+     * @param hitbox
+     */
+    protected void addHitbox(final Hitbox hitbox) {
+        this.rectangles.addAll(hitbox.getRectangles());
     }
 }

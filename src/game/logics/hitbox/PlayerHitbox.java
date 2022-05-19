@@ -3,7 +3,8 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 
 /**
- * The {@link PlayerHitbox} class represents a player's hitbox in
+ * The {@link PlayerHitbox} class represents a 
+ * {@link game.logics.entities.player.Player Player} hitbox in
  * the game environment.
  */
 public class PlayerHitbox extends HitboxInstance {
@@ -16,9 +17,10 @@ public class PlayerHitbox extends HitboxInstance {
     static final double RECTANGLE_2W = 13;
     static final double RECTANGLE_2H = 21;
 
-    // TODO: add javadoc
     /**
-     * .
+     * initializes {@link game.logics.entities.player.Player Player}
+     * {@link Hitbox} in the starting position.
+     * 
      * @param startingPos
      */
     public PlayerHitbox(final Pair<Double, Double> startingPos) {

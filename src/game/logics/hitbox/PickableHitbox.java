@@ -3,14 +3,16 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 
 /**
- * The {@link PickableHitbox} class represents a pickable object's hitbox in
+ * The {@link PickableHitbox} class represents a 
+ * {@link game.logics.entities.pickups.generic.Pickup Pickup} object's
+ * {@link Hitbox}
  * the game environment.
  */
 public class PickableHitbox extends HitboxInstance {
 
-    // TODO: Add javadoc
     /**
-     * .
+     * initializes a {@link game.logics.entities.pickups.generic.Pickup Pickup}
+     * {@link Hitbox} in the given starting position.
      * @param startingPos
      */
     public PickableHitbox(final Pair<Double, Double> startingPos) {
