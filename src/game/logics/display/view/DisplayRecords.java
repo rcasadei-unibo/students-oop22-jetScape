@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import game.utility.other.MenuOption;
-import game.utility.screen.Screen;
 
 /**
  * <p>This class is used to display statistics and records.</p>
@@ -31,10 +30,10 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
     /**
      * {@link DisplayRecords} constructor: add options to be shown.
-     * @param gScreen
+     *
      */
-    public DisplayRecords(final Screen gScreen) {
-        super(gScreen);
+    public DisplayRecords() {
+        super();
 
         this.getOptions().add(MenuOption.MENU);
 
@@ -68,22 +67,22 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
         // RECORDS
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS1,
-                x -> x - gScreen.getWidth() / 4, gScreen.getTileSize() * 3, 0);
+                x -> x - getGameScreen().getWidth() / 4, getGameScreen().getTileSize() * 3, 0);
 
         final List<String> recordList = this.listify(DisplayRecords.LENGTH_RECORDS);
         for (i = 0; i < recordList.size(); i++) {
             super.drawText(g, super.getTextFont(), recordList.get(i),
-                    gScreen.getTileSize() * 3, gScreen.getTileSize() * (3 + i + 1), 0);
+                    getGameScreen().getTileSize() * 3, getGameScreen().getTileSize() * (3 + i + 1), 0);
         }
 
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS2,
-                x -> x + gScreen.getWidth() / 4, gScreen.getTileSize() * 3, 0);
+                x -> x + getGameScreen().getWidth() / 4, getGameScreen().getTileSize() * 3, 0);
 
         final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
         for (i = 0; i < moneyList.size(); i++) {
             super.drawText(g, super.getTextFont(), moneyList.get(i),
-                    gScreen.getTileSize() * 3 + gScreen.getWidth() / 2,
-                    gScreen.getTileSize() * (3 + i + 1), 0);
+                    getGameScreen().getTileSize() * 3 + getGameScreen().getWidth() / 2,
+                    getGameScreen().getTileSize() * (3 + i + 1), 0);
         }
 
         //OPTIONS

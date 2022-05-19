@@ -54,11 +54,11 @@ public class DisplayController {
             final Supplier<Integer> getScore) {
         this.getState = getState;
         this.getScore = getScore;
-        this.hud = new DisplayHUD(gScreen);
-        this.pauseDisplay = new DisplayPause(gScreen);
-        this.mainMenuDisplay = new DisplayMainMenu(gScreen);
-        this.recordsDisplay = new DisplayRecords(gScreen);
-        this.gameOverDisplay = new DisplayGameOver(gScreen);
+        this.hud = new DisplayHUD();
+        this.pauseDisplay = new DisplayPause();
+        this.mainMenuDisplay = new DisplayMainMenu();
+        this.recordsDisplay = new DisplayRecords();
+        this.gameOverDisplay = new DisplayGameOver();
 
         this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
         this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);

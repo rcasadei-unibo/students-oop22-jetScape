@@ -15,11 +15,7 @@ import game.utility.screen.Screen;
  * Abstract class that contains useful methods for draw text on screen.
  */
 public abstract class Display {
-    // TODO: Change to private and protected getters and setters
-    /**
-     * private.
-     */
-    protected final Screen gScreen;
+    private final Screen gScreen = GameWindow.GAME_SCREEN;
 
     /*
      * List of options to be displayed.
@@ -74,11 +70,9 @@ public abstract class Display {
 
     /**
      * Class constructor: load fonts with {@link game.utility.fonts.FontLoader}.
-     * @param gScreen {@link Screen} instance passed to get screen informations.
+     * 
      */
-    public Display(final Screen gScreen) {
-        this.gScreen = gScreen;
-
+    public Display() {
         this.titleFont = GameWindow.GAME_FONTLOADER.getTitleFont()
                 .deriveFont(getScaledSize(TITLE_SCALE));
         this.optionsFont = GameWindow.GAME_FONTLOADER.getOptionsFont()
@@ -93,12 +87,11 @@ public abstract class Display {
     /**
      * Calculates the ordinate's value such as the given string is centered in
      * the current screen.
-     * @param gScreen
      * @param g
      * @param text the string be centered
      * @return this ordinate's value
      */
-    private int getCenteredX(final Screen gScreen, final Graphics2D g, final String text) {
+    private int getCenteredX(final Graphics2D g, final String text) {
 
         final int lenght = (int) g.getFontMetrics().getStringBounds(text, g).getWidth();
 
@@ -166,7 +159,7 @@ public abstract class Display {
     protected void drawCenteredText(final Graphics2D g, /*final Color color,*/ final Font font,
             final String text, final Function<Integer, Integer> f, final int yPos, final int shift) {
         g.setFont(font);
-        this.drawText(g, font, text, f.apply(this.getCenteredX(gScreen, g, text)), yPos, shift);
+        this.drawText(g, font, text, f.apply(this.getCenteredX(g, text)), yPos, shift);
     }
 
     // TODO: Add javadoc
@@ -252,4 +245,13 @@ public abstract class Display {
     protected int getTextShift() {
         return Display.TEXT_SHIFT;
     }
+
+    /**
+     * Get current game screen.
+     * @return Display.gScreen
+     */
+    protected Screen getGameScreen() {
+       return gScreen;
+    }
+
 }

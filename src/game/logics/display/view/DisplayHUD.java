@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 import game.frame.GameWindow;
-import game.utility.screen.Screen;
 
 /**
  * <p>This class contains what is shown when playing, so the score.</p>
@@ -23,10 +22,10 @@ public class DisplayHUD extends Display {
 
     /**
      * {@link DisplayHUD} constructor: loads scoreFont.
-     * @param gScreen
+     *
      */
-    public DisplayHUD(final Screen gScreen) {
-        super(gScreen);
+    public DisplayHUD() {
+        super();
 
         this.score = 0;
         this.scoreFont = GameWindow.GAME_FONTLOADER.getOptionsFont().deriveFont(getScaledSize(FONT_SCALE));
@@ -39,8 +38,8 @@ public class DisplayHUD extends Display {
         final String scoreString = "SCORE: " + this.score;
 
         // SCORE
-        super.drawText(g, scoreFont, scoreString, super.gScreen.getTileSize() * TEXT_X_TILE,
-                super.gScreen.getTileSize() * SCORE_TILE, SCORE_SHIFT);
+        super.drawText(g, scoreFont, scoreString, getGameScreen().getTileSize() * TEXT_X_TILE,
+                getGameScreen().getTileSize() * SCORE_TILE, SCORE_SHIFT);
     }
 
     /**

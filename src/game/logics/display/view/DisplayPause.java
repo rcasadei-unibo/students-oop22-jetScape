@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.util.function.Function;
 
 import game.utility.other.MenuOption;
-import game.utility.screen.Screen;
 
 /**
  * <p>This class contains what is shown when the game is paused.</p>
@@ -18,10 +17,10 @@ public class DisplayPause extends Display implements MenuDisplay {
 
     /**
      * {@link DisplayPause} constructor: add options to be shown.
-     * @param gScreen
+     *
      */
-    public DisplayPause(final Screen gScreen) {
-        super(gScreen);
+    public DisplayPause() {
+        super();
 
         this.getOptions().add(MenuOption.RESUME);
         this.getOptions().add(MenuOption.MENU);

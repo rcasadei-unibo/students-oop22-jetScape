@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.util.function.Function;
 
 import game.utility.other.MenuOption;
-import game.utility.screen.Screen;
 
 /**
  * <p>This class contains what it is shown when Barry dies.</p>
@@ -31,10 +30,10 @@ public class DisplayGameOver extends Display implements MenuDisplay {
 
     /**
      * {@link DisplayGameOver} constructor: add options to be shown.
-     * @param gScreen
+     * 
      */
-    public DisplayGameOver(final Screen gScreen) {
-        super(gScreen);
+    public DisplayGameOver() {
+        super();
         this.getOptions().add(MenuOption.RETRY);
         this.getOptions().add(MenuOption.MENU);
 
@@ -53,17 +52,17 @@ public class DisplayGameOver extends Display implements MenuDisplay {
 
         // SCORE
         super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.scoreString + this.finalScore, x -> x,
-                DisplayGameOver.TEXT_TILE * gScreen.getTileSize(), super.getTextShift());
+                DisplayGameOver.TEXT_TILE * getGameScreen().getTileSize(), super.getTextShift());
 
         // RECORD
         if (this.isNewRecord) {
             super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.recordString, x -> x / 2,
-                    (DisplayGameOver.TEXT_TILE + 1) * gScreen.getTileSize(), super.getTextShift());
+                    (DisplayGameOver.TEXT_TILE + 1) * getGameScreen().getTileSize(), super.getTextShift());
         } else if (isNewPlayingRecord) {
             super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordString[0], x -> x / 2,
-                    (DisplayGameOver.TEXT_TILE + 1) * gScreen.getTileSize(), super.getTextShift());
+                    (DisplayGameOver.TEXT_TILE + 1) * getGameScreen().getTileSize(), super.getTextShift());
             super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordString[1], x -> x / 2,
-                    (DisplayGameOver.TEXT_TILE + 2) * gScreen.getTileSize(), super.getTextShift());
+                    (DisplayGameOver.TEXT_TILE + 2) * getGameScreen().getTileSize(), super.getTextShift());
         }
 
         // OPTIONS
