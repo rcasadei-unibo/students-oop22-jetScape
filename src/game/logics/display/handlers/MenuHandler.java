@@ -30,9 +30,9 @@ public class MenuHandler implements DisplayHandler {
      */
     private MenuOption selectedOption;
 
-    // TODO: Add javadoc
     /**
-     * Complete me.
+     * Initializes the menu handler with the given display's options and sets 
+     * the first one as currently selected, performing setGameState when enter is pressed.
      * @param keyH
      * @param display
      * @param setGameState
