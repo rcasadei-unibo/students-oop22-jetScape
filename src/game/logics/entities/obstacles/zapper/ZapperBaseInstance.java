@@ -82,7 +82,7 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase {
      * Updates the object rotation, depending of the position of the paired {@link ZapperBaseInstance}.
      */
     private void updateRotation() {
-        ZapperBase pairedBase = master.getPaired(this);
+        final ZapperBase pairedBase = master.getPaired(this);
         if (Math.round(this.getPosition().getX()) == Math.round(pairedBase.getPosition().getX())) {
             if (this.getPosition().getY() < pairedBase.getPosition().getY()) {
                 rotation = "down";

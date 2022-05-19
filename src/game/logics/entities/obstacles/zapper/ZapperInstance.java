@@ -53,7 +53,7 @@ public class ZapperInstance implements Zapper {
      * {@inheritDoc}
      */
     public Set<Entity> getEntitiesSet() {
-        Set<Entity> entities = new HashSet<>(rays);
+        final Set<Entity> entities = new HashSet<>(rays);
         entities.add(base1);
         entities.add(base2);
         return entities;
@@ -87,7 +87,7 @@ public class ZapperInstance implements Zapper {
         if (!base1.isOnClearArea() || !base2.isOnClearArea()) {
             return false;
         }
-        for (ZapperRay r : rays) {
+        for (final ZapperRay r : rays) {
             if (!r.isOnClearArea()) {
                 return false;
             }
@@ -102,7 +102,7 @@ public class ZapperInstance implements Zapper {
         if (!base1.isOnSpawnArea() || !base2.isOnSpawnArea()) {
             return false;
         }
-        for (ZapperRay r : rays) {
+        for (final ZapperRay r : rays) {
             if (!r.isOnSpawnArea()) {
                 return false;
             }
@@ -117,7 +117,7 @@ public class ZapperInstance implements Zapper {
         if (!base1.isOnScreenBounds() || !base2.isOnScreenBounds()) {
             return false;
         }
-        for (ZapperRay r : rays) {
+        for (final ZapperRay r : rays) {
             if (!r.isOnScreenBounds()) {
                 return false;
             }
@@ -132,7 +132,7 @@ public class ZapperInstance implements Zapper {
         if (!base1.isVisible() || !base2.isVisible()) {
             return false;
         }
-        for (ZapperRay r : rays) {
+        for (final ZapperRay r : rays) {
             if (!r.isVisible()) {
                 return false;
             }

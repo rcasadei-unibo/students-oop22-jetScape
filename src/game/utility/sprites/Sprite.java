@@ -92,8 +92,8 @@ public class Sprite {
      * @return a {@link BufferedImage} containing the scaled image of the sprite
      */
     public static BufferedImage scale(final BufferedImage imageToScale, final int side) {
-        BufferedImage scaled = new BufferedImage(side, side, imageToScale.getType());
-        Graphics2D g = scaled.createGraphics();
+        final BufferedImage scaled = new BufferedImage(side, side, imageToScale.getType());
+        final Graphics2D g = scaled.createGraphics();
         g.drawImage(imageToScale, 0, 0, side, side, null);
         g.dispose();
         return scaled;

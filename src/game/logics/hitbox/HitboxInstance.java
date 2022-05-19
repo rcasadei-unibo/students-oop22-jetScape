@@ -83,10 +83,10 @@ public abstract class HitboxInstance implements Hitbox {
      * @param y
      */
     protected void addRectangle(final double x, final double y, final double width, final double height) {
-        int startingX = (int) (startingPos.getX() + this.scale(x));
-        int startingY = (int) (startingPos.getY() + this.scale(y));
-        int scaledWidth  = (int) this.scale(width);
-        int scaledHeight = (int) this.scale(height);
+        final int startingX = (int) (startingPos.getX() + this.scale(x));
+        final int startingY = (int) (startingPos.getY() + this.scale(y));
+        final int scaledWidth  = (int) this.scale(width);
+        final int scaledHeight = (int) this.scale(height);
         this.hitboxes.put(new Rectangle(startingX, startingY, scaledWidth, scaledHeight),
                 new Pair<>(this.scale(x), this.scale(y)));
         this.rectangles.addAll(this.hitboxes.keySet());
@@ -99,7 +99,7 @@ public abstract class HitboxInstance implements Hitbox {
      * @return scaled x
      */
     private double scale(final double x) {
-        return (GameWindow.GAME_SCREEN.getTileSize() * (x / SPRITE_DIMENSIONS));
+        return GameWindow.GAME_SCREEN.getTileSize() * (x / SPRITE_DIMENSIONS);
     }
 
     /**

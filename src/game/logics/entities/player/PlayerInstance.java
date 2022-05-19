@@ -3,7 +3,7 @@ package game.logics.entities.player;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.Graphics2D;
-
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -177,6 +177,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             case TELEPORT:
                 score += TeleportInstance.getScoreIncrease();
                 this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
+                break;
             default:
                 break;
         }
@@ -348,7 +349,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             return false;
         }
         public String toString() {
-            return super.toString().toLowerCase();
+            return super.toString().toLowerCase(Locale.ENGLISH);
         }
     }
 }

@@ -63,7 +63,7 @@ public abstract class AbstractLogics implements Logics {
         if (entitiesSpeed.containsKey(type)) {
             return entitiesSpeed.get(type);
         }
-        return defaultEntitySpeed.clone();
+        return defaultEntitySpeed.copy();
     }
 
     /**

@@ -1,5 +1,6 @@
 package game.utility.other;
 
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -28,6 +29,6 @@ public enum MenuOption {
         if (this.equals(MENU)) {
             return "back to menu";
         }
-        return super.toString().toLowerCase();
+        return super.toString().toLowerCase(Locale.ENGLISH);
     }
 }

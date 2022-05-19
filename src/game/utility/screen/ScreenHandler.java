@@ -8,7 +8,7 @@ import java.awt.Dimension;
 public class ScreenHandler implements Screen {
 
     private final Dimension currentSize;
-    private int tileSize;
+    private final int tileSize;
 
     /**
      * Initialize a ScreenHandler with default screen values. 

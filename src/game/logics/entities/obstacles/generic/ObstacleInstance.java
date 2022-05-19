@@ -15,7 +15,7 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
     /**
      * Defines the movement parameters of the obstacle.
      */
-    private SpeedHandler movement;
+    private final SpeedHandler movement;
 
     /**
      * Constructor that sets up obstacle default values (picked up from 
@@ -29,7 +29,7 @@ public abstract class ObstacleInstance extends EntityInstance implements Obstacl
      */
     protected ObstacleInstance(final Logics l, final Pair<Double, Double> position, final EntityType obstacleType, final SpeedHandler speed) {
         super(l, position, obstacleType);
-        movement = speed.clone();
+        movement = speed.copy();
     }
 
     /**

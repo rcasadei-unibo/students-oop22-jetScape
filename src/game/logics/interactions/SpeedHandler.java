@@ -13,10 +13,10 @@ public class SpeedHandler implements Cloneable {
 //    public static final double baseXSpeedIncDiff = 10;
 //    public static final double baseXAcceleration = 0;
 
-    private double xStartSpeed = 0;
-    private double xSpeed = 0;
-    private double xSpeedIncDifficulty = 0;
-    private double xAcceleration = 0;
+    private final double xStartSpeed;
+    private double xSpeed;
+    private final double xSpeedIncDifficulty;
+    private final double xAcceleration;
 
 //    public SpeedHandler() {
 //        setDefaultValues();
@@ -61,7 +61,7 @@ public class SpeedHandler implements Cloneable {
     /**
      * @return a copy of this class
      */
-    public SpeedHandler clone() {
+    public SpeedHandler copy() {
         return new SpeedHandler(xStartSpeed, xSpeedIncDifficulty, xAcceleration);
     }
 }

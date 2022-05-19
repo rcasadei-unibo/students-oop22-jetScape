@@ -34,11 +34,11 @@ public class GameWindow extends JPanel implements Runnable {
     /**
      * Represents how many nanoseconds are in a second.
      */
-    public static final long NANO_SECOND = 1000000000;
+    public static final long NANO_SECOND = 1_000_000_000;
     /**
      * Represents how many microseconds are in a second.
      */
-    public static final long MICRO_SECOND = 1000000;
+    public static final long MICRO_SECOND = 1_000_000;
     /**
      * Represents how many milliseconds are in a second.
      */
@@ -60,7 +60,7 @@ public class GameWindow extends JPanel implements Runnable {
      */
     public static final int FPS_LIMIT = 60;
     private int fps = 0;
-    private List<Long> drawTimePerFrame = new ArrayList<>();
+    private final List<Long> drawTimePerFrame = new ArrayList<>();
     private long averageDrawTime = 0;
 
     /**
@@ -86,7 +86,7 @@ public class GameWindow extends JPanel implements Runnable {
     private final Logics logH;
 
     private final Thread gameLoop = new Thread(this);
-    private boolean gameRunning = false;
+    private boolean gameRunning;
 
     /**
      * Basic constructor that sets {@link JPanel} attributes and sets up the {@link Logics} handler
@@ -143,7 +143,7 @@ public class GameWindow extends JPanel implements Runnable {
         final int drawTimeY = GAME_SCREEN.getHeight() - 5;
 
         final long timeBeforeDraw = System.nanoTime();
-        Graphics2D board = (Graphics2D) g;
+        final Graphics2D board = (Graphics2D) g;
 
         // Draws logical parts of the game
         logH.drawAll(board);
@@ -170,7 +170,7 @@ public class GameWindow extends JPanel implements Runnable {
     @Override
     public void run() {
         // Defines how many nanoseconds have to pass until the next execution loop
-        double drawInterval = NANO_SECOND / FPS_LIMIT;
+        final double drawInterval = NANO_SECOND / FPS_LIMIT;
         // System time after interval has passed
         double nextDraw = System.nanoTime() + drawInterval;
         // Nanoseconds passed from the current loop
@@ -181,7 +181,7 @@ public class GameWindow extends JPanel implements Runnable {
         while (gameLoop.isAlive() && gameRunning) {
 
             // Gets current system time
-            long timer = System.nanoTime();
+            final long timer = System.nanoTime();
 
             // Updates parameters for each second passed
             if (drawTime > NANO_SECOND) {
@@ -190,10 +190,10 @@ public class GameWindow extends JPanel implements Runnable {
                 fpsCount = 0;
 
                 long drawTimeSum = 0;
-                for (long draw : drawTimePerFrame) {
+                for (final long draw : drawTimePerFrame) {
                     drawTimeSum += draw;
                 }
-                averageDrawTime = drawTimeSum / (drawTimePerFrame.size() > 0 ? drawTimePerFrame.size() : 1);
+                averageDrawTime = drawTimeSum / (!drawTimePerFrame.isEmpty() ? drawTimePerFrame.size() : 1);
                 drawTimePerFrame.clear();
             }
 

@@ -31,7 +31,6 @@ import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
-import game.utility.screen.Screen;
 import game.utility.other.EntityType;
 import game.utility.other.GameState;
 
@@ -59,7 +58,6 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      */
     private final Player playerEntity;
 
-    private final Screen screen;
     private final KeyHandler keyH;
     private final Debugger debugger;
 
@@ -71,7 +69,6 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     public LogicsHandler() {
         super();
 
-        this.screen = GameWindow.GAME_SCREEN;
         this.keyH = GameWindow.GAME_KEYHANDLER;
         this.debugger = GameWindow.GAME_DEBUGGER;
 
@@ -80,7 +77,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
         playerEntity = new PlayerInstance(this, entities);
 
-        displayController = new DisplayController(keyH, screen, g -> setGameState(g),
+        displayController = new DisplayController(keyH, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore());
 
         spawner = new TileGenerator(entities, super.getSpawningInteval());
@@ -264,6 +261,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 }
                 spawner.drawNextSpawnTimer(g);
                 this.drawDifficultyLevel(g);
+                break;
             default:
                 break;
         }

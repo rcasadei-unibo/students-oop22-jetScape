@@ -39,11 +39,6 @@ public class DrawManager implements Drawer {
     private String spriteToDraw = PLACEHOLDER_KEY;
 
     /**
-     * Constructor that sets up the {@link DrawManager}.
-     */
-    public DrawManager() { }
-
-    /**
      * {@inheritDoc}
      */
     public void setPlaceH(final Color placeHolder) {
