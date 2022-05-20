@@ -9,7 +9,7 @@ import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
-public class TeleportInstance extends PickupInstance implements Teleport{
+public class TeleportInstance extends PickupInstance implements Teleport {
 
     /**
      * Specifies the path within the sprite folder [specified in <code>Sprite</code> class]
@@ -25,9 +25,9 @@ public class TeleportInstance extends PickupInstance implements Teleport{
     private final int scoreInc = 250;
     
     public TeleportInstance(final Logics l, final Pair<Double, Double> position,  final Player player, final SpeedHandler speed) {
-        super(l, position, player, speed);
-        entityTag = EntityType.TELEPORT;
+        super(l, position, EntityType.TELEPORT, player, speed);
         
+        final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(placeH);
         spritesMgr.addSprite("teleport", texturePath + "teleport.png");
         spritesMgr.setAnimator(() -> "teleport");

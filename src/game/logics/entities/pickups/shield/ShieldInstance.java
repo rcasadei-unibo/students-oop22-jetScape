@@ -23,9 +23,9 @@ public class ShieldInstance extends PickupInstance implements Shield{
     private static final Color placeH = Color.blue;
     
     public ShieldInstance(final Logics l, final Pair<Double, Double> position,  final Player player, final SpeedHandler speed) {
-        super(l, position, player, speed);
-        entityTag = EntityType.SHIELD;
+        super(l, position, EntityType.SHIELD, player, speed);
         
+        final var spritesMgr = this.getSpriteManager();
         spritesMgr.setPlaceH(placeH);
         spritesMgr.addSprite("shield", texturePath + "shield.png");
         spritesMgr.setAnimator(() -> "shield");

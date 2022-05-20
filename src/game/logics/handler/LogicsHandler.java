@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 
 import game.frame.GameHandler;
 import game.frame.GameWindow;
+
 import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
@@ -26,12 +27,17 @@ import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
+
 import game.logics.display.controller.DisplayController;
+
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
+
 import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.interactions.SpeedHandler;
+
 import game.logics.records.Records;
+
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.screen.Screen;
@@ -70,6 +76,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * another set of obstacles.
      */
     final private double spawnInterval = 3.3;
+
     /**
      * Defines the interval of each check for entities to clean.
      */
@@ -94,7 +101,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.keyH = GameWindow.GAME_KEYHANDLER;
         this.debugger = GameWindow.GAME_DEBUGGER;
 
-        EntityType.genericTypes
+        EntityType.ALL_ENTITY_TYPE
                 .forEach(e -> entities.put(e, new HashSet<>()));
 
         game = new GameInfoHandler(new GameInfo());
@@ -105,7 +112,6 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 () -> gameState, () -> playerEntity.getCurrentScore(), () -> game.getActualGame(), records);
 
         spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
-
         this.initializeSpawner();
     }
 
@@ -119,16 +125,16 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         try {
             spawner.initialize();
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "An error occured while trying to load tiles.\n\nDetails:\n"+e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "An error occured while trying to load tiles.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
 
-    public BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner(){
-        return new BiConsumer<Predicate<EntityType>,Predicate<Entity>>(){
+    public BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner() {
+        return new BiConsumer<Predicate<EntityType>,Predicate<Entity>>() {
             public void accept(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
                 synchronized (entities) {
                     entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
@@ -303,3 +309,4 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.displayController.drawScreen(g);
     }
 }
+

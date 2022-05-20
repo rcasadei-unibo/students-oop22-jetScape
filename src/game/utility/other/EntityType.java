@@ -2,20 +2,29 @@ package game.utility.other;
 
 import java.util.List;
 
+/**
+ * The {@link EntityType} enumerable describes which category of each entity that encapsulates it.
+ */
 public enum EntityType {
-    UNDEFINED, PLAYER, OBSTACLE, MISSILE, ZAPPER, ZAPPERBASE, ZAPPERRAY, PICKUP, SHIELD, TELEPORT;
-    
-    public static final List<EntityType> allTypes = List.of(EntityType.PLAYER, EntityType.OBSTACLE, EntityType.ZAPPER, EntityType.ZAPPERBASE, EntityType.ZAPPERRAY, EntityType.MISSILE, EntityType.PICKUP, EntityType.SHIELD, EntityType.TELEPORT);
-    public static final List<EntityType> genericTypes = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
-    
+    /**
+     * Defines the type of the entity.
+     */
+    UNDEFINED, PLAYER, MISSILE, ZAPPER, ZAPPERBASE, ZAPPERRAY, SHIELD, TELEPORT;
+
+    /**
+     * A list containing each type of entity that can be implemented.
+     */
+    public static final List<EntityType> ALL_ENTITY_TYPE = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
+
+    /**
+     * @return <code>true</code> if the current type is for a generable entity, <code>false</code> if not
+     */
     public boolean isGenerableEntity() {
-        switch(this) {
-            case OBSTACLE:
+        switch (this) {
             case MISSILE:
             case ZAPPER:
             case ZAPPERBASE:
             case ZAPPERRAY:
-            case PICKUP:
             case SHIELD:
             case TELEPORT:
                 return true;
@@ -24,10 +33,12 @@ public enum EntityType {
         }
         return false;
     }
-    
+
+    /**
+     * @return <code>true</code> if the current type is for a obstacle, <code>false</code> if not
+     */
     public boolean isObstacle() {
-        switch(this) {
-            case OBSTACLE:
+        switch (this) {
             case MISSILE:
             case ZAPPER:
             case ZAPPERBASE:
@@ -38,10 +49,12 @@ public enum EntityType {
         }
         return false;
     }
-    
+
+    /**
+     * @return <code>true</code> if the current type is for a pickup, <code>false</code> if not
+     */
     public boolean isPickUp() {
-        switch(this) {
-            case PICKUP:
+        switch (this) {
             case SHIELD:
             case TELEPORT:
                 return true;
@@ -50,7 +63,7 @@ public enum EntityType {
         }
         return false;
     }
-    
+
     @Override
     public String toString() {
         return super.toString().toLowerCase();
