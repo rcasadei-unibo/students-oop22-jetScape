@@ -66,8 +66,8 @@ public class CollisionsChecker {
      * @return true if the entity's {@link Hitbox} collides with the player one
      */
     private boolean collides(final Hitbox entity) {
-        for (Rectangle hitbox : player.getRectangles()) {
-            for (Rectangle target : entity.getRectangles()) {
+        for (final Rectangle hitbox : player.getRectangles()) {
+            for (final Rectangle target : entity.getRectangles()) {
                 if (hitbox.intersects(target)) {
                     return true;
                 }

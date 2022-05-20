@@ -43,7 +43,7 @@ public class Debugger {
      * If this flag is <code>false</code>, the game won't use any debug function currently enabled.
      * </p>
      */
-    private boolean debugMode = false;
+    private boolean debugMode;
 
     /**
      * Constructor that initiate the {@link Debugger}.

@@ -41,7 +41,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     /**
      * The position of the missile warning is drawn.
      */
-    private Pair<Double, Double> warnPosition;
+    private final Pair<Double, Double> warnPosition;
 
     /**
      * The position when the warning should start flickering.
@@ -51,11 +51,11 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     /**
      * The flickering speed of the missile warning when a missile is about to appear.
      */
-    private final int warnFlickSpeed = 10;
+    static final int WARN_FLICK_SPEED = 10;
     /**
      * How many frames have passed since between a second and another.
      */
-    private int frameTime = 0;
+    private int frameTime;
 
     /**
      * A reference to the player's position.
@@ -65,12 +65,12 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     private static final double Y_DEFAULT_SPEED = 0;
     private static final double Y_DEFAULT_ACCELERATION = 400;
 
-    private double yStartSpeed = Y_DEFAULT_SPEED;
+    private final double yStartSpeed = Y_DEFAULT_SPEED;
     private double ySpeed = yStartSpeed;
-    private double yAcceleration = Y_DEFAULT_ACCELERATION;
-    private final double yBrakingDivider = 3.5;
+    private final double yAcceleration = Y_DEFAULT_ACCELERATION;
+    static final double Y_BRAKING_DIVIDER = 3.5;
 
-    private final double yBrakeDecrease = 1.0;
+    static final double Y_BRAKE_DECREASE = 1.0;
 
     /**
      * The direction the missile was moving.
@@ -127,14 +127,14 @@ public class MissileInstance extends ObstacleInstance implements Missile {
         if (this.isOnSpawnArea()) {
             if (this.getPosition().getY() > playerPosition.getY()) {
                 if (lastDir != Direction.UP) {
-                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
+                    ySpeed = -ySpeed / Y_BRAKING_DIVIDER + Y_BRAKE_DECREASE * AbstractLogics.getDifficultyLevel();
                 }
                 this.getPosition().setY(this.getPosition().getY() - ySpeed / GameWindow.FPS_LIMIT);
                 ySpeed += yAcceleration / GameWindow.FPS_LIMIT;
                 lastDir = Direction.UP;
             } else if (this.getPosition().getY() < playerPosition.getY()) {
                 if (lastDir != Direction.DOWN) {
-                    ySpeed = -ySpeed / yBrakingDivider + yBrakeDecrease * AbstractLogics.getDifficultyLevel();
+                    ySpeed = -ySpeed / Y_BRAKING_DIVIDER + Y_BRAKE_DECREASE * AbstractLogics.getDifficultyLevel();
                 }
                 this.getPosition().setY(this.getPosition().getY() + ySpeed / GameWindow.FPS_LIMIT);
                 ySpeed += yAcceleration  / GameWindow.FPS_LIMIT;
@@ -153,10 +153,10 @@ public class MissileInstance extends ObstacleInstance implements Missile {
             return;
         }
 
-        if (this.getPosition().getX() > GameWindow.GAME_SCREEN.getWidth()) {
-            if (this.getPosition().getX() > warnFlickRange || frameTime % warnFlickSpeed < warnFlickSpeed / 2) {
-                this.getSpriteManager().drawSprite(g, "warn", warnPosition, GameWindow.GAME_SCREEN.getTileSize());
-            }
+        if (this.getPosition().getX() > GameWindow.GAME_SCREEN.getWidth()
+                && (this.getPosition().getX() > warnFlickRange
+                || frameTime % WARN_FLICK_SPEED < WARN_FLICK_SPEED / 2)) {
+            this.getSpriteManager().drawSprite(g, "warn", warnPosition, GameWindow.GAME_SCREEN.getTileSize());
         }
     }
 }

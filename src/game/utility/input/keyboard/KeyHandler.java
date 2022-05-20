@@ -24,7 +24,7 @@ public class KeyHandler implements KeyListener {
      * </p>
      * 
      */
-    private Map<Integer, Boolean> input = new HashMap<>();
+    private final Map<Integer, Boolean> input = new HashMap<>();
     private Optional<Integer> lastKeyTyped = Optional.empty();
 
     /**

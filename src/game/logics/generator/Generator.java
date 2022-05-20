@@ -12,6 +12,7 @@ import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperRay;
 import game.logics.entities.pickups.shield.Shield;
 import game.logics.entities.pickups.teleport.Teleport;
+import game.utility.other.FormatException;
 import game.utility.other.Pair;
 
 /**
@@ -80,11 +81,11 @@ public interface Generator extends Runnable {
     /**
      * Loads up all required information for the generation of obstacles.
      * 
-     * @throws ParseException if parser fails to parse into objects the contents of json file
-     * @throws IOException if json file reading fails
+     * @throws FormatException if parser fails to parse into objects the contents of json file
+     * @throws JsonException if json file reading fails
      * @throws FileNotFoundException if json file cannot be found
      */
-    void initialize() throws FileNotFoundException, JsonException, Exception;
+    void initialize() throws FileNotFoundException, JsonException, FormatException;
     /**
      * Start the generation of obstacles [Starts thread].
      */

@@ -1,6 +1,7 @@
 package game.utility.other;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * The {@link EntityType} enumerable describes which category of each entity that encapsulates it.
@@ -66,6 +67,6 @@ public enum EntityType {
 
     @Override
     public String toString() {
-        return super.toString().toLowerCase();
+        return super.toString().toLowerCase(Locale.ENGLISH);
     }
 }

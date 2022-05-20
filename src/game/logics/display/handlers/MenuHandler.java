@@ -23,7 +23,7 @@ public class MenuHandler implements DisplayHandler {
     /**
      * current cursor index.
      */
-    private int cursor = 0;
+    private int cursor;
 
     /**
      * current selected option.
@@ -40,8 +40,9 @@ public class MenuHandler implements DisplayHandler {
     public MenuHandler(final KeyHandler keyH, final Display display, final Consumer<GameState> setGameState) {
         super();
         this.keyH = keyH;
+        this.cursor = 0;
         this.options = display.getOptions();
-        this.selectedOption = options.get(0);
+        this.selectedOption = options.get(this.cursor);
         this.setGameState = setGameState;
     }
 

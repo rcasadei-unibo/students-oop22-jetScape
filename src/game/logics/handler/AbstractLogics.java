@@ -11,7 +11,7 @@ import game.utility.other.EntityType;
  */
 public abstract class AbstractLogics implements Logics {
 
-    private static int frameTime = 0;
+    private static int frameTime;
     private static int difficultyLevel = 1;
 
     private static final double SPAWN_INTERVAL = 3.3;
@@ -63,7 +63,7 @@ public abstract class AbstractLogics implements Logics {
         if (entitiesSpeed.containsKey(type)) {
             return entitiesSpeed.get(type);
         }
-        return defaultEntitySpeed.clone();
+        return defaultEntitySpeed.copy();
     }
 
     /**

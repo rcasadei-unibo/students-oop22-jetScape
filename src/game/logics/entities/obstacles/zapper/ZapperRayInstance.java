@@ -65,7 +65,7 @@ public class ZapperRayInstance extends ObstacleInstance implements ZapperRay {
 
         updateRotation();
 
-        if (this.rotation.equals("vertical")) {
+        if ("vertical".equals(this.rotation)) {
             this.setHitbox(new ZapperRayVerticalHitbox(p));
         } else {
             this.setHitbox(new ZapperRayHorizontalHitbox(p));

@@ -22,39 +22,29 @@ public abstract class EntityInstance implements Entity {
     /**
      * Defines the entity's position on the game environment. 
      */
-    private Pair<Double, Double> position;
+
+    private final Pair<Double, Double> position;
 
     /**
      * Defines the entity's starting position.
      */
-    private Pair<Double, Double> startPos;
+    private final Pair<Double, Double> startPos;
 
     /**
      * Defines the entity's type category.
      */
-    private EntityType entityTag;
+    private final EntityType entityTag;
 
     /// FLAGS ///
-    private boolean visible = true;
-    private boolean onScreen = false;
-    private boolean onClearArea = false;
+    private boolean visible;
+    private boolean onScreen;
+    private boolean onClearArea;
     private boolean onSpawnArea = true;
 
     private Hitbox hitbox;
 
     private final Drawer spritesMgr = new DrawManager();
     private final BiConsumer<Predicate<EntityType>, Predicate<Entity>> cleaner;
-
-    /**
-     * Constructor that sets up entity default values (picked up from 
-     * {@link Logics}) and defines it's bounds in the environment.
-     * 
-     * @param l the logics handler which the entity is linked to
-     */
-    protected EntityInstance(final Logics l) {
-        this.cleaner = l.getEntitiesCleaner();
-        entityTag = EntityType.UNDEFINED;
-    }
 
     /**
      * Constructor that sets up entity default values (picked up from 
@@ -66,9 +56,9 @@ public abstract class EntityInstance implements Entity {
      * @param type the type of entity to create
      */
     protected EntityInstance(final Logics l, final Pair<Double, Double> position, final EntityType type) {
-        this(l);
+        this.cleaner = l.getEntitiesCleaner();
         this.position = position;
-        this.startPos = position.clone();
+        this.startPos = position.copy();
         this.entityTag = type;
     }
 
@@ -203,7 +193,7 @@ public abstract class EntityInstance implements Entity {
      * {@inheritDoc}
      */
     public void drawCoordinates(final Graphics2D g) {
-        final int xShift = ((int) Math.round(position.getX()) + (int) Math.round(GameWindow.GAME_SCREEN.getTileSize() * 0.88));
+        final int xShift = (int) Math.round(position.getX()) + (int) Math.round(GameWindow.GAME_SCREEN.getTileSize() * 0.88);
         final int yShiftDrawnX = (int) Math.round(position.getY()) + GameWindow.GAME_SCREEN.getTileSize();
         final int yShiftDrawnY = yShiftDrawnX + 10;
 

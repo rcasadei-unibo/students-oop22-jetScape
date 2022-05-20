@@ -6,7 +6,7 @@ package game.utility.other;
  *  @param <X> the first type of the pair
  *  @param <Y> the second type of the pair
  */
-public class Pair<X, Y> implements Cloneable {
+public class Pair<X, Y> {
 
     private X x;
     private Y y;
@@ -78,7 +78,7 @@ public class Pair<X, Y> implements Cloneable {
             return false;
         }
 
-        Pair other = (Pair) obj;
+        final Pair other = (Pair) obj;
         if (x == null) {
             if (other.x != null) {
                 return false;
@@ -105,7 +105,7 @@ public class Pair<X, Y> implements Cloneable {
     /**
      * {@inheritDoc}
      */
-    public Pair<X, Y> clone() {
+    public Pair<X, Y> copy() {
         return new Pair<>(this.getX(), this.getY());
     }
 

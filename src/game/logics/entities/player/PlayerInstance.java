@@ -3,7 +3,7 @@ package game.logics.entities.player;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.Graphics2D;
-
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,13 +56,13 @@ public class PlayerInstance extends EntityInstance implements Player {
     private static final double X_POSITION = GameWindow.GAME_SCREEN.getTileSize() * X_RELATIVE_POSITION;
     private final Pair<Double, Double> shieldPosition = new Pair<>(0.0, 0.0);
 
-    private boolean shieldProtected = false;
-    private boolean invulnerable = false;
+    private boolean shieldProtected;
+    private boolean invulnerable;
 
     /**
      * The current player's score.
      */
-    private int score = 0;
+    private int score;
     /**
      * The current jump speed of the player.
      */
@@ -89,7 +89,7 @@ public class PlayerInstance extends EntityInstance implements Player {
     /**
      * How many frames have passed since between a second and another.
      */
-    private int frameTime = 0;
+    private int frameTime;
     private int invulnerableTimer = -1;
 
     private final KeyHandler keyH;
@@ -99,7 +99,7 @@ public class PlayerInstance extends EntityInstance implements Player {
      * A enumerable describing the current status of the player.
      */
     private PlayerStatus status;
-    private boolean statusChanged = false;
+    private boolean statusChanged;
 
     private PlayerDeath causeOfDeath;
 
@@ -185,6 +185,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             case TELEPORT:
                 score += TeleportInstance.getScoreIncrease();
                 this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
+                break;
             default:
                 break;
         }
@@ -339,7 +340,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             fallMultiplier += FALL_MULTIPLIER_INCREASE * 4;
         }
 
-        shieldPosition.setX(this.getPosition().getX() + GameWindow.GAME_SCREEN.getTileSize() / 16);
+        shieldPosition.setX(this.getPosition().getX() + GameWindow.GAME_SCREEN.getTileSize() / 16.0);
         shieldPosition.setY(this.getPosition().getY());
 
         this.getHitbox().updatePosition(this.getPosition());

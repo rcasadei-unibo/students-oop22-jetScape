@@ -14,7 +14,6 @@ import game.logics.records.Records;
 
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
-import game.utility.screen.Screen;
 
 import java.awt.Graphics2D;
 import java.util.function.Consumer;
@@ -51,14 +50,16 @@ public class DisplayController {
      * all {@MenuHandler} needed instances.
      *
      * @param keyH
-     * @param gScreen
      * @param setState Consumer to set new value of State
      * @param getState Supplier to get new value from State
      * @param getScore Supplier to get new value of Score
      */
-    public DisplayController(final KeyHandler keyH, final Screen gScreen,
-            final Consumer<GameState> setState, final Supplier<GameState> getState,
-            final Supplier<Integer> getScore, final Supplier<GameInfo> getGame, final Records records) {
+    public DisplayController(final KeyHandler keyH,
+            final Consumer<GameState> setState,
+            final Supplier<GameState> getState,
+            final Supplier<Integer> getScore,
+            final Supplier<GameInfo> getGame, final Records records) {
+
         this.getState = getState;
         this.getScore = getScore;
         this.getGame = getGame;
