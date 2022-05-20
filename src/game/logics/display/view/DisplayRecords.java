@@ -40,6 +40,8 @@ public class DisplayRecords extends Display implements MenuDisplay {
         super();
         this.records = records;
 
+        this.getOptions().add(MenuOption.MENU);
+
         this.fetch();
     }
 
