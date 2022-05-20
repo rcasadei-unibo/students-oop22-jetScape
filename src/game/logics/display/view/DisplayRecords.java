@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 import game.logics.records.Records;
@@ -27,11 +25,10 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
     private final Records records;
 
-    //TODO: SPOSTARE
     //private static final List<String> lengthRecords = new ArrayList<>();
     //private static final List<String> moneyRecords = new ArrayList<>();
-    private static final Set<String> LENGTH_RECORDS = new HashSet<>();
-    private static final Set<String> MONEY_RECORDS = new HashSet<>();
+    private static final List<String> LENGTH_RECORDS = new ArrayList<>();
+    //private static final List<String> MONEY_RECORDS = new LinkedList<>();
 
     /**
      * {@link DisplayRecords} constructor: add options to be shown.
@@ -43,21 +40,28 @@ public class DisplayRecords extends Display implements MenuDisplay {
         super();
         this.records = records;
 
-        // TODO: remove these
-        DisplayRecords.LENGTH_RECORDS.add("1235");
-        DisplayRecords.LENGTH_RECORDS.add("150");
-        DisplayRecords.LENGTH_RECORDS.add("1500");
+        this.fetch();
+    }
 
-        DisplayRecords.MONEY_RECORDS.add("3500");
+    private void fetch() {
+        DisplayRecords.LENGTH_RECORDS.clear();
+
+        records.getRecordScores().stream()
+        .map(s -> s.toString())
+        .peek(DisplayRecords.LENGTH_RECORDS::add)
+        .close();
+
+        //TODO remove this
+        //DisplayRecords.MONEY_RECORDS.add("3500");
     }
 
     // TODO: SPOSTARE IN CLASSE APPOSITA
-    private List<String> listify(final Set<String> set) {
+    /*private List<String> listify(final Set<String> set) {
         final List<String> returnList = new ArrayList<>();
         returnList.addAll(List.copyOf(set));
         Collections.sort(returnList);
         return returnList;
-    }
+    }*/
 
     //game.utility.sprites.Drawer per caricare una sprite
     /**
@@ -66,6 +70,7 @@ public class DisplayRecords extends Display implements MenuDisplay {
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
 
         int i;
+        this.fetch();
         this.setSelectedOption(selected);
 
         // TITLE
@@ -75,7 +80,9 @@ public class DisplayRecords extends Display implements MenuDisplay {
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS1,
                 x -> x - super.getGameScreen().getWidth() / 4, super.getGameScreen().getTileSize() * 3, 0);
 
-        final List<String> recordList = this.listify(DisplayRecords.LENGTH_RECORDS);
+        //final List<String> recordList = this.listify(DisplayRecords.LENGTH_RECORDS);
+        final List<String> recordList = DisplayRecords.LENGTH_RECORDS;
+
         for (i = 0; i < recordList.size(); i++) {
             super.drawText(g, super.getTextFont(), recordList.get(i),
                     super.getGameScreen().getTileSize() * 3, super.getGameScreen().getTileSize() * (3 + i + 1), 0);
@@ -84,12 +91,12 @@ public class DisplayRecords extends Display implements MenuDisplay {
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS2,
                 x -> x + super.getGameScreen().getWidth() / 4, super.getGameScreen().getTileSize() * 3, 0);
 
-        final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
+      /*  final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
         for (i = 0; i < moneyList.size(); i++) {
             super.drawText(g, super.getTextFont(), moneyList.get(i),
                     super.getGameScreen().getTileSize() * 3 + super.getGameScreen().getWidth() / 2,
                     super.getGameScreen().getTileSize() * (3 + i + 1), 0);
-        }
+        }*/
 
         //OPTIONS
         super.drawOptions(g, DisplayRecords.OPTION_TILE);
