@@ -65,8 +65,7 @@ public class DisplayGameOver extends Display implements MenuDisplay {
 
         // SCORE
         super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.scoreString + this.finalScore, x -> x,
-
-        DisplayGameOver.TEXT_TILE * gScreen.getTileSize(), super.getTextShift());
+                DisplayGameOver.TEXT_TILE * gScreen.getTileSize(), super.getTextShift());
 
         // RECORD
         if(records.isNewRecordScore()) {

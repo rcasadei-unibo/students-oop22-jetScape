@@ -7,16 +7,22 @@ import game.utility.input.JSONWriter;
 import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.handler.Logics.GameInfo;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 //import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 public class Records {
 
-    private final GameInfoHandler game;
+    private static final int NUMBER_OF_SAVED_RECORD = 3;
+	private final GameInfoHandler game;
     private final Player player;
     private final JSONWriter writer;
     private final JSONReader reader;
@@ -30,18 +36,21 @@ public class Records {
     // private Map<String, Integer> salary;
 
     // Data read from game
-    //private int score;
     private PlayerDeath causeOfDeath;
 
-    private static int playingRecordScore = 0; // higher score obtained by playing consecutively
-    private static boolean newPlayingRecordScore = false;
+    private static int playingRecordScore; // higher score obtained by playing consecutively
+    private static boolean newPlayingRecordScore;
 
-    private int recordScore; // absolute new score record
-    private boolean newRecordScore = false;
+    private final List<Integer> recordScores = new ArrayList<>(); // absolute new score record
+    private boolean newRecordScore;
+
+    /*{
+        recordScores.addAll(Collections.nCopies(Records.NUMBER_OF_SAVED_RECORD, Optional.empty()));
+    }*/
 
     public Records(final GameInfoHandler game, final Player player) {
         this.game = game;
-        
+
         this.writer = new JSONWriter(this);
         this.reader = new JSONReader(this);
 
@@ -90,7 +99,7 @@ public class Records {
             if (!newGameInfo.isGameEnded()) {
 
                 final int score = player.getCurrentScore();
-                System.out.println(score);
+                //System.out.println(score);
                 newGameInfo.setGameEnded(score);
                 this.fetch(newGameInfo);
             }
@@ -139,18 +148,20 @@ public class Records {
     /***   Calculate and check records    ***/
     /****************************************/
 
-	/*  TODO Move this method inside records
-	 *  substituting it with getter methods .isNewAbsoluteRecordScore() & .isNewPlayingRecordScore()
+	/*  TODO use new GameUID Date
 	 */
     /**
-     * This method checks if the new finalScore is a new record and only in this case saves it.
+     * This method checks if the new finalScore is a new record and only in
+     * this case saves it.
+     *
      * @param finalScore
      *   final score in the current game
      */
     public void checkScore(final int finalScore) {
 
         //this.score = finalScore;
-
+        
+        //FIXME doesn't appear
         if (finalScore > Records.playingRecordScore) {
             Records.newPlayingRecordScore = true;
             Records.playingRecordScore = finalScore;
@@ -158,18 +169,31 @@ public class Records {
             Records.newPlayingRecordScore = false;
         }
 
-        if (finalScore > this.recordScore) {
+        if (this.recordScores.size() < Records.getSavedNumberOfRecords()) {
+            this.addRecordScore(finalScore);
+        } else if (finalScore > this.getLowestRecordScore()) {
             this.newRecordScore = true;
-            this.setRecordScore(finalScore);
-            //StatisticsReader.writeRecord(finalScore); // TODO write new record
-        } else if (finalScore < this.recordScore) {
+            this.addRecordScore(finalScore);
+        } else {
             this.newRecordScore = false;
         }
+
+        //if (finalScore > this.getLowestRecordScore()) {
+           // this.newRecordScore = true;
+        //    this.addRecordScore(finalScore);
+            //StatisticsReader.writeRecord(finalScore); // TODO write new record
+        //} else if (finalScore < this.recordScore) {
+           // this.newRecordScore = false;
+        //}
     }
 
     /****************************************/
     /*** Getters & Setters from / to file ***/
     /****************************************/
+    
+    public static int getSavedNumberOfRecords() {
+        return Records.NUMBER_OF_SAVED_RECORD;
+    }
 
     public int getBurnedTimes() {
         return this.burnedTimes;
@@ -189,12 +213,38 @@ public class Records {
     }
 */
 
-    public int getRecordScore() {
-        return this.recordScore;
+    public void addRecordScore(final int newRecordScore) {
+        //this.recordScores.forEach(System.out::println);
+
+        this.recordScores.add(newRecordScore);
+        this.recordScores.sort(Comparator.reverseOrder());
+        if (this.recordScores.size() > Records.getSavedNumberOfRecords()) {
+            this.recordScores.remove(Records.getSavedNumberOfRecords() - 1);
+        }
     }
 
-    public void setRecordScore(int recordScore) {
-        this.recordScore = recordScore;
+    public List<Integer> getRecordScores() {
+        /*final List<Integer> recordScores = new ArrayList<>();
+
+        for (final Optional<Integer> record : this.recordScores) {
+            if (record.isPresent()) {
+                recordScores.add(record.get());
+            }
+        }*/
+        return this.recordScores;
+    }
+
+    public void setRecordScores(final List<Integer> recordScores) {
+        this.recordScores.clear();
+        this.recordScores.addAll(recordScores);
+        /*for (final Integer record : recordScores) {
+                this.recordScores.add(Optional.of(record));
+        }
+        if (recordScores.size() < Records.getSavedNumberOfRecords()) {
+            this.recordScores.addAll(Collections.nCopies(
+                    recordScores.size() - Records.NUMBER_OF_SAVED_RECORD,
+                    Optional.empty()));
+        }*/
     }
 
     /****************************************/
@@ -202,8 +252,21 @@ public class Records {
     /****************************************/
 
     public int getScore() {
-       // return this.score;
+        //return this.score;
         return this.game.getActualGame().getFinalScore();
+    }
+
+    public Integer getHighestScore() {
+        return this.recordScores.get(0);
+    }
+
+    private Integer getLowestRecordScore() {
+        if (this.recordScores.isEmpty()) {
+            return 0;
+        } else {
+            return this.recordScores.stream().sorted().findFirst().get();
+            //return this.recordScores.get(this.recordScores.size() - 1);
+        }
     }
 
     public boolean isNewRecordScore() {

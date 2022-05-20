@@ -69,11 +69,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * Defines how many seconds have to pass for the spawner to generate
      * another set of obstacles.
      */
-    private double spawnInterval = 3.3;
+    final private double spawnInterval = 3.3;
     /**
      * Defines the interval of each check for entities to clean.
      */
-    private double cleanInterval = 5.0;
+    final private double cleanInterval = 5.0;
 
     private final Screen screen;
     private final KeyHandler keyH;
@@ -195,7 +195,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 case EXIT:
                     final String quitMessage = "Are you sure to quit the game?";
                     final String quitTitle = "Quit Game";
-                    if(JOptionPane.showConfirmDialog((Component)GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+                    if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
                         return;
                     }
                     break;
@@ -211,10 +211,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     spawner.resume();
                     break;
                 case MENU:
-                    if(this.gameState == GameState.PAUSED) {
+                    if (this.gameState == GameState.PAUSED) {
                         final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
                         final String title = "Return to main menu";
-                        if(JOptionPane.showConfirmDialog((Component)GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+                        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
                             return;
                         }
                         spawner.stop();
@@ -226,11 +226,13 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     //this.gameOverDisplay.setRecords(getScore.get());
                     //this.records.fetch(this.getGame);
                     LogicsHandler.records.announceGameEnded(() -> game.getActualGame());
-                    System.out.println(LogicsHandler.records.getRecordScore());
+                    for (final Integer record : LogicsHandler.records.getRecordScores()) {
+                        System.out.println(record);
+                    }
                     LogicsHandler.records.update();
                     break;
                 case PAUSED:
-                    if(this.gameState != GameState.INGAME) {
+                    if (this.gameState != GameState.INGAME) {
                         return;
                     }
                     spawner.pause();
@@ -256,7 +258,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 playerEntity.update();
                 break;
             case INGAME:
-                if(playerEntity.hasDied()) {
+                if (playerEntity.hasDied()) {
                     this.setGameState(GameState.ENDGAME);
                     break;
                 }

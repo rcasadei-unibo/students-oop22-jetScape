@@ -61,14 +61,13 @@ public class DisplayRecords extends Display implements MenuDisplay {
         return returnList;
     }
 
-
     //game.utility.sprites.Drawer per caricare una sprite
     /**
      * {@inheritDoc}
      */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
-        int i;
 
+        int i;
         this.setSelectedOption(selected);
 
         // TITLE

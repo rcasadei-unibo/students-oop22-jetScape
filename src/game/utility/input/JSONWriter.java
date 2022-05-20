@@ -3,7 +3,6 @@ package game.utility.input;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsonable;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -22,15 +21,7 @@ public class JSONWriter extends JSONHandler implements Jsonable, Serializable {
     public JSONWriter(final Records records) {
         super(records);
     }
-/*
-	public void scheduleWrite(final String key, final String value) {
-		this.json.put(key, value);
-	}
 
-	public void scheduleWrite(final String key, final int value) {
-		this.json.put(key, value);
-	}
-*/
 	/**
 	 * Get informations that have to be written to file
 	 *//*
@@ -45,7 +36,7 @@ public class JSONWriter extends JSONHandler implements Jsonable, Serializable {
     public void write() {
         super.download();
         try (
-            final FileWriter fw = new FileWriter(super.getFile());
+            FileWriter fw = new FileWriter(super.getFile());
         ) {
             this.toJson(fw);
         } catch(IOException e) {

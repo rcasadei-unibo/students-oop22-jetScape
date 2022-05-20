@@ -31,8 +31,6 @@ public class DisplayController {
     private final Supplier<Integer> getScore;
     private final Supplier<GameInfo> getGame;
 
-    private final Records records;
-
     /*
      * Screen's displays
      */
@@ -66,7 +64,6 @@ public class DisplayController {
         this.getState = getState;
         this.getScore = getScore;
         this.getGame = getGame;
-        this.records = records;
 
         this.hud = new DisplayHUD(gScreen);
         this.pauseDisplay = new DisplayPause(gScreen);
