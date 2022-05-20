@@ -218,9 +218,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     this.quitGame();
                     break;
                 case INGAME:
-                    LogicsHandler.game.setActualGame(new GameInfo(LogicsHandler.game));
-                    //this.gameID.generateNewGameUID();
-                    if (this.gameState == GameState.ENDGAME) {
+                    if (this.gameState != GameState.PAUSED) {
+                        LogicsHandler.game.setActualGame(new GameInfo(LogicsHandler.game));
+                        //this.gameID.generateNewGameUID();
+                    }
+                    if (this.gameState == GameState.ENDGAME) { // RETRY
                         this.resetGame();
                     } else if (this.gameState == GameState.MENU) {
                         entities.get(EntityType.PLAYER).add(playerEntity);
@@ -296,12 +298,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case PAUSED:
             case INGAME:
                 synchronized (entities) {
-                    entities.entrySet().stream().sorted((e1, e2) ->
-                            Integer.compare(e2.getKey().ordinal(),
-                                    e1.getKey().ordinal()))
-                                            .collect(Collectors.toList())
-                                            .forEach(e -> e.getValue()
-                                                    .forEach(se -> se.draw(g)));
+                    entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
 
                     entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
                     entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
