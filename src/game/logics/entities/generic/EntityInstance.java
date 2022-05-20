@@ -56,6 +56,8 @@ public abstract class EntityInstance implements Entity {
         this.position = position;
         this.startPos = position.copy();
         this.entityTag = type;
+
+        this.setVisibility(true);
     }
 
     /**
@@ -63,9 +65,10 @@ public abstract class EntityInstance implements Entity {
      * 
      * @param v <code>true</code> if entity has to be shown, <code>false</code> if entity has to be hidden
      */
-    protected void setVisibility(final boolean v) {
+    protected final void setVisibility(final boolean v) {
         visible = v;
     }
+
     /**
      * Allows to set the main {@link Hitbox} of the entity.
      * 
