@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import game.logics.records.Records;
 import game.utility.other.MenuOption;
-import game.utility.screen.Screen;
 
 /**
  * <p>This class contains what it is shown when Barry dies.</p>
@@ -33,10 +32,10 @@ public class DisplayGameOver extends Display implements MenuDisplay {
 
     /**
      * {@link DisplayGameOver} constructor: add options to be shown.
-     * @param gScreen
+     * 
      */
-    public DisplayGameOver(final Screen gScreen, final Records records) {
-        super(gScreen);
+    public DisplayGameOver(final Records records) {
+        super();
         this.records = records;
 
         this.getOptions().add(MenuOption.RETRY);
@@ -64,28 +63,33 @@ public class DisplayGameOver extends Display implements MenuDisplay {
         super.drawTitleText(g, title, Function.identity());
 
         // SCORE
-        super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.scoreString + this.finalScore, x -> x,
-                DisplayGameOver.TEXT_TILE * gScreen.getTileSize(), super.getTextShift());
+        super.drawCenteredText(g, super.getTextFont(),
+                DisplayGameOver.scoreString + this.finalScore, x -> x,
+                DisplayGameOver.TEXT_TILE * super.getGameScreen().getTileSize(),
+                super.getTextShift());
 
         // RECORD
         if(records.isNewRecordScore()) {
-            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.recordScoreString, x -> x / 2,
-                    (DisplayGameOver.TEXT_TILE + 1) * gScreen.getTileSize(), super.getTextShift());
+            super.drawCenteredText(g, super.getTextFont(),
+                    DisplayGameOver.recordScoreString, x -> x / 2,
+                    (DisplayGameOver.TEXT_TILE + 1) * super.getGameScreen().getTileSize(),
+                    super.getTextShift());
         } else if(records.isNewPlayingRecordScore()) {
-            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[0], x -> x / 2,
-                    (DisplayGameOver.TEXT_TILE + 1) * gScreen.getTileSize(), super.getTextShift());
-            super.drawCenteredText(g, super.getTextFont(), DisplayGameOver.playingRecordScoreString[1], x -> x / 2,
-                    (DisplayGameOver.TEXT_TILE + 2) * gScreen.getTileSize(), super.getTextShift());
+            super.drawCenteredText(g, super.getTextFont(),
+                    DisplayGameOver.playingRecordScoreString[0], x -> x / 2,
+                    (DisplayGameOver.TEXT_TILE + 1) * super.getGameScreen().getTileSize(),
+                    super.getTextShift());
+            super.drawCenteredText(g, super.getTextFont(),
+                    DisplayGameOver.playingRecordScoreString[1], x -> x / 2,
+                    (DisplayGameOver.TEXT_TILE + 2) * super.getGameScreen().getTileSize(),
+                    super.getTextShift());
         }
 
         // OPTIONS
         super.drawOptions(g, DisplayGameOver.OPTION_TILE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //TODO remove magic setting from here
+    // TODO: remove magic setting from here
     /*public void drawScreen(final Graphics2D g) {
         this.setSelectedOption(Optional.of(MenuOption.RETRY));
         this.drawScreen(g, Optional.of(this.getSelectedOption()));

@@ -7,12 +7,10 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * The <code>KeyHandler</code> class is used for knowing 
+ * The {@link KeyHandler} class is used for knowing 
  * which keys are being pressed or released on the keyboard.
- * 
- * @author Daniel Pellanda
  */
-public class KeyHandler implements KeyListener{
+public class KeyHandler implements KeyListener {
 
     /**
      * A map that tells if a key is being pressed or not.
@@ -26,11 +24,11 @@ public class KeyHandler implements KeyListener{
      * </p>
      * 
      */
-    public Map<Integer,Boolean> input = new HashMap<>();
+    private Map<Integer, Boolean> input = new HashMap<>();
     private Optional<Integer> lastKeyTyped = Optional.empty();
-    
+
     /**
-     * Initializes a <code>KeyHandler</code>.
+     * Initializes a {@link KeyHandler}.
      */
     public KeyHandler() {
         input.put(KeyEvent.VK_SPACE, false);
@@ -46,33 +44,54 @@ public class KeyHandler implements KeyListener{
         input.put(KeyEvent.VK_DOWN, false);
     }
 
+    /**
+     * @return the key code of the last key typed, if no key has been pressed returns -1
+     */
     public int getKeyTyped() {
         if (this.lastKeyTyped.isPresent()) {
             return lastKeyTyped.get();
         }
         return -1;
     }
-    
+    /**
+     * Reset the last key memorized after has been used.
+     */
     public void resetKeyTyped() {
         this.lastKeyTyped = Optional.empty();
     }
-    
-    @Override
-    public void keyTyped(KeyEvent e) {}
+    /**
+     * @param key the key code of the key to check
+     * @return <code>true</code> if the key is pressed in the current frame, <code>false</code> if it isn't pressed or
+     * the key code is not supported
+     */
+    public boolean getCurrentInput(final int key) {
+        if (input.containsKey(key)) {
+            return input.get(key);
+        }
+        return false;
+    }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        if(input.containsKey(e.getKeyCode())){
-            if(!input.get(e.getKeyCode())) {
+    public void keyTyped(final KeyEvent e) { }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void keyPressed(final KeyEvent e) {
+        if (input.containsKey(e.getKeyCode())) {
+            if (!input.get(e.getKeyCode())) {
                 this.lastKeyTyped = Optional.of(e.getKeyCode());
             }
             input.replace(e.getKeyCode(), true);
         }
     }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void keyReleased(KeyEvent e) {
-        if(input.containsKey(e.getKeyCode())){
+    public void keyReleased(final KeyEvent e) {
+        if (input.containsKey(e.getKeyCode())) {
             input.replace(e.getKeyCode(), false);
         }
     }

@@ -21,10 +21,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * The <code>DisplayController</code> class helps {@link LogicsHandler}
+ * The {@link DisplayController} class helps {@link LogicsHandler}
  * to update and draw the correct {@link Display} on the screen.
- *
- * @author Giacomo Amadio
  */
 public class DisplayController {
     private final Supplier<GameState> getState;
@@ -46,7 +44,7 @@ public class DisplayController {
     private final DisplayHandler titleHandler;
     private final DisplayHandler recordsHandler;
     private final DisplayHandler gameOverHandler;
-    /* TODO eventually add shop */
+    // TODO: eventually add shop 
 
     /**
      * {@link DisplayController} builder: builds all displayed cards and
@@ -65,11 +63,11 @@ public class DisplayController {
         this.getScore = getScore;
         this.getGame = getGame;
 
-        this.hud = new DisplayHUD(gScreen);
-        this.pauseDisplay = new DisplayPause(gScreen);
-        this.mainMenuDisplay = new DisplayMainMenu(gScreen);
-        this.recordsDisplay = new DisplayRecords(gScreen, records);
-        this.gameOverDisplay = new DisplayGameOver(gScreen, records);
+        this.hud = new DisplayHUD();
+        this.pauseDisplay = new DisplayPause();
+        this.mainMenuDisplay = new DisplayMainMenu();
+        this.recordsDisplay = new DisplayRecords(records);
+        this.gameOverDisplay = new DisplayGameOver(records);
 
         this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
         this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);

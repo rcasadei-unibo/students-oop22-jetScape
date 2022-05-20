@@ -45,10 +45,9 @@ import game.utility.other.EntityType;
 import game.utility.other.GameState;
 
 /**
- * The <code>LogicsHandler</code> class helps {@link GameWindow} to update
+ * The {@link LogicsHandler} class helps {@link GameWindow} to update
  * and draw logical parts of the game like the Interface, Entities, Collisions, etc....
  * 
- * @author Daniel Pellanda
  */
 public class LogicsHandler extends AbstractLogics implements Logics {
 
@@ -70,17 +69,6 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * A reference to the player's entity.
      */
     private final Player playerEntity;
-
-    /**
-     * Defines how many seconds have to pass for the spawner to generate
-     * another set of obstacles.
-     */
-    final private double spawnInterval = 3.3;
-
-    /**
-     * Defines the interval of each check for entities to clean.
-     */
-    final private double cleanInterval = 5.0;
 
     private final Screen screen;
     private final KeyHandler keyH;
@@ -105,22 +93,25 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 .forEach(e -> entities.put(e, new HashSet<>()));
 
         game = new GameInfoHandler(new GameInfo());
+
         playerEntity = new PlayerInstance(this, entities);
+
         records = new Records(game, playerEntity);
 
         displayController = new DisplayController(keyH, screen, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore(), () -> game.getActualGame(), records);
 
-        spawner = new TileGenerator(screen.getTileSize(), entities, spawnInterval);
+        spawner = new TileGenerator(entities, super.getSpawningInteval());
         this.initializeSpawner();
     }
 
     private void initializeSpawner() {
-        spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, new SpeedHandler(500.0, 10.0, 5000.0)));
-        spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, new SpeedHandler(250.0, 15.0, 0)));
-        spawner.setZapperRayCreator((b,p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
-        spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));
-        spawner.setTeleportCreator(p -> new TeleportInstance(this, p, playerEntity, new SpeedHandler(250.0, 15.0, 0)));
+
+        spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.MISSILE)));
+        spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, super.getEntityMovementInfo(EntityType.ZAPPERBASE)));
+        spawner.setZapperRayCreator((b, p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
+        spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.SHIELD)));
+        spawner.setTeleportCreator(p -> new TeleportInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.TELEPORT)));
 
         try {
             spawner.initialize();
@@ -133,8 +124,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         }
     }
 
-    public BiConsumer<Predicate<EntityType>,Predicate<Entity>> getEntitiesCleaner() {
-        return new BiConsumer<Predicate<EntityType>,Predicate<Entity>>() {
+    /**
+     * {@inheritDoc}
+     */
+    public BiConsumer<Predicate<EntityType>, Predicate<Entity>> getEntitiesCleaner() {
+        return new BiConsumer<Predicate<EntityType>, Predicate<Entity>>() {
             public void accept(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
                 synchronized (entities) {
                     entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
@@ -147,17 +141,17 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             }
         };
     }
-    
+
     private void resetGame() {
         this.getEntitiesCleaner().accept(t -> t != EntityType.PLAYER, e -> true);
         playerEntity.reset();
     }
-    
+
     /**
      * Handles the commands executed for each key pressed.
      */
     private void checkKeyboardInput() {
-        switch(keyH.getKeyTyped()) {
+        switch (keyH.getKeyTyped()) {
             case KeyEvent.VK_Z:
                 debugger.setDebugMode(!debugger.isDebugModeOn());
                 keyH.resetKeyTyped();
@@ -170,31 +164,34 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 break;
         }
     }
-    
+
     /**
      * Removes all entities that are on the "clear area" [x < -tile size].
      */
     private void updateCleaner() {
-        if(super.getFrameTime() % GameWindow.FPS_LIMIT * cleanInterval == 0) {
+        if (super.getFrameTime() % GameWindow.FPS_LIMIT * super.getCleanerActivityInterval() == 0) {
             this.getEntitiesCleaner().accept(t -> t.isGenerableEntity(), e -> e.isOnClearArea());
         }
     }
-    
+
     private void updateDifficulty() {
         final int increaseDiffPerScore = 250;
-        
+
         super.setDifficultyLevel(playerEntity.getCurrentScore() / increaseDiffPerScore + 1);
     }
-    
-    private void drawDifficultyLevel(final Graphics2D g) {
-        if (debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
 
-            g.setColor(Debugger.debugColor);
-            g.setFont(Debugger.debugFont);
-            g.drawString("DIFFICULTY: " + super.getDifficultyLevel(), 3, 26);
+    private void drawDifficultyLevel(final Graphics2D g) {
+
+        final int difficultyMeterXLocation = 3;
+        final int difficultyMeterYLocation = 26;
+
+        if (debugger.isFeatureEnabled(Debugger.Option.DIFFICULTY_LEVEL)) {
+            g.setColor(Debugger.DEBUG_COLOR);
+            g.setFont(Debugger.DEBUG_FONT);
+            g.drawString("DIFFICULTY: " + super.getDifficultyLevel(), difficultyMeterXLocation, difficultyMeterYLocation);
         }
     }
-    
+
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
@@ -254,7 +251,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      * {@inheritDoc}
      */
     public void updateAll() {
-        switch(this.gameState) {
+        switch (this.gameState) {
             case EXIT:
                 spawner.terminate();
                 GameHandler.GAME_WINDOW.stopGame();
@@ -270,7 +267,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 }
                 this.updateDifficulty();
                 this.updateCleaner();
-                synchronized(entities) {
+                synchronized (entities) {
                     entities.forEach((s, se) -> se.forEach(e -> e.update()));
                 }
             default:

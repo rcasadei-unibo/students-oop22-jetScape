@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.util.function.Function;
 
 import game.utility.other.MenuOption;
-import game.utility.screen.Screen;
 
 /**
  * <p>This class is used to display the main menu.</p>
@@ -18,10 +17,10 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
 
     /**
      * {@link DisplayMainMenu} constructor: add options to be shown.
-     * @param gScreen
+     *
      */
-    public DisplayMainMenu(final Screen gScreen) {
-        super(gScreen);
+    public DisplayMainMenu() {
+        super();
 
         this.getOptions().add(MenuOption.START);
         this.getOptions().add(MenuOption.SHOP);

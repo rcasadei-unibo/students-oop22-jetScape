@@ -9,30 +9,35 @@ import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.MenuOption;
 /**
- * The <code>MenuHandler</code> class manages <class>Display</class> menus
- * 
- * @author Giacomo Amadio
+ * The {@link MenuHandler} class manages {@link Display} menus.
  */
 public class MenuHandler implements DisplayHandler {
     private final KeyHandler keyH;
     private final Consumer<GameState> setGameState;
-    
+
     /**
-     * current display's menu options
+     * current display's menu options.
      */
     private final List<MenuOption> options;
-    
+
     /**
-     * current cursor index
+     * current cursor index.
      */
     private int cursor = 0;
-    
+
     /**
-     * current selected option
+     * current selected option.
      */
     private MenuOption selectedOption;
 
-    public MenuHandler(KeyHandler keyH, Display display, Consumer<GameState> setGameState) {
+    /**
+     * Initializes the menu handler with the given display's options and sets 
+     * the first one as currently selected, performing setGameState when enter is pressed.
+     * @param keyH
+     * @param display
+     * @param setGameState
+     */
+    public MenuHandler(final KeyHandler keyH, final Display display, final Consumer<GameState> setGameState) {
         super();
         this.keyH = keyH;
         this.options = display.getOptions();
@@ -40,8 +45,11 @@ public class MenuHandler implements DisplayHandler {
         this.setGameState = setGameState;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void update() {
-        switch(keyH.getKeyTyped()) {
+        switch (keyH.getKeyTyped()) {
             case KeyEvent.VK_UP :
                 this.goUp();
                 keyH.resetKeyTyped();
@@ -58,35 +66,36 @@ public class MenuHandler implements DisplayHandler {
                 break;
         }
     }
-    
+    /**
+     * {@inheritDoc}
+     */
     public MenuOption getSelectedOption() {
         this.updateSelectedOption();
         return this.selectedOption;
-    
     }
-    
+
     /**
-     * moves the cursor up 
+     * moves the cursor up .
      */
-    private void goUp () {
+    private void goUp() {
         this.cursor--;
-        if(this.cursor < 0) {
+        if (this.cursor < 0) {
             this.cursor = this.options.size() - 1;
         }
     }
-    
+
     /**
-     * moves the cursor down 
+     * moves the cursor down .
      */
-    private void goDown () {
+    private void goDown() {
         this.cursor++;
-        if(this.cursor > this.options.size() - 1) {
+        if (this.cursor > this.options.size() - 1) {
             this.cursor = 0;
         }
     }
-    
+
     /**
-     * updates the selected option
+     * updates the selected option.
      */
     private void updateSelectedOption() {
         this.selectedOption = this.options.get(this.cursor);

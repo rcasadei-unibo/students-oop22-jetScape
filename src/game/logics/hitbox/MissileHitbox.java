@@ -3,19 +3,23 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 
 /**
- * The <code>MissileHitbox</code> class represents a missile's hitbox in
+ * The {@link MissileHitbox} class represents a missile's hitbox in
  * the game environment.
- * 
- * @author Giacomo Amadio
  */
-public class MissileHitbox extends HitboxInstance{
-    static final double rectangleX = 0;
-    static final double rectangleY = 13;
-    static final double rectangleW = 30;
-    static final double rectangleH = 5;
+public class MissileHitbox extends HitboxInstance {
+    static final double RECTANGLE_X = 0;
+    static final double RECTANGLE_Y = 13;
+    static final double RECTANGLE_W = 30;
+    static final double RECTANGLE_H = 5;
 
-    public MissileHitbox(Pair<Double, Double> startingPos) {
+    /**
+     * initializes {@link game.logics.entities.obstacles.missile.Missile Missile}
+     * {@link Hitbox} in the starting position.
+     * 
+     * @param startingPos
+     */
+    public MissileHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);
-        super.addRectangle(rectangleX, rectangleY, rectangleW, rectangleH);
+        super.addRectangle(RECTANGLE_X, RECTANGLE_Y, RECTANGLE_W, RECTANGLE_H);
     }
 }

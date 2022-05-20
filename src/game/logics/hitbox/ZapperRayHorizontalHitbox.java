@@ -3,19 +3,23 @@ package game.logics.hitbox;
 import game.utility.other.Pair;
 
 /**
- * The <code>ZapperRayHorizontalHitbox</code> class represents a ZapperRayHorizontal's hitbox in
+ * The {@link ZapperRayHorizontalHitbox} class represents a 
+ * {@link game.logics.entities.obstacles.zapper.ZapperRay ZapperRay}'s horizontal hitbox in
  * the game environment.
- * 
- * @author Giacomo Amadio
  */
 public class ZapperRayHorizontalHitbox extends HitboxInstance {
-    static final double rectangleX = 0;
-    static final double rectangleY = 6;
-    static final double rectangleW = 32;
-    static final double rectangleH = 20;
+    static final double RECTANGLE_X = 0;
+    static final double RECTANGLE_Y = 6;
+    static final double RECTANGLE_W = 32;
+    static final double RECTANGLE_H = 20;
 
-    public ZapperRayHorizontalHitbox(Pair<Double, Double> startingPos) {
+    /**
+     * initializes {@link game.logics.entities.obstacles.zapper.ZapperRay ZapperRay} horizontal
+     * {@link Hitbox} in the starting position.
+     * @param startingPos
+     */
+    public ZapperRayHorizontalHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);
-        super.addRectangle(rectangleX, rectangleY, rectangleW, rectangleH);
+        super.addRectangle(RECTANGLE_X, RECTANGLE_Y, RECTANGLE_W, RECTANGLE_H);
     }
 }

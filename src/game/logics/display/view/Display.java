@@ -13,11 +13,9 @@ import game.utility.screen.Screen;
 
 /**
  * Abstract class that contains useful methods for draw text on screen.
- *
- * @author davide
  */
 public abstract class Display {
-    protected final Screen gScreen;
+    private final Screen gScreen = GameWindow.GAME_SCREEN;
 
     /*
      * List of options to be displayed.
@@ -66,17 +64,15 @@ public abstract class Display {
     /**
      * options shadow shift.
      */
-    private static final int optionShift = 2;
-    private static final int titleShift = 5;
-    private static final int textShift = 2;
+    private static final int OPTIONS_SHIFT = 2;
+    private static final int TITLE_SHIFT = 5;
+    private static final int TEXT_SHIFT = 2;
 
     /**
      * Class constructor: load fonts with {@link game.utility.fonts.FontLoader}.
-     * @param gScreen {@link Screen} instance passed to get screen informations.
+     * 
      */
-    public Display(final Screen gScreen) {
-        this.gScreen = gScreen;
-
+    public Display() {
         this.titleFont = GameWindow.GAME_FONTLOADER.getTitleFont()
                 .deriveFont(getScaledSize(TITLE_SCALE));
         this.optionsFont = GameWindow.GAME_FONTLOADER.getOptionsFont()
@@ -91,12 +87,11 @@ public abstract class Display {
     /**
      * Calculates the ordinate's value such as the given string is centered in
      * the current screen.
-     * @param gScreen
      * @param g
      * @param text the string be centered
      * @return this ordinate's value
      */
-    private int getCenteredX(final Screen gScreen, final Graphics2D g, final String text) {
+    private int getCenteredX(final Graphics2D g, final String text) {
 
         final int lenght = (int) g.getFontMetrics().getStringBounds(text, g).getWidth();
 
@@ -127,6 +122,16 @@ public abstract class Display {
         this.selectedOption = selectedOption;
     }
 
+    // TODO: Add javadoc
+    /**
+     * .
+     * @param g
+     * @param font
+     * @param text
+     * @param xPos
+     * @param yPos
+     * @param shift
+     */
     protected void drawText(final Graphics2D g, /*final Color color,*/ final Font font,
             final String text, final int xPos, final int yPos, final int shift) {
         g.setFont(font);
@@ -141,15 +146,32 @@ public abstract class Display {
         g.drawString(text, xPos, yPos);
     }
 
+    // TODO: Add javadoc
+    /**
+     * .
+     * @param g
+     * @param font
+     * @param text
+     * @param f
+     * @param yPos
+     * @param shift
+     */
     protected void drawCenteredText(final Graphics2D g, /*final Color color,*/ final Font font,
             final String text, final Function<Integer, Integer> f, final int yPos, final int shift) {
         g.setFont(font);
-        this.drawText(g, font, text, f.apply(this.getCenteredX(gScreen, g, text)), yPos, shift);
+        this.drawText(g, font, text, f.apply(this.getCenteredX(g, text)), yPos, shift);
     }
 
+    // TODO: Add javadoc
+    /**
+     * .
+     * @param g
+     * @param text
+     * @param function
+     */
     protected void drawTitleText(final Graphics2D g, final String text, final Function<Integer, Integer> function) {
         this.drawCenteredText(g, this.titleFont, text, Function.identity(),
-                gScreen.getTileSize() * Display.TTITLE_TILE, Display.titleShift);
+                gScreen.getTileSize() * Display.TTITLE_TILE, Display.TITLE_SHIFT);
     }
 
     /**
@@ -164,11 +186,11 @@ public abstract class Display {
                 final String selected = "> " + option + " <";
                 this.drawCenteredText(g, this.selectedOptionsFont, selected,
                         x -> x,
-                        gScreen.getTileSize() * (i + yTile), Display.optionShift);
+                        gScreen.getTileSize() * (i + yTile), Display.OPTIONS_SHIFT);
             } else {
                 this.drawCenteredText(g, this.optionsFont, option.toString(),
                         x -> x,
-                        gScreen.getTileSize() * (i + yTile), Display.optionShift);
+                        gScreen.getTileSize() * (i + yTile), Display.OPTIONS_SHIFT);
             }
             i++;
         }
@@ -221,6 +243,15 @@ public abstract class Display {
      * @return Display.textShift
      */
     protected int getTextShift() {
-        return Display.textShift;
+        return Display.TEXT_SHIFT;
     }
+
+    /**
+     * Get current game screen.
+     * @return Display.gScreen
+     */
+    protected Screen getGameScreen() {
+       return gScreen;
+    }
+
 }

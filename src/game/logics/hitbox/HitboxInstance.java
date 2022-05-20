@@ -14,76 +14,100 @@ import game.utility.debug.Debugger;
 import game.utility.other.Pair;
 
 /**
- * The <code>HitboxInstance</code> class represents a generic entity's group of hitboxes
- * 
- * @author Giacomo Amadio
+ * The {@link HitboxInstance} class represents a 
+ * {@link game.logics.entities.generic.Entity Entity} hitbox.
  */
-public abstract class HitboxInstance implements Hitbox{
+public abstract class HitboxInstance implements Hitbox {
     /**
-     * sprite default dimension 
+     * sprite default dimension.
      */
-    static final int spriteDimensions = 32;
+    static final int SPRITE_DIMENSIONS = 32;
     /**
      * map that associates a rectangle with a pair of 
-     * coordinates which origin is the actual sprite position 
+     * coordinates which origin is the actual sprite position .
      */
-    private final Map<Rectangle, Pair<Double,Double>> hitboxes;
-    private final Pair<Double,Double> startingPos;
-    protected final Set<Rectangle> rectangles;
-    
-    public HitboxInstance(Pair<Double, Double> startingPos) {
+    private final Map<Rectangle, Pair<Double, Double>> hitboxes;
+    private final Pair<Double, Double> startingPos;
+    /**
+     * used to represent safely group of {@link Hitbox}, forcing to update
+     * each entity of such individually.
+     */
+    private final Set<Rectangle> rectangles;
+
+    /**
+     * initializes a {@link game.logics.entities.generic.Entity Entity} hitbox.
+     * @param startingPos
+     */
+    public HitboxInstance(final Pair<Double, Double> startingPos) {
         super();
         this.hitboxes = new HashMap<>();
-        this.startingPos = new Pair<>(startingPos.getX(),startingPos.getY());
+        this.startingPos = new Pair<>(startingPos.getX(), startingPos.getY());
         this.rectangles = new HashSet<>();
     }
 
-    public void updatePosition(Pair<Double,Double> newPos) {
-        this.hitboxes.forEach((hitbox,scale) -> {
-            hitbox.setLocation((int) (newPos.getX()+ scale.getX()),
-                    (int) (newPos.getY()+ scale.getY()));
+    /**
+     * {@inheritDoc}
+     */
+    public void updatePosition(final Pair<Double, Double> newPos) {
+        this.hitboxes.forEach((hitbox, scale) -> {
+            hitbox.setLocation((int) (newPos.getX() + scale.getX()),
+                    (int) (newPos.getY() + scale.getY()));
         });
     }
+
     /**
      * @return set this entity component rectangle 
      */
     public Set<Rectangle> getRectangles() {
         return Collections.unmodifiableSet(this.rectangles);
     }
-    
-    public void draw(Graphics2D g) {
-        if(GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.HITBOX)) {
+
+    /**
+     * {@inheritDoc}
+     */
+    public void draw(final Graphics2D g) {
+        if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.HITBOX)) {
             this.rectangles.forEach(hitbox -> {
                 g.setColor(Color.MAGENTA);
                 g.draw(hitbox);
             });
         }
     }
-    
+
     /**
-     * @param top left corner x
-     * @param top left corner y 
+     * adds the rectangle of the specified dimensions in the hitbox.
+     * 
      * @param width
      * @param height
-     * 
-     * puts the new entry in the hitbox map 
+     * @param x
+     * @param y
      */
-    protected void addRectangle(double x, double y, double width, double height) {
+    protected void addRectangle(final double x, final double y, final double width, final double height) {
         int startingX = (int) (startingPos.getX() + this.scale(x));
         int startingY = (int) (startingPos.getY() + this.scale(y));
         int scaledWidth  = (int) this.scale(width);
         int scaledHeight = (int) this.scale(height);
-        this.hitboxes.put(new Rectangle(startingX,startingY,scaledWidth,scaledHeight),
+        this.hitboxes.put(new Rectangle(startingX, startingY, scaledWidth, scaledHeight),
                 new Pair<>(this.scale(x), this.scale(y)));
         this.rectangles.addAll(this.hitboxes.keySet());
     }
-    
+
     /**
-     * @param double dimension
+     * scales the hitbox dimension using the current screen tile's size.
      * 
-     * scales the hitbox dimension using the current screen tile's size
+     * @param x 
+     * @return scaled x
      */
-    private double scale (double x) {
-        return (GameWindow.GAME_SCREEN.getTileSize()* (x/spriteDimensions));
+    private double scale(final double x) {
+        return (GameWindow.GAME_SCREEN.getTileSize() * (x / SPRITE_DIMENSIONS));
+    }
+
+    /**
+     * adds the specified hitbox to the group (to use only with groups of entities).
+     * 
+     * @param hitbox
+     */
+    protected void addHitbox(final Hitbox hitbox) {
+        this.rectangles.addAll(hitbox.getRectangles());
     }
 }

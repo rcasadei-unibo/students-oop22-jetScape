@@ -152,8 +152,8 @@ public class GameWindow extends JPanel implements Runnable {
         // Draws logical parts of the game
         logH.drawAll(board);
 
-        board.setColor(Debugger.debugColor);
-        board.setFont(Debugger.debugFont);
+        board.setColor(Debugger.DEBUG_COLOR);
+        board.setFont(Debugger.DEBUG_FONT);
 
         // Draws FPS meter if enabled by debugger
         if (GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.FPS_METER)) {

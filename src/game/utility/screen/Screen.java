@@ -4,28 +4,44 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 /**
- * The <code>Screen</code> interface can be used for accessing <code>ScreenHandler</code> methods
+ * The {@link Screen} interface can be used for accessing {@link ScreenHandler} methods
  * 
- * The <code>ScreenHandler</code> stores all the basic screen information.
- * 
- * @author Daniel Pellanda
+ * The {@link ScreenHandler} stores all the basic screen information.
  */
 public interface Screen {
-    
-    static final Dimension systemResolution = Toolkit.getDefaultToolkit().getScreenSize();
-    
-    ////     DEFAULT VALUES    ////
-    static final int baseTileSize = 32;
-    
-    static final int horizontalRatio = 16;
-    static final int verticalRatio = 9;
-    
-    static final double baseScaling = 2;
-    
-    static final double proportion = 1.5;
-        
+
     /**
-     * @return a <code>Dimension</code> containing the size of the screen
+     * A {@link Dimension} containing the current screen resolution used by the system.
+     */
+    Dimension SYSTEM_RESOLUTION = Toolkit.getDefaultToolkit().getScreenSize();
+
+    ////     DEFAULT VALUES    ////
+    /**
+     * Default size of a screen tile.
+     */
+    int BASE_TILE_SIZE = 32;
+
+    /**
+     * The current horizontal aspect ratio of the game.
+     */
+    int HORIZONTAL_RATIO = 16;
+    /**
+     * The current vertical aspect ratio of the game.
+     */
+    int VERTICAL_RATIO = 9;
+
+    /**
+     * Default scaling proportion of game screen.
+     */
+    double BASE_SCALING = 2;
+
+    /**
+     * The current proportion of the system screen compared to the game screen.
+     */
+    double PROPORTION = 1.5;
+
+    /**
+     * @return a {@link Dimension} containing the size of the screen
      */
     Dimension getScreenSize();
     /**
