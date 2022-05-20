@@ -36,6 +36,7 @@ public class DisplayRecords extends Display implements MenuDisplay {
     /**
      * {@link DisplayRecords} constructor: add options to be shown.
      *
+     * @param records Object of type {@link Records} used to read what have to be displayed
      */
     public DisplayRecords(final Records records) {
 
@@ -89,7 +90,7 @@ public class DisplayRecords extends Display implements MenuDisplay {
                     super.getGameScreen().getTileSize() * 3 + super.getGameScreen().getWidth() / 2,
                     super.getGameScreen().getTileSize() * (3 + i + 1), 0);
         }
-        
+
         //OPTIONS
         super.drawOptions(g, DisplayRecords.OPTION_TILE);
     }

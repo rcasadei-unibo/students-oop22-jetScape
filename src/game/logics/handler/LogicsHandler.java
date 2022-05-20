@@ -36,8 +36,6 @@ import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
 
 import game.logics.handler.Logics.GameInfoHandler;
-import game.logics.interactions.SpeedHandler;
-
 import game.logics.records.Records;
 
 import game.utility.debug.Debugger;
@@ -297,7 +295,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case ENDGAME: 
             case PAUSED:
             case INGAME:
-                synchronized(entities) {
+                synchronized (entities) {
                     entities.entrySet().stream().sorted((e1, e2) ->
                             Integer.compare(e2.getKey().ordinal(),
                                     e1.getKey().ordinal()))

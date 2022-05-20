@@ -9,26 +9,31 @@ import java.util.stream.IntStream;
 
 import game.logics.records.Records;
 
-public class JSONHandler {
+/**
+ * Non-instantiable class used by {@link JSONWriter} and {@link JSONReader} to
+ * get common file information used to read & write information to and from a
+ * JSON formatted file.
+ */
+public abstract class JSONHandler {
 
     private final Records records;
-    
+
     // Do not change path without updating .gitignore tracked file
     private static final String SEP = File.separator;
     private static final String FILE_PATH = "res" + SEP + "game" + SEP + "data" + SEP + "records.json";
     private static final File FILE = new File(FILE_PATH);
 
     // Data for building JSON data table
-    private final static List<String> KEY_LIST = new ArrayList<>();
-    private final static Map<String, Object> RECORDS_MAP = new HashMap<>();
+    private static final List<String> KEY_LIST = new ArrayList<>();
+    private static final Map<String, Object> RECORDS_MAP = new HashMap<>();
 
     //TODO complete list
     // List of keys for JSON files
-    private final static String KEY_RECORD_SCORE = "record%i"; // %i represent record index
-    private final static List<String> KEY_RECORD_SCORES = new ArrayList<>();
+    private static final String KEY_RECORD_SCORE = "record%i"; // %i represent record index
+    private static final List<String> KEY_RECORD_SCORES = new ArrayList<>();
 
-    private final static String KEY_BURNED = "burned";
-    private final static String KEY_ZAPPED = "zapped";
+    private static final String KEY_BURNED = "burned";
+    private static final String KEY_ZAPPED = "zapped";
 
     // Static initializer
     static {
@@ -61,9 +66,9 @@ public class JSONHandler {
         this.buildMap();
     }
 
-    
     /**
-     * Refresh recordsMap with data read from records, to write
+     * Refresh recordsMap with information data read from records that have to
+     *   be written to file.
      */
     protected void download() {
 
@@ -80,18 +85,30 @@ public class JSONHandler {
 
         RECORDS_MAP.replace(KEY_BURNED, this.records.getBurnedTimes());
         RECORDS_MAP.replace(KEY_ZAPPED, this.records.getZappedTimes());
-        
+
         //RECORDS_MAP.forEach((x,y) -> System.out.println(x + " - " + y));
     }
 
+    /**
+     * This method is used to get the ordered list of keys.
+     * @return the {@link List} JSONHandler.KEY_LIST
+     */
     protected static List<String> getKeyList() {
         return JSONHandler.KEY_LIST;
     }
 
-    protected static Map<String,Object> getRecordsMap() {
+    /**
+     * This method is used to get actual records.
+     * @return the {@link Map} JSONHandler.RECORDS_MAP
+     */
+    protected static Map<String, Object> getRecordsMap() {
         return JSONHandler.RECORDS_MAP;
     }
 
+    /**
+     * This method is used to get the file used for writing and reading.
+     * @return the {@link File} JSONHandler.FILE
+     */
     protected File getFile() {
         return JSONHandler.FILE;
     }

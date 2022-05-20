@@ -32,7 +32,8 @@ public class DisplayGameOver extends Display implements MenuDisplay {
 
     /**
      * {@link DisplayGameOver} constructor: add options to be shown.
-     * 
+     *
+     * @param records Object of type {@link Records} used to read what have to be displayed
      */
     public DisplayGameOver(final Records records) {
         super();
@@ -69,12 +70,12 @@ public class DisplayGameOver extends Display implements MenuDisplay {
                 super.getTextShift());
 
         // RECORD
-        if(records.isNewRecordScore()) {
+        if (records.isNewRecordScore()) {
             super.drawCenteredText(g, super.getTextFont(),
                     DisplayGameOver.recordScoreString, x -> x / 2,
                     (DisplayGameOver.TEXT_TILE + 1) * super.getGameScreen().getTileSize(),
                     super.getTextShift());
-        } else if(records.isNewPlayingRecordScore()) {
+        } else if (records.isNewPlayingRecordScore()) {
             super.drawCenteredText(g, super.getTextFont(),
                     DisplayGameOver.playingRecordScoreString[0], x -> x / 2,
                     (DisplayGameOver.TEXT_TILE + 1) * super.getGameScreen().getTileSize(),

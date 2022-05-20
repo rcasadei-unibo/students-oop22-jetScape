@@ -1,5 +1,7 @@
 package game.logics.entities.player;
 
+import java.util.Locale;
+
 import game.logics.entities.generic.Entity;
 
 /**
@@ -38,7 +40,7 @@ public interface Player extends Entity {
     enum PlayerStatus {
         WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
 
-        public static boolean hasChanged = false;
+        //private static boolean hasChanged;
 
         public boolean isInDyingAnimation() {
             switch (this) {
@@ -52,12 +54,19 @@ public interface Player extends Entity {
             return false;
         }
 
+        /*public boolean isChanged() {
+            return PlayerStatus.hasChanged;
+        }*/
+
         @Override
         public String toString() {
-            return super.toString().toLowerCase();
+            return super.toString().toLowerCase(Locale.ENGLISH);
         }
     }
 
+    /**
+     * A enumerable describing the cause of death of the player.
+     */
     enum PlayerDeath {
         BURNED, ZAPPED, NONE;
     }

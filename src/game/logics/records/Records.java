@@ -8,21 +8,22 @@ import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.handler.Logics.GameInfo;
 
 import java.util.ArrayList;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+//import java.util.Optional;
 import java.util.Set;
 //import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
-public class Records {
+public final class Records {
 
     private static final int NUMBER_OF_SAVED_RECORD = 3;
-	private final GameInfoHandler game;
+
+    private final GameInfoHandler game;
     private final Player player;
     private final JSONWriter writer;
     private final JSONReader reader;
@@ -64,7 +65,7 @@ public class Records {
     /****************************************/
 
     /**
-     * Read from file
+     * Read from file.
      */
     public void refresh() {
         this.reader.read();
@@ -108,9 +109,11 @@ public class Records {
     }
 
     /**
-     * Get data for updating in game, calling the data getters
+     * Get data for updating in game, calling the data getters.
+     *
+     *@param newGameInfo GameInfo passed via {@link Supplier} by {@link #announceGameEnded announceGameEnded()}
      */
-	//TODO add new records
+    //TODO add new records
     private void fetch(final GameInfo newGameInfo) {
 
         //System.out.println(gameUID.isGamePlayed());
@@ -122,10 +125,10 @@ public class Records {
                 this.causeOfDeath = player.getCauseOfDeath();
                 switch (this.causeOfDeath) {
                     case BURNED:
-                        this.burnedTimes ++;
+                        this.burnedTimes++;
                         break;
                     case ZAPPED:
-                        this.zappedTimes ++;
+                        this.zappedTimes++;
                         break;
                     default:
                         break;
@@ -138,7 +141,7 @@ public class Records {
     }
 
     /**
-     * Write to file
+     * Write to file.
      */
     public void update() {
         this.writer.write();
@@ -148,8 +151,7 @@ public class Records {
     /***   Calculate and check records    ***/
     /****************************************/
 
-	/*  TODO use new GameUID Date
-	 */
+    //  TODO use new GameUID Date
     /**
      * This method checks if the new finalScore is a new record and only in
      * this case saves it.
@@ -160,7 +162,7 @@ public class Records {
     public void checkScore(final int finalScore) {
 
         //this.score = finalScore;
-        
+
         //FIXME doesn't appear
         if (finalScore > Records.playingRecordScore) {
             Records.newPlayingRecordScore = true;
@@ -190,7 +192,7 @@ public class Records {
     /****************************************/
     /*** Getters & Setters from / to file ***/
     /****************************************/
-    
+
     public static int getSavedNumberOfRecords() {
         return Records.NUMBER_OF_SAVED_RECORD;
     }

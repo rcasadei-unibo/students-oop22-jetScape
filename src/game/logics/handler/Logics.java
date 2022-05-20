@@ -43,9 +43,9 @@ public interface Logics {
      * This class models a Game, the GameUID handler: this class keeps a
      *   reference to the actual UID of the current game.
      */
-    public static class GameInfoHandler {
+    class GameInfoHandler {
 
-        private static int numbersOfGamesPlayed = 0;
+        private static int numbersOfGamesPlayed;
         private static GameInfo actualGame;
 
         public GameInfoHandler(final GameInfo newGame) {
@@ -70,13 +70,13 @@ public interface Logics {
      * refer to the actual game.
      *
      */
-    public class GameInfo {
+    class GameInfo {
 
         private final int gameNumber;
 
-        private Date gameStartDate = new Date();
+        private final Date gameStartDate = new Date();
         private Optional<Date> gameEndDate = Optional.empty();
-        private boolean gameEnded = false;
+        private boolean gameEnded;
         private int finalScore;
 
         /**
@@ -118,6 +118,8 @@ public interface Logics {
 
         /**
          * This method sets the game as ended.
+         *
+         * @param score score obtained by player
          */
         public void setGameEnded(final int score) {
            if (!this.gameEnded) {
@@ -141,7 +143,7 @@ public interface Logics {
 
         /**
          * This method calculates the time elapsed from when the game started
-         *   until it ended
+         *   until it ended.
          *
          * @return the time elapsed, or better the time difference
          */

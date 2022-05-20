@@ -3,7 +3,6 @@ package game.logics.entities.player;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.Graphics2D;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -287,7 +286,7 @@ public class PlayerInstance extends EntityInstance implements Player {
     }
 
     private void setCauseOfDeath(final PlayerStatus deathCause) {
-        switch(deathCause) {
+        switch (deathCause) {
             case BURNED:
                 causeOfDeath = Player.PlayerDeath.BURNED;
                 break;

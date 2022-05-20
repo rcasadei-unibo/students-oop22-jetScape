@@ -154,9 +154,9 @@ public abstract class EntityInstance implements Entity {
      * Updates the entity's flags.
      */
     private void updateFlags() {
-        if (position.getX() >= -GameWindow.GAME_SCREEN.getTileSize() &&
-                position.getX() <= GameWindow.GAME_SCREEN.getWidth() &&
-                position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
+        if (position.getX() >= -GameWindow.GAME_SCREEN.getTileSize()
+                && position.getX() <= GameWindow.GAME_SCREEN.getWidth()
+                && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
             onScreen = true;
             onClearArea = false;
             onSpawnArea = false;
