@@ -59,6 +59,11 @@ public abstract class JSONHandler {
         RECORDS_MAP.put(KEY_ZAPPED, this.records.getZappedTimes());
     }
 
+    /**
+     * {@link JSONHandler} constructor, called to set internal {@Records} parameter.
+     *
+     * @param records {@link Records} Place to get and set statistics & records data
+     */
     public JSONHandler(final Records records) {
         this.records = records;
         //KEY_LIST.forEach(System.out::println);

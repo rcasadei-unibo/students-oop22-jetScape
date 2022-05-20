@@ -19,6 +19,11 @@ import java.util.Set;
 //import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
+/**
+ * This class handles statistics and records, furthermore it manages its writing
+ * and reading.
+ *
+ */
 public final class Records {
 
     private static final int NUMBER_OF_SAVED_RECORD = 3;
@@ -49,6 +54,11 @@ public final class Records {
         recordScores.addAll(Collections.nCopies(Records.NUMBER_OF_SAVED_RECORD, Optional.empty()));
     }*/
 
+    /**
+     * Build a new {@link Records}.
+     * @param game a {@link GameInfoHandler} object used to get current game informations.
+     * @param player {@link Player} object used to get some player informations.
+     */
     public Records(final GameInfoHandler game, final Player player) {
         this.game = game;
 
@@ -253,15 +263,27 @@ public final class Records {
     /*** Getters & Setters from / to game ***/
     /****************************************/
 
+    /**
+     * Get player score form {@link Game} instance.
+     * @return player score
+     */
     public int getScore() {
         //return this.score;
         return this.game.getActualGame().getFinalScore();
     }
 
+    /**
+     * Get current highest score obtained by player.
+     * @return first element of the highest scores list
+     */
     public Integer getHighestScore() {
         return this.recordScores.get(0);
     }
 
+    /**
+     * Get current least score obtained by player.
+     * @return last element of the highest scores list
+     */
     private Integer getLowestRecordScore() {
         if (this.recordScores.isEmpty()) {
             return 0;
@@ -271,10 +293,18 @@ public final class Records {
         }
     }
 
+    /**
+     * Get if the new score is a new highest record.
+     * @return true if the new score is a new highest record.
+     */
     public boolean isNewRecordScore() {
         return this.newRecordScore;
     }
 
+    /**
+     * Get if the new score is a new playing consecutively record.
+     * @return true if the new score is a new playing consecutively record.
+     */
     public boolean isNewPlayingRecordScore() {
         return Records.newPlayingRecordScore;
     }
