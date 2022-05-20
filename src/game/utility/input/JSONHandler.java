@@ -11,7 +11,7 @@ import game.logics.records.Records;
 
 /**
  * Non-instantiable class used by {@link JSONWriter} and {@link JSONReader} to
- * get common file information used to read & write information to and from a
+ * get common file information used to read &amp; write information to and from a
  * JSON formatted file.
  */
 public abstract class JSONHandler {
@@ -60,9 +60,9 @@ public abstract class JSONHandler {
     }
 
     /**
-     * {@link JSONHandler} constructor, called to set internal {@Records} parameter.
+     * {@link JSONHandler} constructor, called to set internal {@link Records} parameter.
      *
-     * @param records {@link Records} Place to get and set statistics & records data
+     * @param records {@link Records} Place to get and set statistics &amp; records data
      */
     public JSONHandler(final Records records) {
         this.records = records;

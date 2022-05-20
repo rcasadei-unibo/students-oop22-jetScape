@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import game.utility.other.Pair;
 
 /**
- * The {@link Hitbox} interface is used for accessing {@link HitboxInstace} methods.
+ * The <code>Hitbox</code> interface is used for accessing {@link HitboxInstance} methods.
  * 
  * <p>
  * The {@link HitboxInstance} class represents a generic entity's group of hitboxes
@@ -18,7 +18,7 @@ public interface Hitbox {
      * Translates all this entity's Rectangles the indicated distance,
      * to the right along the X coordinate axis, and downward along the Y coordinate axis.
      * 
-     * @param newPos of the {@link Entity}
+     * @param newPos of the {@link game.logics.entities.generic.Entity Entity}
      */
     void updatePosition(Pair<Double, Double> newPos);
 

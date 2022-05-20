@@ -18,7 +18,7 @@ import game.utility.other.Pair;
 public class ShieldInstance extends PickupInstance implements Shield {
 
     /**
-     * Specifies the path within the sprite folder [specified in {@link Sprite} class]
+     * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
      * where {@link ShieldInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "shield" + System.getProperty("file.separator");

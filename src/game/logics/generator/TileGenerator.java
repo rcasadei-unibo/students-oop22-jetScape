@@ -41,7 +41,7 @@ import game.utility.other.Pair;
  * obstacles during the game.
  * 
  * {@link TileGenerator} works on a separated thread which can be manually
- * controlled by the {@link LogicsHandler}.
+ * controlled by the {@link game.logics.handler.LogicsHandler LogicsHandler}.
  * 
  */
 public class TileGenerator implements Generator {
@@ -234,7 +234,7 @@ public class TileGenerator implements Generator {
      * 
      * @throws JsonException if parser fails to parse into objects the contents of json file
      * @throws FileNotFoundException if json file cannot be found
-     * @throws Exception if json file is not correctly formatted
+     * @throws FormatException if json file is not correctly formatted
      */
     private void loadTiles() throws FileNotFoundException, JsonException, FormatException {
         final Object parsed = Jsoner.deserialize(new FileReader(TILES_PATH));

@@ -22,7 +22,7 @@ import game.utility.other.Pair;
 public class MissileInstance extends ObstacleInstance implements Missile {
 
     /**
-     * Specifies the path within the sprite folder [specified in {@link Sprite} class]
+     * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
      * where {@link MissileInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "missile" + System.getProperty("file.separator");

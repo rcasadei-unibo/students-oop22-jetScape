@@ -23,7 +23,7 @@ import game.utility.other.Pair;
 public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase {
 
     /**
-     * Specifies the path within the sprites folder [specified in {@link Sprite} class]
+     * Specifies the path within the sprites folder [specified in {{@link game.utility.sprites.Sprite Sprite} class]
      * where {@link ZapperBaseInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "zapperbase" + System.getProperty("file.separator");

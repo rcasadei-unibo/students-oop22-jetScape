@@ -20,8 +20,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * The {@link DisplayController} class helps {@link LogicsHandler}
- * to update and draw the correct {@link Display} on the screen.
+ * The <code>DisplayController</code> class helps {@link game.logics.handler.LogicsHandler LogicsHandler}
+ * to update and draw the correct {@link game.logics.display.view.Display Display} on the screen.
  */
 public class DisplayController {
     private final Supplier<GameState> getState;
@@ -47,7 +47,7 @@ public class DisplayController {
 
     /**
      * {@link DisplayController} builder: builds all displayed cards and
-     * all {@MenuHandler} needed instances.
+     * all {@link MenuHandler} needed instances.
      *
      * @param keyH
      * @param setState Consumer to set new value of State

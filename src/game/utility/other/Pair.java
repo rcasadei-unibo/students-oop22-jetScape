@@ -1,7 +1,7 @@
 package game.utility.other;
 
 /**
- * A standard generic Pair<X,Y>, with getters, hashCode, equals, toString and clone well implemented.
+ * A standard generic Pair&lt;X,Y&gt;, with getters, hashCode, equals, toString and clone well implemented.
  * 
  *  @param <X> the first type of the pair
  *  @param <Y> the second type of the pair

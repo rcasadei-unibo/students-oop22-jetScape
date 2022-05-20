@@ -168,7 +168,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     }
 
     /**
-     * Removes all entities that are on the "clear area" [x < -tile size].
+     * Removes all entities that are on the "clear area" [x &lt; - tile size].
      */
     private void updateCleaner() {
         if (super.getFrameTime() % GameWindow.FPS_LIMIT * super.getCleanerActivityInterval() == 0) {

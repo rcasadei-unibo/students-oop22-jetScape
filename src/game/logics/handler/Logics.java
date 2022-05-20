@@ -11,11 +11,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
- * The {@link Logics} interface is used for accessing
+ * The <code>Logics</code> interface is used for accessing
  * {@link LogicsHandler} methods.
  *
  * <p>
- * The {@link LogicsHandler} class helps {@link GameWindow} to update and draw
+ * The {@link LogicsHandler} class helps {@link game.frame.GameWindow GameWindow} to update and draw
  * logical parts of the game like the Interface, Entities, Collisions, etc....
  * </p>
  *
@@ -40,7 +40,7 @@ public interface Logics {
     void drawAll(Graphics2D g);
 
     /**
-     * This class models a Game, the GameUID handler: this class keeps a
+     * This class models a Game, the GameInfo handler: this class keeps a
      *   reference to the actual UID of the current game.
      */
     class GameInfoHandler {
@@ -66,7 +66,7 @@ public interface Logics {
     }
 
     /**
-     * This class models a GameID, a unique game identifier that is used to
+     * This class models a GameInfo, a unique game identifier that is used to
      * refer to the actual game.
      *
      */
@@ -80,7 +80,7 @@ public interface Logics {
         private int finalScore;
 
         /**
-         * Builds the first GameUID at the first game played.
+         * Builds the first GameInfo at the first game played.
          * The unique identifier is set here.
          */
         public GameInfo() {
@@ -109,7 +109,7 @@ public interface Logics {
         /**
          * This method is used to get when a game is over, if it is over.
          *
-         * @return Optional<Date> Date representing the time when the game ended,
+         * @return Optional&lt;Date&gt; Date representing the time when the game ended,
          *   if ended, otherwise returns Optional.empty()
          */
         public Optional<Date> getGameEndDate() {
@@ -135,7 +135,7 @@ public interface Logics {
 
         /**
          * Getter method to receive the Unique IDentifier.
-         * @return int the UID
+         * @return an int representing the UID
          */
         public int getUID() {
             return this.gameNumber;

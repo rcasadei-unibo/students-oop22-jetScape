@@ -264,7 +264,7 @@ public final class Records {
     /****************************************/
 
     /**
-     * Get player score form {@link Game} instance.
+     * Get player score form {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
      * @return player score
      */
     public int getScore() {
