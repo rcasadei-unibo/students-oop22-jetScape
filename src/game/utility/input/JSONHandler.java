@@ -14,7 +14,7 @@ import game.logics.records.Records;
  * get common file information used to read &amp; write information to and from a
  * JSON formatted file.
  */
-public abstract class JSONHandler {
+public class JSONHandler {
 
     private final Records records;
 
@@ -64,7 +64,7 @@ public abstract class JSONHandler {
      *
      * @param records {@link Records} Place to get and set statistics &amp; records data
      */
-    public JSONHandler(final Records records) {
+    protected JSONHandler(final Records records) {
         this.records = records;
         //KEY_LIST.forEach(System.out::println);
         //RECORDS_MAP.keySet().forEach(System.out::println);

@@ -49,9 +49,9 @@ public class DisplayRecords extends Display implements MenuDisplay {
         DisplayRecords.LENGTH_RECORDS.clear();
 
         records.getRecordScores().stream()
-        .map(s -> s.toString())
-        .peek(DisplayRecords.LENGTH_RECORDS::add)
-        .close();
+                .map(s -> s.toString())
+                .peek(DisplayRecords.LENGTH_RECORDS::add)
+                .close();
 
         //TODO remove this
         //DisplayRecords.MONEY_RECORDS.add("3500");

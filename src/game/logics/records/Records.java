@@ -115,7 +115,7 @@ public final class Records {
                 this.fetch(newGameInfo);
             }
             //oldGameInfo = newGameInfo;
-        //}
+        //}true if the new score is a new
     }
 
     /**
@@ -173,7 +173,6 @@ public final class Records {
 
         //this.score = finalScore;
 
-        //FIXME doesn't appear
         if (finalScore > Records.playingRecordScore) {
             Records.newPlayingRecordScore = true;
             Records.playingRecordScore = finalScore;
@@ -181,9 +180,8 @@ public final class Records {
             Records.newPlayingRecordScore = false;
         }
 
-        if (this.recordScores.size() < Records.getSavedNumberOfRecords()) {
-            this.addRecordScore(finalScore);
-        } else if (finalScore > this.getLowestRecordScore()) {
+        if (this.recordScores.size() < Records.getSavedNumberOfRecords()
+                || finalScore > this.getLowestRecordScore()) {
             this.newRecordScore = true;
             this.addRecordScore(finalScore);
         } else {
@@ -203,27 +201,50 @@ public final class Records {
     /*** Getters & Setters from / to file ***/
     /****************************************/
 
+    /**
+     * This static method is used to get the constant value stored as
+     * Records.NUMBER_OF_SAVED_RECORD.
+     *
+     * @return the number of records that will be written to file.
+     */
     public static int getSavedNumberOfRecords() {
         return Records.NUMBER_OF_SAVED_RECORD;
     }
 
+    /**
+     * This method is used to get burnedTimes value.
+     *
+     * @return how many times Barry died burned.
+     */
     public int getBurnedTimes() {
         return this.burnedTimes;
     }
 
+    /**
+     * This method is used to get zappedTimes value.
+     *
+     * @return how many times Barry died electrocuted.
+     */
     public int getZappedTimes() {
         return this.zappedTimes;
     }
 
-/*
+    /**
+     * This method is used to set burnedTimes value.
+     *
+     * @param readBurnedTimes how many times Barry died burned.
+     */
     public void setBurnedTimes(final int readBurnedTimes) {
         this.burnedTimes = readBurnedTimes;
     }
-
+    /**
+     * This method is used to set zappedTimes value.
+     *
+     * @param readZappedTimes how many times Barry died electrocuted.
+     */
     public void setZappedTimes(final int readZappedTimes) {
         this.zappedTimes = readZappedTimes;
     }
-*/
 
     public void addRecordScore(final int newRecordScore) {
         //this.recordScores.forEach(System.out::println);
@@ -299,6 +320,14 @@ public final class Records {
      */
     public boolean isNewRecordScore() {
         return this.newRecordScore;
+    }
+
+    /**
+     * Get the playing consecutively record score.
+     * @return the playing record score
+     */
+    public int getPlayingRecordScore() {
+        return Records.playingRecordScore;
     }
 
     /**
