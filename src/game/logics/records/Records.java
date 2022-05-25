@@ -47,7 +47,7 @@ public final class Records {
     private static int playingRecordScore; // higher score obtained by playing consecutively
     private static boolean newPlayingRecordScore;
 
-    private final List<Integer> recordScores = new ArrayList<>(); // absolute new score record
+    private final List<Integer> recordScores = new ArrayList<>(Records.NUMBER_OF_SAVED_RECORD); // absolute new score record
     private boolean newRecordScore;
 
     /*{
@@ -250,10 +250,19 @@ public final class Records {
         //this.recordScores.forEach(System.out::println);
 
         this.recordScores.add(newRecordScore);
+
         this.recordScores.sort(Comparator.reverseOrder());
+
+
         if (this.recordScores.size() > Records.getSavedNumberOfRecords()) {
-            this.recordScores.remove(Records.getSavedNumberOfRecords() - 1);
+            //System.out.println("ELIMINATO: "
+            //    + this.recordScores.get(Records.getSavedNumberOfRecords()).toString());
+            this.recordScores.remove(Records.getSavedNumberOfRecords());
         }
+
+        System.out.println("--");
+        this.recordScores.stream().forEach(System.out::println);
+        System.out.println("--");
     }
 
     public List<Integer> getRecordScores() {
