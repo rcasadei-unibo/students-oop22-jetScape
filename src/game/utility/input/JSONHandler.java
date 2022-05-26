@@ -25,26 +25,29 @@ public class JSONHandler {
 
     // Data for building JSON data table
     private static final List<String> KEY_LIST = new ArrayList<>();
-    private static final Map<String, Object> RECORDS_MAP = new HashMap<>();
+    private static final Map<String, Object> RECORDS_MAP = new HashMap<>(Records.getSavedNumberOfRecords());
 
     //TODO complete list
     // List of keys for JSON files
-    private static final String KEY_RECORD_SCORE = "record%i"; // %i represent record index
-    private static final List<String> KEY_RECORD_SCORES = new ArrayList<>();
+    private static final String PSEUDOKEY_RECORD_SCORE = "record%i"; // %i represents record index
+    private static final String STRING_RECORD_SCORE = "record";
+
+    private static final List<String> KEY_RECORD_SCORES = new ArrayList<>(Records.getSavedNumberOfRecords());
 
     private static final String KEY_BURNED = "burned";
     private static final String KEY_ZAPPED = "zapped";
 
     // Static initializer
     static {
-        //TODO add missing keys
+        // create all Record Score keys using PSEUDOKEY_RECORD_SCORE and an index
         for (Integer i = 0; i < Records.getSavedNumberOfRecords(); i++) {
-            KEY_RECORD_SCORES.add(KEY_RECORD_SCORE.replace("%i", i.toString()));
+            KEY_RECORD_SCORES.add(PSEUDOKEY_RECORD_SCORE.replace("%i", i.toString()));
         }
         KEY_LIST.addAll(KEY_RECORD_SCORES);
         KEY_LIST.add(KEY_BURNED);
         KEY_LIST.add(KEY_ZAPPED);
 
+        //TODO add missing keys
         //this.writer.build();
     }
 
@@ -53,10 +56,23 @@ public class JSONHandler {
         IntStream.range(0, Records.getSavedNumberOfRecords()).forEach(i -> {
             RECORDS_MAP.put(KEY_RECORD_SCORES.get(i), 0);
         });
-        //RECORDS_MAP.forEach((x,y) -> System.out.println(x + " - " + y));
+        //RECORDS_MAP.forEach((x, y) -> System.out.println(x + " - " + y));
 
-        RECORDS_MAP.put(KEY_BURNED, this.records.getBurnedTimes());
-        RECORDS_MAP.put(KEY_ZAPPED, this.records.getZappedTimes());
+        RECORDS_MAP.put(KEY_BURNED, 0);
+        RECORDS_MAP.put(KEY_ZAPPED, 0);
+    }
+
+    private void refreshMap() {
+
+        final List<Integer> recordsList = this.records.getRecordScores();
+        IntStream.range(0, this.records.getRecordScores().size()).forEach(i -> {
+            RECORDS_MAP.replace(KEY_RECORD_SCORES.get(i), recordsList.get(i));
+        });
+
+        RECORDS_MAP.replace(KEY_BURNED, this.records.getBurnedTimes());
+        RECORDS_MAP.replace(KEY_ZAPPED, this.records.getZappedTimes());
+
+        //RECORDS_MAP.forEach((x,y) -> System.out.println(x + " - " + y));
     }
 
     /**
@@ -77,21 +93,9 @@ public class JSONHandler {
      */
     protected void download() {
 
-        IntStream.range(0, this.records.getRecordScores().size()).forEach(i -> {
-            RECORDS_MAP.replace(KEY_RECORD_SCORES.get(i), this.records.getRecordScores().get(i));
-        });
+        this.refreshMap();
 
-        final Map<String, Object> recordsMap = new HashMap<>(RECORDS_MAP);
-        recordsMap.entrySet().stream()
-               .filter(e -> KEY_RECORD_SCORES.stream().anyMatch(x -> x == e.getKey()))
-               .filter(e -> ((Integer) e.getValue()) == 0)
-              // .forEach(x -> System.out.println(x.getKey() + " - " + x.getValue()));
-               .forEach(x -> RECORDS_MAP.remove(x.getKey()));
 
-        RECORDS_MAP.replace(KEY_BURNED, this.records.getBurnedTimes());
-        RECORDS_MAP.replace(KEY_ZAPPED, this.records.getZappedTimes());
-
-        //RECORDS_MAP.forEach((x,y) -> System.out.println(x + " - " + y));
     }
 
     /**
@@ -100,6 +104,14 @@ public class JSONHandler {
      */
     protected static List<String> getKeyList() {
         return JSONHandler.KEY_LIST;
+    }
+
+    /**
+     * This method is used to get record base string used to form related keys.
+     * @return {@link String} JSONHandler.STRING_RECORD_SCORE
+     */
+    protected static String getStringRecordScore() {
+        return JSONHandler.STRING_RECORD_SCORE;
     }
 
     /**

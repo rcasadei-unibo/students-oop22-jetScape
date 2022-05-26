@@ -250,7 +250,6 @@ public final class Records {
         //this.recordScores.forEach(System.out::println);
 
         this.recordScores.add(newRecordScore);
-
         this.recordScores.sort(Comparator.reverseOrder());
 
 
@@ -260,9 +259,9 @@ public final class Records {
             this.recordScores.remove(Records.getSavedNumberOfRecords());
         }
 
-        System.out.println("--");
-        this.recordScores.stream().forEach(System.out::println);
-        System.out.println("--");
+        //System.out.println("--");
+        //this.recordScores.stream().forEach(System.out::println);
+        //System.out.println("--");
     }
 
     public List<Integer> getRecordScores() {
