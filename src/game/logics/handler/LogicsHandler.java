@@ -223,9 +223,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                         //this.gameID.generateNewGameUID();
                     }
                     if (this.gameState == GameState.ENDGAME) { // RETRY
+                        LogicsHandler.records.refresh();
                         this.resetGame();
                     } else if (this.gameState == GameState.MENU) {
                         entities.get(EntityType.PLAYER).add(playerEntity);
+                        LogicsHandler.records.refresh();
                     }
                     spawner.resume();
                     break;
@@ -240,9 +242,9 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     //this.gameOverDisplay.setRecords(getScore.get());
                     //this.records.fetch(this.getGame);
                     LogicsHandler.records.announceGameEnded(() -> game.getActualGame());
-                    for (final Integer record : LogicsHandler.records.getRecordScores()) {
+                    /*for (final Integer record : LogicsHandler.records.getRecordScores()) {
                         System.out.println(record);
-                    }
+                    }*/
                     LogicsHandler.records.update();
                     break;
                 case PAUSED:

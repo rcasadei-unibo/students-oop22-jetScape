@@ -1,11 +1,11 @@
 package game.utility.input;
 
+import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsonable;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
@@ -16,9 +16,8 @@ import game.logics.records.Records;
 /**
  * This class writes information to a JSON file.
  */
-public class JSONWriter extends JSONHandler implements Jsonable, Serializable {
+public class JSONWriter extends JSONHandler implements Jsonable {
 
-    private static final long serialVersionUID = 1L;
     private final JsonObject json = new JsonObject();
 
     /**
@@ -70,22 +69,24 @@ public class JSONWriter extends JSONHandler implements Jsonable, Serializable {
     */
 
         // Creates a copy map to iterate and remove elements in the original map
-        final Map<String, Object> writtenRecordsMap = new HashMap<>(super.getRecordsMap());
+        final Map<JsonKey, Object> writtenRecordsMap = new HashMap<>(super.getRecordsMap());
 
         // Prevent all score records associated with 0 to be written into file
         super.getRecordsMap().entrySet().stream()
                // Remove all elements that don't have PSEUDOKEY_RECORD_SCORE string inside key (they don't matter here)
                //.filter(e -> e.getKey().contains(PSEUDOKEY_RECORD_SCORE.replaceAll("[^\\\\]%i", "")))
                //.filter(e -> super.get.stream().anyMatch(x -> x == e.getKey()))
-               .filter(e -> e.getKey().contains(super.getStringRecordScore()))
+               .filter(e -> e.getKey().getKey().contains(super.getStringRecordScore()))
 
                .filter(e -> ((Integer) e.getValue()) == 0)
                  //.forEach(x -> System.out.println(x.getKey() + " - " + x.getValue()));
                .forEach(x -> writtenRecordsMap.remove(x.getKey()));
 
-        json.putAll(writtenRecordsMap);
-        // json.put("position", this.getPosition());
-        // json.put("salary", this.getSalary());
+        //json.putAll(writtenRecordsMap);
+        /*writtenRecordsMap.entrySet().forEach(entry -> {
+            json.put(entry.getKey(), entry.getValue());
+        });*/
+        writtenRecordsMap.forEach(json::put);
 
         // Writes the object physically
         json.toJson(writer);
