@@ -3,7 +3,7 @@ package game.logics.display.view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -25,10 +25,8 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
     private final Records records;
 
-    //private static final List<String> lengthRecords = new ArrayList<>();
-    //private static final List<String> moneyRecords = new ArrayList<>();
     private static final List<String> LENGTH_RECORDS = new ArrayList<>();
-    //private static final List<String> MONEY_RECORDS = new LinkedList<>();
+    //private static final List<String> MONEY_RECORDS = new ArrayList<>();
 
     /**
      * {@link DisplayRecords} constructor: add options to be shown.
@@ -48,12 +46,19 @@ public class DisplayRecords extends Display implements MenuDisplay {
     private void fetch() {
         DisplayRecords.LENGTH_RECORDS.clear();
 
-        records.getRecordScores().stream()
-                .map(s -> s.toString())
-                .peek(DisplayRecords.LENGTH_RECORDS::add)
-                .close();
+        this.records.getRecordScores().forEach(x -> {
+            DisplayRecords.LENGTH_RECORDS.add(x.toString());
+        });
 
-        //TODO remove this
+        /*
+        this.records.getRecordScores().stream()
+                .map(s -> s.toString())
+                //.peek(System.out::println)
+                .peek(DisplayRecords.LENGTH_RECORDS::add)
+                //.peek(System.out::println)
+                .close();*/
+
+        //TODO remove
         //DisplayRecords.MONEY_RECORDS.add("3500");
     }
 
@@ -65,13 +70,12 @@ public class DisplayRecords extends Display implements MenuDisplay {
         return returnList;
     }*/
 
-    //game.utility.sprites.Drawer per caricare una sprite
+    // Use game.utility.sprites.Drawer to load a sprite
     /**
      * {@inheritDoc}
      */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
 
-        int i;
         this.fetch();
         this.setSelectedOption(selected);
 
@@ -80,21 +84,24 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
         // RECORDS
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS1,
-                x -> x - super.getGameScreen().getWidth() / 4, super.getGameScreen().getTileSize() * 3, 0);
+                x -> x - super.getGameScreen().getWidth() / 4,
+                super.getGameScreen().getTileSize() * 3, 0);
 
         //final List<String> recordList = this.listify(DisplayRecords.LENGTH_RECORDS);
         final List<String> recordList = DisplayRecords.LENGTH_RECORDS;
 
-        for (i = 0; i < recordList.size(); i++) {
+        for (int i = 0; i < recordList.size(); i++) {
             super.drawText(g, super.getTextFont(), recordList.get(i),
-                    super.getGameScreen().getTileSize() * 3, super.getGameScreen().getTileSize() * (3 + i + 1), 0);
+                    super.getGameScreen().getTileSize() * 3,
+                    super.getGameScreen().getTileSize() * (3 + i + 1), 0);
         }
 
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS2,
-                x -> x + super.getGameScreen().getWidth() / 4, super.getGameScreen().getTileSize() * 3, 0);
+                x -> x + super.getGameScreen().getWidth() / 4,
+                super.getGameScreen().getTileSize() * 3, 0);
 
-      /*  final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
-        for (i = 0; i < moneyList.size(); i++) {
+        /*final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
+        for (int i = 0; i < moneyList.size(); i++) {
             super.drawText(g, super.getTextFont(), moneyList.get(i),
                     super.getGameScreen().getTileSize() * 3 + super.getGameScreen().getWidth() / 2,
                     super.getGameScreen().getTileSize() * (3 + i + 1), 0);

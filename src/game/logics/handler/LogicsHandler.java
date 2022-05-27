@@ -253,6 +253,9 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     }
                     spawner.pause();
                     break;
+                case RECORDS:
+                    LogicsHandler.records.refresh();
+                    break;
                 default:
                     break;
             }

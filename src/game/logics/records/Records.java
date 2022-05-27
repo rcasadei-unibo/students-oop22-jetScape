@@ -74,12 +74,6 @@ public final class Records {
     /***    In and to file operations     ***/
     /****************************************/
 
-    /**
-     * Read from file.
-     */
-    public void refresh() {
-        this.reader.read();
-    }
 /*
     private boolean checkAndSet(final GameUID newGameUID) {
 
@@ -148,6 +142,13 @@ public final class Records {
             this.checkScore(newGameInfo.getFinalScore());
             //this.getScore();
         //}
+    }
+
+    /**
+     * Read from file.
+     */
+    public void refresh() {
+        this.reader.read();
     }
 
     /**
@@ -237,6 +238,7 @@ public final class Records {
     public void setBurnedTimes(final int readBurnedTimes) {
         this.burnedTimes = readBurnedTimes;
     }
+
     /**
      * This method is used to set zappedTimes value.
      *
@@ -251,7 +253,6 @@ public final class Records {
 
         this.recordScores.add(newRecordScore);
         this.recordScores.sort(Comparator.reverseOrder());
-
 
         if (this.recordScores.size() > Records.getSavedNumberOfRecords()) {
             //System.out.println("ELIMINATO: "
@@ -272,7 +273,7 @@ public final class Records {
                 recordScores.add(record.get());
             }
         }*/
-        return this.recordScores;
+        return List.copyOf(this.recordScores);
     }
 
     public void setRecordScores(final List<Integer> recordScores) {

@@ -106,10 +106,17 @@ public class JSONHandler {
      */
     protected void upload(final JsonObject json) {
 
+        final List<Integer> recordsReadList = new ArrayList<>(Records.getSavedNumberOfRecords());
+
         // Overwrites the map
-        /*IntStream.range(0, Records.getSavedNumberOfRecords()).forEach(x -> {
-            json.getIntegerOrDefault(KEY_RECORD_SCORES.get(x));
-        });*/
+        IntStream.range(0, Records.getSavedNumberOfRecords()).forEach(x -> {
+            final int receivedValue = json.getIntegerOrDefault(KEY_RECORD_SCORES.get(x));
+            if (receivedValue != (int) PSEUDOKEY_RECORD_SCORE.getValue()) {
+                recordsReadList.add(x, receivedValue);
+            }
+        });
+        records.setRecordScores(recordsReadList);
+
         records.setBurnedTimes(json.getInteger(KEY_BURNED));
         records.setZappedTimes(json.getInteger(KEY_ZAPPED));
 
