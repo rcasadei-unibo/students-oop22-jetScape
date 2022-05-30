@@ -159,6 +159,11 @@ public class JSONHandler {
         return JSONHandler.FILE;
     }
 
+    /**
+     * Represents a key that could be written to file and owns also a default
+     * value.
+     *
+     */
     protected static final class FileKey implements JsonKey, Serializable {
 
         private static final long serialVersionUID = 1L;
@@ -166,6 +171,12 @@ public class JSONHandler {
         private final String key;
         private final Object defaultValue;
 
+        /**
+         * Builds a new {@link FileKey}.
+         *
+         * @param key the new key
+         * @param value defaultVaue assigned to {@code key}
+         */
         public FileKey(final String key, final Object value) {
             this.key = key;
             this.defaultValue = value;
