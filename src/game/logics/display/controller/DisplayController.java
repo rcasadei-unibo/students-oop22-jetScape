@@ -2,11 +2,13 @@ package game.logics.display.controller;
 
 import game.logics.display.handlers.DisplayHandler;
 import game.logics.display.handlers.MenuHandler;
+import game.logics.display.handlers.SettingsHandler;
 import game.logics.display.view.DisplayGameOver;
 import game.logics.display.view.DisplayHUD;
 import game.logics.display.view.DisplayMainMenu;
 import game.logics.display.view.DisplayPause;
 import game.logics.display.view.DisplayRecords;
+import game.logics.display.view.DisplaySettings;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import java.awt.Graphics2D;
@@ -28,6 +30,7 @@ public class DisplayController {
     private final DisplayMainMenu mainMenuDisplay;
     private final DisplayRecords recordsDisplay;
     private final DisplayGameOver gameOverDisplay;
+    private final DisplaySettings gameSettings;
     /*
      * Handlers for every display with a menu
      */
@@ -35,6 +38,7 @@ public class DisplayController {
     private final DisplayHandler titleHandler;
     private final DisplayHandler recordsHandler;
     private final DisplayHandler gameOverHandler;
+    private final SettingsHandler settingsHandler;
     // TODO: eventually add shop 
 
     /**
@@ -56,11 +60,13 @@ public class DisplayController {
         this.mainMenuDisplay = new DisplayMainMenu();
         this.recordsDisplay = new DisplayRecords();
         this.gameOverDisplay = new DisplayGameOver();
+        this.gameSettings = new DisplaySettings();
 
         this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
         this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
         this.recordsHandler = new MenuHandler(keyH, recordsDisplay, setState);
         this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
+        this.settingsHandler = new SettingsHandler(keyH, gameSettings, setState);
     }
 
     /**
@@ -88,6 +94,9 @@ public class DisplayController {
                 this.gameOverDisplay.drawScreen(g,
                         gameOverHandler.getSelectedOption());
                 break;
+           case SETTINGS :
+               this.gameSettings.drawScreen(g,
+                        settingsHandler.getSelectedOption());
            default:
                 break;
         }
@@ -115,6 +124,8 @@ public class DisplayController {
                 this.gameOverDisplay.setFinalScore(getScore.get());
                 this.gameOverHandler.update();
                 break;
+            case SETTINGS :
+                this.settingsHandler.update();
             default :
                 break;
         }

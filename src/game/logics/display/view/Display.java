@@ -231,6 +231,14 @@ public abstract class Display {
     }
 
     /**
+     * Get standard options font.
+     * @return Display.optionsFont
+     */
+    protected Font getOptionsFont() {
+        return this.optionsFont;
+    }
+
+    /**
      * Get standard text font.
      * @return Display.textFont
      */
@@ -244,6 +252,14 @@ public abstract class Display {
      */
     protected int getTextShift() {
         return Display.TEXT_SHIFT;
+    }
+
+    /**
+     * Get standard option shift.
+     * @return Display.OPTIONS_SHIFT
+     */
+    protected int getOptionShift() {
+        return Display.OPTIONS_SHIFT;
     }
 
     /**

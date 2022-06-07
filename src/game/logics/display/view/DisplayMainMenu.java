@@ -23,7 +23,7 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
         super();
 
         this.getOptions().add(MenuOption.START);
-        this.getOptions().add(MenuOption.SHOP);
+        this.getOptions().add(MenuOption.SETTINGS);
         this.getOptions().add(MenuOption.QUIT);
         this.getOptions().add(MenuOption.RECORDS);
     }
