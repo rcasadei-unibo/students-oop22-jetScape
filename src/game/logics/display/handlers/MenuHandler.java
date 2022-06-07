@@ -78,7 +78,7 @@ public class MenuHandler implements DisplayHandler {
     /**
      * moves the cursor up .
      */
-    private void goUp() {
+    protected void goUp() {
         this.cursor--;
         if (this.cursor < 0) {
             this.cursor = this.options.size() - 1;
@@ -88,7 +88,7 @@ public class MenuHandler implements DisplayHandler {
     /**
      * moves the cursor down .
      */
-    private void goDown() {
+    protected void goDown() {
         this.cursor++;
         if (this.cursor > this.options.size() - 1) {
             this.cursor = 0;
@@ -98,8 +98,25 @@ public class MenuHandler implements DisplayHandler {
     /**
      * updates the selected option.
      */
-    private void updateSelectedOption() {
+    protected void updateSelectedOption() {
         this.selectedOption = this.options.get(this.cursor);
     }
 
+	protected KeyHandler getKeyH() {
+		return keyH;
+	}
+
+	protected Consumer<GameState> getSetGameState() {
+		return setGameState;
+	}
+
+	protected List<MenuOption> getOptions() {
+		return options;
+	}
+
+	protected int getCursor() {
+		return cursor;
+	}
+
+    
 }
