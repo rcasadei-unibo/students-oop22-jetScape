@@ -10,12 +10,12 @@ public enum MenuOption {
    /**
     * Menu options.
     */
-    START, SHOP, QUIT, RECORDS, MENU, RETRY, RESUME;
+    START, SETTINGS, QUIT, RECORDS, MENU, RETRY, RESUME, MUSIC, SOUND;
 
     static final Map<MenuOption, GameState> OPTIONS = Map.of(START, GameState.INGAME,
-            SHOP, GameState.MENU, QUIT, GameState.EXIT, RECORDS, GameState.RECORDS,
-            MENU, GameState.MENU, RETRY, GameState.INGAME, RESUME, GameState.INGAME);
-
+            SETTINGS, GameState.SETTINGS, QUIT, GameState.EXIT, RECORDS, GameState.RECORDS,
+            MENU, GameState.MENU, RETRY, GameState.INGAME, RESUME, GameState.INGAME,
+            MUSIC, GameState.SETTINGS, SOUND, GameState.SETTINGS);
 
    /**
     *@return the {@link GameState} associated with the current option
