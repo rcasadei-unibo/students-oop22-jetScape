@@ -32,7 +32,7 @@ public abstract class EntityInstance implements Entity {
     private final EntityType entityTag;
 
     /// FLAGS ///
-    private boolean visible;
+    private boolean visible = true;
     private boolean onScreen;
     private boolean onClearArea;
     private boolean onSpawnArea = true;
