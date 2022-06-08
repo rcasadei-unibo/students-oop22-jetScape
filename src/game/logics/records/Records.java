@@ -35,6 +35,9 @@ public final class Records {
     //private GameInfo oldGameInfo;
 
     // Statistics and records list
+    private final List<Integer> scoreRecords = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score records
+    private final List<Integer> moneyRecords = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new money records
+
     private int burnedTimes;
     private int zappedTimes;
 
@@ -44,14 +47,11 @@ public final class Records {
     private static int playingScoreRecord; // higher score obtained by playing consecutively
     private static boolean newPlayingScoreRecord;
 
-    private final List<Integer> scoreRecords = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score record
-    private final List<Integer> moneyRecords = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score record
-
     private boolean newScoreRecord;
     private boolean newMoneyRecord;
 
     /*{
-        scoreRecords.addAll(Collections.nCopies(Records.NUMBER_OF_SAVED_RECORD, Optional.empty()));
+        this.scoreRecords.addAll(Collections.nCopies(Records.MAX_NUMBER_OF_SAVED_RECORD, Optional.empty()));
     }*/
 
     /**
