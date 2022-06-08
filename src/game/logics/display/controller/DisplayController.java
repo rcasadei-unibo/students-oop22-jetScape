@@ -109,6 +109,7 @@ public class DisplayController {
            case SETTINGS :
                this.gameSettings.drawScreen(g,
                         settingsHandler.getSelectedOption());
+               break;
            default:
                 break;
         }
@@ -120,7 +121,6 @@ public class DisplayController {
      */
     public void updateScreen() {
         switch (getState.get()) {
-
             case MENU :
                 titleHandler.update();
                 break;
@@ -138,6 +138,7 @@ public class DisplayController {
                 break;
             case SETTINGS :
                 this.settingsHandler.update();
+                break;
             default :
                 break;
         }
