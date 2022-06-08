@@ -78,6 +78,7 @@ public interface Logics {
         private Optional<Date> gameEndDate = Optional.empty();
         private boolean gameEnded;
         private int finalScore;
+        private int finalCoins;
 
         /**
          * Builds the first GameInfo at the first game played.
@@ -120,17 +121,23 @@ public interface Logics {
          * This method sets the game as ended.
          *
          * @param score score obtained by player
+         * @param coins coins collected by player
          */
-        public void setGameEnded(final int score) {
+        public void setGameEnded(final int score, final int coins) {
            if (!this.gameEnded) {
                this.gameEndDate = Optional.of(new Date());
                this.finalScore = score;
+               this.finalCoins = coins;
                this.gameEnded = true;
            }
         }
 
         public int getFinalScore() {
             return this.finalScore;
+        }
+
+        public int getFinalCoinsCollected() {
+            return this.finalCoins;
         }
 
         /**
@@ -172,4 +179,3 @@ public interface Logics {
         }
     }
 }
-

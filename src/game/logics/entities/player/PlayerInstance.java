@@ -63,6 +63,10 @@ public class PlayerInstance extends EntityInstance implements Player {
      */
     private int score;
     /**
+     * The current player's number of coins collected.
+     */
+    private int coins;
+    /**
      * The current jump speed of the player.
      */
     private final double jumpSpeed;
@@ -182,8 +186,11 @@ public class PlayerInstance extends EntityInstance implements Player {
                 entityHit.clean();
                 break;
             case TELEPORT:
-                score += TeleportInstance.getScoreIncrease();
+                this.score += TeleportInstance.getScoreIncrease();
                 this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
+                break;
+            case COIN:
+                this.coins++;
                 break;
             default:
                 break;
@@ -276,6 +283,13 @@ public class PlayerInstance extends EntityInstance implements Player {
      */
     public int getCurrentScore() {
         return this.score;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getCurrentCoinsCollected() {
+        return this.coins;
     }
 
     /**

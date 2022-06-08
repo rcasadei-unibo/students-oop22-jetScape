@@ -28,6 +28,13 @@ public interface Player extends Entity {
     int getCurrentScore();
 
     /**
+     * Return the actual number of coins collected, it doesn't matter if Barry is alive or not.
+     *
+     * @return the current player's coins
+     */
+    int getCurrentCoinsCollected();
+
+    /**
      * This method is used to get the current cause of death, if any.
      *   If Barry is still alive, returns <code>Player.PlayerDeath.NONE</code>
      * @return a PlayerDeath instance with the cause of death

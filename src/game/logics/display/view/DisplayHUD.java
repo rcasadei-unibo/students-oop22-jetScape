@@ -19,6 +19,7 @@ public class DisplayHUD extends Display {
     private final Font scoreFont;
 
     private int score;
+    private int coins;
 
     /**
      * {@link DisplayHUD} constructor: loads scoreFont.
@@ -28,6 +29,7 @@ public class DisplayHUD extends Display {
         super();
 
         this.score = 0;
+        this.coins = 0;
         this.scoreFont = GameWindow.GAME_FONTLOADER.getOptionsFont().deriveFont(getScaledSize(FONT_SCALE));
     }
 
@@ -36,11 +38,17 @@ public class DisplayHUD extends Display {
      */
     public void drawScreen(final Graphics2D g) {
         final String scoreString = "SCORE: " + this.score;
+        final String coinsString = "COINS: " + this.coins;
 
         // SCORE
         super.drawText(g, scoreFont, scoreString,
                 super.getGameScreen().getTileSize() * TEXT_X_TILE,
                 super.getGameScreen().getTileSize() * SCORE_TILE, SCORE_SHIFT);
+
+        // COINS
+        super.drawText(g, scoreFont, coinsString,
+                super.getGameScreen().getTileSize() * TEXT_X_TILE,
+                super.getGameScreen().getTileSize() * (SCORE_TILE + 1), SCORE_SHIFT);
     }
 
     /**
@@ -49,6 +57,14 @@ public class DisplayHUD extends Display {
      */
     public void updateScore(final int score) {
         this.score = score;
+    }
+
+    /**
+     * Update internal coins counter to be shown.
+     * @param coins
+     */
+    public void updateCoins(final int coins) {
+        this.coins = coins;
     }
 
     /**

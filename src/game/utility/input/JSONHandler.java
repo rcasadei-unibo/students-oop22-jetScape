@@ -28,14 +28,14 @@ public class JSONHandler {
 
     // Data for building JSON data table
     private static final List<JsonKey> KEY_LIST = new ArrayList<>();
-    private static final Map<JsonKey, Object> RECORDS_MAP = new HashMap<>(Records.getSavedNumberOfRecords());
+    private static final Map<JsonKey, Object> RECORDS_MAP = new HashMap<>(Records.getMaxSavedNumberOfRecords());
 
     //TODO complete list
     // List of keys for JSON files
     private static final JsonKey PSEUDOKEY_RECORD_SCORE = new FileKey("record%i", 0); // %i represents record index
     private static final String STRING_RECORD_SCORE = "record";
 
-    private static final List<JsonKey> KEY_RECORD_SCORES = new ArrayList<>(Records.getSavedNumberOfRecords());
+    private static final List<JsonKey> KEY_RECORD_SCORES = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
 
     private static final JsonKey KEY_BURNED = new FileKey("burned", 0);
     private static final JsonKey KEY_ZAPPED = new FileKey("zapped", 0);
@@ -45,7 +45,7 @@ public class JSONHandler {
     // Static initializer
     static {
         // create all Record Score keys using PSEUDOKEY_RECORD_SCORE and an index
-        for (Integer i = 0; i < Records.getSavedNumberOfRecords(); i++) {
+        for (Integer i = 0; i < Records.getMaxSavedNumberOfRecords(); i++) {
             KEY_RECORD_SCORES.add(new FileKey(
                     PSEUDOKEY_RECORD_SCORE.getKey().replace("%i", i.toString()),
                     PSEUDOKEY_RECORD_SCORE.getValue()));
@@ -59,7 +59,7 @@ public class JSONHandler {
 
     private void buildMap() {
 
-        IntStream.range(0, Records.getSavedNumberOfRecords()).forEach(i -> {
+        IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(i -> {
             RECORDS_MAP.put(KEY_RECORD_SCORES.get(i), 0);
         });
         //RECORDS_MAP.forEach((x, y) -> System.out.println(x + " - " + y));
@@ -106,10 +106,10 @@ public class JSONHandler {
      */
     protected void upload(final JsonObject json) {
 
-        final List<Integer> recordsReadList = new ArrayList<>(Records.getSavedNumberOfRecords());
+        final List<Integer> recordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
 
         // Overwrites the map
-        IntStream.range(0, Records.getSavedNumberOfRecords()).forEach(x -> {
+        IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(x -> {
             final int receivedValue = json.getIntegerOrDefault(KEY_RECORD_SCORES.get(x));
             if (receivedValue != (int) PSEUDOKEY_RECORD_SCORE.getValue()) {
                 recordsReadList.add(x, receivedValue);
