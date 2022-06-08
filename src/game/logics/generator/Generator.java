@@ -10,8 +10,10 @@ import com.github.cliftonlabs.json_simple.JsonException;
 import game.logics.entities.obstacles.missile.Missile;
 import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperRay;
+import game.logics.entities.pickups.coin.Coin;
 import game.logics.entities.pickups.shield.Shield;
 import game.logics.entities.pickups.teleport.Teleport;
+
 import game.utility.other.FormatException;
 import game.utility.other.Pair;
 
@@ -59,6 +61,12 @@ public interface Generator extends Runnable {
      * @param teleport a function for creating <code>Teleport</code>
      */
     void setTeleportCreator(Function<Pair<Double, Double>, Teleport> teleport);
+    /**
+     * Sets the function for creating <code>Coin</code> objects.
+     * 
+     * @param coin a function for creating <code>Coin</code>
+     */
+    void setCoinCreator(Function<Pair<Double, Double>, Coin> coin);
 
     /**
      * Draws a timer that indicates how many milliseconds have to pass before the

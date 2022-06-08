@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 public class DisplayController {
     private final Supplier<GameState> getState;
     private final Supplier<Integer> getScore;
+    private final Supplier<Integer> getCoins;
     private final Supplier<GameInfo> getGame;
 
     /*
@@ -58,10 +59,12 @@ public class DisplayController {
             final Consumer<GameState> setState,
             final Supplier<GameState> getState,
             final Supplier<Integer> getScore,
+            final Supplier<Integer> getCoins,
             final Supplier<GameInfo> getGame, final Records records) {
 
         this.getState = getState;
         this.getScore = getScore;
+        this.getCoins = getCoins;
         this.getGame = getGame;
 
         this.hud = new DisplayHUD();
@@ -124,6 +127,7 @@ public class DisplayController {
                 break;
             case INGAME :
                 this.hud.updateScore(getScore.get());
+                this.hud.updateCoins(getCoins.get());
                 break;
             case ENDGAME :
                 this.gameOverHandler.update();

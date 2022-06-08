@@ -28,6 +28,7 @@ import game.logics.entities.obstacles.zapper.Zapper;
 import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperInstance;
 import game.logics.entities.obstacles.zapper.ZapperRay;
+import game.logics.entities.pickups.coin.Coin;
 import game.logics.entities.pickups.shield.Shield;
 import game.logics.entities.pickups.teleport.Teleport;
 import game.logics.handler.AbstractLogics;
@@ -75,6 +76,10 @@ public class TileGenerator implements Generator {
      * A function used by the generator for creating <code>Teleport</code> object.
      */
     private Optional<Function<Pair<Double, Double>, Teleport>> createTeleport = Optional.empty();
+    /**
+     * A function used by the generator for creating <code>Coin</code> object.
+     */
+    private Optional<Function<Pair<Double, Double>, Coin>> createCoin = Optional.empty();
 
     /**
      * A map containing lists where all loaded set of tiles are stored.
@@ -89,7 +94,11 @@ public class TileGenerator implements Generator {
     /**
      * Decides the odds for the generator to spawn a set of missiles.
      */
-    private static final int MISSILE_ODDS = 30;
+    private static final int MISSILE_ODDS = 35;
+    /**
+     * Decides the odds for the generator to spawn a group of coins.
+     */
+    private static final int MONEY_ODDS = 15;
     /**
      * Decides the odds for the generator to spawn a power up.
      */
@@ -229,6 +238,27 @@ public class TileGenerator implements Generator {
         }
     }
 
+    private void loadCoin(final JsonArray types) throws FormatException {
+        for (int i = 0; i < types.size(); i++) {
+             final JsonArray sets = (JsonArray) checkParse(types.get(i));
+             final Set<Entity> tile = new HashSet<>();
+
+             for (int j = 0; j < sets.size(); j++) {
+                 final JsonArray set = (JsonArray) checkParse(sets.get(j));
+                 final Set<Coin> tmp = new HashSet<>();
+
+                 for (int h = 0; h < set.size(); h++) {
+                     final JsonObject coin = (JsonObject) checkParse(set.get(h));
+                     tmp.add(createCoin.get().apply(new Pair<>(
+                             Double.parseDouble((String) coin.get("x")) * tileSize,
+                             Double.parseDouble((String) coin.get("y")) * tileSize)));
+                 }
+                 tile.addAll(tmp);
+             }
+             tileSets.get(EntityType.COIN).add(tile);
+         }
+     }
+
     /**
      * Loads each set of obstacles from a json file and store them in Lists.
      * 
@@ -262,6 +292,12 @@ public class TileGenerator implements Generator {
             final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.TELEPORT.toString()));
             this.loadTeleport(types);
         }
+
+        ///        LOADING COINS      ///
+        if (createCoin.isPresent()) {
+            final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.COIN.toString()));
+            this.loadCoin(types);
+        }
     }
 
     private void spawnTile() {
@@ -273,6 +309,8 @@ public class TileGenerator implements Generator {
             randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
             randomNumber += EntityType.SHIELD.ordinal();
             spawnSet(EntityType.values()[randomNumber]);
+        } else if (randomNumber <= MONEY_ODDS) {
+            spawnSet(EntityType.COIN);
         } else if (randomNumber <= MISSILE_ODDS) {
             spawnSet(EntityType.MISSILE);
         } else {
@@ -331,6 +369,12 @@ public class TileGenerator implements Generator {
      */
     public void setTeleportCreator(final Function<Pair<Double, Double>, Teleport> teleport) {
         this.createTeleport = Optional.of(teleport);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public void setCoinCreator(final Function<Pair<Double, Double>, Coin> coin) {
+        this.createCoin = Optional.of(coin);
     }
 
 

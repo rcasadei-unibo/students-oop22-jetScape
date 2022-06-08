@@ -25,6 +25,7 @@ import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
 import game.logics.entities.obstacles.zapper.ZapperRayInstance;
+import game.logics.entities.pickups.coin.CoinInstance;
 import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
@@ -98,6 +99,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
         displayController = new DisplayController(keyH, g -> setGameState(g),
                 () -> gameState, () -> playerEntity.getCurrentScore(),
+                () -> playerEntity.getCurrentCoinsCollected(),
                 () -> game.getActualGame(), records);
 
         spawner = new TileGenerator(entities, super.getSpawningInteval());
@@ -111,6 +113,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         spawner.setZapperRayCreator((b, p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
         spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.SHIELD)));
         spawner.setTeleportCreator(p -> new TeleportInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.TELEPORT)));
+        spawner.setCoinCreator(p -> new CoinInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.COIN)));
 
         try {
             spawner.initialize();
