@@ -19,8 +19,7 @@ public abstract class AbstractLogics implements Logics {
 
     private final SpeedHandler defaultEntitySpeed = new SpeedHandler(250.0, 15.0, 0);
     private final Map<EntityType, SpeedHandler> entitiesSpeed = 
-            Map.of(
-                   EntityType.MISSILE, new SpeedHandler(500.0, 10.0, 5000.0));
+            Map.of(EntityType.MISSILE, new SpeedHandler(500.0, 10.0, 5000.0));
 
     static void setDifficultyLevel(final int newDifficultyLevel) {
         AbstractLogics.difficultyLevel = newDifficultyLevel;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * The {@link EntityType} enumerable describes which category of each entity that encapsulates it.
+ * The {@code EntityType} enumerable describes which category of each entity that encapsulates it.
  */
 public enum EntityType {
     /**
