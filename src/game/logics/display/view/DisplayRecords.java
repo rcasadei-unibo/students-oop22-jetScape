@@ -47,24 +47,21 @@ public class DisplayRecords extends Display implements MenuDisplay {
         DisplayRecords.LENGTH_RECORDS.clear();
         DisplayRecords.MONEY_RECORDS.clear();
 
-        this.records.getRecordScores().forEach(x -> {
+        this.records.getScoreRecords().forEach(x -> {
             DisplayRecords.LENGTH_RECORDS.add(x.toString());
         });
 
-        this.records.getRecordCoins().forEach(x -> {
+        this.records.getMoneyRecords().forEach(x -> {
             DisplayRecords.MONEY_RECORDS.add(x.toString());
         });
 
         /*
-        this.records.getRecordScores().stream()
+        this.records.getScoreRecords().stream()
                 .map(s -> s.toString())
                 //.peek(System.out::println)
                 .peek(DisplayRecords.LENGTH_RECORDS::add)
                 //.peek(System.out::println)
                 .close();*/
-
-        //TODO remove
-        //DisplayRecords.MONEY_RECORDS.add("3500");
     }
 
     // TODO: SPOSTARE IN CLASSE APPOSITA
@@ -75,7 +72,6 @@ public class DisplayRecords extends Display implements MenuDisplay {
         return returnList;
     }*/
 
-    // Use game.utility.sprites.Drawer to load a sprite
     /**
      * {@inheritDoc}
      */

@@ -41,17 +41,17 @@ public final class Records {
     // Data read from game
     private PlayerDeath causeOfDeath;
 
-    private static int playingRecordScore; // higher score obtained by playing consecutively
-    private static boolean newPlayingRecordScore;
+    private static int playingScoreRecord; // higher score obtained by playing consecutively
+    private static boolean newPlayingScoreRecord;
 
-    private final List<Integer> recordScores = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score record
-    private final List<Integer> recordCoins = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score record
+    private final List<Integer> scoreRecords = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score record
+    private final List<Integer> moneyRecords = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score record
 
-    private boolean newRecordScore;
-    private boolean newRecordCoins;
+    private boolean newScoreRecord;
+    private boolean newMoneyRecord;
 
     /*{
-        recordScores.addAll(Collections.nCopies(Records.NUMBER_OF_SAVED_RECORD, Optional.empty()));
+        scoreRecords.addAll(Collections.nCopies(Records.NUMBER_OF_SAVED_RECORD, Optional.empty()));
     }*/
 
     /**
@@ -104,9 +104,9 @@ public final class Records {
             if (!newGameInfo.isGameEnded()) {
 
                 final int score = player.getCurrentScore();
-                final int coins = player.getCurrentCoinsCollected();
+                final int money = player.getCurrentCoinsCollected();
                 //System.out.println(score);
-                newGameInfo.setGameEnded(score, coins);
+                newGameInfo.setGameEnded(score, money);
                 this.fetch(newGameInfo);
             }
             //oldGameInfo = newGameInfo;
@@ -141,7 +141,7 @@ public final class Records {
                 //System.out.println(causeOfDeath);
             }
             this.checkScore(newGameInfo.getFinalScore());
-            this.checkCoins(newGameInfo.getFinalCoinsCollected());
+            this.checkMoney(newGameInfo.getFinalMoney());
             //this.getScore();
         //}
     }
@@ -176,27 +176,27 @@ public final class Records {
 
         //this.score = finalScore;
 
-        if (finalScore > Records.playingRecordScore) {
-            Records.newPlayingRecordScore = true;
-            Records.playingRecordScore = finalScore;
-        } else if (finalScore < Records.playingRecordScore) {
-            Records.newPlayingRecordScore = false;
+        if (finalScore > Records.playingScoreRecord) {
+            Records.newPlayingScoreRecord = true;
+            Records.playingScoreRecord = finalScore;
+        } else if (finalScore < Records.playingScoreRecord) {
+            Records.newPlayingScoreRecord = false;
         }
 
-        if (this.recordScores.size() < Records.getMaxSavedNumberOfRecords()
+        if (this.scoreRecords.size() < Records.getMaxSavedNumberOfRecords()
                 || finalScore > this.getLowestRecordScore()) {
-            this.newRecordScore = true;
-            this.addRecordScore(finalScore);
+            this.newScoreRecord = true;
+            this.addScoreRecord(finalScore);
         } else {
-            this.newRecordScore = false;
+            this.newScoreRecord = false;
         }
 
         //if (finalScore > this.getLowestRecordScore()) {
-           // this.newRecordScore = true;
-        //    this.addRecordScore(finalScore);
+           // this.newScoreRecord = true;
+        //    this.addScoreRecord(finalScore);
             //StatisticsReader.writeRecord(finalScore); // TODO write new record
         //} else if (finalScore < this.recordScore) {
-           // this.newRecordScore = false;
+           // this.newScoreRecord = false;
         //}
     }
 
@@ -207,14 +207,14 @@ public final class Records {
      * @param finalCoinsCollected
      *   final number of coins collected in the current game
      */
-    public void checkCoins(final int finalCoinsCollected) {
+    public void checkMoney(final int finalCoinsCollected) {
 
-        if (this.recordCoins.size() < Records.getMaxSavedNumberOfRecords()
-                || finalCoinsCollected > this.getLowestRecordCoins()) {
-            this.newRecordCoins = true;
-            this.addRecordCoins(finalCoinsCollected);
+        if (this.moneyRecords.size() < Records.getMaxSavedNumberOfRecords()
+                || finalCoinsCollected > this.getLowestMoneyRecord()) {
+            this.newMoneyRecord = true;
+            this.addMoneyRecord(finalCoinsCollected);
         } else {
-            this.newRecordCoins = false;
+            this.newMoneyRecord = false;
         }
     }
 
@@ -268,24 +268,24 @@ public final class Records {
         this.zappedTimes = readZappedTimes;
     }
 
-    public void addRecordScore(final int newRecordScore) {
+    public void addScoreRecord(final int newScoreRecord) {
         //this.recordScores.forEach(System.out::println);
 
-        this.recordScores.add(newRecordScore);
-        this.recordScores.sort(Comparator.reverseOrder());
+        this.scoreRecords.add(newScoreRecord);
+        this.scoreRecords.sort(Comparator.reverseOrder());
 
-        if (this.recordScores.size() > Records.getMaxSavedNumberOfRecords()) {
+        if (this.scoreRecords.size() > Records.getMaxSavedNumberOfRecords()) {
             //System.out.println("ELIMINATO: "
-            //    + this.recordScores.get(Records.getSavedNumberOfRecords()).toString());
-            this.recordScores.remove(Records.getMaxSavedNumberOfRecords());
+            //    + this.scoreRecords.get(Records.getSavedNumberOfRecords()).toString());
+            this.scoreRecords.remove(Records.getMaxSavedNumberOfRecords());
         }
 
         //System.out.println("--");
-        //this.recordScores.stream().forEach(System.out::println);
+        //this.scoreRecords.stream().forEach(System.out::println);
         //System.out.println("--");
     }
 
-    public List<Integer> getRecordScores() {
+    public List<Integer> getScoreRecords() {
         /*final List<Integer> recordScores = new ArrayList<>();
 
         for (final Optional<Integer> record : this.recordScores) {
@@ -293,41 +293,41 @@ public final class Records {
                 recordScores.add(record.get());
             }
         }*/
-        return List.copyOf(this.recordScores);
+        return List.copyOf(this.scoreRecords);
     }
 
-    public void setRecordScores(final List<Integer> recordScores) {
-        this.recordScores.clear();
-        this.recordScores.addAll(recordScores);
+    public void setScoreRecords(final List<Integer> recordScores) {
+        this.scoreRecords.clear();
+        this.scoreRecords.addAll(recordScores);
         /*for (final Integer record : recordScores) {
-                this.recordScores.add(Optional.of(record));
+                this.scoreRecords.add(Optional.of(record));
         }
-        if (recordScores.size() < Records.getMaxSavedNumberOfRecords()) {
-            this.recordScores.addAll(Collections.nCopies(
+        if (this.scoreRecords.size() < Records.getMaxSavedNumberOfRecords()) {
+            this.scoreRecords.addAll(Collections.nCopies(
                     recordScores.size() - Records.NUMBER_OF_SAVED_RECORD,
                     Optional.empty()));
         }*/
     }
 
-    public void addRecordCoins(final int newRecordCoins) {
+    public void addMoneyRecord(final int newMoneyRecord) {
 
-        this.recordCoins.add(newRecordCoins);
-        this.recordCoins.sort(Comparator.reverseOrder());
+        this.moneyRecords.add(newMoneyRecord);
+        this.moneyRecords.sort(Comparator.reverseOrder());
 
-        if (this.recordCoins.size() > Records.getMaxSavedNumberOfRecords()) {
+        if (this.moneyRecords.size() > Records.getMaxSavedNumberOfRecords()) {
             //System.out.println("ELIMINATO: "
-            //    + this.recordCoins.get(Records.getMaxSavedNumberOfRecords()).toString());
-            this.recordCoins.remove(Records.getMaxSavedNumberOfRecords());
+            //    + this.moneyRecords.get(Records.getMaxSavedNumberOfRecords()).toString());
+            this.moneyRecords.remove(Records.getMaxSavedNumberOfRecords());
         }
     }
 
-    public List<Integer> getRecordCoins() {
-        return List.copyOf(this.recordCoins);
+    public List<Integer> getMoneyRecords() {
+        return List.copyOf(this.moneyRecords);
     }
 
-    public void setRecordCoins(final List<Integer> recordCoins) {
-        this.recordCoins.clear();
-        this.recordCoins.addAll(recordCoins);
+    public void setMoneyRecords(final List<Integer> recordCoins) {
+        this.moneyRecords.clear();
+        this.moneyRecords.addAll(recordCoins);
     }
 
     /****************************************/
@@ -348,7 +348,7 @@ public final class Records {
      * @return first element of the highest scores list
      */
     public Integer getHighestScore() {
-        return this.recordScores.get(0);
+        return this.scoreRecords.get(0);
     }
 
     /**
@@ -356,11 +356,11 @@ public final class Records {
      * @return last element of the highest scores list
      */
     private Integer getLowestRecordScore() {
-        if (this.recordScores.isEmpty()) {
+        if (this.scoreRecords.isEmpty()) {
             return 0;
         } else {
-            return this.recordScores.stream().sorted().findFirst().get();
-            //return this.recordScores.get(this.recordScores.size() - 1);
+            return this.scoreRecords.stream().sorted().findFirst().get();
+            //return this.scoreRecords.get(this.recordScores.size() - 1);
         }
     }
 
@@ -368,52 +368,51 @@ public final class Records {
      * Get if the new score is a new highest record.
      * @return true if the new score is a new highest record.
      */
-    public boolean isNewRecordScore() {
-        return this.newRecordScore;
+    public boolean isNewScoreRecord() {
+        return this.newScoreRecord;
     }
 
     /**
      * Get the playing consecutively record score.
      * @return the playing record score
      */
-    public int getPlayingRecordScore() {
-        return Records.playingRecordScore;
+    public int getPlayingScoreRecord() {
+        return Records.playingScoreRecord;
     }
 
     /**
      * Get if the new score is a new playing consecutively record.
      * @return true if the new score is a new playing consecutively record.
      */
-    public boolean isNewPlayingRecordScore() {
-        return Records.newPlayingRecordScore;
+    public boolean isNewPlayingScoreRecord() {
+        return Records.newPlayingScoreRecord;
     }
 
     /**
      * Get coins collected by player given from {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
      * @return player score
      */
-    public int getCoins() {
-        return this.game.getActualGame().getFinalCoinsCollected();
+    public int getMoney() {
+        return this.game.getActualGame().getFinalMoney();
     }
 
     /**
      * Get current highest score obtained by player.
      * @return first element of the highest scores list
      */
-    public Integer getHighestRecordCoins() {
-        return this.recordCoins.get(0);
+    public Integer getHighestMoneyRecord() {
+        return this.moneyRecords.get(0);
     }
 
     /**
      * Get current least score obtained by player.
      * @return last element of the highest scores list
      */
-    private Integer getLowestRecordCoins() {
-        if (this.recordCoins.isEmpty()) {
+    private Integer getLowestMoneyRecord() {
+        if (this.moneyRecords.isEmpty()) {
             return 0;
         } else {
-            return this.recordCoins.stream().sorted().findFirst().get();
-            //return this.recordScores.get(this.recordScores.size() - 1);
+            return this.moneyRecords.stream().sorted().findFirst().get();
         }
     }
 
@@ -421,7 +420,7 @@ public final class Records {
      * Get if the new number of coins collected is a new highest record.
      * @return true if the new number of coins collected is a new highest record.
      */
-    public boolean isNewRecordCoins() {
-        return this.newRecordCoins;
+    public boolean isNewMoneyRecord() {
+        return this.newMoneyRecord;
     }
 }
