@@ -76,7 +76,8 @@ public class JSONWriter extends JSONHandler implements Jsonable {
                // Remove all elements that don't have PSEUDOKEY_RECORD_SCORE string inside key (they don't matter here)
                //.filter(e -> e.getKey().contains(PSEUDOKEY_RECORD_SCORE.replaceAll("[^\\\\]%i", "")))
                //.filter(e -> super.get.stream().anyMatch(x -> x == e.getKey()))
-               .filter(e -> e.getKey().getKey().contains(super.getStringRecordScore()))
+               .filter(e -> e.getKey().getKey().contains(super.getStringScoreRecord())
+                       || e.getKey().getKey().contains(super.getStringMoneyRecord()))
 
                .filter(e -> ((Integer) e.getValue()) == 0)
                  //.forEach(x -> System.out.println(x.getKey() + " - " + x.getValue()));

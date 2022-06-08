@@ -31,12 +31,14 @@ public class JSONHandler {
     private static final List<JsonKey> KEY_LIST = new ArrayList<>();
     private static final Map<JsonKey, Object> RECORDS_MAP = new HashMap<>(Records.getMaxSavedNumberOfRecords());
 
-    //TODO complete list
     // List of keys for JSON files
-    private static final JsonKey PSEUDOKEY_RECORD_SCORE = new FileKey("record%i", 0); // %i represents record index
-    private static final String STRING_RECORD_SCORE = "record";
+    private static final JsonKey PSEUDOKEY_RECORD_LIST = new FileKey("record%i", 0); // %i represents record index
 
-    private static final List<JsonKey> KEY_RECORD_SCORES = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+    private static final String STRING_SCORE_RECORD = "score";
+    private static final String STRING_MONEY_RECORD = "money";
+
+    private static final List<JsonKey> KEY_SCORE_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+    private static final List<JsonKey> KEY_MONEY_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
 
     private static final JsonKey KEY_BURNED = new FileKey("burned", 0);
     private static final JsonKey KEY_ZAPPED = new FileKey("zapped", 0);
@@ -47,21 +49,28 @@ public class JSONHandler {
     static {
         // create all Record Score keys using PSEUDOKEY_RECORD_SCORE and an index
         for (Integer i = 0; i < Records.getMaxSavedNumberOfRecords(); i++) {
-            KEY_RECORD_SCORES.add(new FileKey(
-                    PSEUDOKEY_RECORD_SCORE.getKey().replace("%i", i.toString()),
-                    PSEUDOKEY_RECORD_SCORE.getValue()));
+            KEY_SCORE_RECORDS.add(new FileKey(
+                    PSEUDOKEY_RECORD_LIST.getKey()
+                            .replace("record", STRING_SCORE_RECORD)
+                            .replace("%i", i.toString()),
+                    PSEUDOKEY_RECORD_LIST.getValue()));
+            KEY_MONEY_RECORDS.add(new FileKey(
+                    PSEUDOKEY_RECORD_LIST.getKey()
+                            .replace("record", STRING_MONEY_RECORD)
+                            .replace("%i", i.toString()),
+                    PSEUDOKEY_RECORD_LIST.getValue()));
         }
-        KEY_LIST.addAll(KEY_RECORD_SCORES);
+        KEY_LIST.addAll(KEY_SCORE_RECORDS);
+        KEY_LIST.addAll(KEY_MONEY_RECORDS);
         KEY_LIST.add(KEY_BURNED);
         KEY_LIST.add(KEY_ZAPPED);
-
-        //TODO add missing keys
     }
 
     private void buildMap() {
 
         IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(i -> {
-            RECORDS_MAP.put(KEY_RECORD_SCORES.get(i), 0);
+            RECORDS_MAP.put(KEY_SCORE_RECORDS.get(i), 0);
+            RECORDS_MAP.put(KEY_MONEY_RECORDS.get(i), 0);
         });
         //RECORDS_MAP.forEach((x, y) -> System.out.println(x + " - " + y));
 
@@ -89,9 +98,14 @@ public class JSONHandler {
     protected void download() {
 
         // Refreshes the map
-        final List<Integer> recordsList = this.records.getRecordScores();
-        IntStream.range(0, this.records.getRecordScores().size()).forEach(i -> {
-            RECORDS_MAP.replace(KEY_RECORD_SCORES.get(i), recordsList.get(i));
+        final List<Integer> scoreRecordsList = this.records.getScoreRecords();
+        IntStream.range(0, this.records.getScoreRecords().size()).forEach(i -> {
+            RECORDS_MAP.replace(KEY_SCORE_RECORDS.get(i), scoreRecordsList.get(i));
+        });
+
+        final List<Integer> moneyRecordsList = this.records.getMoneyRecords();
+        IntStream.range(0, this.records.getMoneyRecords().size()).forEach(i -> {
+            RECORDS_MAP.replace(KEY_MONEY_RECORDS.get(i), moneyRecordsList.get(i));
         });
 
         RECORDS_MAP.replace(KEY_BURNED, this.records.getBurnedTimes());
@@ -107,16 +121,26 @@ public class JSONHandler {
      */
     protected void upload(final JsonObject json) {
 
-        final List<Integer> recordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+        final List<Integer> scoreRecordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+        final List<Integer> moneyRecordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
 
-        // Overwrites the map
+        // Overwrites the score map
         IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(x -> {
-            final int receivedValue = json.getIntegerOrDefault(KEY_RECORD_SCORES.get(x));
-            if (receivedValue != (int) PSEUDOKEY_RECORD_SCORE.getValue()) {
-                recordsReadList.add(x, receivedValue);
+            final int receivedValue = json.getIntegerOrDefault(KEY_SCORE_RECORDS.get(x));
+            if (receivedValue != (int) PSEUDOKEY_RECORD_LIST.getValue()) {
+                scoreRecordsReadList.add(x, receivedValue);
             }
         });
-        records.setRecordScores(recordsReadList);
+        // Overwrites the money map
+        IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(x -> {
+            final int receivedValue = json.getIntegerOrDefault(KEY_MONEY_RECORDS.get(x));
+            if (receivedValue != (int) PSEUDOKEY_RECORD_LIST.getValue()) {
+                moneyRecordsReadList.add(x, receivedValue);
+            }
+        });
+
+        records.setScoreRecords(scoreRecordsReadList);
+        records.setMoneyRecords(moneyRecordsReadList);
 
         records.setBurnedTimes(json.getInteger(KEY_BURNED));
         records.setZappedTimes(json.getInteger(KEY_ZAPPED));
@@ -137,11 +161,19 @@ public class JSONHandler {
     }
 
     /**
-     * This method is used to get record base string used to form related keys.
-     * @return {@link String} JSONHandler.STRING_RECORD_SCORE
+     * This method is used to get record score base string used to form related keys.
+     * @return {@link String} JSONHandler.STRING_SCORE_RECORD
      */
-    protected static String getStringRecordScore() {
-        return JSONHandler.STRING_RECORD_SCORE;
+    protected static String getStringScoreRecord() {
+        return JSONHandler.STRING_SCORE_RECORD;
+    }
+
+    /**
+     * This method is used to get record money base string used to form related keys.
+     * @return {@link String} JSONHandler.STRING_MONEY_RECORD
+     */
+    protected static String getStringMoneyRecord() {
+        return JSONHandler.STRING_MONEY_RECORD;
     }
 
     /**
