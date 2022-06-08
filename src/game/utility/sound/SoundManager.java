@@ -9,36 +9,60 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import game.utility.other.Sound;
+
 public class SoundManager {
+    /**
+     * maximum and minimum level for audio
+     */
+    public static final int MAX_LEVEL = 4;
+    public static final int MIN_LEVEL = 0;
     private static final String SEPARATOR = System.getProperty("file.separator");
     /**
      * absolute path of the directory containing all game's fonts.
      */
     public static final String DEFAULT_DIR = System.getProperty("user.dir") + SEPARATOR
-            + "res" + SEPARATOR + "game" + SEPARATOR + "music" + SEPARATOR + "MainTheme.wav";
+            + "res" + SEPARATOR + "game" + SEPARATOR + "sound"+ SEPARATOR;
 
-    Clip clip;
-    FloatControl fControl;
-    public static final int MAX_LEVEL = 4;
-    public static final int MIN_LEVEL = 0;
+    private Clip clip;
+    private FloatControl fControl;
     private int volumeLevel = 2;
-    float volume;
+    private float volume;
+    private Sound currentSound;
 
-    private void setTrack() {
+
+    public SoundManager(Sound currentSound) {
+        super();
+        this.currentSound = currentSound;
+        this.setTrack(currentSound);
+    }
+
+    private void setTrack(Sound sound) {
         try {
-            clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(new File(DEFAULT_DIR)));
-            fControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+            this.clip = AudioSystem.getClip();
+            this.clip.open(AudioSystem.getAudioInputStream(
+                    new File(DEFAULT_DIR + sound.getFileName())));
+            this.fControl = (FloatControl)this.clip.getControl(FloatControl.Type.MASTER_GAIN);
             updateVolume();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    public void playMainTheme() {
-        setTrack();
+    public void play(Sound sound) {
+        if(currentSound.equals(sound)) {
+            setTrack(sound);
+        }
+        clip.start();
+    }
+
+    public void playInLoop(Sound sound) {
+        if(currentSound.equals(sound)) {
+            setTrack(sound);
+        }
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         clip.start();
+
     }
 
     public void stop() {
@@ -63,15 +87,15 @@ public class SoundManager {
         }
     }
 
-    public void updateVolume() {
+    private void updateVolume() {
         switch (this.volumeLevel) {
             case 0: volume = -80f; break;
-            case 1: volume = -30f; break;
-            case 2: volume = -20f; break;
+            case 1: volume = -25f; break;
+            case 2: volume = -15f; break;
             case 3: volume = -10f; break;
             case 4: volume = -5f; break;
             default: break;
         }
-        fControl.setValue(volume);
+        this.fControl.setValue(volume);
     }
 }
