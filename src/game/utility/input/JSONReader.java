@@ -1,5 +1,6 @@
 package game.utility.input;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -53,12 +54,15 @@ public class JSONReader extends JSONHandler {
             Reader reader = new FileReader(super.getFile());
         ) {
             this.fromJson(reader);
+            super.upload(json);
+        } catch (FileNotFoundException e1) {
+            // TODO Auto-generated catch block
+            System.err.println("File record non esistente...");
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
-       super.upload(json);
     }
 
     /**
