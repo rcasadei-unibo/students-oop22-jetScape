@@ -4,10 +4,12 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
+import game.frame.GameWindow;
 import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.MenuOption;
+import game.utility.other.Sound;
 /**
  * The {@link MenuHandler} class manages {@link Display} menus.
  */
@@ -54,14 +56,17 @@ public class MenuHandler implements DisplayHandler {
             case KeyEvent.VK_UP :
                 this.goUp();
                 keyH.resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_DOWN:
                 this.goDown();
                 keyH.resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_ENTER:
                 this.setGameState.accept(this.selectedOption.getOptionsGS());
                 keyH.resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             default:
                 break;

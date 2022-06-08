@@ -7,7 +7,8 @@ import game.frame.GameWindow;
 import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
-import game.utility.other.MenuOption;
+import game.utility.other.Sound;
+
 
 public class SettingsHandler extends MenuHandler {
 
@@ -24,22 +25,27 @@ public class SettingsHandler extends MenuHandler {
             case KeyEvent.VK_UP :
                 this.goUp();
                 super.getKeyH().resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_DOWN:
                 this.goDown();
                 super.getKeyH().resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_LEFT:
                 this.lower();
                 super.getKeyH().resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_RIGHT:
                 this.raise();
                 super.getKeyH().resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_ENTER:
                 super.getSetGameState().accept(super.getSelectedOption().getOptionsGS());
                 super.getKeyH().resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             default:
                 break;
@@ -47,14 +53,28 @@ public class SettingsHandler extends MenuHandler {
     }
 
     private void lower() {
-        if(super.getSelectedOption().equals(MenuOption.MUSIC)){
-            GameWindow.GAME_SOUND.lowerVolumeLevel();
+        switch(super.getSelectedOption()){
+            case MUSIC:
+                GameWindow.GAME_MUSIC.lowerVolumeLevel();
+                break;
+            case SOUND:
+                GameWindow.GAME_SOUND.lowerVolumeLevel();
+                break;
+            default:
+                break;
         }
     }
 
     private void raise() {
-        if(super.getSelectedOption().equals(MenuOption.MUSIC)){
+        switch(super.getSelectedOption()){
+        case MUSIC:
+            GameWindow.GAME_MUSIC.raiseVolumeLevel();
+            break;
+        case SOUND:
             GameWindow.GAME_SOUND.raiseVolumeLevel();
-         }
+            break;
+        default:
+            break;
+    }
     }
 }

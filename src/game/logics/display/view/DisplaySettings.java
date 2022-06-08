@@ -49,6 +49,9 @@ public class DisplaySettings extends Display {
                 gScreen.getTileSize() * RECTANGLE_WIDTH, gScreen.getTileSize()/2);
         g.fillRect(gScreen.getTileSize() * RECTANGLE_XTILE,
                 (int) (gScreen.getTileSize() * 3.5),
+                gScreen.getTileSize() * GameWindow.GAME_MUSIC.getVolumeLevel(), gScreen.getTileSize()/2);
+        g.fillRect(gScreen.getTileSize() * RECTANGLE_XTILE,
+                (int) (gScreen.getTileSize() * 5.5),
                 gScreen.getTileSize() * GameWindow.GAME_SOUND.getVolumeLevel(), gScreen.getTileSize()/2);
     }
 
