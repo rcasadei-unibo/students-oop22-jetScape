@@ -191,6 +191,7 @@ public class PlayerInstance extends EntityInstance implements Player {
                 break;
             case COIN:
                 this.coins++;
+                this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
                 break;
             default:
                 break;
