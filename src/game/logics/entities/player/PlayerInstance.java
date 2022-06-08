@@ -17,6 +17,7 @@ import game.logics.interactions.CollisionsHandler;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
+import game.utility.other.Sound;
 
 /**
  * The {@link PlayerInstance} class represents the player's entity in
@@ -176,6 +177,7 @@ public class PlayerInstance extends EntityInstance implements Player {
                 break;
             case ZAPPER:
                 this.obstacleHit(PlayerStatus.ZAPPED);
+                GameWindow.GAME_SOUND.play(Sound.ZAPPED);
                 break;
             case SHIELD:
                 this.shieldProtected = true;

@@ -28,12 +28,9 @@ public class SoundManager {
     private FloatControl fControl;
     private int volumeLevel = 2;
     private float volume;
-    private Sound currentSound;
-
 
     public SoundManager(Sound currentSound) {
         super();
-        this.currentSound = currentSound;
         this.setTrack(currentSound);
     }
 
@@ -50,16 +47,12 @@ public class SoundManager {
     }
 
     public void play(Sound sound) {
-        if(currentSound.equals(sound)) {
-            setTrack(sound);
-        }
+        setTrack(sound);
         clip.start();
     }
 
     public void playInLoop(Sound sound) {
-        if(currentSound.equals(sound)) {
-            setTrack(sound);
-        }
+        setTrack(sound);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         clip.start();
 
