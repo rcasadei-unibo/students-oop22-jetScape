@@ -8,6 +8,7 @@ import game.logics.handler.LogicsHandler;
 import game.utility.debug.Debugger;
 import game.utility.fonts.FontLoader;
 import game.utility.input.keyboard.KeyHandler;
+import game.utility.other.Sound;
 import game.utility.screen.Screen;
 import game.utility.screen.ScreenHandler;
 import game.utility.sound.SoundManager;
@@ -86,10 +87,13 @@ public class GameWindow extends JPanel implements Runnable {
      */
     public static final Debugger GAME_DEBUGGER = new Debugger(GameHandler.DEBUG_MODE);
     /**
-     * Manages in game sounds and music.
+     * Manages in game music.
      */
-    public static final SoundManager GAME_SOUND = new SoundManager();
-
+    public static final SoundManager GAME_MUSIC = new SoundManager(Sound.MAIN_THEME);
+    /**
+     * Manages in game sound.
+     */
+    public static final SoundManager GAME_SOUND = new SoundManager(Sound.MENU_SELECTION);
     /**
      * Handles the logic part of the game (entities, interface, game state, etc). 
      */
@@ -126,7 +130,7 @@ public class GameWindow extends JPanel implements Runnable {
      */
     public void startGame() {
         gameRunning = true;
-        GAME_SOUND.playMainTheme();
+        GAME_MUSIC.playInLoop(Sound.MAIN_THEME);
         gameLoop.start();
     }
 
@@ -135,7 +139,7 @@ public class GameWindow extends JPanel implements Runnable {
      */
     public void stopGame() {
         gameRunning = false;
-        GAME_SOUND.stop();
+        GAME_MUSIC.stop();
     }
 
     /**
