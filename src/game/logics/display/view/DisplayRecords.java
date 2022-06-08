@@ -3,13 +3,13 @@ package game.logics.display.view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+//import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
+import game.logics.records.Records;
 import game.utility.other.MenuOption;
+
 
 /**
  * <p>This class is used to display statistics and records.</p>
@@ -17,49 +17,66 @@ import game.utility.other.MenuOption;
  * <p>This class extends {@link Display}.</p>
  */
 public class DisplayRecords extends Display implements MenuDisplay {
+
     private static final int OPTION_TILE = 8;
     private static final String TITLE = "Records";
     private static final String RECORDS1 = "Length";
     private static final String RECORDS2 = "Money";
 
-    //TODO: SPOSTARE
-    //private static final List<String> lengthRecords = new ArrayList<>();
-    //private static final List<String> moneyRecords = new ArrayList<>();
-    private static final Set<String> LENGTH_RECORDS = new HashSet<>();
-    private static final Set<String> MONEY_RECORDS = new HashSet<>();
+    private final Records records;
+
+    private static final List<String> LENGTH_RECORDS = new ArrayList<>();
+    //private static final List<String> MONEY_RECORDS = new ArrayList<>();
 
     /**
      * {@link DisplayRecords} constructor: add options to be shown.
      *
+     * @param records Object of type {@link Records} used to read what have to be displayed
      */
-    public DisplayRecords() {
+    public DisplayRecords(final Records records) {
+
         super();
+        this.records = records;
 
         this.getOptions().add(MenuOption.MENU);
 
-        // TODO: remove these
-        DisplayRecords.LENGTH_RECORDS.add("1235");
-        DisplayRecords.LENGTH_RECORDS.add("150");
-        DisplayRecords.LENGTH_RECORDS.add("1500");
+        this.fetch();
+    }
 
-        DisplayRecords.MONEY_RECORDS.add("3500");
+    private void fetch() {
+        DisplayRecords.LENGTH_RECORDS.clear();
+
+        this.records.getRecordScores().forEach(x -> {
+            DisplayRecords.LENGTH_RECORDS.add(x.toString());
+        });
+
+        /*
+        this.records.getRecordScores().stream()
+                .map(s -> s.toString())
+                //.peek(System.out::println)
+                .peek(DisplayRecords.LENGTH_RECORDS::add)
+                //.peek(System.out::println)
+                .close();*/
+
+        //TODO remove
+        //DisplayRecords.MONEY_RECORDS.add("3500");
     }
 
     // TODO: SPOSTARE IN CLASSE APPOSITA
-    private List<String> listify(final Set<String> set) {
+    /*private List<String> listify(final Set<String> set) {
         final List<String> returnList = new ArrayList<>();
         returnList.addAll(List.copyOf(set));
         Collections.sort(returnList);
         return returnList;
-    }
+    }*/
 
-    //game.utility.sprites.Drawer per caricare una sprite
+    // Use game.utility.sprites.Drawer to load a sprite
     /**
      * {@inheritDoc}
      */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
-        int i;
 
+        this.fetch();
         this.setSelectedOption(selected);
 
         // TITLE
@@ -67,23 +84,28 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
         // RECORDS
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS1,
-                x -> x - getGameScreen().getWidth() / 4, getGameScreen().getTileSize() * 3, 0);
+                x -> x - super.getGameScreen().getWidth() / 4,
+                super.getGameScreen().getTileSize() * 3, 0);
 
-        final List<String> recordList = this.listify(DisplayRecords.LENGTH_RECORDS);
-        for (i = 0; i < recordList.size(); i++) {
+        //final List<String> recordList = this.listify(DisplayRecords.LENGTH_RECORDS);
+        final List<String> recordList = DisplayRecords.LENGTH_RECORDS;
+
+        for (int i = 0; i < recordList.size(); i++) {
             super.drawText(g, super.getTextFont(), recordList.get(i),
-                    getGameScreen().getTileSize() * 3, getGameScreen().getTileSize() * (3 + i + 1), 0);
+                    super.getGameScreen().getTileSize() * 3,
+                    super.getGameScreen().getTileSize() * (3 + i + 1), 0);
         }
 
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS2,
-                x -> x + getGameScreen().getWidth() / 4, getGameScreen().getTileSize() * 3, 0);
+                x -> x + super.getGameScreen().getWidth() / 4,
+                super.getGameScreen().getTileSize() * 3, 0);
 
-        final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
-        for (i = 0; i < moneyList.size(); i++) {
+        /*final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
+        for (int i = 0; i < moneyList.size(); i++) {
             super.drawText(g, super.getTextFont(), moneyList.get(i),
-                    getGameScreen().getTileSize() * 3 + getGameScreen().getWidth() / 2,
-                    getGameScreen().getTileSize() * (3 + i + 1), 0);
-        }
+                    super.getGameScreen().getTileSize() * 3 + super.getGameScreen().getWidth() / 2,
+                    super.getGameScreen().getTileSize() * (3 + i + 1), 0);
+        }*/
 
         //OPTIONS
         super.drawOptions(g, DisplayRecords.OPTION_TILE);

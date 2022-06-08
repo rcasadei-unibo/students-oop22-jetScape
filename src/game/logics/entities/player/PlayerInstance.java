@@ -3,7 +3,6 @@ package game.logics.entities.player;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.Graphics2D;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,7 +26,7 @@ import game.utility.other.Pair;
 public class PlayerInstance extends EntityInstance implements Player {
 
     /**
-     * Specifies the path within the sprite folder [specified in {@link Sprite} class]
+     * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
      * where {@link PlayerInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "player" + System.getProperty("file.separator");
@@ -53,7 +52,7 @@ public class PlayerInstance extends EntityInstance implements Player {
     /**
      * The horizontal position where the player will be.
      */
-    public static final double X_POSITION = GameWindow.GAME_SCREEN.getTileSize() * X_RELATIVE_POSITION;
+    private static final double X_POSITION = GameWindow.GAME_SCREEN.getTileSize() * X_RELATIVE_POSITION;
     private final Pair<Double, Double> shieldPosition = new Pair<>(0.0, 0.0);
 
     private boolean shieldProtected;
@@ -95,8 +94,13 @@ public class PlayerInstance extends EntityInstance implements Player {
     private final KeyHandler keyH;
     private final CollisionsHandler hitChecker;
 
+    /**
+     * A enumerable describing the current status of the player.
+     */
     private PlayerStatus status;
     private boolean statusChanged;
+
+    private PlayerDeath causeOfDeath;
 
     /**
      * Constructor used for initializing basic parts of the player entity.
@@ -105,18 +109,20 @@ public class PlayerInstance extends EntityInstance implements Player {
      * @param entities the map where all current active entities are contained
      */
     public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
+
         super(l, new Pair<>(X_POSITION, Y_LOW_LIMIT), EntityType.PLAYER);
         this.keyH = GameWindow.GAME_KEYHANDLER;
 
-        fallSpeed = BASE_FALL_SPEED / GameWindow.FPS_LIMIT;
-        jumpSpeed = BASE_JUMP_SPEED / GameWindow.FPS_LIMIT;
+        this.fallSpeed = BASE_FALL_SPEED / GameWindow.FPS_LIMIT;
+        this.jumpSpeed = BASE_JUMP_SPEED / GameWindow.FPS_LIMIT;
 
         this.setHitbox(new PlayerHitbox(this.getPosition()));
         hitChecker = new CollisionsHandler(entities, this);
 
-        status = PlayerStatus.WALK;
+        this.status = PlayerStatus.WALK;
 
         final var spritesMgr = this.getSpriteManager();
+
         spritesMgr.setPlaceH(PLACE_HOLDER);
         spritesMgr.addSprite("walk1", SPRITE_PATH + "barrywalk1.png");
         spritesMgr.addSprite("walk2", SPRITE_PATH + "barrywalk2.png");
@@ -157,7 +163,8 @@ public class PlayerInstance extends EntityInstance implements Player {
                 this.shieldProtected = false;
                 return;
             }
-            setStatus(statusAfterHit);
+            this.setStatus(statusAfterHit);
+            this.setCauseOfDeath(statusAfterHit);
         }
     }
 
@@ -196,7 +203,9 @@ public class PlayerInstance extends EntityInstance implements Player {
     private void jump() {
         fallMultiplier = INITIAL_FALL_MULTIPLIER;
 
-        this.getPosition().setY(this.getPosition().getY() - jumpSpeed * jumpMultiplier > Y_TOP_LIMIT ? this.getPosition().getY() - jumpSpeed * jumpMultiplier : Y_TOP_LIMIT);
+        this.getPosition().setY(this.getPosition().getY() - jumpSpeed * jumpMultiplier > Y_TOP_LIMIT
+                ? this.getPosition().getY() - jumpSpeed * jumpMultiplier
+                : Y_TOP_LIMIT);
         setStatus(PlayerStatus.JUMP);
     }
 
@@ -219,33 +228,6 @@ public class PlayerInstance extends EntityInstance implements Player {
             setStatus(fall() ? PlayerStatus.FALL : PlayerStatus.LAND);
             fallMultiplier += FALL_MULTIPLIER_INCREASE;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public int getCurrentScore() {
-        return this.score;
-    }
-    /**
-     * {@inheritDoc}
-     */
-    public boolean hasDied() {
-        return status == PlayerStatus.DEAD;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void reset() {
-        super.reset();
-        setStatus(PlayerStatus.WALK);
-        score = 0;
-        frameTime = 0;
-
-        invulnerable = false;
-        shieldProtected = false;
     }
 
     /**
@@ -288,6 +270,56 @@ public class PlayerInstance extends EntityInstance implements Player {
             this.score++;
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getCurrentScore() {
+        return this.score;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasDied() {
+        return status == PlayerStatus.DEAD;
+    }
+
+    private void setCauseOfDeath(final PlayerStatus deathCause) {
+        switch (deathCause) {
+            case BURNED:
+                causeOfDeath = Player.PlayerDeath.BURNED;
+                break;
+            case ZAPPED:
+                causeOfDeath = Player.PlayerDeath.ZAPPED;
+                break;
+            default:
+                causeOfDeath = Player.PlayerDeath.NONE;
+                break;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Player.PlayerDeath getCauseOfDeath() {
+        return this.causeOfDeath;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        super.reset();
+        setStatus(PlayerStatus.WALK);
+        score = 0;
+        frameTime = 0;
+
+        invulnerable = false;
+        shieldProtected = false;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -313,6 +345,7 @@ public class PlayerInstance extends EntityInstance implements Player {
         this.getHitbox().updatePosition(this.getPosition());
         this.hitChecker.interact(e -> checkHit(e));
     }
+
     /**
      * {@inheritDoc}
      */
@@ -328,28 +361,5 @@ public class PlayerInstance extends EntityInstance implements Player {
             }
         }
     }
-
-    /**
-     * A enumerable describing the current status of the player.
-     */
-    private enum PlayerStatus { 
-        WALK, LAND, FALL, JUMP, ZAPPED, BURNED, DEAD;
-
-        public boolean isInDyingAnimation() {
-            switch (this) {
-                case ZAPPED:
-                    return true;
-                case BURNED:
-                    return true;
-                case DEAD:
-                    return true;
-                default:
-                    break;
-            }
-            return false;
-        }
-        public String toString() {
-            return super.toString().toLowerCase(Locale.ENGLISH);
-        }
-    }
 }
+

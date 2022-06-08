@@ -38,8 +38,9 @@ public class DisplayHUD extends Display {
         final String scoreString = "SCORE: " + this.score;
 
         // SCORE
-        super.drawText(g, scoreFont, scoreString, getGameScreen().getTileSize() * TEXT_X_TILE,
-                getGameScreen().getTileSize() * SCORE_TILE, SCORE_SHIFT);
+        super.drawText(g, scoreFont, scoreString,
+                super.getGameScreen().getTileSize() * TEXT_X_TILE,
+                super.getGameScreen().getTileSize() * SCORE_TILE, SCORE_SHIFT);
     }
 
     /**

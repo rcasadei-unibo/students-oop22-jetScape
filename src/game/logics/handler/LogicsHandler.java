@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 
 import game.frame.GameHandler;
 import game.frame.GameWindow;
+
 import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
@@ -28,9 +29,15 @@ import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
+
 import game.logics.display.controller.DisplayController;
+
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
+
+import game.logics.handler.Logics.GameInfoHandler;
+import game.logics.records.Records;
+
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
@@ -43,6 +50,7 @@ import game.utility.other.GameState;
  * 
  */
 public class LogicsHandler extends AbstractLogics implements Logics {
+
     /**
      * Contains the current active entities on the game environment.
      */
@@ -54,6 +62,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     private final Generator spawner;
 
     private final DisplayController displayController;
+
     private GameState gameState = GameState.MENU;
 
     /**
@@ -63,6 +72,9 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
     private final KeyHandler keyH;
     private final Debugger debugger;
+
+    private static Records records;
+    private static GameInfoHandler game;
 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -76,18 +88,24 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.debugger = GameWindow.GAME_DEBUGGER;
 
         EntityType.ALL_ENTITY_TYPE
-        .forEach(e -> entities.put(e, new HashSet<>()));
+                .forEach(e -> entities.put(e, new HashSet<>()));
+
+        game = new GameInfoHandler(new GameInfo());
 
         playerEntity = new PlayerInstance(this, entities);
 
+        records = new Records(game, playerEntity);
+
         displayController = new DisplayController(keyH, g -> setGameState(g),
-                () -> gameState, () -> playerEntity.getCurrentScore());
+                () -> gameState, () -> playerEntity.getCurrentScore(),
+                () -> game.getActualGame(), records);
 
         spawner = new TileGenerator(entities, super.getSpawningInteval());
         this.initializeSpawner();
     }
 
     private void initializeSpawner() {
+
         spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.MISSILE)));
         spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, super.getEntityMovementInfo(EntityType.ZAPPERBASE)));
         spawner.setZapperRayCreator((b, p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
@@ -150,7 +168,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     }
 
     /**
-     * Removes all entities that are on the "clear area" [x < -tile size].
+     * Removes all entities that are on the "clear area" [x &lt; - tile size].
      */
     private void updateCleaner() {
         if (super.getFrameTime() % GameWindow.FPS_LIMIT * super.getCleanerActivityInterval() == 0) {
@@ -165,6 +183,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     }
 
     private void drawDifficultyLevel(final Graphics2D g) {
+
         final int difficultyMeterXLocation = 3;
         final int difficultyMeterYLocation = 26;
 
@@ -199,10 +218,16 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     this.quitGame();
                     break;
                 case INGAME:
-                    if (this.gameState == GameState.ENDGAME) {
+                    if (this.gameState != GameState.PAUSED) {
+                        LogicsHandler.game.setActualGame(new GameInfo(LogicsHandler.game));
+                        //this.gameID.generateNewGameUID();
+                    }
+                    if (this.gameState == GameState.ENDGAME) { // RETRY
+                        LogicsHandler.records.refresh();
                         this.resetGame();
                     } else if (this.gameState == GameState.MENU) {
                         entities.get(EntityType.PLAYER).add(playerEntity);
+                        LogicsHandler.records.refresh();
                     }
                     spawner.resume();
                     break;
@@ -214,12 +239,22 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case ENDGAME:
                     spawner.stop();
+                    //this.gameOverDisplay.setRecords(getScore.get());
+                    //this.records.fetch(this.getGame);
+                    LogicsHandler.records.announceGameEnded(() -> game.getActualGame());
+                    /*for (final Integer record : LogicsHandler.records.getRecordScores()) {
+                        System.out.println(record);
+                    }*/
+                    LogicsHandler.records.update();
                     break;
                 case PAUSED:
                     if (this.gameState != GameState.INGAME) {
                         return;
                     }
                     spawner.pause();
+                    break;
+                case RECORDS:
+                    LogicsHandler.records.refresh();
                     break;
                 default:
                     break;
@@ -269,6 +304,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case INGAME:
                 synchronized (entities) {
                     entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
+
                     entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
                     entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
@@ -280,5 +316,5 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         }
         this.displayController.drawScreen(g);
     }
-
 }
+

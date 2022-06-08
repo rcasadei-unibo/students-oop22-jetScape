@@ -11,7 +11,7 @@ import game.utility.debug.Debugger;
 import game.utility.other.EntityType;
 
 /**
- * The {@link CollisionsHandler} class helps {@link LogicsHandler} to manage
+ * The {@link CollisionsHandler} class helps {@link game.logics.handler.LogicsHandler LogicsHandler} to manage
  * collision between player and various entities.
  */ 
 public class CollisionsHandler {

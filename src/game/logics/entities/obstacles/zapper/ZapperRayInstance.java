@@ -24,7 +24,7 @@ import game.utility.other.Pair;
 public class ZapperRayInstance extends ObstacleInstance implements ZapperRay {
 
     /**
-     * Specifies the path within the sprite folder [specified in {@link Sprite} class]
+     * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
      * where {@link ZapperRayInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "zapperray" + System.getProperty("file.separator");

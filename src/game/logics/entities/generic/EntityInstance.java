@@ -14,6 +14,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 /**
+
  * The abstract class {@link EntityInstance} is used to define all the common parts of each entity
  * like their position, entity relationship, visibility, on screen presence, etc...
  */
@@ -21,11 +22,14 @@ public abstract class EntityInstance implements Entity {
     /**
      * Defines the entity's position on the game environment. 
      */
+
     private final Pair<Double, Double> position;
+
     /**
      * Defines the entity's starting position.
      */
     private final Pair<Double, Double> startPos;
+
     /**
      * Defines the entity's type category.
      */
@@ -44,8 +48,8 @@ public abstract class EntityInstance implements Entity {
 
     /**
      * Constructor that sets up entity default values (picked up from 
-     * {@link Logics}), defines it's bounds in the environment and allows to set it's
-     * starting position.
+     * {@link Logics}), defines it's bounds in the environment and allows to set
+     * it's starting position.
      * 
      * @param l the logics handler which the entity is linked to
      * @param position the starting position of the entity in the environment
@@ -56,6 +60,8 @@ public abstract class EntityInstance implements Entity {
         this.position = position;
         this.startPos = position.copy();
         this.entityTag = type;
+
+        this.setVisibility(true);
     }
 
     /**
@@ -63,9 +69,10 @@ public abstract class EntityInstance implements Entity {
      * 
      * @param v <code>true</code> if entity has to be shown, <code>false</code> if entity has to be hidden
      */
-    protected void setVisibility(final boolean v) {
+    protected final void setVisibility(final boolean v) {
         visible = v;
     }
+
     /**
      * Allows to set the main {@link Hitbox} of the entity.
      * 
@@ -136,6 +143,7 @@ public abstract class EntityInstance implements Entity {
         position.setX(startPos.getX());
         position.setY(startPos.getY());
     }
+
     /**
      * {@inheritDoc}
      */
@@ -148,7 +156,9 @@ public abstract class EntityInstance implements Entity {
      * Updates the entity's flags.
      */
     private void updateFlags() {
-        if (position.getX() >= -GameWindow.GAME_SCREEN.getTileSize() && position.getX() <= GameWindow.GAME_SCREEN.getWidth() && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
+        if (position.getX() >= -GameWindow.GAME_SCREEN.getTileSize()
+                && position.getX() <= GameWindow.GAME_SCREEN.getWidth()
+                && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
             onScreen = true;
             onClearArea = false;
             onSpawnArea = false;

@@ -22,7 +22,7 @@ import game.utility.other.Pair;
  * obstacles during the game.
  * 
  * {@link TileGenerator} works on a separated thread which can be manually
- * controlled by the {@link LogicsHandler}.
+ * controlled by the {@link game.logics.handler.LogicsHandler LogicsHandler}.
  * 
  */
 public interface Generator extends Runnable {

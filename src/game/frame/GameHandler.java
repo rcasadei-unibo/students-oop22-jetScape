@@ -37,10 +37,12 @@ public class GameHandler implements Game {
      *  Starting debug mode.
      */
     public static final boolean DEBUG_MODE = false;
+
     /**
      * The {@link JFrame} where the game window will be contained.
      */
     public static final JFrame GAME_FRAME = new JFrame();
+
     /**
      * The {@link GameWindow} where the game will run.
      */

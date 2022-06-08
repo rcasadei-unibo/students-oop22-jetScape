@@ -43,6 +43,7 @@ public class ZapperInstance implements Zapper {
         }
         return base1;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -58,6 +59,7 @@ public class ZapperInstance implements Zapper {
         entities.add(base2);
         return entities;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -65,6 +67,7 @@ public class ZapperInstance implements Zapper {
     public SpeedHandler getSpeedHandler() {
         return base1.getSpeedHandler();
     }
+
     /**
      * {@inheritDoc}
      */
@@ -72,6 +75,7 @@ public class ZapperInstance implements Zapper {
     public Pair<Double, Double> getPosition() {
         return base1.getPosition();
     }
+
     /**
      * {@inheritDoc}
      */
@@ -79,6 +83,7 @@ public class ZapperInstance implements Zapper {
     public EntityType entityType() {
         return EntityType.ZAPPER;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -94,6 +99,7 @@ public class ZapperInstance implements Zapper {
         }
         return true;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -109,6 +115,7 @@ public class ZapperInstance implements Zapper {
         }
         return true;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -124,6 +131,7 @@ public class ZapperInstance implements Zapper {
         }
         return true;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -139,6 +147,7 @@ public class ZapperInstance implements Zapper {
         }
         return true;
     }
+
     /**
      * {@inheritDoc}
      */
@@ -146,6 +155,7 @@ public class ZapperInstance implements Zapper {
     public Hitbox getHitbox() {
         return this.hitbox;
     }
+
     /**
     * {@inheritDoc}
     */
@@ -154,6 +164,7 @@ public class ZapperInstance implements Zapper {
         base2.clean();
         rays.forEach(r -> r.clean());
     }
+
     /**
      * {@inheritDoc}
      */
@@ -162,6 +173,7 @@ public class ZapperInstance implements Zapper {
         base2.reset();
         rays.forEach(r -> r.reset());
     }
+
     /**
      * {@inheritDoc}
      */
@@ -171,6 +183,7 @@ public class ZapperInstance implements Zapper {
         base2.update();
         rays.forEach(r -> r.update());
     }
+
     /**
      * {@inheritDoc}
      */
@@ -180,6 +193,7 @@ public class ZapperInstance implements Zapper {
         base2.draw(g);
         rays.forEach(r -> r.draw(g));
     }
+
     /**
      * {@inheritDoc}
      */
@@ -189,6 +203,7 @@ public class ZapperInstance implements Zapper {
         base2.drawCoordinates(g);
         rays.forEach(r -> r.drawCoordinates(g));
     }
+
     /**
      * {@inheritDoc}
      */

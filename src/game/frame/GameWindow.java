@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link GameWindow} class manages both the panel representing 
+ * The <code>GameWindow</code> class manages both the panel representing 
  * the game window and the execution of the game.
  * 
  * <p>
@@ -60,7 +60,12 @@ public class GameWindow extends JPanel implements Runnable {
      * 
      */
     public static final int FPS_LIMIT = 60;
+
+    /**
+     * Game FPS (Frame Per Second).
+     */
     private int fps;
+
     private final List<Long> drawTimePerFrame = new ArrayList<>();
     private long averageDrawTime;
 
@@ -91,6 +96,10 @@ public class GameWindow extends JPanel implements Runnable {
     private final transient Logics logH;
 
     private final transient Thread gameLoop = new Thread(this);
+
+    /**
+     * Indicates if the thread is set to be active or not.
+     */
     private boolean gameRunning;
 
     /**

@@ -18,7 +18,7 @@ import game.utility.other.Pair;
 public class TeleportInstance extends PickupInstance implements Teleport {
 
     /**
-     * Specifies the path within the sprite folder [specified in {@link Sprite} class]
+     * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
      * where {@link TeleportInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "teleport" + System.getProperty("file.separator");

@@ -52,6 +52,7 @@ public abstract class PickupInstance extends EntityInstance implements Pickup {
         super.reset();
         movement.resetSpeed();
     }
+
     /**
      * {@inheritDoc}
      */

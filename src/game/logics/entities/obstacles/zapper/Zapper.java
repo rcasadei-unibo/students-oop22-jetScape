@@ -20,10 +20,12 @@ public interface Zapper extends Obstacle {
      * @return the other {@link ZapperBase} paired
      */
     ZapperBase getPaired(ZapperBase z);
+
     /**
      * @return the {@link Pair} of {@link ZapperBase} contained in {@link ZapperInstance}
      */
     Pair<ZapperBase, ZapperBase> getBothBases();
+
     /**
      * @return a {@link Set} contain all the {@link ZapperBase} and {@link ZapperRay} contained in {@link Zapper}
      */

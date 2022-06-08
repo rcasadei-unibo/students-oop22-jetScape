@@ -22,7 +22,7 @@ import game.utility.other.Pair;
 public class MissileInstance extends ObstacleInstance implements Missile {
 
     /**
-     * Specifies the path within the sprite folder [specified in {@link Sprite} class]
+     * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
      * where {@link MissileInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "missile" + System.getProperty("file.separator");
@@ -47,6 +47,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
      * The position when the warning should start flickering.
      */
     private final double warnFlickRange = GameWindow.GAME_SCREEN.getWidth() + GameWindow.GAME_SCREEN.getTileSize() * 4;
+
     /**
      * The flickering speed of the missile warning when a missile is about to appear.
      */
@@ -114,6 +115,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
         super.reset();
         ySpeed = yStartSpeed;
     }
+
     /**
      * {@inheritDoc}
      */
