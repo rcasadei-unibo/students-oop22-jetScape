@@ -18,17 +18,14 @@ public class DisplayGameOver extends Display implements MenuDisplay {
     private static final int OPTION_TILE = 7;
     private static String title = "Game Over";
     private static String scoreString = "Your score was: ";
+    //private static String[] moneyString = {"You've collected: ", " coins"};
     private static String recordScoreString = "NEW RECORD";
     private static String[] playingRecordScoreString = {"BARRY COULD", "LIVE LONGER"};
 
     private final Records records;
 
-    //private static int playingRecord = 0; // higher score obtained by playing consecutively
-    //private static boolean isNewPlayingRecord = false;
-
-    //private int recordScore; // absolute new record
-    //private boolean isNewRecord = false;
     private int finalScore;
+    private int finalMoney;
 
     /**
      * {@link DisplayGameOver} constructor: add options to be shown.
@@ -48,7 +45,8 @@ public class DisplayGameOver extends Display implements MenuDisplay {
      */
     private void readRecords() {
         this.finalScore = this.records.getScore();
-        //TODO uncomment and use this info
+        this.finalMoney = this.records.getMoney();
+
         //this.recordScore = this.records.getRecordScore();
     }
 
@@ -65,23 +63,31 @@ public class DisplayGameOver extends Display implements MenuDisplay {
 
         // SCORE
         super.drawCenteredText(g, super.getTextFont(),
-                DisplayGameOver.scoreString + this.finalScore, x -> x,
+                DisplayGameOver.scoreString + this.finalScore, x -> x / 2,
+                DisplayGameOver.TEXT_TILE * super.getGameScreen().getTileSize(),
+                super.getTextShift());
+
+        // Use game.utility.sprites.Drawer to load a sprite
+
+        // MONEY
+        super.drawCenteredText(g, super.getTextFont(),
+                " M " + this.finalMoney, x -> 2 * super.getGameScreen().getWidth() / 3,
                 DisplayGameOver.TEXT_TILE * super.getGameScreen().getTileSize(),
                 super.getTextShift());
 
         // RECORD
-        if (records.isNewRecordScore()) {
+        if (records.isNewScoreRecord()) {
             super.drawCenteredText(g, super.getTextFont(),
-                    DisplayGameOver.recordScoreString, x -> x / 2,
+                    DisplayGameOver.recordScoreString, x -> x / 3,
                     (DisplayGameOver.TEXT_TILE + 1) * super.getGameScreen().getTileSize(),
                     super.getTextShift());
-        } else if (records.isNewPlayingRecordScore()) {
+        } else if (records.isNewPlayingScoreRecord()) {
             super.drawCenteredText(g, super.getTextFont(),
-                    DisplayGameOver.playingRecordScoreString[0], x -> x / 2,
+                    DisplayGameOver.playingRecordScoreString[0], x -> x / 3,
                     (DisplayGameOver.TEXT_TILE + 1) * super.getGameScreen().getTileSize(),
                     super.getTextShift());
             super.drawCenteredText(g, super.getTextFont(),
-                    DisplayGameOver.playingRecordScoreString[1], x -> x / 2,
+                    DisplayGameOver.playingRecordScoreString[1], x -> x / 3,
                     (DisplayGameOver.TEXT_TILE + 2) * super.getGameScreen().getTileSize(),
                     super.getTextShift());
         }
