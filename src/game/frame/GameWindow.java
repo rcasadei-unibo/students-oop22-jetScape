@@ -139,7 +139,7 @@ public class GameWindow extends JPanel implements Runnable {
      */
     public void stopGame() {
         gameRunning = false;
-        GAME_MUSIC.stop();
+        GAME_MUSIC.stop(Sound.MAIN_THEME);
     }
 
     /**

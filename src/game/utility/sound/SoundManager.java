@@ -2,6 +2,8 @@ package game.utility.sound;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -24,22 +26,24 @@ public class SoundManager {
     public static final String DEFAULT_DIR = System.getProperty("user.dir") + SEPARATOR
             + "res" + SEPARATOR + "game" + SEPARATOR + "sound"+ SEPARATOR;
 
-    private Clip clip;
+    private Map<Sound,Clip> clips;
     private FloatControl fControl;
     private int volumeLevel = 2;
     private float volume;
 
     public SoundManager(Sound currentSound) {
         super();
+        this.clips = new HashMap<>();
         this.setTrack(currentSound);
     }
 
     private void setTrack(Sound sound) {
         try {
-            this.clip = AudioSystem.getClip();
-            this.clip.open(AudioSystem.getAudioInputStream(
+            this.clips.put(sound, AudioSystem.getClip());
+            this.clips.get(sound).open(AudioSystem.getAudioInputStream(
                     new File(DEFAULT_DIR + sound.getFileName())));
-            this.fControl = (FloatControl)this.clip.getControl(FloatControl.Type.MASTER_GAIN);
+            this.fControl = (FloatControl)this.clips.get(sound)
+                    .getControl(FloatControl.Type.MASTER_GAIN);
             updateVolume();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
@@ -48,18 +52,21 @@ public class SoundManager {
 
     public void play(Sound sound) {
         setTrack(sound);
-        clip.start();
+        clips.get(sound).start();
     }
 
     public void playInLoop(Sound sound) {
         setTrack(sound);
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
-        clip.start();
+        clips.get(sound).loop(Clip.LOOP_CONTINUOUSLY);
+        clips.get(sound).start();
 
     }
 
-    public void stop() {
-        clip.stop();
+    public void stop(Sound sound) {
+        if(clips.keySet().contains(sound)) {
+            clips.get(sound).stop();
+            this.removePlayed();
+        }
     }
 
     public int getVolumeLevel() {
@@ -90,5 +97,9 @@ public class SoundManager {
             default: break;
         }
         this.fControl.setValue(volume);
+    }
+    
+    private void removePlayed() {
+        this.clips.entrySet().removeIf(entry -> !entry.getValue().isRunning());
     }
 }
