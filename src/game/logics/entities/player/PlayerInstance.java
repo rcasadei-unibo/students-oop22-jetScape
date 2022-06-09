@@ -182,6 +182,7 @@ public class PlayerInstance extends EntityInstance implements Player {
                 break;
             case ZAPPER:
                 if(!this.shieldProtected) {
+                    GameWindow.GAME_SOUND.stop(Sound.JETPACK);
                     GameWindow.GAME_SOUND.play(Sound.ZAPPED);
                 }
                 this.obstacleHit(PlayerStatus.ZAPPED);
