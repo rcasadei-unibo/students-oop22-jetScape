@@ -23,7 +23,8 @@ public class JSONHandler {
 
     // Do not change path without updating .gitignore tracked file
     private static final String SEP = File.separator;
-    private static final String FILE_PATH = "res" + SEP + "game" + SEP + "data" + SEP + "records.json";
+    private static final String FILE_PATH = System.getProperty("user.dir") + SEP
+            + "res" + SEP + "game" + SEP + "data" + SEP + "records.json";
     private static final File FILE = new File(FILE_PATH);
 
     // Data for building JSON data table
