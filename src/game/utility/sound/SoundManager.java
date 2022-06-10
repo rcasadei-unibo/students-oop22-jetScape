@@ -100,6 +100,9 @@ public class SoundManager {
     }
     
     private void removePlayed() {
+        this.clips.entrySet().stream()
+            .filter(entry -> !entry.getValue().isRunning())
+            .forEach(entry -> entry.getValue().close());
         this.clips.entrySet().removeIf(entry -> !entry.getValue().isRunning());
     }
 }
