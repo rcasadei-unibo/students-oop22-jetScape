@@ -44,8 +44,8 @@ public final class Records {
     // Data read from game
     private PlayerDeath causeOfDeath;
 
-    private static int playingScoreRecord; // higher score obtained by playing consecutively
-    private static boolean newPlayingScoreRecord;
+    private int playingScoreRecord; // higher score obtained by playing consecutively
+    private boolean newPlayingScoreRecord;
 
     private boolean newScoreRecord;
     private boolean newMoneyRecord;
@@ -176,19 +176,18 @@ public final class Records {
 
         //this.score = finalScore;
 
-        if (finalScore > Records.playingScoreRecord) {
-            Records.newPlayingScoreRecord = true;
-            Records.playingScoreRecord = finalScore;
-        } else if (finalScore < Records.playingScoreRecord) {
-            Records.newPlayingScoreRecord = false;
+        if (finalScore > this.playingScoreRecord) {
+            this.newPlayingScoreRecord = true;
+            this.playingScoreRecord = finalScore;
+        } else if (finalScore < this.playingScoreRecord) {
+            this.newPlayingScoreRecord = false;
         }
+
+        this.newScoreRecord = finalScore > this.getHighestRecordScore();
 
         if (this.scoreRecords.size() < Records.getMaxSavedNumberOfRecords()
                 || finalScore > this.getLowestRecordScore()) {
-            this.newScoreRecord = true;
             this.addScoreRecord(finalScore);
-        } else {
-            this.newScoreRecord = false;
         }
 
         //if (finalScore > this.getLowestRecordScore()) {
@@ -347,7 +346,7 @@ public final class Records {
      * Get current highest score obtained by player.
      * @return first element of the highest scores list
      */
-    public Integer getHighestScore() {
+    private Integer getHighestRecordScore() {
         return this.scoreRecords.get(0);
     }
 
@@ -377,7 +376,7 @@ public final class Records {
      * @return the playing record score
      */
     public int getPlayingScoreRecord() {
-        return Records.playingScoreRecord;
+        return this.playingScoreRecord;
     }
 
     /**
@@ -385,7 +384,7 @@ public final class Records {
      * @return true if the new score is a new playing consecutively record.
      */
     public boolean isNewPlayingScoreRecord() {
-        return Records.newPlayingScoreRecord;
+        return this.newPlayingScoreRecord;
     }
 
     /**
