@@ -38,35 +38,38 @@ public class SoundManager {
     }
 
     private void setTrack(Sound sound) {
-        try {
-            this.clips.put(sound, AudioSystem.getClip());
-            this.clips.get(sound).open(AudioSystem.getAudioInputStream(
+        if(!clips.keySet().contains(sound)) {
+            try {
+                this.clips.put(sound, AudioSystem.getClip());
+                this.clips.get(sound).open(AudioSystem.getAudioInputStream(
                     new File(DEFAULT_DIR + sound.getFileName())));
-            this.fControl = (FloatControl)this.clips.get(sound)
+                this.fControl = (FloatControl)this.clips.get(sound)
                     .getControl(FloatControl.Type.MASTER_GAIN);
-            updateVolume();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
+            }
         }
+        updateVolume();
     }
 
     public void play(Sound sound) {
+        this.removePlayed();
         setTrack(sound);
         clips.get(sound).start();
     }
 
     public void playInLoop(Sound sound) {
+        this.removePlayed();
         setTrack(sound);
         clips.get(sound).loop(Clip.LOOP_CONTINUOUSLY);
         clips.get(sound).start();
-
     }
 
     public void stop(Sound sound) {
         if(clips.keySet().contains(sound)) {
             clips.get(sound).stop();
-            this.removePlayed();
         }
+        this.removePlayed();
     }
 
     public int getVolumeLevel() {
