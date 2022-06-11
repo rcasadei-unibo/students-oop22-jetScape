@@ -13,14 +13,15 @@ public abstract class AbstractLogics implements Logics {
 
     private static int frameTime;
     private static int difficultyLevel = 1;
+    private final static int INCREASE_DIFF_PER_SCORE = 250;
+
 
     private static final double SPAWN_INTERVAL = 3.3;
     private static final double CLEAN_INTERVAL = 5.0;
 
     private final SpeedHandler defaultEntitySpeed = new SpeedHandler(250.0, 15.0, 0);
     private final Map<EntityType, SpeedHandler> entitiesSpeed = 
-            Map.of(
-                   EntityType.MISSILE, new SpeedHandler(500.0, 10.0, 5000.0));
+            Map.of(EntityType.MISSILE, new SpeedHandler(500.0, 10.0, 5000.0));
 
     static void setDifficultyLevel(final int newDifficultyLevel) {
         AbstractLogics.difficultyLevel = newDifficultyLevel;
@@ -34,6 +35,12 @@ public abstract class AbstractLogics implements Logics {
      */
     public static int getDifficultyLevel() {
         return AbstractLogics.difficultyLevel;
+    }
+    /**
+     * @return how often difficulty should increase
+     */
+    public static int getIncreaseDiffPerScore() {
+        return INCREASE_DIFF_PER_SCORE;
     }
     /**
      * @return the total number of frames passed since the game begin his execution
