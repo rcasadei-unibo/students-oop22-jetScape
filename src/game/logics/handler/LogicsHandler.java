@@ -29,7 +29,8 @@ import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
-
+import game.logics.background.Background;
+import game.logics.background.BackgroundController;
 import game.logics.display.controller.DisplayController;
 
 import game.logics.generator.Generator;
@@ -51,6 +52,7 @@ import game.utility.other.GameState;
  */
 public class LogicsHandler extends AbstractLogics implements Logics {
 
+    private final Background background;
     /**
      * Contains the current active entities on the game environment.
      */
@@ -95,6 +97,8 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.playerEntity = new PlayerInstance(this, this.entities);
 
         this.records = new Records(game, playerEntity);
+
+        this.background = new BackgroundController(super.getBackgroundMovementInfo());
 
         this.displayController = new DisplayController(this.keyH, g -> setGameState(g),
                 () -> this.gameState, () -> this.playerEntity.getCurrentScore(),
@@ -308,7 +312,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case PAUSED:
             case INGAME:
                 synchronized (this.entities) {
-
+                    this.background.update(g);
                     this.entities.entrySet().stream()
                             .sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(),
                                     e1.getKey().ordinal()))
@@ -316,6 +320,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                             .forEach(e -> e.getValue().forEach(se -> se.draw(g)));
 
                     this.entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
+                    this.background.drawCoordinates(g);
                     this.entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
                 this.spawner.drawNextSpawnTimer(g);
