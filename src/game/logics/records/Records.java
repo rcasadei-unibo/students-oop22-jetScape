@@ -183,7 +183,7 @@ public final class Records {
             this.newPlayingScoreRecord = false;
         }
 
-        this.newScoreRecord = finalScore > this.getHighestRecordScore();
+        this.newScoreRecord = this.scoreRecords.isEmpty() || finalScore  > this.getHighestRecordScore();
 
         if (this.scoreRecords.size() < Records.getMaxSavedNumberOfRecords()
                 || finalScore > this.getLowestRecordScore()) {
