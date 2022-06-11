@@ -73,8 +73,8 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     private final KeyHandler keyH;
     private final Debugger debugger;
 
-    private static Records records;
-    private static GameInfoHandler game;
+    private final Records records;
+    private final GameInfoHandler game;
 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -219,15 +219,15 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case INGAME:
                     if (this.gameState != GameState.PAUSED) {
-                        LogicsHandler.game.setActualGame(new GameInfo(LogicsHandler.game));
+                        this.game.setActualGame(new GameInfo(this.game));
                         //this.gameID.generateNewGameUID();
                     }
                     if (this.gameState == GameState.ENDGAME) { // RETRY
-                        LogicsHandler.records.refresh();
+                        this.records.refresh();
                         this.resetGame();
                     } else if (this.gameState == GameState.MENU) {
                         entities.get(EntityType.PLAYER).add(playerEntity);
-                        LogicsHandler.records.refresh();
+                        this.records.refresh();
                     }
                     spawner.resume();
                     break;
@@ -241,11 +241,11 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     spawner.stop();
                     //this.gameOverDisplay.setRecords(getScore.get());
                     //this.records.fetch(this.getGame);
-                    LogicsHandler.records.announceGameEnded(() -> game.getActualGame());
+                    this.records.announceGameEnded(() -> game.getActualGame());
                     /*for (final Integer record : LogicsHandler.records.getRecordScores()) {
                         System.out.println(record);
                     }*/
-                    LogicsHandler.records.update();
+                    this.records.update();
                     break;
                 case PAUSED:
                     if (this.gameState != GameState.INGAME) {
@@ -254,7 +254,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     spawner.pause();
                     break;
                 case RECORDS:
-                    LogicsHandler.records.refresh();
+                    this.records.refresh();
                     break;
                 default:
                     break;
