@@ -173,7 +173,7 @@ public class PlayerInstance extends EntityInstance implements Player {
     private void checkHit(final Entity entityHit) {
         switch (entityHit.entityType()) {
             case MISSILE: 
-                if(!this.shieldProtected) {
+                if (!this.shieldProtected) {
                     GameWindow.GAME_SOUND.stop(Sound.JETPACK);
                     GameWindow.GAME_SOUND.play(Sound.MISSILE);
                 }
@@ -181,7 +181,7 @@ public class PlayerInstance extends EntityInstance implements Player {
                 entityHit.clean();
                 break;
             case ZAPPER:
-                if(!this.shieldProtected) {
+                if (!this.shieldProtected) {
                     GameWindow.GAME_SOUND.stop(Sound.JETPACK);
                     GameWindow.GAME_SOUND.play(Sound.ZAPPED);
                 }
@@ -219,7 +219,7 @@ public class PlayerInstance extends EntityInstance implements Player {
                 ? this.getPosition().getY() - jumpSpeed * jumpMultiplier
                 : Y_TOP_LIMIT);
         setStatus(PlayerStatus.JUMP);
-        if(statusChanged){
+        if (statusChanged) {
             GameWindow.GAME_SOUND.playInLoop(Sound.JETPACK);
         }
     }
@@ -242,7 +242,7 @@ public class PlayerInstance extends EntityInstance implements Player {
         } else if (status != PlayerStatus.WALK) {
             setStatus(fall() ? PlayerStatus.FALL : PlayerStatus.LAND);
             fallMultiplier += FALL_MULTIPLIER_INCREASE;
-            if(statusChanged){
+            if (statusChanged) {
                 GameWindow.GAME_SOUND.stop(Sound.JETPACK);
             }
         }

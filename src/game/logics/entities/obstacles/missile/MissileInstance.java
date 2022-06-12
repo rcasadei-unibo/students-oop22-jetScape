@@ -143,7 +143,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
                 ySpeed += yAcceleration  / GameWindow.FPS_LIMIT;
                 lastDir = Direction.DOWN;
             }
-            if(!this.warningPlayed) {
+            if (!this.warningPlayed) {
                 GameWindow.GAME_SOUND.play(Sound.MISSILE_WARNING);
                 this.warningPlayed = true;
             }
