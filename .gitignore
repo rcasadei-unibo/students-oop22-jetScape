@@ -1,5 +1,5 @@
 bin/
 .metadata/
 .settings/
-res/game/data/
+res/game/data/*.json
 *.project
