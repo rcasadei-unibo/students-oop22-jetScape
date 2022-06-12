@@ -107,21 +107,31 @@ public class MenuHandler implements DisplayHandler {
         this.selectedOption = this.options.get(this.cursor);
     }
 
-	protected KeyHandler getKeyH() {
-		return keyH;
-	}
+    /**
+     * @return this handler's KeyHandler
+     */
+    protected KeyHandler getKeyH() {
+        return keyH;
+    }
 
-	protected Consumer<GameState> getSetGameState() {
-		return setGameState;
-	}
+    /**
+     * @return this handler's setter for game state
+     */
+    protected Consumer<GameState> getSetGameState() {
+        return setGameState;
+    }
 
-	protected List<MenuOption> getOptions() {
-		return options;
-	}
+    /**
+     * @return this handler's list of options
+     */
+    protected List<MenuOption> getOptions() {
+        return options;
+    }
 
-	protected int getCursor() {
-		return cursor;
-	}
-
-    
+    /**
+     * @return this handler's cursor value
+     */
+    protected int getCursor() {
+        return cursor;
+    }
 }

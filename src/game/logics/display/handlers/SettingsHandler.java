@@ -9,10 +9,19 @@ import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.Sound;
 
-
+/**
+ * this class is used to handle settings regulations through sliders use.
+ */
 public class SettingsHandler extends MenuHandler {
 
-    public SettingsHandler(KeyHandler keyH, Display display, Consumer<GameState> setGameState) {
+    /**
+     * initializes Setting Handler class.
+     * @param keyH
+     * @param display
+     * @param setGameState
+     */
+    public SettingsHandler(final KeyHandler keyH, final Display display,
+            final Consumer<GameState> setGameState) {
         super(keyH, display, setGameState);
     }
 
@@ -53,7 +62,7 @@ public class SettingsHandler extends MenuHandler {
     }
 
     private void lower() {
-        switch(super.getSelectedOption()){
+        switch (super.getSelectedOption()) {
             case MUSIC:
                 GameWindow.GAME_MUSIC.lowerVolumeLevel();
                 break;
@@ -66,7 +75,7 @@ public class SettingsHandler extends MenuHandler {
     }
 
     private void raise() {
-        switch(super.getSelectedOption()){
+        switch (super.getSelectedOption()) {
         case MUSIC:
             GameWindow.GAME_MUSIC.raiseVolumeLevel();
             break;
