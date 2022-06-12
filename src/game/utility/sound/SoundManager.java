@@ -1,8 +1,10 @@
 package game.utility.sound;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sound.sampled.AudioSystem;
@@ -11,39 +13,117 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import game.utility.other.MenuOption;
 import game.utility.other.Sound;
 
+/**
+ * Loads sounds and handles tracks playing stopping and volume changes requests.
+ */
 public class SoundManager {
     /**
-     * maximum and minimum level for audio
+     * maximum and minimum level for audio.
      */
-    public static final int MAX_LEVEL = 4;
-    public static final int MIN_LEVEL = 0;
+    private static final int MAX_LEVEL = 4;
+    private static final int MIN_LEVEL = 0;
     private static final String SEPARATOR = System.getProperty("file.separator");
     /**
-     * absolute path of the directory containing all game's fonts.
+     * absolute path of the directory containing all game's sounds.
      */
     public static final String DEFAULT_DIR = System.getProperty("user.dir") + SEPARATOR
-            + "res" + SEPARATOR + "game" + SEPARATOR + "sound"+ SEPARATOR;
-
-    private Map<Sound,Clip> clips;
+            + "res" + SEPARATOR + "game" + SEPARATOR + "sound" + SEPARATOR;
+    /**
+     * associates a float value to the current volume level.
+     */
+    private final List<Float> audioSpectum = List.of(-80f, -25f, -15f, -10f, -5f);
+    /**
+     * associates the sounds to their specific track.
+     */
+    private final Map<Sound, Clip> clips;
+    private final SettingsManager sManager;
+    private int volumeLevel;
     private FloatControl fControl;
-    private int volumeLevel = 2;
-    private float volume;
 
-    public SoundManager(Sound currentSound) {
+    /**
+     * initializes the class to manage the specified audio setting tracks.
+     * @param audioSetting to distinguish music and sound
+     */
+    public SoundManager(final MenuOption audioSetting) {
         super();
         this.clips = new HashMap<>();
-        this.setTrack(currentSound);
+        this.sManager = new SettingsManager(audioSetting);
+        this.volumeLevel = this.sManager.getSettingValue();
     }
 
-    private void setTrack(Sound sound) {
-        if(!clips.keySet().contains(sound)) {
+    /**
+     * Plays the specified sound one time.
+     * @param sound to play
+     */
+    public void play(final Sound sound) {
+        this.removePlayed();
+        setTrack(sound);
+        clips.get(sound).start();
+    }
+
+    /**
+     * Plays the specified sound in loop.
+     * @param sound to play
+     */
+    public void playInLoop(final Sound sound) {
+        this.removePlayed();
+        setTrack(sound);
+        clips.get(sound).loop(Clip.LOOP_CONTINUOUSLY);
+        clips.get(sound).start();
+    }
+
+    /**
+     * Stops the specified sound.
+     * @param sound to stop
+     */
+    public void stop(final Sound sound) {
+        if (clips.keySet().contains(sound)) {
+            clips.get(sound).stop();
+        }
+        this.removePlayed();
+    }
+
+    /**
+     * @return Volume level of this audio setting 
+     */
+    public int getVolumeLevel() {
+        return volumeLevel;
+    }
+
+    /**
+     * decreases by one the current volume level if 
+     * is not already on the minimum allowed.
+     */
+    public void lowerVolumeLevel() {
+        if (volumeLevel > MIN_LEVEL) {
+            this.volumeLevel--;
+            updateVolume();
+            this.sManager.writeSetting(volumeLevel);
+        }
+    }
+
+    /**
+     * increments by one the current volume level if 
+     * is not already on the maximum allowed.
+     */
+    public void raiseVolumeLevel() {
+        if (volumeLevel < MAX_LEVEL) {
+            this.volumeLevel++;
+            updateVolume();
+            this.sManager.writeSetting(volumeLevel);
+        }
+    }
+
+    private void setTrack(final Sound sound) {
+        if (!clips.keySet().contains(sound)) {
             try {
                 this.clips.put(sound, AudioSystem.getClip());
                 this.clips.get(sound).open(AudioSystem.getAudioInputStream(
                     new File(DEFAULT_DIR + sound.getFileName())));
-                this.fControl = (FloatControl)this.clips.get(sound)
+                this.fControl = (FloatControl) this.clips.get(sound)
                     .getControl(FloatControl.Type.MASTER_GAIN);
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                 e.printStackTrace();
@@ -52,56 +132,10 @@ public class SoundManager {
         updateVolume();
     }
 
-    public void play(Sound sound) {
-        this.removePlayed();
-        setTrack(sound);
-        clips.get(sound).start();
-    }
-
-    public void playInLoop(Sound sound) {
-        this.removePlayed();
-        setTrack(sound);
-        clips.get(sound).loop(Clip.LOOP_CONTINUOUSLY);
-        clips.get(sound).start();
-    }
-
-    public void stop(Sound sound) {
-        if(clips.keySet().contains(sound)) {
-            clips.get(sound).stop();
-        }
-        this.removePlayed();
-    }
-
-    public int getVolumeLevel() {
-        return volumeLevel;
-    }
-
-    public void lowerVolumeLevel() {
-        if (volumeLevel > MIN_LEVEL) {
-            this.volumeLevel--;
-            updateVolume();
-        }
-    }
-
-    public void raiseVolumeLevel() {
-        if (volumeLevel < MAX_LEVEL) {
-            this.volumeLevel++;
-            updateVolume();
-        }
-    }
-
     private void updateVolume() {
-        switch (this.volumeLevel) {
-            case 0: volume = -80f; break;
-            case 1: volume = -25f; break;
-            case 2: volume = -15f; break;
-            case 3: volume = -10f; break;
-            case 4: volume = -5f; break;
-            default: break;
-        }
-        this.fControl.setValue(volume);
+        this.fControl.setValue(audioSpectum.get(volumeLevel));
     }
-    
+
     private void removePlayed() {
         this.clips.entrySet().stream()
             .filter(entry -> !entry.getValue().isRunning())

@@ -8,6 +8,7 @@ import game.logics.handler.LogicsHandler;
 import game.utility.debug.Debugger;
 import game.utility.fonts.FontLoader;
 import game.utility.input.keyboard.KeyHandler;
+import game.utility.other.MenuOption;
 import game.utility.other.Sound;
 import game.utility.screen.Screen;
 import game.utility.screen.ScreenHandler;
@@ -89,11 +90,11 @@ public class GameWindow extends JPanel implements Runnable {
     /**
      * Manages in game music.
      */
-    public static final SoundManager GAME_MUSIC = new SoundManager(Sound.MAIN_THEME);
+    public static final SoundManager GAME_MUSIC = new SoundManager(MenuOption.MUSIC);
     /**
      * Manages in game sound.
      */
-    public static final SoundManager GAME_SOUND = new SoundManager(Sound.MENU_SELECTION);
+    public static final SoundManager GAME_SOUND = new SoundManager(MenuOption.SOUND);
     /**
      * Handles the logic part of the game (entities, interface, game state, etc). 
      */
