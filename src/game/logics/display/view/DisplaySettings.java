@@ -8,23 +8,29 @@ import java.util.function.Function;
 import game.frame.GameWindow;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
-
+/**
+ * <p>This class contains what is shown when you want to change settings.</p>
+ * 
+ * <p>This class extends {@link Display}.</p>
+ */
 public class DisplaySettings extends Display {
 
     private static final String TITLE = "Settings";
+    private static final int TILE_GAP = 2;
     private static final int OPTIONS_XTILE = 1;
     private static final int OPTIONS_YTILE = 4;
-    private static final int RECTANGLE_XTILE = 8;
+    private static final int STROKE_VAL = 5;
+    private static final double RECTANGLE_XTILE = 8;
+    private static final double RECTANGLE_YTILE = 3.5;
     private static final int RECTANGLE_WIDTH = 4;
     private  final Screen gScreen = super.getGameScreen();
-    
+
     /**
      * {@link DisplayPause} constructor: add options to be shown.
      *
      */
     public DisplaySettings() {
         super();
-
         this.getOptions().add(MenuOption.MUSIC);
         this.getOptions().add(MenuOption.SOUND);
         this.getOptions().add(MenuOption.MENU);
@@ -34,25 +40,23 @@ public class DisplaySettings extends Display {
      * {@inheritDoc}
      */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
+        int x = (int) (gScreen.getTileSize() * RECTANGLE_XTILE);
+        int y = (int) (gScreen.getTileSize() * RECTANGLE_YTILE);
+        int width = gScreen.getTileSize() * RECTANGLE_WIDTH;
+        int height = gScreen.getTileSize() / 2;
         this.setSelectedOption(selected);
-
         // TITLE
         super.drawTitleText(g, TITLE, Function.identity());
-
         // OPTIONS
         this.drawOptions(g);
-        g.setStroke(new BasicStroke(5));
-        g.drawRect(gScreen.getTileSize() * RECTANGLE_XTILE,
-                (int) (gScreen.getTileSize() * 3.5), gScreen.getTileSize() * RECTANGLE_WIDTH,
-                gScreen.getTileSize()/2);
-        g.drawRect(gScreen.getTileSize() * RECTANGLE_XTILE, (int) (gScreen.getTileSize() * 5.5),
-                gScreen.getTileSize() * RECTANGLE_WIDTH, gScreen.getTileSize()/2);
-        g.fillRect(gScreen.getTileSize() * RECTANGLE_XTILE,
-                (int) (gScreen.getTileSize() * 3.5),
-                gScreen.getTileSize() * GameWindow.GAME_MUSIC.getVolumeLevel(), gScreen.getTileSize()/2);
-        g.fillRect(gScreen.getTileSize() * RECTANGLE_XTILE,
-                (int) (gScreen.getTileSize() * 5.5),
-                gScreen.getTileSize() * GameWindow.GAME_SOUND.getVolumeLevel(), gScreen.getTileSize()/2);
+        //MUSIC SLIDER
+        g.setStroke(new BasicStroke(STROKE_VAL));
+        g.drawRect(x, y, width, height);
+        g.fillRect(x, y, gScreen.getTileSize() * GameWindow.GAME_MUSIC.getVolumeLevel(), height);
+        //SOUND SLIDER
+        y += gScreen.getTileSize() * TILE_GAP;
+        g.drawRect(x, y, width, height);
+        g.fillRect(x, y, gScreen.getTileSize() * GameWindow.GAME_SOUND.getVolumeLevel(), height);
     }
 
     /**
@@ -69,7 +73,7 @@ public class DisplaySettings extends Display {
             this.drawText(g, super.getOptionsFont(), current,
                     gScreen.getTileSize() * OPTIONS_XTILE,
                     gScreen.getTileSize() * (i + OPTIONS_YTILE), super.getOptionShift());
-            i += 2;
+            i += TILE_GAP;
         }
     }
 
