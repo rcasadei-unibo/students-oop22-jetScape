@@ -20,7 +20,7 @@ import game.utility.other.MenuOption;
 public final class SettingsManager {
     private static final String SEPARATOR = System.getProperty("file.separator");
     /**
-     * absolute path of the directory containing all game's fonts.
+     * absolute path of the directory containing game's settings.
      */
     public static final String PATH = System.getProperty("user.dir") + SEPARATOR
             + "res" + SEPARATOR + "game" + SEPARATOR + "data" + SEPARATOR + "settings.json";
