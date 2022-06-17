@@ -112,12 +112,11 @@ public class DisplayController {
      */
     public void updateScreen() {
         switch (getState.get()) {
-
             case MENU :
-                titleHandler.update();
+                this.titleHandler.update();
                 break;
             case RECORDS :
-                recordsHandler.update();
+                this.recordsHandler.update();
                 break;
             case PAUSED :
                 this.pauseHandler.update();
