@@ -158,6 +158,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     private void resetGame() {
         this.getEntitiesCleaner().accept(t -> t != EntityType.PLAYER, e -> true);
         this.playerEntity.reset();
+        this.background.reset();
     }
 
     /**

@@ -3,6 +3,8 @@ package game.logics.background;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import javax.swing.JComponent;
+
 import game.frame.GameWindow;
 import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
@@ -33,19 +35,24 @@ public class BackgroundController implements Background {
     private boolean onScreen;
     private boolean onClearArea;
 
-    private static final Pair<Double, Double> START_POS = new Pair<>(0.0, 0.0);
-    private final Pair<Double, Double> position = START_POS;
-    private final SpeedHandler speed;
+    //private static final int leftBorderOffset = 5;
+    private static final int SCREEN_WIDTH = GameWindow.GAME_SCREEN.getWidth();
+    private static final Pair<Double, Double> LEFT_START_POS = new Pair<>(0.0, 0.0);
+    //private static final Pair<Double, Double> RIGHT_START_POS = new Pair<>((double) SCREEN_WIDTH, 0.0);
+
+    private final Pair<Double, Double> leftPosition = LEFT_START_POS;
+    //private final Pair<Double, Double> rightPosition = RIGHT_START_POS;
+
+    private final SpeedHandler movement;
 
     private final BackgroundDrawer drawMgr = new BackgroundDrawManager();
-    //private final Drawer spritesMgr = new DrawManager();
 
     /**
      * @param speed the {@link SpeedHandler} to use for the pickup
      */
     public BackgroundController(final SpeedHandler speed) {
 
-        this.speed = speed;
+        this.movement = speed;
         this.drawMgr.setPlaceH(PLACE_HOLDER);
         this.drawMgr.addSprite(KEY_SPRITE1, SPRITE_PATH + "background_1.png");
         this.drawMgr.addSprite(KEY_SPRITE2, SPRITE_PATH + "background_2.png");
@@ -58,30 +65,61 @@ public class BackgroundController implements Background {
      * 
      * @param v <code>true</code> if has to be shown, <code>false</code> if has to be hidden
      */
-    protected final void setVisibility(final boolean v) {
+    private void setVisibility(final boolean v) {
         visible = v;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean isVisible() {
+    private boolean isVisible() {
         return visible;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void update(final Graphics2D g) {
-        this.draw(g);
+    public void reset() {
+        this.leftPosition.set(LEFT_START_POS.getX(), LEFT_START_POS.getY());
+        //this.rightPosition.set(RIGHT_START_POS.getX(), RIGHT_START_POS.getY());
+        this.movement.resetSpeed();
     }
 
     /**
      * {@inheritDoc}
      */
-    public void draw(final Graphics2D g) {
+    public void update(final Graphics2D g) {
+        this.updateFlags();
+
+        if (this.leftPosition.getX() > -SCREEN_WIDTH * 2) {
+            this.leftPosition.setX(this.leftPosition.getX() - this.movement.getXSpeed() / GameWindow.FPS_LIMIT);
+            //this.rightPosition.setX(this.rightPosition.getX() - this.movement.getXSpeed() / GameWindow.FPS_LIMIT);
+        }/* else if (this.isLeftOnClearArea()) {
+            //final double tempRight = this.leftPosition.getX();
+            //this.leftPosition.setX(this.rightPosition.getX());
+            //this.rightPosition.setX(tempRight + SCREEN_WIDTH);
+        }*/
+
+        this.draw(g);
+    }
+
+    /**
+     * Draws the background if visible.
+     * 
+     * @param g the graphics drawer
+     */
+    private void draw(final Graphics2D g) {
         if (this.isVisible()) {
-            this.drawMgr.drawSprite(g, KEY_SPRITE1, position, GameWindow.GAME_SCREEN.getHeight(), GameWindow.GAME_SCREEN.getWidth());
+            if (this.onClearArea) {
+                final Pair<Double, Double> temp = this.calculateRightPosition();
+                this.leftPosition.set(temp.getX(), temp.getY());
+                this.onClearArea = false;
+            }
+            this.drawMgr.drawSprite(g, KEY_SPRITE1, this.leftPosition,
+                    GameWindow.GAME_SCREEN.getHeight(),
+                    GameWindow.GAME_SCREEN.getWidth());
+            if (this.onScreen) {
+                this.drawMgr.drawSprite(g, KEY_SPRITE2, this.calculateRightPosition(),
+                     GameWindow.GAME_SCREEN.getHeight(),
+                     GameWindow.GAME_SCREEN.getWidth());
+            }
         }
     }
 
@@ -89,72 +127,64 @@ public class BackgroundController implements Background {
      * {@inheritDoc}
      */
     public void drawCoordinates(final Graphics2D g) {
-        final int xShift = (int) Math.round(position.getX()) + (int) Math.round(GameWindow.GAME_SCREEN.getTileSize() * 0.88);
-        final int yShiftDrawnX = (int) Math.round(position.getY()) + GameWindow.GAME_SCREEN.getTileSize();
+        final int xShift = (int) Math.round(leftPosition.getX()) + (int) Math.round(GameWindow.GAME_SCREEN.getTileSize() * 0.88);
+        final int yShiftDrawnX = (int) Math.round(leftPosition.getY()) + GameWindow.GAME_SCREEN.getTileSize();
         final int yShiftDrawnY = yShiftDrawnX + 10;
 
         if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
             g.setColor(Debugger.DEBUG_COLOR);
             g.setFont(Debugger.DEBUG_FONT);
 
-            g.drawString("X:" + Math.round(position.getX()), xShift, yShiftDrawnX);
-            g.drawString("Y:" + Math.round(position.getY()), xShift, yShiftDrawnY);
+            g.drawString("X:" + Math.round(leftPosition.getX()), xShift, yShiftDrawnX);
+            g.drawString("Y:" + Math.round(leftPosition.getY()), xShift, yShiftDrawnY);
         }
+    }
+
+    private Pair<Double, Double> calculateRightPosition() {
+        return new Pair<Double, Double>(this.leftPosition.getX() + SCREEN_WIDTH, this.leftPosition.getY());
     }
 
         /**
          * {@inheritDoc}
          */
-        public boolean isOnScreenBounds() {
+        private boolean isOnScreenBounds() {
             return onScreen;
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        public boolean isOnClearArea() {
-            return this.onClearArea;
-        }
 
-        /**
-         * {@inheritDoc}
-         */
-        public Pair<Double, Double> getPosition() {
-            return position;
-        }
+    private boolean isOnClearArea() {
+        return this.onClearArea;
+    }
 
-        /**
-         * Updates the entity's flags.
-         */
-        private void updateFlags() {
-            if (position.getX() >= -GameWindow.GAME_SCREEN.getTileSize()
-                    && position.getX() <= GameWindow.GAME_SCREEN.getWidth()
-                    && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
-                onScreen = true;
+    /**
+     * Updates the entity's flags.
+     */
+    private void updateFlags() {
+        if (leftPosition.getX() <= Math.abs(GameWindow.GAME_SCREEN.getWidth())
+                && leftPosition.getY() >= 0 && leftPosition.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
+            onScreen = true;
+            onClearArea = false;
+        } else {
+            if (leftPosition.getX() < -GameWindow.GAME_SCREEN.getTileSize()) {
+                onClearArea = true;
+            } else if (leftPosition.getX() >= GameWindow.GAME_SCREEN.getWidth()) {
                 onClearArea = false;
             } else {
-                if (position.getX() < -GameWindow.GAME_SCREEN.getTileSize()) {
-                    onClearArea = true;
-                } else if (position.getX() >= GameWindow.GAME_SCREEN.getWidth()) {
-                    onClearArea = false;
-                } else {
-                    onClearArea = false;
-                }
-                onScreen = false;
+                onClearArea = false;
             }
+            onScreen = false;
         }
+    }
 
-        /**
-         * {@inheritDoc}
-         */
-        public void update() {
-            updateFlags();
-        }
-
-        /**
-         * @return a string representing the type of entity with his coordinates in the environment
-         */
-        public String toString() {
-            return "Background [X:" + Math.round(position.getX()) + "-Y:" + Math.round(position.getY()) + "]";
-        }
+    /**
+     * @return a string representing the type of entity with his coordinates in the environment
+     */
+    @Override
+    public String toString() {
+        return "Background"
+                 + "[L: X:" + Math.round(leftPosition.getX())
+                 +  " - Y:" + Math.round(leftPosition.getY()) + "]\n" + "           "
+                 + "[R: X:" + Math.round(this.calculateRightPosition().getX())
+                 +  " - Y:" + Math.round(this.calculateRightPosition().getY()) + "]";
+    }
 }

@@ -9,6 +9,11 @@ import java.awt.Graphics2D;
 public interface Background {
 
     /**
+     * Reset the background parameters.
+     */
+    void reset();
+
+    /**
      * Updates background parameters (called for each frame).
      * 
      * @param g the graphics drawer
@@ -21,4 +26,5 @@ public interface Background {
      * @param g the graphics drawer
      */
     void drawCoordinates(Graphics2D g);
+
 }
