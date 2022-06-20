@@ -4,13 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import game.frame.GameWindow;
-import game.logics.handler.Logics;
 import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
 import game.utility.other.Pair;
-import game.utility.sprites.DrawManager;
-import game.utility.sprites.Drawer;
 
+/**
+ * This class is a {@link Background} handler.
+ */
 public class BackgroundController implements Background {
 
     /**
@@ -30,22 +30,25 @@ public class BackgroundController implements Background {
 
     /// FLAGS ///
     private boolean visible;
-
+    private boolean onScreen;
+    private boolean onClearArea;
 
     private static final Pair<Double, Double> START_POS = new Pair<>(0.0, 0.0);
     private final Pair<Double, Double> position = START_POS;
+    private final SpeedHandler speed;
 
-
-    private final Drawer spritesMgr = new DrawManager();
+    private final BackgroundDrawer drawMgr = new BackgroundDrawManager();
+    //private final Drawer spritesMgr = new DrawManager();
 
     /**
      * @param speed the {@link SpeedHandler} to use for the pickup
      */
     public BackgroundController(final SpeedHandler speed) {
 
-        this.spritesMgr.setPlaceH(PLACE_HOLDER);
-        this.spritesMgr.addSprite(KEY_SPRITE1, SPRITE_PATH + "background_1.png");
-        this.spritesMgr.addSprite(KEY_SPRITE2, SPRITE_PATH + "background_2.png");
+        this.speed = speed;
+        this.drawMgr.setPlaceH(PLACE_HOLDER);
+        this.drawMgr.addSprite(KEY_SPRITE1, SPRITE_PATH + "background_1.png");
+        this.drawMgr.addSprite(KEY_SPRITE2, SPRITE_PATH + "background_2.png");
 
         this.setVisibility(true);
     }
@@ -66,6 +69,9 @@ public class BackgroundController implements Background {
         return visible;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void update(final Graphics2D g) {
         this.draw(g);
     }
@@ -75,7 +81,7 @@ public class BackgroundController implements Background {
      */
     public void draw(final Graphics2D g) {
         if (this.isVisible()) {
-            spritesMgr.drawSprite(g, KEY_SPRITE1, position, GameWindow.GAME_SCREEN.getHeight());
+            this.drawMgr.drawSprite(g, KEY_SPRITE1, position, GameWindow.GAME_SCREEN.getHeight(), GameWindow.GAME_SCREEN.getWidth());
         }
     }
 
@@ -95,46 +101,32 @@ public class BackgroundController implements Background {
             g.drawString("Y:" + Math.round(position.getY()), xShift, yShiftDrawnY);
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-/*
-        private boolean onScreen;
-        private boolean onClearArea;
 
         /**
          * {@inheritDoc}
          */
-        /*public boolean isOnScreenBounds() {
+        public boolean isOnScreenBounds() {
             return onScreen;
-        }*/
+        }
 
         /**
          * {@inheritDoc}
          */
-        /*public boolean isOnClearArea() {
+        public boolean isOnClearArea() {
             return this.onClearArea;
-        }*/
+        }
 
         /**
          * {@inheritDoc}
          */
-        /*public Pair<Double, Double> getPosition() {
+        public Pair<Double, Double> getPosition() {
             return position;
         }
-        */
 
         /**
          * Updates the entity's flags.
          */
-        /*private void updateFlags() {
+        private void updateFlags() {
             if (position.getX() >= -GameWindow.GAME_SCREEN.getTileSize()
                     && position.getX() <= GameWindow.GAME_SCREEN.getWidth()
                     && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
@@ -150,23 +142,19 @@ public class BackgroundController implements Background {
                 }
                 onScreen = false;
             }
-        }*/
+        }
 
         /**
          * {@inheritDoc}
          */
-        /*
         public void update() {
             updateFlags();
-        }*/
-
+        }
 
         /**
          * @return a string representing the type of entity with his coordinates in the environment
          */
-        /*
         public String toString() {
             return "Background [X:" + Math.round(position.getX()) + "-Y:" + Math.round(position.getY()) + "]";
         }
-*/
 }
