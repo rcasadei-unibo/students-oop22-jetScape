@@ -49,6 +49,16 @@ public class Pair<X, Y> {
     public void setY(final Y y) {
         this.y = y;
     }
+    /**
+     * Set both values of the pair.
+     * 
+     * @param x the new first value
+     * @param y the new second value
+     */
+    public void set(final X x, final Y y) {
+        this.x = x;
+        this.y = y;
+    }
 
     /**
      * {@inheritDoc}
