@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.awt.Rectangle;
 
 import game.logics.entities.generic.Entity;
 import game.logics.entities.player.PlayerInstance;
@@ -66,13 +65,9 @@ public class CollisionsChecker {
      * @return true if the entity's {@link Hitbox} collides with the player one
      */
     private boolean collides(final Hitbox entity) {
-        for (final Rectangle hitbox : player.getRectangles()) {
-            for (final Rectangle target : entity.getRectangles()) {
-                if (hitbox.intersects(target)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return this.player.getRectangles().stream().filter(player -> entity.getRectangles()
+                .stream().filter(target -> player.intersects(target))
+                .findFirst().isPresent())
+                .findFirst().isPresent();
     }
 }
