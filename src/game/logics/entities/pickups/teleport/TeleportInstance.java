@@ -10,7 +10,8 @@ import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
- * The class {@link TeleportInstance} is used for defining a teleport pickup in the environment.
+ * The class {@link TeleportInstance} is used for defining a teleport pickup in
+ * the environment.
  * 
  * A teleport is a bonus item that can be picked up by the player granting a slight score
  * increase + the removal of all the current entities on the screen.
@@ -36,7 +37,8 @@ public class TeleportInstance extends PickupInstance implements Teleport {
      * @param player a reference to the {@link Player} entity
      * @param speed the {@link SpeedHandler} to use for the pickup
      */
-    public TeleportInstance(final Logics l, final Pair<Double, Double> position,  final Player player, final SpeedHandler speed) {
+    public TeleportInstance(final Logics l, final Pair<Double, Double> position,
+            final Player player, final SpeedHandler speed) {
         super(l, position, EntityType.TELEPORT, player, speed);
 
         final var spritesMgr = this.getSpriteManager();

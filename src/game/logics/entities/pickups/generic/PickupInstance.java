@@ -24,7 +24,8 @@ public abstract class PickupInstance extends EntityInstance implements Pickup {
      * @param player a reference to the {@link Player} entity
      * @param speed the {@link SpeedHandler} to use for the pickup
      */
-    protected PickupInstance(final Logics l, final Pair<Double, Double> position, final EntityType pickupType, final Player player, final SpeedHandler speed) {
+    protected PickupInstance(final Logics l, final Pair<Double, Double> position,
+            final EntityType pickupType, final Player player, final SpeedHandler speed) {
         super(l, position, pickupType);
         this.player = player;
         this.movement = speed.copy();
@@ -61,7 +62,8 @@ public abstract class PickupInstance extends EntityInstance implements Pickup {
         super.update();
 
         if (this.getPosition().getX() > -GameWindow.GAME_SCREEN.getTileSize() * 2) {
-            this.getPosition().setX(this.getPosition().getX() - movement.getXSpeed() / GameWindow.FPS_LIMIT);
+            this.getPosition().setX(this.getPosition().getX()
+                    - movement.getXSpeed() / GameWindow.FPS_LIMIT);
         }
         this.getHitbox().updatePosition(this.getPosition());
     }
