@@ -38,13 +38,10 @@ public class BackgroundController implements Background {
 
     private static final double LADDER_GENERATION = 0.15;
 
-    //private static final int leftBorderOffset = 5;
     private static final int SCREEN_WIDTH = GameWindow.GAME_SCREEN.getWidth();
-    private static final Pair<Double, Double> LEFT_START_POS = new Pair<>(0.0, 0.0);
-    //private static final Pair<Double, Double> RIGHT_START_POS = new Pair<>((double) SCREEN_WIDTH, 0.0);
+    private static final Pair<Double, Double> START_POS = new Pair<>(0.0, 0.0);
 
-    private final Pair<Double, Double> leftPosition = LEFT_START_POS.copy();
-    //private final Pair<Double, Double> rightPosition = RIGHT_START_POS;
+    private final Pair<Double, Double> position = START_POS.copy();
 
     private final BackgroundDrawer drawMgr = new BackgroundDrawManager();
     private final Random rand = new Random();
@@ -97,8 +94,7 @@ public class BackgroundController implements Background {
      * {@inheritDoc}
      */
     public void reset() {
-        this.leftPosition.set(LEFT_START_POS.getX(), LEFT_START_POS.getY());
-        //this.rightPosition.set(RIGHT_START_POS.getX(), RIGHT_START_POS.getY());
+        this.position.set(START_POS.getX(), START_POS.getY());
         this.movement.resetSpeed();
     }
 
@@ -109,7 +105,6 @@ public class BackgroundController implements Background {
         this.updateFlags();
         if (this.isVisible()) {
             if (this.onScreen) {
-                //this.shiftBox();
                 this.boxSprite.put(BoxPos.RIGHT,
                         rand.nextDouble() > BackgroundController.LADDER_GENERATION
                         ? Optional.of(BackgroundController.KEY_SPRITE1)
@@ -117,13 +112,11 @@ public class BackgroundController implements Background {
             }
             if (!this.onClearArea) {
                 this.shiftBox();
-                //this.onScreen = true;
                 this.onClearArea = true;
             }
         }
-        if (this.leftPosition.getX() > -SCREEN_WIDTH * 2) {
-            this.leftPosition.setX(this.leftPosition.getX() - this.movement.getXSpeed() / GameWindow.FPS_LIMIT);
-            //this.rightPosition.setX(this.rightPosition.getX() - this.movement.getXSpeed() / GameWindow.FPS_LIMIT);
+        if (this.position.getX() > -SCREEN_WIDTH * 2) {
+            this.position.setX(this.position.getX() - this.movement.getXSpeed() / GameWindow.FPS_LIMIT);
         }/* else if (this.onClearArea) {
             //final double tempRight = this.leftPosition.getX();
             //this.leftPosition.setX(this.rightPosition.getX());
@@ -159,40 +152,34 @@ public class BackgroundController implements Background {
         this.boxSprite.put(BoxPos.LEFT, this.boxSprite.get(BoxPos.CENTRAL));
         this.boxSprite.put(BoxPos.CENTRAL, this.boxSprite.get(BoxPos.RIGHT));
 
-        final Pair<Double, Double> temp = this.calculateRightPosition();
-        this.leftPosition.set(temp.getX(), temp.getY());
+        final Pair<Double, Double> temp = this.calculate(BoxPos.RIGHT);
+        this.position.set(temp.getX(), temp.getY());
     }
 
     private Pair<Double, Double> calculate(final BoxPos box) {
         final Pair<Double, Double> newPos;
         switch (box) {
-        //    case CENTRAL:
-        //        break;
-             case LEFT:
-                newPos = new Pair<>(this.leftPosition.getX() - SCREEN_WIDTH, this.leftPosition.getY());
-                break;
-            case RIGHT:
-                newPos = new Pair<>(this.leftPosition.getX() + SCREEN_WIDTH, this.leftPosition.getY());
+            case LEFT:
+                newPos = new Pair<>(this.position.getX() - SCREEN_WIDTH, this.position.getY());
                 break;
             default:
-                //newPos = new Pair<>(this.leftPosition);
-                newPos = this.leftPosition.copy();
+                 //newPos = new Pair<>(this.position);
+                 newPos = this.position.copy();
+                 break;
+            case RIGHT:
+                newPos = new Pair<>(this.position.getX() + SCREEN_WIDTH, this.position.getY());
                 break;
         }
         return newPos;
-    }
-
-    private Pair<Double, Double> calculateRightPosition() {
-        return new Pair<Double, Double>(this.leftPosition.getX() + SCREEN_WIDTH, this.leftPosition.getY());
     }
 
     /**
      * {@inheritDoc}
      */
     public void drawCoordinates(final Graphics2D g) {
-        final int xShift = (int) Math.round(leftPosition.getX())
+        final int xShift = (int) Math.round(position.getX())
                 + (int) Math.round(GameWindow.GAME_SCREEN.getTileSize() * 0.88);
-        final int yShiftDrawnX = (int) Math.round(leftPosition.getY())
+        final int yShiftDrawnX = (int) Math.round(position.getY())
                 + GameWindow.GAME_SCREEN.getTileSize();
         final int yShiftDrawnY = yShiftDrawnX + 10;
 
@@ -200,39 +187,31 @@ public class BackgroundController implements Background {
             g.setColor(Debugger.DEBUG_COLOR);
             g.setFont(Debugger.DEBUG_FONT);
 
-            g.drawString("X:" + Math.round(leftPosition.getX()), xShift, yShiftDrawnX);
-            g.drawString("Y:" + Math.round(leftPosition.getY()), xShift, yShiftDrawnY);
+            g.drawString("X:" + Math.round(position.getX()), xShift, yShiftDrawnX);
+            g.drawString("Y:" + Math.round(position.getY()), xShift, yShiftDrawnY);
         }
     }
-
-    /*
-    private boolean isOnScreenBounds() {
-        return onScreen;
-    }
-    */
 
     /**
      * Updates the entity's flags.
      */
     private void updateFlags() {
-      /*  if (leftPosition.getX() <= Math.abs(GameWindow.GAME_SCREEN.getWidth() - GameWindow.GAME_SCREEN.getTileSize())
-                && leftPosition.getY() >= 0 && leftPosition.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
+      /*  if (position.getX() <= Math.abs(GameWindow.GAME_SCREEN.getWidth() - GameWindow.GAME_SCREEN.getTileSize())
+                && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
+      */  if (position.getX() <= -GameWindow.GAME_SCREEN.getTileSize()
+                && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
             onScreen = true;
             onClearArea = false;
-      */  if (leftPosition.getX() <= -GameWindow.GAME_SCREEN.getTileSize()
-                && leftPosition.getY() >= 0 && leftPosition.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
-            onScreen = true;
-            onClearArea = false;
-        }/* else {
-            if (leftPosition.getX() < -GameWindow.GAME_SCREEN.getTileSize() - GameWindow.GAME_SCREEN.getWidth()) {
+        } else {
+         /*   if (position.getX() < -GameWindow.GAME_SCREEN.getTileSize() - GameWindow.GAME_SCREEN.getWidth()) {
                 onClearArea = true;
-            } else if (leftPosition.getX() >= GameWindow.GAME_SCREEN.getWidth()) {
+            } else if (position.getX() >= GameWindow.GAME_SCREEN.getWidth()) {
                 onClearArea = false;
             } else {
                 onClearArea = false;
-            }
+            }*/
             onScreen = false;
-        }*/
+        }
     }
 
     /**
@@ -241,10 +220,12 @@ public class BackgroundController implements Background {
     @Override
     public String toString() {
         return "Background"
-                 + "[L: X:" + Math.round(leftPosition.getX())
-                 +  " - Y:" + Math.round(leftPosition.getY()) + "]\n" + "           "
-                 + "[R: X:" + Math.round(this.calculateRightPosition().getX())
-                 +  " - Y:" + Math.round(this.calculateRightPosition().getY()) + "]";
+                + "[L: X:" + Math.round(this.calculate(BoxPos.LEFT).getX())
+                +  " - Y:" + Math.round(this.calculate(BoxPos.LEFT).getY()) + "]\n" + "           "
+                + "[C: X:" + Math.round(position.getX())
+                +  " - Y:" + Math.round(position.getY()) + "]\n" + "           "
+                + "[R: X:" + Math.round(this.calculate(BoxPos.RIGHT).getX())
+                +  " - Y:" + Math.round(this.calculate(BoxPos.RIGHT).getY()) + "]";
     }
 
     private enum BoxPos {
