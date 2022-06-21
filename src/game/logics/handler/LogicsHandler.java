@@ -293,6 +293,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 }
                 this.updateDifficulty();
                 this.updateCleaner();
+                this.background.update();
                 synchronized (this.entities) {
                     this.entities.forEach((s, se) -> se.forEach(e -> e.update()));
                 }
@@ -313,7 +314,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case PAUSED:
             case INGAME:
                 synchronized (this.entities) {
-                    this.background.update(g);
+                    this.background.draw(g);
                     this.entities.entrySet().stream()
                             .sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(),
                                     e1.getKey().ordinal()))

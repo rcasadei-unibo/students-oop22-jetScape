@@ -15,10 +15,16 @@ public interface Background {
 
     /**
      * Updates background parameters (called for each frame).
+     */
+    void update();
+
+    /**
+     * Draws the background images or the rectangle place holder if the
+     * images haven't been loaded.
      * 
      * @param g the graphics drawer
      */
-    void update(Graphics2D g);
+    void draw(Graphics2D g);
 
     /**
      * Draws the coordinates of the background if visible.

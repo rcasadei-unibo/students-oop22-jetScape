@@ -85,7 +85,7 @@ public class BackgroundController implements Background {
     /**
      * {@inheritDoc}
      */
-    public void update(final Graphics2D g) {
+    public void update() {
         this.updateFlags();
 
         if (this.leftPosition.getX() > -SCREEN_WIDTH * 2) {
@@ -96,8 +96,6 @@ public class BackgroundController implements Background {
             //this.leftPosition.setX(this.rightPosition.getX());
             //this.rightPosition.setX(tempRight + SCREEN_WIDTH);
         }*/
-
-        this.draw(g);
     }
 
     /**
@@ -105,7 +103,7 @@ public class BackgroundController implements Background {
      * 
      * @param g the graphics drawer
      */
-    private void draw(final Graphics2D g) {
+    public void draw(final Graphics2D g) {
         if (this.isVisible()) {
             if (this.onClearArea) {
                 final Pair<Double, Double> temp = this.calculateRightPosition();
