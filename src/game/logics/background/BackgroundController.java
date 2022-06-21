@@ -49,8 +49,8 @@ public class BackgroundController implements Background {
 
     /// FLAGS ///
     private boolean visible;
-    private boolean onScreen;
-    private boolean onClearArea;
+    private boolean toBeGenerated;
+    private boolean toBeShifted;
     private final Map<BoxPos, Boolean> boxVisible;
     private final Map<BoxPos, Optional<String>> boxSprite;
 
@@ -73,6 +73,7 @@ public class BackgroundController implements Background {
         Set.of(BoxPos.values()).stream()
                 .forEach(key -> this.boxSprite.put(key, Optional.empty()));
         this.boxSprite.put(BoxPos.CENTRAL, Optional.of(KEY_SPRITE1));
+        this.boxSprite.put(BoxPos.RIGHT, Optional.of(KEY_SPRITE1));
 
         this.setVisibility(true);
     }
@@ -104,24 +105,20 @@ public class BackgroundController implements Background {
     public void update() {
         this.updateFlags();
         if (this.isVisible()) {
-            if (this.onScreen) {
+            if (this.toBeGenerated) {
                 this.boxSprite.put(BoxPos.RIGHT,
                         rand.nextDouble() > BackgroundController.LADDER_GENERATION
                         ? Optional.of(BackgroundController.KEY_SPRITE1)
                         : Optional.of(BackgroundController.KEY_SPRITE2));
             }
-            if (!this.onClearArea) {
+            if (this.toBeShifted) {
                 this.shiftBox();
-                this.onClearArea = true;
+                this.toBeShifted = false;
+            }
+            if (this.position.getX() > -SCREEN_WIDTH * 2) {
+                this.position.setX(this.position.getX() - this.movement.getXSpeed() / GameWindow.FPS_LIMIT);
             }
         }
-        if (this.position.getX() > -SCREEN_WIDTH * 2) {
-            this.position.setX(this.position.getX() - this.movement.getXSpeed() / GameWindow.FPS_LIMIT);
-        }/* else if (this.onClearArea) {
-            //final double tempRight = this.leftPosition.getX();
-            //this.leftPosition.setX(this.rightPosition.getX());
-            //this.rightPosition.setX(tempRight + SCREEN_WIDTH);
-        }*/
     }
 
     /**
@@ -131,7 +128,6 @@ public class BackgroundController implements Background {
      */
     public void draw(final Graphics2D g) {
         if (this.isVisible()) {
-
             this.boxSprite.entrySet().stream()
                     .filter(box -> this.boxVisible.get(box.getKey()))
                     .forEach(box -> this.drawMgr.drawSprite(g,
@@ -162,12 +158,12 @@ public class BackgroundController implements Background {
             case LEFT:
                 newPos = new Pair<>(this.position.getX() - SCREEN_WIDTH, this.position.getY());
                 break;
-            default:
-                 //newPos = new Pair<>(this.position);
-                 newPos = this.position.copy();
-                 break;
             case RIGHT:
                 newPos = new Pair<>(this.position.getX() + SCREEN_WIDTH, this.position.getY());
+                break;
+            default:
+                //newPos = new Pair<>(this.position);
+                newPos = this.position.copy();
                 break;
         }
         return newPos;
@@ -196,21 +192,11 @@ public class BackgroundController implements Background {
      * Updates the entity's flags.
      */
     private void updateFlags() {
-      /*  if (position.getX() <= Math.abs(GameWindow.GAME_SCREEN.getWidth() - GameWindow.GAME_SCREEN.getTileSize())
-                && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
-      */  if (position.getX() <= -GameWindow.GAME_SCREEN.getTileSize()
-                && position.getY() >= 0 && position.getY() <= GameWindow.GAME_SCREEN.getHeight()) {
-            onScreen = true;
-            onClearArea = false;
+        if (position.getX() <= 0) {
+            toBeGenerated = true;
+            toBeShifted = true;
         } else {
-         /*   if (position.getX() < -GameWindow.GAME_SCREEN.getTileSize() - GameWindow.GAME_SCREEN.getWidth()) {
-                onClearArea = true;
-            } else if (position.getX() >= GameWindow.GAME_SCREEN.getWidth()) {
-                onClearArea = false;
-            } else {
-                onClearArea = false;
-            }*/
-            onScreen = false;
+            toBeGenerated = false;
         }
     }
 
