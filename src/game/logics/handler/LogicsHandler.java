@@ -218,7 +218,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
             return;
         }
-        spawner.stop();
+        this.spawner.stop();
     }
 
     private void setGameState(final GameState gs) {
@@ -235,9 +235,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     if (this.gameState == GameState.ENDGAME) { // RETRY
                         this.records.refresh();
                         this.resetGame();
-                    } else if (this.gameState == GameState.MENU) {
-                        this.entities.get(EntityType.PLAYER).add(playerEntity);
+                    } else if (this.gameState == GameState.MENU) { // START
                         this.records.refresh();
+                        this.resetGame();
+                        this.entities.get(EntityType.PLAYER).add(playerEntity);
                     }
                     this.spawner.resume();
                     break;
