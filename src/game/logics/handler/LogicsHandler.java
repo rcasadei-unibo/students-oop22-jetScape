@@ -204,28 +204,30 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         }
     }
 
-    private void quitGame() {
+    private boolean quitGame() {
         final String quitMessage = "Are you sure to quit the game?";
         final String quitTitle = "Quit Game";
-        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-            return;
-        }
+        return JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW,
+                quitMessage, quitTitle, JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION;
     }
 
-    private void quitToMainMenu() {
-        final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
+    private boolean quitToMainMenu() {
+        final String message = "Do you want to return to the main menu?\n"
+                + "You will lose the current progress of this match.";
         final String title = "Return to main menu";
-        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
-            return;
-        }
-        this.spawner.stop();
+        return JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW,
+                message, title, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION;
     }
 
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
                 case EXIT:
-                    this.quitGame();
+                    if (this.quitGame()) {
+                       return;
+                    }
                     break;
                 case INGAME:
                     if (this.gameState != GameState.PAUSED) {
@@ -244,7 +246,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case MENU:
                     if (this.gameState == GameState.PAUSED) {
-                        this.quitToMainMenu();
+                        if (this.quitToMainMenu()) {
+                            this.spawner.stop();
+                            return;
+                        }
                     }
                     this.getEntitiesCleaner().accept(t -> true, e -> true);
                     break;
