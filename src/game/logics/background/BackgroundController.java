@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import game.frame.GameWindow;
 import game.logics.interactions.SpeedHandler;
@@ -66,11 +67,17 @@ public class BackgroundController implements Background {
                 BoxId.LEFT, false,
                 BoxId.CENTRAL, true,
                 BoxId.RIGHT, false));
+        this.boxSprite = new HashMap<>(3);
 
+        Set.of(BoxId.values()).stream()
+                .forEach(key -> this.boxSprite.put(key, Optional.empty()));
+
+        /*
         this.boxSprite = new HashMap(Map.of(
                 BoxId.LEFT, Optional.empty(),
                 BoxId.CENTRAL, KEY_SPRITE1,
                 BoxId.RIGHT, Optional.empty()));
+        */
         this.setVisibility(true);
     }
 
@@ -128,9 +135,10 @@ public class BackgroundController implements Background {
             this.boxSprite.entrySet().stream()
                     .filter(box -> this.boxVisible.get(box.getKey()))
                     .forEach(box -> this.drawMgr.drawSprite(g,
-                            BackgroundDrawer.PLACEHOLDER_KEY, this.leftPosition,
+                            box.getValue().orElse(BackgroundDrawer.PLACEHOLDER_KEY), this.leftPosition,
                             GameWindow.GAME_SCREEN.getHeight(),
                             GameWindow.GAME_SCREEN.getWidth()));
+
             /*
             this.drawMgr.drawSprite(g, KEY_SPRITE1, this.leftPosition,
                     GameWindow.GAME_SCREEN.getHeight(),
