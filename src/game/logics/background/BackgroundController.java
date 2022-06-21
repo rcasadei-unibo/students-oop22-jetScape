@@ -2,6 +2,9 @@ package game.logics.background;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import game.frame.GameWindow;
 import game.logics.interactions.SpeedHandler;
@@ -34,6 +37,8 @@ public class BackgroundController implements Background {
     private boolean visible;
     private boolean onScreen;
     private boolean onClearArea;
+    private final Map<BoxId, Boolean> boxVisible;
+    private final Map<BoxId, Optional<String>> boxSprite;
 
     //private static final int leftBorderOffset = 5;
     private static final int SCREEN_WIDTH = GameWindow.GAME_SCREEN.getWidth();
@@ -57,6 +62,15 @@ public class BackgroundController implements Background {
         this.drawMgr.addSprite(KEY_SPRITE1, SPRITE_PATH + "background_1.png");
         this.drawMgr.addSprite(KEY_SPRITE2, SPRITE_PATH + "background_2.png");
 
+        this.boxVisible = new HashMap<>(Map.of(
+                BoxId.LEFT, false,
+                BoxId.CENTRAL, true,
+                BoxId.RIGHT, false));
+
+        this.boxSprite = new HashMap(Map.of(
+                BoxId.LEFT, Optional.empty(),
+                BoxId.CENTRAL, KEY_SPRITE1,
+                BoxId.RIGHT, Optional.empty()));
         this.setVisibility(true);
     }
 
@@ -105,11 +119,19 @@ public class BackgroundController implements Background {
      */
     public void draw(final Graphics2D g) {
         if (this.isVisible()) {
-            if (this.onClearArea) {
+            if (!this.onScreen) { // this.onClearArea
                 final Pair<Double, Double> temp = this.calculateRightPosition();
                 this.leftPosition.set(temp.getX(), temp.getY());
-                this.onClearArea = false;
+                this.onScreen = true;
+                //this.onClearArea = false;
             }
+            this.boxSprite.entrySet().stream()
+                    .filter(box -> this.boxVisible.get(box.getKey()))
+                    .forEach(box -> this.drawMgr.drawSprite(g,
+                            BackgroundDrawer.PLACEHOLDER_KEY, this.leftPosition,
+                            GameWindow.GAME_SCREEN.getHeight(),
+                            GameWindow.GAME_SCREEN.getWidth()));
+            /*
             this.drawMgr.drawSprite(g, KEY_SPRITE1, this.leftPosition,
                     GameWindow.GAME_SCREEN.getHeight(),
                     GameWindow.GAME_SCREEN.getWidth());
@@ -117,7 +139,7 @@ public class BackgroundController implements Background {
                 this.drawMgr.drawSprite(g, KEY_SPRITE2, this.calculateRightPosition(),
                      GameWindow.GAME_SCREEN.getHeight(),
                      GameWindow.GAME_SCREEN.getWidth());
-            }
+            }*/
         }
     }
 
@@ -183,5 +205,9 @@ public class BackgroundController implements Background {
                  +  " - Y:" + Math.round(leftPosition.getY()) + "]\n" + "           "
                  + "[R: X:" + Math.round(this.calculateRightPosition().getX())
                  +  " - Y:" + Math.round(this.calculateRightPosition().getY()) + "]";
+    }
+
+    private enum BoxId {
+        LEFT, CENTRAL, RIGHT;
     }
 }
