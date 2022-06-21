@@ -314,8 +314,8 @@ public class LogicsHandler extends AbstractLogics implements Logics {
             case ENDGAME:
             case PAUSED:
             case INGAME:
+                this.background.draw(g);
                 synchronized (this.entities) {
-                    this.background.draw(g);
                     this.entities.entrySet().stream()
                             .sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(),
                                     e1.getKey().ordinal()))
@@ -323,9 +323,9 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                             .forEach(e -> e.getValue().forEach(se -> se.draw(g)));
 
                     this.entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
-                    this.background.drawCoordinates(g);
                     this.entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
+                this.background.drawCoordinates(g);
                 this.spawner.drawNextSpawnTimer(g);
                 this.drawDifficultyLevel(g);
                 break;
