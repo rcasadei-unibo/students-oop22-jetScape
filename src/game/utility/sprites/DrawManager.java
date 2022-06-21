@@ -43,7 +43,7 @@ public class DrawManager implements Drawer {
      */
     public void setPlaceH(final Color placeHolder) {
         this.defaultColor = placeHolder;
-        sprites.put(PLACEHOLDER_KEY, new Sprite(PLACEHOLDER_KEY, defaultColor));
+        this.sprites.put(PLACEHOLDER_KEY, new EntitySprite(PLACEHOLDER_KEY, defaultColor));
     }
     /**
      * {@inheritDoc}
@@ -55,33 +55,35 @@ public class DrawManager implements Drawer {
      * {@inheritDoc}
      */
     public void addSprite(final String name, final String path) {
-        sprites.put(name, new Sprite(name, defaultColor, path));
+        this.sprites.put(name, new EntitySprite(name, defaultColor, path));
     }
     /**
      * {@inheritDoc}
      */
     public void addLoadedSprite(final Sprite t) {
-        sprites.put(t.getName(), t);
+        this.sprites.put(t.getName(), t);
     }
 
     private void draw(final Graphics2D g, final String sprite, final Pair<Double, Double> pos, final int size) {
-        if (sprites.containsKey(sprite)) {
-            sprites.get(sprite).draw(g, pos, size);
-        } else if (sprites.containsKey(PLACEHOLDER_KEY)) {
-            sprites.get(PLACEHOLDER_KEY).draw(g, pos, size);
+        if (this.sprites.containsKey(sprite)) {
+            this.sprites.get(sprite).draw(g, pos, size);
+        } else if (this.sprites.containsKey(PLACEHOLDER_KEY)) {
+            this.sprites.get(PLACEHOLDER_KEY).draw(g, pos, size);
         }
     }
+
     /**
      * {@inheritDoc}
      */
     public void drawSprite(final Graphics2D g, final String sprite, final Pair<Double, Double> pos, final int size) {
         this.draw(g, sprite, pos, size);
     }
+
     /**
      * {@inheritDoc}
      */
     public void drawCurrentSprite(final Graphics2D g, final Pair<Double, Double> pos, final int size) {
-        animator.ifPresent(a -> spriteToDraw = a.get());
-        this.draw(g, spriteToDraw, pos, size);
+        this.animator.ifPresent(a -> this.spriteToDraw = a.get());
+        this.draw(g, this.spriteToDraw, pos, size);
     }
 }

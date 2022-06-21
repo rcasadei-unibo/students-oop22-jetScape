@@ -3,7 +3,7 @@ package game.frame;
 import javax.swing.JFrame;
 
 import game.utility.screen.Screen;
-import game.utility.sprites.Sprite;
+import game.utility.sprites.AbstractSprite;
 
 /**
  * The {@link GameHandler} class is used to create and handle
@@ -25,7 +25,7 @@ public class GameHandler implements Game {
     /**
      * The icon representing the game window.
      */
-    private static final String WINDOW_ICON_PATH = Sprite.DEFAULT_SPRITE_DIR + "icon.png";
+    private static final String WINDOW_ICON_PATH = AbstractSprite.getDefaultSpriteDirectory() + "icon.png";
     /**
      * Allows the window to get manually resized by the user.
      * <p>It's suggested to leave it <code>false</code> as long as a way to change
@@ -58,7 +58,7 @@ public class GameHandler implements Game {
         GAME_FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GAME_FRAME.setTitle(WINDOW_TITLE);
         GAME_FRAME.setLocation((int) Screen.SYSTEM_RESOLUTION.getWidth() / windowLocation, (int) Screen.SYSTEM_RESOLUTION.getHeight() / windowLocation);
-        GAME_FRAME.setIconImage(Sprite.load(WINDOW_ICON_PATH));
+        GAME_FRAME.setIconImage(AbstractSprite.load(WINDOW_ICON_PATH));
         GAME_FRAME.setResizable(WINDOW_RESIZABLE);
 
         GAME_FRAME.add(GAME_WINDOW);
@@ -74,5 +74,4 @@ public class GameHandler implements Game {
         GAME_FRAME.setVisible(true);
         GAME_WINDOW.startGame();
     }
-
 }

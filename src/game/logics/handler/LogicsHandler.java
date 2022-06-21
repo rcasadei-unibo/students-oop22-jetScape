@@ -29,7 +29,8 @@ import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.PlayerInstance;
-
+import game.logics.background.Background;
+import game.logics.background.BackgroundController;
 import game.logics.display.controller.DisplayController;
 
 import game.logics.generator.Generator;
@@ -51,6 +52,7 @@ import game.utility.other.GameState;
  */
 public class LogicsHandler extends AbstractLogics implements Logics {
 
+    private final Background background;
     /**
      * Contains the current active entities on the game environment.
      */
@@ -73,8 +75,8 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     private final KeyHandler keyH;
     private final Debugger debugger;
 
-    private static Records records;
-    private static GameInfoHandler game;
+    private final Records records;
+    private final GameInfoHandler game;
 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -90,30 +92,32 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         EntityType.ALL_ENTITY_TYPE
                 .forEach(e -> entities.put(e, new HashSet<>()));
 
-        game = new GameInfoHandler(new GameInfo());
+        this.game = new GameInfoHandler(new GameInfo());
 
-        playerEntity = new PlayerInstance(this, entities);
+        this.playerEntity = new PlayerInstance(this, this.entities);
 
-        records = new Records(game, playerEntity);
+        this.records = new Records(game, playerEntity);
 
-        displayController = new DisplayController(keyH, g -> setGameState(g),
-                () -> gameState, () -> playerEntity.getCurrentScore(),
-                () -> game.getActualGame(), records);
+        this.background = new BackgroundController(super.getBackgroundMovementInfo());
 
-        spawner = new TileGenerator(entities, super.getSpawningInteval());
+        this.displayController = new DisplayController(this.keyH, g -> setGameState(g),
+                () -> this.gameState, () -> this.playerEntity.getCurrentScore(),
+                () -> this.game.getActualGame(), this.records);
+
+        this.spawner = new TileGenerator(this.entities, super.getSpawningInteval());
         this.initializeSpawner();
     }
 
     private void initializeSpawner() {
 
-        spawner.setMissileCreator(p -> new MissileInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.MISSILE)));
-        spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, super.getEntityMovementInfo(EntityType.ZAPPERBASE)));
-        spawner.setZapperRayCreator((b, p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
-        spawner.setShieldCreator(p -> new ShieldInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.SHIELD)));
-        spawner.setTeleportCreator(p -> new TeleportInstance(this, p, playerEntity, super.getEntityMovementInfo(EntityType.TELEPORT)));
+        this.spawner.setMissileCreator(p -> new MissileInstance(this, p, this.playerEntity, super.getEntityMovementInfo(EntityType.MISSILE)));
+        this.spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, super.getEntityMovementInfo(EntityType.ZAPPERBASE)));
+        this.spawner.setZapperRayCreator((b, p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
+        this.spawner.setShieldCreator(p -> new ShieldInstance(this, p, this.playerEntity, super.getEntityMovementInfo(EntityType.SHIELD)));
+        this.spawner.setTeleportCreator(p -> new TeleportInstance(this, p, this.playerEntity, super.getEntityMovementInfo(EntityType.TELEPORT)));
 
         try {
-            spawner.initialize();
+            this.spawner.initialize();
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -131,14 +135,21 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      */
     public BiConsumer<Predicate<EntityType>, Predicate<Entity>> getEntitiesCleaner() {
         return new BiConsumer<Predicate<EntityType>, Predicate<Entity>>() {
-            public void accept(final Predicate<EntityType> typeCondition, final Predicate<Entity> entityCondition) {
+            public void accept(final Predicate<EntityType> typeCondition,
+                    final Predicate<Entity> entityCondition) {
                 synchronized (entities) {
-                    entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
-                    .forEach(e -> GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_CLEAN, "cleaned::" + e.toString()));
-                    entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).flatMap(e -> e.getValue().stream()).filter(entityCondition).collect(Collectors.toList())
-                    .forEach(e -> e.reset());
-                    entities.entrySet().stream().filter(e -> typeCondition.test(e.getKey())).map(e -> e.getValue()).collect(Collectors.toList())
-                    .forEach(se -> se.removeIf(entityCondition));
+                    entities.entrySet().stream()
+                            .filter(e -> typeCondition.test(e.getKey()))
+                            .flatMap(e -> e.getValue().stream())
+                            .filter(entityCondition)
+                            .peek(e -> GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_CLEAN, "cleaned::" + e.toString()))
+                            .collect(Collectors.toList())
+                            .forEach(e -> e.reset());
+                    entities.entrySet().stream()
+                            .filter(e -> typeCondition.test(e.getKey()))
+                            .map(e -> e.getValue())
+                            .collect(Collectors.toList())
+                            .forEach(se -> se.removeIf(entityCondition));
                 }
             }
         };
@@ -146,21 +157,22 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
     private void resetGame() {
         this.getEntitiesCleaner().accept(t -> t != EntityType.PLAYER, e -> true);
-        playerEntity.reset();
+        this.playerEntity.reset();
+        this.background.reset();
     }
 
     /**
      * Handles the commands executed for each key pressed.
      */
     private void checkKeyboardInput() {
-        switch (keyH.getKeyTyped()) {
+        switch (this.keyH.getKeyTyped()) {
             case KeyEvent.VK_Z:
-                debugger.setDebugMode(!debugger.isDebugModeOn());
-                keyH.resetKeyTyped();
+                this.debugger.setDebugMode(!this.debugger.isDebugModeOn());
+                this.keyH.resetKeyTyped();
                 break;
             case KeyEvent.VK_P:
                 this.setGameState(GameState.PAUSED);
-                keyH.resetKeyTyped();
+                this.keyH.resetKeyTyped();
                 break;
             default:
                 break;
@@ -177,9 +189,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     }
 
     private void updateDifficulty() {
-        final int increaseDiffPerScore = 250;
-
-        super.setDifficultyLevel(playerEntity.getCurrentScore() / increaseDiffPerScore + 1);
+        super.setDifficultyLevel(this.playerEntity.getCurrentScore() / super.getIncreaseDiffPerScore() + 1);
     }
 
     private void drawDifficultyLevel(final Graphics2D g) {
@@ -208,7 +218,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
             return;
         }
-        spawner.stop();
+        this.spawner.stop();
     }
 
     private void setGameState(final GameState gs) {
@@ -219,17 +229,18 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case INGAME:
                     if (this.gameState != GameState.PAUSED) {
-                        LogicsHandler.game.setActualGame(new GameInfo(LogicsHandler.game));
+                        this.game.setActualGame(new GameInfo(this.game));
                         //this.gameID.generateNewGameUID();
                     }
                     if (this.gameState == GameState.ENDGAME) { // RETRY
-                        LogicsHandler.records.refresh();
+                        this.records.refresh();
                         this.resetGame();
-                    } else if (this.gameState == GameState.MENU) {
-                        entities.get(EntityType.PLAYER).add(playerEntity);
-                        LogicsHandler.records.refresh();
+                    } else if (this.gameState == GameState.MENU) { // START
+                        this.records.refresh();
+                        this.resetGame();
+                        this.entities.get(EntityType.PLAYER).add(playerEntity);
                     }
-                    spawner.resume();
+                    this.spawner.resume();
                     break;
                 case MENU:
                     if (this.gameState == GameState.PAUSED) {
@@ -238,23 +249,23 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     this.getEntitiesCleaner().accept(t -> true, e -> true);
                     break;
                 case ENDGAME:
-                    spawner.stop();
+                    this.spawner.stop();
                     //this.gameOverDisplay.setRecords(getScore.get());
                     //this.records.fetch(this.getGame);
-                    LogicsHandler.records.announceGameEnded(() -> game.getActualGame());
+                    this.records.announceGameEnded(() -> this.game.getActualGame());
                     /*for (final Integer record : LogicsHandler.records.getRecordScores()) {
                         System.out.println(record);
                     }*/
-                    LogicsHandler.records.update();
+                    this.records.update();
                     break;
                 case PAUSED:
                     if (this.gameState != GameState.INGAME) {
                         return;
                     }
-                    spawner.pause();
+                    this.spawner.pause();
                     break;
                 case RECORDS:
-                    LogicsHandler.records.refresh();
+                    this.records.refresh();
                     break;
                 default:
                     break;
@@ -269,22 +280,23 @@ public class LogicsHandler extends AbstractLogics implements Logics {
     public void updateAll() {
         switch (this.gameState) {
             case EXIT:
-                spawner.terminate();
+                this.spawner.terminate();
                 GameHandler.GAME_WINDOW.stopGame();
                 GameHandler.GAME_FRAME.dispose();
                 break;
             case ENDGAME:
-                playerEntity.update();
+                this.playerEntity.update();
                 break;
             case INGAME:
-                if (playerEntity.hasDied()) {
+                if (this.playerEntity.hasDied()) {
                     this.setGameState(GameState.ENDGAME);
                     break;
                 }
                 this.updateDifficulty();
                 this.updateCleaner();
-                synchronized (entities) {
-                    entities.forEach((s, se) -> se.forEach(e -> e.update()));
+                this.background.update();
+                synchronized (this.entities) {
+                    this.entities.forEach((s, se) -> se.forEach(e -> e.update()));
                 }
             default:
                 break;
@@ -299,16 +311,22 @@ public class LogicsHandler extends AbstractLogics implements Logics {
      */
     public void drawAll(final Graphics2D g) {
         switch (this.gameState) {
-            case ENDGAME: 
+            case ENDGAME:
             case PAUSED:
             case INGAME:
-                synchronized (entities) {
-                    entities.entrySet().stream().sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(), e1.getKey().ordinal())).collect(Collectors.toList()).forEach(e -> e.getValue().forEach(se -> se.draw(g)));
+                this.background.draw(g);
+                synchronized (this.entities) {
+                    this.entities.entrySet().stream()
+                            .sorted((e1, e2) -> Integer.compare(e2.getKey().ordinal(),
+                                    e1.getKey().ordinal()))
+                            .collect(Collectors.toList())
+                            .forEach(e -> e.getValue().forEach(se -> se.draw(g)));
 
-                    entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
-                    entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
+                    this.entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
+                    this.entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
-                spawner.drawNextSpawnTimer(g);
+                this.background.drawCoordinates(g);
+                this.spawner.drawNextSpawnTimer(g);
                 this.drawDifficultyLevel(g);
                 break;
             default:
