@@ -3,8 +3,6 @@ package game.logics.background;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import javax.swing.JComponent;
-
 import game.frame.GameWindow;
 import game.logics.interactions.SpeedHandler;
 import game.utility.debug.Debugger;
@@ -16,8 +14,9 @@ import game.utility.other.Pair;
 public class BackgroundController implements Background {
 
     /**
-    * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
-     * where {@link ShieldInstance} sprites can be found.
+     * Specifies the path within the sprite folder [specified in
+     * {@link game.utility.sprites.AbstractSprite AbstractSprite} class]
+     * where {@link BackgroundSprite} sprites can be found.
      */
     private static final String SPRITE_PATH = "background" + System.getProperty("file.separator");
 
@@ -25,11 +24,12 @@ public class BackgroundController implements Background {
     private static final String KEY_SPRITE2 = "background2";
 
     /**
-     * If sprites are missing, they will be replace by a rectangle of the color specified in
-     * <code>{@link ShieldInstance}.PLACE_HOLDER</code>.
+     * If sprites are missing, they will be replaced by a rectangle of the color specified here.
+     *
+     *   HSV: 240° 33% 14.1%
+     *   RGB: 24 24 36
      */
-    private static final Color PLACE_HOLDER = Color.black;
-
+    private static final Color PLACE_HOLDER = Color.getHSBColor((float) 0.666, (float) 0.333, (float) 0.141);
     /// FLAGS ///
     private boolean visible;
     private boolean onScreen;
@@ -125,8 +125,10 @@ public class BackgroundController implements Background {
      * {@inheritDoc}
      */
     public void drawCoordinates(final Graphics2D g) {
-        final int xShift = (int) Math.round(leftPosition.getX()) + (int) Math.round(GameWindow.GAME_SCREEN.getTileSize() * 0.88);
-        final int yShiftDrawnX = (int) Math.round(leftPosition.getY()) + GameWindow.GAME_SCREEN.getTileSize();
+        final int xShift = (int) Math.round(leftPosition.getX())
+                + (int) Math.round(GameWindow.GAME_SCREEN.getTileSize() * 0.88);
+        final int yShiftDrawnX = (int) Math.round(leftPosition.getY())
+                + GameWindow.GAME_SCREEN.getTileSize();
         final int yShiftDrawnY = yShiftDrawnX + 10;
 
         if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
@@ -142,17 +144,14 @@ public class BackgroundController implements Background {
         return new Pair<Double, Double>(this.leftPosition.getX() + SCREEN_WIDTH, this.leftPosition.getY());
     }
 
-        /**
-         * {@inheritDoc}
-         */
-        private boolean isOnScreenBounds() {
-            return onScreen;
-        }
-
+    /*
+    private boolean isOnScreenBounds() {
+        return onScreen;
+    }
 
     private boolean isOnClearArea() {
         return this.onClearArea;
-    }
+    }*/
 
     /**
      * Updates the entity's flags.
