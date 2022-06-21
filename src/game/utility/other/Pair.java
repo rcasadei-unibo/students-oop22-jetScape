@@ -16,10 +16,17 @@ public class Pair<X, Y> {
      * @param y the value of the second pair
      */
     public Pair(final X x, final Y y) {
-        super();
         this.x = x;
         this.y = y;
     }
+
+    /**
+     * @param pair the pair hat have to be copied
+     *//*
+    public Pair(final Pair<X, Y> pair) {
+        this.x = pair.getX();
+        this.y = pair.getY();
+    }*/
 
     /**
      * @return the first value of the pair

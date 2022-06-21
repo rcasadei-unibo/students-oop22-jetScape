@@ -40,7 +40,7 @@ public class BackgroundController implements Background {
     private static final Pair<Double, Double> LEFT_START_POS = new Pair<>(0.0, 0.0);
     //private static final Pair<Double, Double> RIGHT_START_POS = new Pair<>((double) SCREEN_WIDTH, 0.0);
 
-    private final Pair<Double, Double> leftPosition = LEFT_START_POS;
+    private final Pair<Double, Double> leftPosition = LEFT_START_POS.copy();
     //private final Pair<Double, Double> rightPosition = RIGHT_START_POS;
 
     private final SpeedHandler movement;
