@@ -4,10 +4,12 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
+import game.frame.GameWindow;
 import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.MenuOption;
+import game.utility.other.Sound;
 /**
  * The {@link MenuHandler} class manages {@link Display} menus.
  */
@@ -54,14 +56,17 @@ public class MenuHandler implements DisplayHandler {
             case KeyEvent.VK_UP :
                 this.goUp();
                 keyH.resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_DOWN:
                 this.goDown();
                 keyH.resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_ENTER:
                 this.setGameState.accept(this.selectedOption.getOptionsGS());
                 keyH.resetKeyTyped();
+                GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             default:
                 break;
@@ -78,7 +83,7 @@ public class MenuHandler implements DisplayHandler {
     /**
      * moves the cursor up .
      */
-    private void goUp() {
+    protected void goUp() {
         this.cursor--;
         if (this.cursor < 0) {
             this.cursor = this.options.size() - 1;
@@ -88,7 +93,7 @@ public class MenuHandler implements DisplayHandler {
     /**
      * moves the cursor down .
      */
-    private void goDown() {
+    protected void goDown() {
         this.cursor++;
         if (this.cursor > this.options.size() - 1) {
             this.cursor = 0;
@@ -98,8 +103,35 @@ public class MenuHandler implements DisplayHandler {
     /**
      * updates the selected option.
      */
-    private void updateSelectedOption() {
+    protected void updateSelectedOption() {
         this.selectedOption = this.options.get(this.cursor);
     }
 
+    /**
+     * @return this handler's KeyHandler
+     */
+    protected KeyHandler getKeyH() {
+        return keyH;
+    }
+
+    /**
+     * @return this handler's setter for game state
+     */
+    protected Consumer<GameState> getSetGameState() {
+        return setGameState;
+    }
+
+    /**
+     * @return this handler's list of options
+     */
+    protected List<MenuOption> getOptions() {
+        return options;
+    }
+
+    /**
+     * @return this handler's cursor value
+     */
+    protected int getCursor() {
+        return cursor;
+    }
 }

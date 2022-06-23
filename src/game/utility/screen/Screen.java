@@ -4,9 +4,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 /**
- * The {@link Screen} interface can be used for accessing {@link ScreenHandler} methods
+ * <p>The {@link Screen} interface can be used for accessing {@link ScreenHandler} methods.</p>
  * 
- * The {@link ScreenHandler} stores all the basic screen information.
+ * <p>The {@link ScreenHandler} stores all the basic screen information.</p>
  */
 public interface Screen {
 

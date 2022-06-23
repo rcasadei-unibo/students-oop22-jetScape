@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
@@ -36,7 +37,6 @@ import game.logics.display.controller.DisplayController;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
 
-import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.records.Records;
 
 import game.utility.debug.Debugger;
@@ -52,11 +52,18 @@ import game.utility.other.GameState;
  */
 public class LogicsHandler extends AbstractLogics implements Logics {
 
+    /**
+     * Contains the background on the game environment.
+     */
     private final Background background;
     /**
      * Contains the current active entities on the game environment.
      */
     private final Map<EntityType, Set<Entity>> entities = new HashMap<>();
+    /**
+     * A reference to the player's entity.
+     */
+    private final Player playerEntity;
 
     /**
      * Generates sets of obstacles on the environment.
@@ -67,16 +74,12 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
     private GameState gameState = GameState.MENU;
 
-    /**
-     * A reference to the player's entity.
-     */
-    private final Player playerEntity;
-
     private final KeyHandler keyH;
     private final Debugger debugger;
 
     private final Records records;
     private final GameInfoHandler game;
+    private final Supplier<GameInfo> getGame;
 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -93,6 +96,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 .forEach(e -> entities.put(e, new HashSet<>()));
 
         this.game = new GameInfoHandler(new GameInfo());
+        this.getGame = () -> this.game.getActualGame();
 
         this.playerEntity = new PlayerInstance(this, this.entities);
 
@@ -204,28 +208,30 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         }
     }
 
-    private void quitGame() {
+    private boolean quitGame() {
         final String quitMessage = "Are you sure to quit the game?";
         final String quitTitle = "Quit Game";
-        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, quitMessage, quitTitle, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-            return;
-        }
+        return JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW,
+                quitMessage, quitTitle, JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION;
     }
 
-    private void quitToMainMenu() {
-        final String message = "Do you want to return to the main menu?\nYou will lose the current progress of this match.";
+    private boolean quitToMainMenu() {
+        final String message = "Do you want to return to the main menu?\n"
+                + "You will lose the current progress of this match.";
         final String title = "Return to main menu";
-        if (JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW, message, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
-            return;
-        }
-        this.spawner.stop();
+        return JOptionPane.showConfirmDialog((Component) GameHandler.GAME_WINDOW,
+                message, title, JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION;
     }
 
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
                 case EXIT:
-                    this.quitGame();
+                    if (this.quitGame()) {
+                       return;
+                    }
                     break;
                 case INGAME:
                     if (this.gameState != GameState.PAUSED) {
@@ -243,19 +249,17 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     this.spawner.resume();
                     break;
                 case MENU:
-                    if (this.gameState == GameState.PAUSED) {
-                        this.quitToMainMenu();
+                    if (this.gameState == GameState.PAUSED
+                            && this.quitToMainMenu()) {
+                        this.spawner.stop();
+                        return;
                     }
                     this.getEntitiesCleaner().accept(t -> true, e -> true);
                     break;
                 case ENDGAME:
                     this.spawner.stop();
-                    //this.gameOverDisplay.setRecords(getScore.get());
                     //this.records.fetch(this.getGame);
-                    this.records.announceGameEnded(() -> this.game.getActualGame());
-                    /*for (final Integer record : LogicsHandler.records.getRecordScores()) {
-                        System.out.println(record);
-                    }*/
+                    this.records.announceGameEnded(this.getGame);
                     this.records.update();
                     break;
                 case PAUSED:

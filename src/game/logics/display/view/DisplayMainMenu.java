@@ -2,7 +2,7 @@ package game.logics.display.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import game.logics.background.Background;
 import game.utility.other.MenuOption;
@@ -26,7 +26,7 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
 
         this.background = background;
         this.getOptions().add(MenuOption.START);
-        this.getOptions().add(MenuOption.SHOP);
+        this.getOptions().add(MenuOption.SETTINGS);
         this.getOptions().add(MenuOption.QUIT);
         this.getOptions().add(MenuOption.RECORDS);
     }
@@ -40,7 +40,7 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
         this.background.draw(g);
 
         // TITLE
-        super.drawTitleText(g, GAME_NAME, Function.identity());
+        super.drawTitleText(g, GAME_NAME, UnaryOperator.identity());
 
         // OPTIONS
         super.drawOptions(g);

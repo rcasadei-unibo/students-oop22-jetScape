@@ -17,6 +17,7 @@ import game.logics.interactions.CollisionsHandler;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
+import game.utility.other.Sound;
 
 /**
  * The {@link PlayerInstance} class represents the player's entity in
@@ -161,6 +162,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             if (this.shieldProtected) {
                 this.invulnerable = true;
                 this.shieldProtected = false;
+                GameWindow.GAME_SOUND.play(Sound.SHIELD_DOWN);
                 return;
             }
             this.setStatus(statusAfterHit);
@@ -171,19 +173,29 @@ public class PlayerInstance extends EntityInstance implements Player {
     private void checkHit(final Entity entityHit) {
         switch (entityHit.entityType()) {
             case MISSILE: 
+                if (!this.shieldProtected) {
+                    GameWindow.GAME_SOUND.stop(Sound.JETPACK);
+                    GameWindow.GAME_SOUND.play(Sound.MISSILE);
+                }
                 this.obstacleHit(PlayerStatus.BURNED);
                 entityHit.clean();
                 break;
             case ZAPPER:
+                if (!this.shieldProtected) {
+                    GameWindow.GAME_SOUND.stop(Sound.JETPACK);
+                    GameWindow.GAME_SOUND.play(Sound.ZAPPED);
+                }
                 this.obstacleHit(PlayerStatus.ZAPPED);
                 break;
             case SHIELD:
                 this.shieldProtected = true;
                 entityHit.clean();
+                GameWindow.GAME_SOUND.play(Sound.SHIELD_UP);
                 break;
             case TELEPORT:
                 score += TeleportInstance.getScoreIncrease();
                 this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
+                GameWindow.GAME_SOUND.play(Sound.TELEPORT);
                 break;
             default:
                 break;
@@ -207,6 +219,9 @@ public class PlayerInstance extends EntityInstance implements Player {
                 ? this.getPosition().getY() - jumpSpeed * jumpMultiplier
                 : Y_TOP_LIMIT);
         setStatus(PlayerStatus.JUMP);
+        if (statusChanged) {
+            GameWindow.GAME_SOUND.playInLoop(Sound.JETPACK);
+        }
     }
 
     private boolean fall() {
@@ -227,6 +242,9 @@ public class PlayerInstance extends EntityInstance implements Player {
         } else if (status != PlayerStatus.WALK) {
             setStatus(fall() ? PlayerStatus.FALL : PlayerStatus.LAND);
             fallMultiplier += FALL_MULTIPLIER_INCREASE;
+            if (statusChanged) {
+                GameWindow.GAME_SOUND.stop(Sound.JETPACK);
+            }
         }
     }
 

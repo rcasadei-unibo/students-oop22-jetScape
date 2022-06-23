@@ -3,14 +3,14 @@ package game.logics.display.controller;
 import game.logics.background.Background;
 import game.logics.display.handlers.DisplayHandler;
 import game.logics.display.handlers.MenuHandler;
-
+import game.logics.display.handlers.SettingsHandler;
 import game.logics.display.view.DisplayGameOver;
 import game.logics.display.view.DisplayHUD;
 import game.logics.display.view.DisplayMainMenu;
 import game.logics.display.view.DisplayPause;
 import game.logics.display.view.DisplayRecords;
+import game.logics.display.view.DisplaySettings;
 
-import game.logics.handler.Logics.GameInfo;
 import game.logics.records.Records;
 
 import game.utility.input.keyboard.KeyHandler;
@@ -36,6 +36,8 @@ public class DisplayController {
     private final DisplayMainMenu mainMenuDisplay;
     private final DisplayRecords recordsDisplay;
     private final DisplayGameOver gameOverDisplay;
+    private final DisplaySettings gameSettings;
+
     /*
      * Handlers for every display with a menu
      */
@@ -43,6 +45,7 @@ public class DisplayController {
     private final DisplayHandler titleHandler;
     private final DisplayHandler recordsHandler;
     private final DisplayHandler gameOverHandler;
+    private final SettingsHandler settingsHandler;
     // TODO: eventually add shop 
 
     /**
@@ -50,9 +53,10 @@ public class DisplayController {
      * all {@link MenuHandler} needed instances.
      *
      * @param keyH
-     * @param setState Consumer to set new value of State
-     * @param getState Supplier to get new value from State
+     * @param setState {@link Consumer} to set new value of State
+     * @param getState {@link Supplier} to get new value from State
      * @param getScore Supplier to get new value of Score
+     * @param records {@link Records} to check & set new records
      */
     public DisplayController(final KeyHandler keyH,
             final Consumer<GameState> setState,
@@ -65,8 +69,8 @@ public class DisplayController {
 
         this.hud = new DisplayHUD();
         this.pauseDisplay = new DisplayPause();
-
         this.mainMenuDisplay = new DisplayMainMenu(background);
+        this.gameSettings = new DisplaySettings();
         this.recordsDisplay = new DisplayRecords(records);
         this.gameOverDisplay = new DisplayGameOver(records);
 
@@ -74,6 +78,7 @@ public class DisplayController {
         this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
         this.recordsHandler = new MenuHandler(keyH, recordsDisplay, setState);
         this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
+        this.settingsHandler = new SettingsHandler(keyH, gameSettings, setState);
     }
 
     /**
@@ -101,6 +106,10 @@ public class DisplayController {
                 this.gameOverDisplay.drawScreen(g,
                         gameOverHandler.getSelectedOption());
                 break;
+           case SETTINGS :
+               this.gameSettings.drawScreen(g,
+                        settingsHandler.getSelectedOption());
+               break;
            default:
                 break;
         }
@@ -126,6 +135,9 @@ public class DisplayController {
                 break;
             case ENDGAME :
                 this.gameOverHandler.update();
+                break;
+            case SETTINGS :
+                this.settingsHandler.update();
                 break;
             default :
                 break;
