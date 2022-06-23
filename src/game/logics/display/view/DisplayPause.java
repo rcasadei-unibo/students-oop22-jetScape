@@ -2,7 +2,7 @@ package game.logics.display.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import game.utility.other.MenuOption;
 
@@ -33,7 +33,7 @@ public class DisplayPause extends Display implements MenuDisplay {
         this.setSelectedOption(selected);
 
         // TITLE
-        super.drawTitleText(g, TITLE, Function.identity());
+        super.drawTitleText(g, TITLE, UnaryOperator.identity());
 
         // OPTIONS
         super.drawOptions(g);

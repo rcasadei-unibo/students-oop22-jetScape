@@ -3,7 +3,7 @@ package game.logics.display.view;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import game.frame.GameWindow;
 import game.utility.other.MenuOption;
@@ -49,7 +49,7 @@ public class DisplaySettings extends Display {
         this.setSelectedOption(selected);
 
         // TITLE
-        super.drawTitleText(g, TITLE, Function.identity());
+        super.drawTitleText(g, TITLE, UnaryOperator.identity());
 
         // OPTIONS
         this.drawOptions(g);

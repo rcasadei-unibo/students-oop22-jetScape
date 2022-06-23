@@ -2,7 +2,7 @@ package game.logics.display.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import game.utility.other.MenuOption;
 
@@ -35,7 +35,7 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
         this.setSelectedOption(selected);
 
         // TITLE
-        super.drawTitleText(g, GAME_NAME, Function.identity());
+        super.drawTitleText(g, GAME_NAME, UnaryOperator.identity());
 
         // OPTIONS
         super.drawOptions(g);

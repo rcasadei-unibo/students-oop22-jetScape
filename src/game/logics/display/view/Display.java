@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import game.frame.GameWindow;
 import game.utility.other.MenuOption;
@@ -168,7 +168,7 @@ public abstract class Display {
      * This is the most exhaustive method.</p>
      * 
      * <p>Explanation of how the function parameter works:<ul>
-     * <li>passing to {@code f} a {@link Function#identity}
+     * <li>passing to {@code f} a {@link UnaryOperator#identity}
      *   will center the text on the axis lying in the middle of the screen</li>
      * <li>passing {@code x -> x - WIDTH_OF_SCREEN / 4}
      *   will center the text on the axis corresponding to the first quarter of
@@ -189,13 +189,13 @@ public abstract class Display {
      * @implNote this method calls {@link #drawText(Graphics2D g, Font font, String text, int xCalculated, int yPos, int shift)}
      */
     protected void drawCenteredText(final Graphics2D g, /*final Color color,*/ final Font font,
-            final String text, final Function<Integer, Integer> function, final int yPos, final int shift) {
+            final String text, final UnaryOperator<Integer> function, final int yPos, final int shift) {
         this.drawText(g, font, text, function.apply(this.getCenteredX(g, text)), yPos, shift);
     }
 
     /**
      * Draw a title on screen.
-     * This is a specialised version of {@link #drawCenteredText(Graphics2D, Font, String, Function, int, int)}
+     * This is a specialized version of {@link #drawCenteredText}
      *
      * @param g the graphics drawer
      * @param text the string with the text that have to be printed on screen
@@ -205,8 +205,8 @@ public abstract class Display {
      * @implNote this method calls calls the aforementioned method using {@linkplain #titleFont font} and
      * {@linkplain Display#TITLE_SHIFT default} values, furthermore yPos is calculated.
      */
-    protected void drawTitleText(final Graphics2D g, final String text, final Function<Integer, Integer> function) {
-        this.drawCenteredText(g, this.titleFont, text, Function.identity(),
+    protected void drawTitleText(final Graphics2D g, final String text, final UnaryOperator<Integer> function) {
+        this.drawCenteredText(g, this.titleFont, text, UnaryOperator.identity(),
                 gScreen.getTileSize() * Display.TITLE_TILE, Display.TITLE_SHIFT);
     }
 

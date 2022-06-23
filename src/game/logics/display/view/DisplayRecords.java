@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 //import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import game.logics.records.Records;
 import game.utility.other.MenuOption;
@@ -80,7 +80,7 @@ public class DisplayRecords extends Display implements MenuDisplay {
         this.setSelectedOption(selected);
 
         // TITLE
-        super.drawTitleText(g, TITLE, Function.identity());
+        super.drawTitleText(g, TITLE, UnaryOperator.identity());
 
         // RECORDS
         super.drawCenteredText(g, super.getTextFont(), DisplayRecords.RECORDS1,
