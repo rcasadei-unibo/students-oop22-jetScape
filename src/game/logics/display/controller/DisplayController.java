@@ -1,5 +1,6 @@
 package game.logics.display.controller;
 
+import game.logics.background.Background;
 import game.logics.display.handlers.DisplayHandler;
 import game.logics.display.handlers.MenuHandler;
 
@@ -26,7 +27,6 @@ import java.util.function.Supplier;
 public class DisplayController {
     private final Supplier<GameState> getState;
     private final Supplier<Integer> getScore;
-    private final Supplier<GameInfo> getGame;
 
     /*
      * Screen's displays
@@ -58,15 +58,15 @@ public class DisplayController {
             final Consumer<GameState> setState,
             final Supplier<GameState> getState,
             final Supplier<Integer> getScore,
-            final Supplier<GameInfo> getGame, final Records records) {
+            final Background background, final Records records) {
 
         this.getState = getState;
         this.getScore = getScore;
-        this.getGame = getGame;
 
         this.hud = new DisplayHUD();
         this.pauseDisplay = new DisplayPause();
-        this.mainMenuDisplay = new DisplayMainMenu();
+
+        this.mainMenuDisplay = new DisplayMainMenu(background);
         this.recordsDisplay = new DisplayRecords(records);
         this.gameOverDisplay = new DisplayGameOver(records);
 

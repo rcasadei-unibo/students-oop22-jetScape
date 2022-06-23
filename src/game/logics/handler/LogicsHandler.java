@@ -100,9 +100,9 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
         this.background = new BackgroundController(super.getBackgroundMovementInfo());
 
-        this.displayController = new DisplayController(this.keyH, g -> setGameState(g),
-                () -> this.gameState, () -> this.playerEntity.getCurrentScore(),
-                () -> this.game.getActualGame(), this.records);
+        this.displayController = new DisplayController(this.keyH,
+                g -> setGameState(g), () -> this.gameState,
+                () -> this.playerEntity.getCurrentScore(), this.background, this.records);
 
         this.spawner = new TileGenerator(this.entities, super.getSpawningInteval());
         this.initializeSpawner();
