@@ -204,7 +204,7 @@ public final class Records {
 
     /**
      * This static method is used to get the constant value stored as
-     * Records.NUMBER_OF_SAVED_RECORD.
+     * {@link Records#NUMBER_OF_SAVED_RECORD}.
      *
      * @return the number of records that will be written to file.
      */
@@ -295,7 +295,7 @@ public final class Records {
 
     /**
      * Get player score form {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
-     * @return player score
+     * @return the player score
      */
     public int getScore() {
         //return this.score;
@@ -304,7 +304,7 @@ public final class Records {
 
     /**
      * Get current highest score obtained by player.
-     * @return first element of the highest scores list
+     * @return the first element of the highest scores list
      */
     public Integer getHighestScore() {
         return this.recordScores.get(0);
@@ -312,7 +312,7 @@ public final class Records {
 
     /**
      * Get current least score obtained by player.
-     * @return last element of the highest scores list
+     * @return the last element of the highest scores list
      */
     private Integer getLowestRecordScore() {
         if (this.recordScores.isEmpty()) {

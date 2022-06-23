@@ -15,6 +15,9 @@ import game.utility.screen.Screen;
  * Abstract class that contains useful methods for draw text on screen.
  */
 public abstract class Display {
+    /**
+     * The graphics drawer of type {@link Screen}.
+     */
     private final Screen gScreen = GameWindow.GAME_SCREEN;
 
     /*
@@ -40,18 +43,13 @@ public abstract class Display {
      */
     private static final double OPTIONS_SCALE = 12;
 
-    /*
-     * Fonts for every type of text
+    /**
+     * Fonts for every type of text.
      */
     private final Font titleFont;
     private final Font optionsFont;
     private final Font textFont;
     private final Font selectedOptionsFont;
-
-//    /**
-//     * Default writing tile for text.
-//     */
-//    private int textTile = 5;
 
     /**
      * Default writing tile for options.
@@ -62,7 +60,7 @@ public abstract class Display {
      */
     private static final int TTITLE_TILE = 2;
     /**
-     * options shadow shift.
+     * Shadow shifts for options.
      */
     private static final int OPTIONS_SHIFT = 2;
     private static final int TITLE_SHIFT = 5;
@@ -70,7 +68,6 @@ public abstract class Display {
 
     /**
      * Class constructor: load fonts with {@link game.utility.fonts.FontLoader}.
-     * 
      */
     public Display() {
         this.titleFont = GameWindow.GAME_FONTLOADER.getTitleFont()
@@ -84,10 +81,11 @@ public abstract class Display {
 
         this.options = new ArrayList<>();
     }
+
     /**
      * Calculates the ordinate's value such as the given string is centered in
      * the current screen.
-     * @param g
+     * @param g the graphics drawer
      * @param text the string be centered
      * @return this ordinate's value
      */
@@ -125,7 +123,7 @@ public abstract class Display {
     // TODO: Add javadoc
     /**
      * .
-     * @param g
+     * @param g the graphics drawer
      * @param font
      * @param text
      * @param xPos
@@ -149,7 +147,7 @@ public abstract class Display {
     // TODO: Add javadoc
     /**
      * .
-     * @param g
+     * @param g the graphics drawer
      * @param font
      * @param text
      * @param f
@@ -165,7 +163,7 @@ public abstract class Display {
     // TODO: Add javadoc
     /**
      * .
-     * @param g
+     * @param g the graphics drawer
      * @param text
      * @param function
      */
@@ -176,7 +174,7 @@ public abstract class Display {
 
     /**
      * Draw list of options with custom yTile.
-     * @param g
+     * @param g the graphics drawer
      * @param yTile custom value that is used to choose the vertical position.
      */
     protected void drawOptions(final Graphics2D g, final int yTile) {
@@ -198,7 +196,7 @@ public abstract class Display {
 
     /**
      * Draw list of options with default yTile.
-     * @param g
+     * @param g the graphics drawer
      */
     protected void drawOptions(final Graphics2D g) {
         this.drawOptions(g, Display.OPTION_TILE);
@@ -224,7 +222,7 @@ public abstract class Display {
 
     /**
      * Get standard title font.
-     * @return Display.titleFont
+     * @return {@link Display#titleFont}
      */
     protected Font getTitleFont() {
         return this.titleFont;
@@ -264,10 +262,9 @@ public abstract class Display {
 
     /**
      * Get current game screen.
-     * @return Display.gScreen
+     * @return {@link Display#gScreen}
      */
     protected Screen getGameScreen() {
        return gScreen;
     }
-
 }

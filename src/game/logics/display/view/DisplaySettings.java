@@ -23,7 +23,8 @@ public class DisplaySettings extends Display {
     private static final double RECTANGLE_XTILE = 8;
     private static final double RECTANGLE_YTILE = 3.5;
     private static final int RECTANGLE_WIDTH = 4;
-    private  final Screen gScreen = super.getGameScreen();
+
+    private final Screen gScreen = super.getGameScreen();
 
     /**
      * {@link DisplayPause} constructor: add options to be shown.
@@ -40,19 +41,24 @@ public class DisplaySettings extends Display {
      * {@inheritDoc}
      */
     public void drawScreen(final Graphics2D g, final MenuOption selected) {
-        int x = (int) (gScreen.getTileSize() * RECTANGLE_XTILE);
+        final int x = (int) (gScreen.getTileSize() * RECTANGLE_XTILE);
         int y = (int) (gScreen.getTileSize() * RECTANGLE_YTILE);
-        int width = gScreen.getTileSize() * RECTANGLE_WIDTH;
-        int height = gScreen.getTileSize() / 2;
+        final int width = gScreen.getTileSize() * RECTANGLE_WIDTH;
+        final int height = gScreen.getTileSize() / 2;
+
         this.setSelectedOption(selected);
+
         // TITLE
         super.drawTitleText(g, TITLE, Function.identity());
+
         // OPTIONS
         this.drawOptions(g);
+
         //MUSIC SLIDER
         g.setStroke(new BasicStroke(STROKE_VAL));
         g.drawRect(x, y, width, height);
         g.fillRect(x, y, gScreen.getTileSize() * GameWindow.GAME_MUSIC.getVolumeLevel(), height);
+
         //SOUND SLIDER
         y += gScreen.getTileSize() * TILE_GAP;
         g.drawRect(x, y, width, height);

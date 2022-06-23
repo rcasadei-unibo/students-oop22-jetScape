@@ -10,7 +10,6 @@ import game.logics.display.view.DisplayPause;
 import game.logics.display.view.DisplayRecords;
 import game.logics.display.view.DisplaySettings;
 
-import game.logics.handler.Logics.GameInfo;
 import game.logics.records.Records;
 
 import game.utility.input.keyboard.KeyHandler;
@@ -27,7 +26,6 @@ import java.util.function.Supplier;
 public class DisplayController {
     private final Supplier<GameState> getState;
     private final Supplier<Integer> getScore;
-    private final Supplier<GameInfo> getGame;
 
     /*
      * Screen's displays
@@ -38,6 +36,7 @@ public class DisplayController {
     private final DisplayRecords recordsDisplay;
     private final DisplayGameOver gameOverDisplay;
     private final DisplaySettings gameSettings;
+
     /*
      * Handlers for every display with a menu
      */
@@ -53,19 +52,18 @@ public class DisplayController {
      * all {@link MenuHandler} needed instances.
      *
      * @param keyH
-     * @param setState Consumer to set new value of State
-     * @param getState Supplier to get new value from State
+     * @param setState {@link Consumer} to set new value of State
+     * @param getState {@link Supplier} to get new value from State
      * @param getScore Supplier to get new value of Score
+     * @param records {@link Records} to check & set new records
      */
     public DisplayController(final KeyHandler keyH,
             final Consumer<GameState> setState,
             final Supplier<GameState> getState,
-            final Supplier<Integer> getScore,
-            final Supplier<GameInfo> getGame, final Records records) {
+            final Supplier<Integer> getScore, final Records records) {
 
         this.getState = getState;
         this.getScore = getScore;
-        this.getGame = getGame;
 
         this.hud = new DisplayHUD();
         this.pauseDisplay = new DisplayPause();
