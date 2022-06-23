@@ -190,6 +190,7 @@ public abstract class Display {
      */
     protected void drawCenteredText(final Graphics2D g, /*final Color color,*/ final Font font,
             final String text, final UnaryOperator<Integer> function, final int yPos, final int shift) {
+        g.setFont(font); // this has to be called before this.getCenteredX
         this.drawText(g, font, text, function.apply(this.getCenteredX(g, text)), yPos, shift);
     }
 
