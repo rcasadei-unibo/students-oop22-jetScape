@@ -25,6 +25,7 @@ public final class SettingsManager {
     public static final String PATH = System.getProperty("user.dir") + SEPARATOR
             + "res" + SEPARATOR + "game" + SEPARATOR + "data" + SEPARATOR + "settings.json";
     private static final long DEFAULT_SETTING = 2;
+
     private final File file;
     private JsonObject settings;
     private final MenuOption option;
@@ -34,7 +35,6 @@ public final class SettingsManager {
      * @param option setting to read and write
      */
     public SettingsManager(final MenuOption option) {
-        super();
         this.file = new File(PATH);
         this.option = option;
     }
@@ -44,17 +44,17 @@ public final class SettingsManager {
      * @param value to write
      */
     public void writeSetting(final int value) {
-        update();
+        this.update();
         this.settings.replace(option.toString(), value);
-        write();
+        this.write();
     }
 
     /**
      * reads the value of the associated setting from file.
-     * @return value
+     * @return value read
      */
     public int getSettingValue() {
-        update();
+        this.update();
         return ((BigDecimal) settings.get(option.toString())).intValue();
     }
 
@@ -70,17 +70,23 @@ public final class SettingsManager {
         try (Reader reader = new FileReader(this.file)) {
             this.settings = (JsonObject) Jsoner.deserialize(reader);
         } catch (FileNotFoundException e) {
-            buildDefault();
+            System.err.println("Setting information file cannot be found. Created a default one.\n\nDetails:\n" + e.getMessage());
+            this.buildDefault();
         } catch (IOException e) {
+            System.err.println("An error occurred while trying to read settings.\n\nDetails:\n" + e.getMessage());
             e.printStackTrace();
         } catch (JsonException e) {
+            System.err.println("Settings information file has an incorrect format.\n\nDetails:\n" + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private void buildDefault() {
         this.settings = new JsonObject();
-        settings.put(MenuOption.MUSIC.toString(), BigDecimal.valueOf(DEFAULT_SETTING));
-        settings.put(MenuOption.SOUND.toString(), BigDecimal.valueOf(DEFAULT_SETTING));
+
+        this.settings.put(MenuOption.MUSIC.toString(),
+                BigDecimal.valueOf(DEFAULT_SETTING));
+        this.settings.put(MenuOption.SOUND.toString(),
+                BigDecimal.valueOf(DEFAULT_SETTING));
     }
 }

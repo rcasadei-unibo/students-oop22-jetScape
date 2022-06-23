@@ -56,6 +56,7 @@ public class DisplayController {
      * @param setState {@link Consumer} to set new value of State
      * @param getState {@link Supplier} to get new value from State
      * @param getScore Supplier to get new value of Score
+     * @param background {@link Background} background handler
      * @param records {@link Records} to check & set new records
      */
     public DisplayController(final KeyHandler keyH,

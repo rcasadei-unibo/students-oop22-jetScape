@@ -20,6 +20,7 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
     /**
      * {@link DisplayMainMenu} constructor: add options to be shown.
      *
+     * @param background a {@link Background} handler used to display backgrounds
      */
     public DisplayMainMenu(final Background background) {
         super();
