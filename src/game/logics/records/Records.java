@@ -20,9 +20,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * This class handles statistics and records, furthermore it manages its writing
- * and reading.
- *
+ * This class handles statistics & records, furthermore it supersedes the
+ * reading and writing of them.
  */
 public final class Records {
 
@@ -35,15 +34,10 @@ public final class Records {
     //private GameInfo oldGameInfo;
 
     // Statistics and records list
-    // TODO complete list
     private int burnedTimes;
     private int zappedTimes;
-    // private String[] position;
-    // private Map<String, Integer> salary;
 
     // Data read from game
-    private PlayerDeath causeOfDeath;
-
     private static int playingRecordScore; // higher score obtained by playing consecutively
     private static boolean newPlayingRecordScore;
 
@@ -66,7 +60,7 @@ public final class Records {
         this.reader = new JSONReader(this);
 
         //this.oldGameInfo = game.getActualGame();
-        //game.getNumbersOfGamesPlayed();
+        //this.game.getNumbersOfGamesPlayed();
         this.player = player;
     }
 
@@ -117,8 +111,9 @@ public final class Records {
      *
      *@param newGameInfo GameInfo passed via {@link Supplier} by {@link #announceGameEnded announceGameEnded()}
      */
-    //TODO add new records
     private void fetch(final GameInfo newGameInfo) {
+
+        final PlayerDeath causeOfDeath;
 
         //System.out.println(gameUID.isGamePlayed());
         //gameUID.getGameDate().ifPresent(System.out::println);
@@ -126,8 +121,8 @@ public final class Records {
         // Only if new gameUID (new game)
         //if (this.checkAndSet(gameUID)) {
             if (player.hasDied()) {
-                this.causeOfDeath = player.getCauseOfDeath();
-                switch (this.causeOfDeath) {
+                causeOfDeath = player.getCauseOfDeath();
+                switch (causeOfDeath) {
                     case BURNED:
                         this.burnedTimes++;
                         break;
@@ -172,8 +167,6 @@ public final class Records {
      */
     public void checkScore(final int finalScore) {
 
-        //this.score = finalScore;
-
         if (finalScore > Records.playingRecordScore) {
             Records.newPlayingRecordScore = true;
             Records.playingRecordScore = finalScore;
@@ -181,21 +174,18 @@ public final class Records {
             Records.newPlayingRecordScore = false;
         }
 
-        if (this.recordScores.size() < Records.getSavedNumberOfRecords()
-                || finalScore > this.getLowestRecordScore()) {
+        if (finalScore > this.getHighestScore()) {
             this.newRecordScore = true;
             this.addRecordScore(finalScore);
         } else {
             this.newRecordScore = false;
         }
 
-        //if (finalScore > this.getLowestRecordScore()) {
-           // this.newRecordScore = true;
-        //    this.addRecordScore(finalScore);
-            //StatisticsReader.writeRecord(finalScore); // TODO write new record
-        //} else if (finalScore < this.recordScore) {
-           // this.newRecordScore = false;
-        //}
+        if (finalScore < this.getHighestScore()
+                && finalScore > this.getLowestRecordScore()
+                || this.recordScores.size() < Records.getSavedNumberOfRecords()) {
+            this.addRecordScore(finalScore);
+        }
     }
 
     /****************************************/
@@ -259,10 +249,6 @@ public final class Records {
             //    + this.recordScores.get(Records.getSavedNumberOfRecords()).toString());
             this.recordScores.remove(Records.getSavedNumberOfRecords());
         }
-
-        //System.out.println("--");
-        //this.recordScores.stream().forEach(System.out::println);
-        //System.out.println("--");
     }
 
     public List<Integer> getRecordScores() {
