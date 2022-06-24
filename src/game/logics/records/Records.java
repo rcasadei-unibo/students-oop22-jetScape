@@ -86,17 +86,20 @@ public final class Records {
     /**
      * Declares game ended: sets game end date and gets final score.
      */
-    public void announceGameEnded() {
+    public void fetchGameEnded() {
 
         final GameInfo newGameInfo = this.getGame.get();
 
         // if different --> new game
         //if (oldGameInfo.getUID() != newGameInfo.getUID()) {
-            if (!newGameInfo.isGameEnded()) {
- 
-                final int score = player.getCurrentScore();
-                //System.out.println(score);
-                newGameInfo.setGameEnded(score);
+
+        // Only if new gameUID (new game)
+        //if (this.checkAndSet(gameUID)) {
+            // Only if the game is not set as finished
+            if (!newGameInfo.isGameEnded()) { // FIXME
+
+                newGameInfo.setGameEnded(player.getCurrentScore());
+                //System.out.println(newGameInfo.getFinalScore());
                 this.fetch(newGameInfo);
             }
             //oldGameInfo = newGameInfo;
@@ -113,27 +116,24 @@ public final class Records {
 
         final PlayerDeath causeOfDeath;
 
-        //System.out.println(gameUID.isGamePlayed());
-        //gameUID.getGameDate().ifPresent(System.out::println);
+        //System.out.println(newGameInfo.isGamePlayed());
+        //newGameInfo.getGameDate().ifPresent(System.out::println);
 
-        // Only if new gameUID (new game)
-        //if (this.checkAndSet(gameUID)) {
-            if (player.hasDied()) {
-                causeOfDeath = player.getCauseOfDeath();
-                switch (causeOfDeath) {
-                    case BURNED:
-                        this.burnedTimes++;
-                        break;
-                    case ZAPPED:
-                        this.zappedTimes++;
-                        break;
-                    default:
-                        break;
-                }
-                //System.out.println(causeOfDeath);
-            this.checkScore(newGameInfo.getFinalScore());
-            //this.getScore();
-        //}
+        if (player.hasDied()) {
+            causeOfDeath = player.getCauseOfDeath();
+            switch (causeOfDeath) {
+                case BURNED:
+                    this.burnedTimes++;
+                    break;
+                case ZAPPED:
+                    this.zappedTimes++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        //this.checkScore(this.getScore());
+        this.checkScore(newGameInfo.getFinalScore());
     }
 
     /**

@@ -234,7 +234,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 case INGAME:
                     if (this.gameState != GameState.PAUSED) {
                         this.game.setActualGame(new GameInfo(this.game));
-                        //this.gameID.generateNewGameUID();
+                        //this.game.generateNewGameInfo();
                     }
                     if (this.gameState == GameState.ENDGAME) { // RETRY
                         this.records.refresh();
@@ -256,8 +256,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     break;
                 case ENDGAME:
                     this.spawner.stop();
-                    //this.records.fetch(this.getGame);
-                    this.records.announceGameEnded();
+                    this.records.fetchGameEnded();
                     this.records.update();
                     break;
                 case PAUSED:
