@@ -79,7 +79,6 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
     private final Records records;
     private final GameInfoHandler game;
-    private final Supplier<GameInfo> getGame;
 
     /**
      * Constructor that gets the screen information, the keyboard listener and the debugger, 
@@ -96,11 +95,10 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 .forEach(e -> entities.put(e, new HashSet<>()));
 
         this.game = new GameInfoHandler(new GameInfo());
-        this.getGame = () -> this.game.getActualGame();
 
         this.playerEntity = new PlayerInstance(this, this.entities);
 
-        this.records = new Records(game, playerEntity);
+        this.records = new Records(() -> this.game.getActualGame(), playerEntity);
 
         this.background = new BackgroundController(super.getBackgroundMovementInfo());
 
@@ -259,7 +257,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 case ENDGAME:
                     this.spawner.stop();
                     //this.records.fetch(this.getGame);
-                    this.records.announceGameEnded(this.getGame);
+                    this.records.announceGameEnded();
                     this.records.update();
                     break;
                 case PAUSED:

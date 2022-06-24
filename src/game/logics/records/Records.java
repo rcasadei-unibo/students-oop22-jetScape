@@ -27,11 +27,10 @@ public final class Records {
 
     private static final int NUMBER_OF_SAVED_RECORD = 3;
 
-    private final GameInfoHandler game;
+    private final Supplier<GameInfo> getGame;
     private final Player player;
     private final JSONWriter writer;
     private final JSONReader reader;
-    //private GameInfo oldGameInfo;
 
     // Statistics and records list
     private int burnedTimes;
@@ -50,16 +49,16 @@ public final class Records {
 
     /**
      * Build a new {@link Records}.
-     * @param game a {@link GameInfoHandler} object used to get current game informations.
+     * @param getGame {@link Supplier} of {@link GameInfo} objects used to get
+     *   current game informations.
      * @param player {@link Player} object used to get some player informations.
      */
-    public Records(final GameInfoHandler game, final Player player) {
-        this.game = game;
+    public Records(final Supplier<GameInfo> getGame, final Player player) {
+        this.getGame = getGame;
 
         this.writer = new JSONWriter(this);
         this.reader = new JSONReader(this);
 
-        //this.oldGameInfo = game.getActualGame();
         //this.game.getNumbersOfGamesPlayed();
         this.player = player;
     }
@@ -86,12 +85,10 @@ public final class Records {
 
     /**
      * Declares game ended: sets game end date and gets final score.
-     *
-     * @param getGameInfo Supplier of GameInfo to check
      */
-    public void announceGameEnded(final Supplier<GameInfo> getGameInfo) {
+    public void announceGameEnded() {
 
-        final GameInfo newGameInfo = getGameInfo.get();
+        final GameInfo newGameInfo = this.getGame.get();
 
         // if different --> new game
         //if (oldGameInfo.getUID() != newGameInfo.getUID()) {
@@ -285,7 +282,7 @@ public final class Records {
      */
     public int getScore() {
         //return this.score;
-        return this.game.getActualGame().getFinalScore();
+        return this.getGame.get().getFinalScore();
     }
 
     /**
