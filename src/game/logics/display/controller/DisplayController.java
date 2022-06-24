@@ -52,12 +52,12 @@ public class DisplayController {
      * {@link DisplayController} builder: builds all displayed cards and
      * all {@link MenuHandler} needed instances.
      *
-     * @param keyH
+     * @param keyH {@link KeyHandler} instance
      * @param setState {@link Consumer} to set new value of State
      * @param getState {@link Supplier} to get new value from State
      * @param getScore Supplier to get new value of Score
      * @param background {@link Background} background handler
-     * @param records {@link Records} to check & set new records
+     * @param records {@link Records} to check &amp; set new records
      */
     public DisplayController(final KeyHandler keyH,
             final Consumer<GameState> setState,
@@ -84,7 +84,7 @@ public class DisplayController {
 
     /**
      * Displays the correct screen for the current game state.
-     * @param g
+     * @param g the graphics drawer
      */
     public void drawScreen(final Graphics2D g) {
         switch (getState.get()) {

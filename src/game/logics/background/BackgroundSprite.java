@@ -20,7 +20,7 @@ import game.utility.sprites.Sprite;
  * This class is an implementation of a {@link Sprite} handler.
  * 
  * If the image cannot be loaded or any path isn't specified, a rectangle of
- * the color set by <code>{@link BackgroundImpl#placeHolder}</code> will be drawn.
+ * the color set by <code>{@link BackgroundController#PLACE_HOLDER}</code> will be drawn.
  */
 public class BackgroundSprite extends AbstractSprite implements Sprite {
 

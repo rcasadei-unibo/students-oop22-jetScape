@@ -9,8 +9,8 @@ import game.utility.other.Pair;
 import game.utility.sprites.Sprite;
 
 /**
- * The {@link DrawManager} class decides what sprites to draw
- * for representing an object.
+ * This class choose what sprites to draw for representing the
+ * background and handles the store task.
  * 
  * If there aren't any textures to draw, a place holder rectangle
  * of a specified color will be drawn.
@@ -18,7 +18,7 @@ import game.utility.sprites.Sprite;
 public class BackgroundDrawManager implements BackgroundDrawer {
 
     /**
-     * A map that stores all the background sprites tha could be represented in
+     * A map that stores all the background sprites that could be represented in
      * the environment.
      */
     private final Map<String, Sprite> sprites = new HashMap<>();

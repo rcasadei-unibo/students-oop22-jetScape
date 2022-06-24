@@ -20,8 +20,8 @@ public interface Sprite {
      * 
      * @param g the graphics drawer
      * @param pos the position to draw the image
-     * @param sizes the length of a side of the squared image or length & width
-     *   of the rectangle image
+     * @param sizes the length of a side of the squared image or length &amp;
+     *   width of the rectangle image
      */
     void draw(Graphics2D g, Pair<Double, Double> pos, int... sizes);
 }

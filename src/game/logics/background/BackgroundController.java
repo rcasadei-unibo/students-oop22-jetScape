@@ -25,9 +25,6 @@ public class BackgroundController implements Background {
      */
     private static final String SPRITE_PATH = "background" + System.getProperty("file.separator");
 
-    private static final String KEY_SPRITE1 = "background1";
-    private static final String KEY_SPRITE2 = "background2";
-
     /**
      * If sprites are missing, they will be replaced by a rectangle of the color specified here.
      *
@@ -36,6 +33,19 @@ public class BackgroundController implements Background {
      */
     private static final Color PLACE_HOLDER = Color.getHSBColor((float) 0.666, (float) 0.333, (float) 0.141);
 
+    /**
+     * Identifier for the first background, without ladders.
+     */
+    private static final String KEY_SPRITE1 = "background1";
+    /**
+     * Identifier for the second background, with ladders.
+     */
+    private static final String KEY_SPRITE2 = "background2";
+
+    /**
+     * Probability that {@link BackgroundController#KEY_SPRITE2} is used instead
+     * of {@link BackgroundController#KEY_SPRITE1}.
+     */
     private static final double LADDER_GENERATION = 0.15;
 
     private static final int SCREEN_WIDTH = GameWindow.GAME_SCREEN.getWidth();

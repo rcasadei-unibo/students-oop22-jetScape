@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * This class handles statistics & records, furthermore it supersedes the
+ * This class handles statistics and records, furthermore it supersedes the
  * reading and writing of them.
  */
 public final class Records {
@@ -93,7 +93,7 @@ public final class Records {
         // if different --> new game
         //if (oldGameInfo.getUID() != newGameInfo.getUID()) {
             if (!newGameInfo.isGameEnded()) {
-
+ 
                 final int score = player.getCurrentScore();
                 //System.out.println(score);
                 newGameInfo.setGameEnded(score);
@@ -106,7 +106,8 @@ public final class Records {
     /**
      * Get data for updating in game, calling the data getters.
      *
-     *@param newGameInfo GameInfo passed via {@link Supplier} by {@link #announceGameEnded announceGameEnded()}
+     * @param newGameInfo GameInfo passed via {@link Supplier}
+     * by {@link #fetchGameEnded()}
      */
     private void fetch(final GameInfo newGameInfo) {
 
@@ -130,7 +131,6 @@ public final class Records {
                         break;
                 }
                 //System.out.println(causeOfDeath);
-            }
             this.checkScore(newGameInfo.getFinalScore());
             //this.getScore();
         //}

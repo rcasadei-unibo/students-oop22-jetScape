@@ -35,7 +35,7 @@ public class MenuHandler implements DisplayHandler {
     /**
      * Initializes the menu handler with the given display's options and sets 
      * the first one as currently selected, performing setGameState when enter is pressed.
-     * @param keyH
+     * @param keyH {@link KeyHandler} instance
      * @param display
      * @param setGameState
      */
