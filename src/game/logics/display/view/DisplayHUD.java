@@ -23,7 +23,6 @@ public class DisplayHUD extends Display {
 
     /**
      * {@link DisplayHUD} constructor: loads scoreFont.
-     *
      */
     public DisplayHUD() {
         super();
@@ -53,7 +52,7 @@ public class DisplayHUD extends Display {
 
     /**
      * Update internal score to be shown.
-     * @param score
+     * @param score the score that have to be shown on HUD.
      */
     public void updateScore(final int score) {
         this.score = score;

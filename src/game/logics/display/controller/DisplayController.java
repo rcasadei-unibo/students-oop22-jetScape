@@ -1,15 +1,16 @@
 package game.logics.display.controller;
 
+import game.logics.background.Background;
 import game.logics.display.handlers.DisplayHandler;
 import game.logics.display.handlers.MenuHandler;
-
+import game.logics.display.handlers.SettingsHandler;
 import game.logics.display.view.DisplayGameOver;
 import game.logics.display.view.DisplayHUD;
 import game.logics.display.view.DisplayMainMenu;
 import game.logics.display.view.DisplayPause;
 import game.logics.display.view.DisplayRecords;
+import game.logics.display.view.DisplaySettings;
 
-import game.logics.handler.Logics.GameInfo;
 import game.logics.records.Records;
 
 import game.utility.input.keyboard.KeyHandler;
@@ -27,7 +28,6 @@ public class DisplayController {
     private final Supplier<GameState> getState;
     private final Supplier<Integer> getScore;
     private final Supplier<Integer> getCoins;
-    private final Supplier<GameInfo> getGame;
 
     /*
      * Screen's displays
@@ -37,6 +37,8 @@ public class DisplayController {
     private final DisplayMainMenu mainMenuDisplay;
     private final DisplayRecords recordsDisplay;
     private final DisplayGameOver gameOverDisplay;
+    private final DisplaySettings gameSettings;
+
     /*
      * Handlers for every display with a menu
      */
@@ -44,32 +46,35 @@ public class DisplayController {
     private final DisplayHandler titleHandler;
     private final DisplayHandler recordsHandler;
     private final DisplayHandler gameOverHandler;
+    private final SettingsHandler settingsHandler;
     // TODO: eventually add shop 
 
     /**
      * {@link DisplayController} builder: builds all displayed cards and
      * all {@link MenuHandler} needed instances.
      *
-     * @param keyH
-     * @param setState Consumer to set new value of State
-     * @param getState Supplier to get new value from State
+     * @param keyH {@link KeyHandler} instance
+     * @param setState {@link Consumer} to set new value of State
+     * @param getState {@link Supplier} to get new value from State
      * @param getScore Supplier to get new value of Score
+     * @param background {@link Background} background handler
+     * @param records {@link Records} to check &amp; set new records
      */
     public DisplayController(final KeyHandler keyH,
             final Consumer<GameState> setState,
             final Supplier<GameState> getState,
             final Supplier<Integer> getScore,
             final Supplier<Integer> getCoins,
-            final Supplier<GameInfo> getGame, final Records records) {
+            final Background background, final Records records) {
 
         this.getState = getState;
         this.getScore = getScore;
         this.getCoins = getCoins;
-        this.getGame = getGame;
 
         this.hud = new DisplayHUD();
         this.pauseDisplay = new DisplayPause();
-        this.mainMenuDisplay = new DisplayMainMenu();
+        this.mainMenuDisplay = new DisplayMainMenu(background);
+        this.gameSettings = new DisplaySettings();
         this.recordsDisplay = new DisplayRecords(records);
         this.gameOverDisplay = new DisplayGameOver(records);
 
@@ -77,11 +82,12 @@ public class DisplayController {
         this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
         this.recordsHandler = new MenuHandler(keyH, recordsDisplay, setState);
         this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
+        this.settingsHandler = new SettingsHandler(keyH, gameSettings, setState);
     }
 
     /**
      * Displays the correct screen for the current game state.
-     * @param g
+     * @param g the graphics drawer
      */
     public void drawScreen(final Graphics2D g) {
         switch (getState.get()) {
@@ -104,6 +110,10 @@ public class DisplayController {
                 this.gameOverDisplay.drawScreen(g,
                         gameOverHandler.getSelectedOption());
                 break;
+           case SETTINGS :
+               this.gameSettings.drawScreen(g,
+                        settingsHandler.getSelectedOption());
+               break;
            default:
                 break;
         }
@@ -115,12 +125,11 @@ public class DisplayController {
      */
     public void updateScreen() {
         switch (getState.get()) {
-
             case MENU :
-                titleHandler.update();
+                this.titleHandler.update();
                 break;
             case RECORDS :
-                recordsHandler.update();
+                this.recordsHandler.update();
                 break;
             case PAUSED :
                 this.pauseHandler.update();
@@ -131,6 +140,9 @@ public class DisplayController {
                 break;
             case ENDGAME :
                 this.gameOverHandler.update();
+                break;
+            case SETTINGS :
+                this.settingsHandler.update();
                 break;
             default :
                 break;

@@ -10,7 +10,8 @@ import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
- * The class {@link ShieldInstance} is used for defining a shield pickup in the environment.
+ * The class {@link ShieldInstance} is used for defining a shield pickup in the
+ * environment.
  * 
  * A shield is a bonus item that can be picked up by the player granting a one-time
  * protection from any hit from any obstacle.
@@ -34,7 +35,8 @@ public class ShieldInstance extends PickupInstance implements Shield {
      * @param player a reference to the {@link Player} entity
      * @param speed the {@link SpeedHandler} to use for the pickup
      */
-    public ShieldInstance(final Logics l, final Pair<Double, Double> position, final Player player, final SpeedHandler speed) {
+    public ShieldInstance(final Logics l, final Pair<Double, Double> position,
+            final Player player, final SpeedHandler speed) {
         super(l, position, EntityType.SHIELD, player, speed);
 
         final var spritesMgr = this.getSpriteManager();

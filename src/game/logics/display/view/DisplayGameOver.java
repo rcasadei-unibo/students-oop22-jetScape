@@ -2,7 +2,7 @@ package game.logics.display.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import game.logics.records.Records;
 import game.utility.other.MenuOption;
@@ -59,7 +59,7 @@ public class DisplayGameOver extends Display implements MenuDisplay {
         this.readRecords();
 
         // TITLE
-        super.drawTitleText(g, title, Function.identity());
+        super.drawTitleText(g, title, UnaryOperator.identity());
 
         // SCORE
         super.drawCenteredText(g, super.getTextFont(),

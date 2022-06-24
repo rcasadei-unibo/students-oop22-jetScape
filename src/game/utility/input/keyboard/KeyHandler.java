@@ -42,6 +42,8 @@ public class KeyHandler implements KeyListener {
         input.put(KeyEvent.VK_V, false);
         input.put(KeyEvent.VK_UP, false);
         input.put(KeyEvent.VK_DOWN, false);
+        input.put(KeyEvent.VK_LEFT, false);
+        input.put(KeyEvent.VK_RIGHT, false);
     }
 
     /**

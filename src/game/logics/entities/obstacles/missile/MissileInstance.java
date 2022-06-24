@@ -12,6 +12,7 @@ import game.logics.hitbox.MissileHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
+import game.utility.other.Sound;
 
 /**
  * The class {@link MissileInstance} is used for defining a missile obstacle in the environment.
@@ -71,6 +72,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     static final double Y_BRAKING_DIVIDER = 3.5;
 
     static final double Y_BRAKE_DECREASE = 1.0;
+    private boolean warningPlayed;
 
     /**
      * The direction the missile was moving.
@@ -114,6 +116,7 @@ public class MissileInstance extends ObstacleInstance implements Missile {
     public void reset() {
         super.reset();
         ySpeed = yStartSpeed;
+        this.warningPlayed = false;
     }
 
     /**
@@ -139,6 +142,10 @@ public class MissileInstance extends ObstacleInstance implements Missile {
                 this.getPosition().setY(this.getPosition().getY() + ySpeed / GameWindow.FPS_LIMIT);
                 ySpeed += yAcceleration  / GameWindow.FPS_LIMIT;
                 lastDir = Direction.DOWN;
+            }
+            if (!this.warningPlayed) {
+                GameWindow.GAME_SOUND.play(Sound.MISSILE_WARNING);
+                this.warningPlayed = true;
             }
         }
         warnPosition.setY(this.getPosition().getY());

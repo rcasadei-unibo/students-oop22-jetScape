@@ -36,7 +36,7 @@ public abstract class EntityInstance implements Entity {
     private final EntityType entityTag;
 
     /// FLAGS ///
-    private boolean visible;
+    private boolean visible = true;
     private boolean onScreen;
     private boolean onClearArea;
     private boolean onSpawnArea = true;
@@ -142,6 +142,7 @@ public abstract class EntityInstance implements Entity {
     public void reset() {
         position.setX(startPos.getX());
         position.setY(startPos.getY());
+        this.hitbox.updatePosition(position);
     }
 
     /**

@@ -20,19 +20,17 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * This class handles statistics and records, furthermore it manages its writing
- * and reading.
- *
+ * This class handles statistics and records, furthermore it supersedes the
+ * reading and writing of them.
  */
 public final class Records {
 
     private static final int MAX_NUMBER_OF_SAVED_RECORD = 3;
 
-    private final GameInfoHandler game;
+    private final Supplier<GameInfo> getGame;
     private final Player player;
     private final JSONWriter writer;
     private final JSONReader reader;
-    //private GameInfo oldGameInfo;
 
     // Statistics and records list
     private final List<Integer> scoreRecords = new ArrayList<>(Records.MAX_NUMBER_OF_SAVED_RECORD); // absolute new score records
@@ -42,8 +40,6 @@ public final class Records {
     private int zappedTimes;
 
     // Data read from game
-    private PlayerDeath causeOfDeath;
-
     private int playingScoreRecord; // higher score obtained by playing consecutively
     private boolean newPlayingScoreRecord;
 
@@ -56,17 +52,17 @@ public final class Records {
 
     /**
      * Build a new {@link Records}.
-     * @param game a {@link GameInfoHandler} object used to get current game informations.
+     * @param getGame {@link Supplier} of {@link GameInfo} objects used to get
+     *   current game informations.
      * @param player {@link Player} object used to get some player informations.
      */
-    public Records(final GameInfoHandler game, final Player player) {
-        this.game = game;
+    public Records(final Supplier<GameInfo> getGame, final Player player) {
+        this.getGame = getGame;
 
         this.writer = new JSONWriter(this);
         this.reader = new JSONReader(this);
 
-        //this.oldGameInfo = game.getActualGame();
-        //game.getNumbersOfGamesPlayed();
+        //this.game.getNumbersOfGamesPlayed();
         this.player = player;
     }
 
@@ -92,21 +88,25 @@ public final class Records {
 
     /**
      * Declares game ended: sets game end date and gets final score.
-     *
-     * @param getGameInfo Supplier of GameInfo to check
      */
-    public void announceGameEnded(final Supplier<GameInfo> getGameInfo) {
+    public void fetchGameEnded() {
 
-        final GameInfo newGameInfo = getGameInfo.get();
+        final GameInfo newGameInfo = this.getGame.get();
 
         // if different --> new game
         //if (oldGameInfo.getUID() != newGameInfo.getUID()) {
-            if (!newGameInfo.isGameEnded()) {
+
+        // Only if new gameUID (new game)
+        //if (this.checkAndSet(gameUID)) {
+            // Only if the game is not set as finished
+            if (!newGameInfo.isGameEnded()) { // FIXME
 
                 final int score = player.getCurrentScore();
                 final int money = player.getCurrentCoinsCollected();
-                //System.out.println(score);
+
                 newGameInfo.setGameEnded(score, money);
+                //System.out.println(newGameInfo.getFinalScore());
+
                 this.fetch(newGameInfo);
             }
             //oldGameInfo = newGameInfo;
@@ -116,34 +116,33 @@ public final class Records {
     /**
      * Get data for updating in game, calling the data getters.
      *
-     *@param newGameInfo GameInfo passed via {@link Supplier} by {@link #announceGameEnded announceGameEnded()}
+     * @param newGameInfo GameInfo passed via {@link Supplier}
+     * by {@link #fetchGameEnded()}
      */
-    //TODO add new records
     private void fetch(final GameInfo newGameInfo) {
 
-        //System.out.println(gameUID.isGamePlayed());
-        //gameUID.getGameDate().ifPresent(System.out::println);
+        final PlayerDeath causeOfDeath;
 
-        // Only if new gameUID (new game)
-        //if (this.checkAndSet(gameUID)) {
-            if (player.hasDied()) {
-                this.causeOfDeath = player.getCauseOfDeath();
-                switch (this.causeOfDeath) {
-                    case BURNED:
-                        this.burnedTimes++;
-                        break;
-                    case ZAPPED:
-                        this.zappedTimes++;
-                        break;
-                    default:
-                        break;
-                }
-                //System.out.println(causeOfDeath);
+        //System.out.println(newGameInfo.isGamePlayed());
+        //newGameInfo.getGameDate().ifPresent(System.out::println);
+
+        if (player.hasDied()) {
+            causeOfDeath = player.getCauseOfDeath();
+            switch (causeOfDeath) {
+                case BURNED:
+                    this.burnedTimes++;
+                    break;
+                case ZAPPED:
+                    this.zappedTimes++;
+                    break;
+                default:
+                    break;
             }
-            this.checkScore(newGameInfo.getFinalScore());
-            this.checkMoney(newGameInfo.getFinalMoney());
+        //this.checkScore(this.getScore());
+        this.checkScore(newGameInfo.getFinalScore());
+        this.checkMoney(newGameInfo.getFinalMoney());
             //this.getScore();
-        //}
+        }
     }
 
     /**
@@ -174,8 +173,6 @@ public final class Records {
      */
     public void checkScore(final int finalScore) {
 
-        //this.score = finalScore;
-
         if (finalScore > this.playingScoreRecord) {
             this.newPlayingScoreRecord = true;
             this.playingScoreRecord = finalScore;
@@ -183,20 +180,13 @@ public final class Records {
             this.newPlayingScoreRecord = false;
         }
 
-        this.newScoreRecord = this.scoreRecords.isEmpty() || finalScore  > this.getHighestRecordScore();
+        this.newScoreRecord = this.scoreRecords.isEmpty() || finalScore > this.getHighestRecordScore();
 
-        if (this.scoreRecords.size() < Records.getMaxSavedNumberOfRecords()
-                || finalScore > this.getLowestRecordScore()) {
+        if (this.newScoreRecord || (finalScore < this.getHighestRecordScore()
+                && finalScore > this.getLowestRecordScore())
+                || this.scoreRecords.size() < Records.getMaxSavedNumberOfRecords()) {
             this.addScoreRecord(finalScore);
         }
-
-        //if (finalScore > this.getLowestRecordScore()) {
-           // this.newScoreRecord = true;
-        //    this.addScoreRecord(finalScore);
-            //StatisticsReader.writeRecord(finalScore); // TODO write new record
-        //} else if (finalScore < this.recordScore) {
-           // this.newScoreRecord = false;
-        //}
     }
 
     /**
@@ -223,7 +213,7 @@ public final class Records {
 
     /**
      * This static method is used to get the constant value stored as
-     * Records.NUMBER_OF_SAVED_RECORD.
+     * {@link Records#NUMBER_OF_SAVED_RECORD}.
      *
      * @return the number of records that will be written to file.
      */
@@ -278,10 +268,6 @@ public final class Records {
             //    + this.scoreRecords.get(Records.getSavedNumberOfRecords()).toString());
             this.scoreRecords.remove(Records.getMaxSavedNumberOfRecords());
         }
-
-        //System.out.println("--");
-        //this.scoreRecords.stream().forEach(System.out::println);
-        //System.out.println("--");
     }
 
     public List<Integer> getScoreRecords() {
@@ -334,17 +320,17 @@ public final class Records {
     /****************************************/
 
     /**
-     * Get player score from {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
-     * @return player score
+     * Get player score form {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
+     * @return the player score
      */
     public int getScore() {
         //return this.score;
-        return this.game.getActualGame().getFinalScore();
+        return this.getGame.get().getFinalScore();
     }
 
     /**
      * Get current highest score obtained by player.
-     * @return first element of the highest scores list
+     * @return the first element of the highest scores list
      */
     private Integer getHighestRecordScore() {
         return this.scoreRecords.get(0);
@@ -352,7 +338,7 @@ public final class Records {
 
     /**
      * Get current least score obtained by player.
-     * @return last element of the highest scores list
+     * @return the last element of the highest scores list
      */
     private Integer getLowestRecordScore() {
         if (this.scoreRecords.isEmpty()) {
@@ -392,7 +378,7 @@ public final class Records {
      * @return player score
      */
     public int getMoney() {
-        return this.game.getActualGame().getFinalMoney();
+        return this.getGame.get().getFinalMoney();
     }
 
     /**

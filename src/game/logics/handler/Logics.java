@@ -43,17 +43,21 @@ public interface Logics {
      * This class models a Game, the GameInfo handler: this class keeps a
      *   reference to the actual UID of the current game.
      */
-    class GameInfoHandler {
+    final class GameInfoHandler {
 
-        private static int numbersOfGamesPlayed;
-        private static GameInfo actualGame;
+        private int numbersOfGamesPlayed;
+        private GameInfo actualGame;
 
         public GameInfoHandler(final GameInfo newGame) {
-            GameInfoHandler.actualGame = newGame;
+            actualGame = newGame;
+        }
+
+        public void addOneGamePlayed() {
+            numbersOfGamesPlayed++;
         }
 
         public int getNumbersOfGamesPlayed() {
-            return GameInfoHandler.numbersOfGamesPlayed;
+            return numbersOfGamesPlayed;
         }
 
         public GameInfo getActualGame() {
@@ -61,7 +65,7 @@ public interface Logics {
         }
 
         void setActualGame(final GameInfo newGameID) {
-            GameInfoHandler.actualGame = newGameID;
+            actualGame = newGameID;
         }
     }
 

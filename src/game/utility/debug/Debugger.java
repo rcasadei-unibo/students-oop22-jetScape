@@ -58,7 +58,7 @@ public class Debugger {
         optionEnabled.put(Option.ENTITY_COORDINATES, true);
         optionEnabled.put(Option.NEXT_SPAWN_TIMER, true);
         optionEnabled.put(Option.DIFFICULTY_LEVEL, true);
-        optionEnabled.put(Option.HITBOX, false);
+        optionEnabled.put(Option.HITBOX, true);
         optionEnabled.put(Option.LOG_CLEAN, false);
         optionEnabled.put(Option.LOG_SPAWN, false);
         optionEnabled.put(Option.LOG_HITCHECK, false);
