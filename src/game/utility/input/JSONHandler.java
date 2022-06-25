@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
@@ -70,10 +71,8 @@ public class JSONHandler {
 
     private void buildMap() {
 
-        IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(i -> {
-            RECORDS_MAP.put(KEY_SCORE_RECORDS.get(i), 0);
-            RECORDS_MAP.put(KEY_MONEY_RECORDS.get(i), 0);
-        });
+        Stream.concat(KEY_SCORE_RECORDS.stream(), KEY_MONEY_RECORDS.stream())
+                .forEach(key -> RECORDS_MAP.put(key, 0));
         //RECORDS_MAP.forEach((x, y) -> System.out.println(x + " - " + y));
 
         RECORDS_MAP.put(KEY_MONEY, 0);
@@ -97,8 +96,10 @@ public class JSONHandler {
     /**
      * Refresh recordsMap with information data read from records that have to
      *   be written to file.
+     *
+     *  This method writes to file.
      */
-    protected void download() {
+    protected void upload() {
 
         // Refreshes the map
         final List<Integer> scoreRecordsList = this.records.getScoreRecords();
@@ -121,9 +122,12 @@ public class JSONHandler {
     /**
      * Overwrite recordsMap with information data read from file that have to
      *   be loaded as new records.
-     * @param json 
+     *
+     * This method reads from file.
+     *
+     * @param json the {@link JsonObject} read from file
      */
-    protected void upload(final JsonObject json) {
+    protected void download(final JsonObject json) {
 
         final List<Integer> scoreRecordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
         final List<Integer> moneyRecordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
@@ -143,12 +147,12 @@ public class JSONHandler {
             }
         });
 
-        records.setScoreRecords(scoreRecordsReadList);
-        records.setMoneyRecords(moneyRecordsReadList);
+        this.records.setScoreRecords(scoreRecordsReadList);
+        this.records.setMoneyRecords(moneyRecordsReadList);
 
-        records.setBurnedTimes(json.getInteger(KEY_BURNED));
-        records.setZappedTimes(json.getInteger(KEY_ZAPPED));
-        records.setSavedMoney(json.getInteger(KEY_MONEY));
+        this.records.setBurnedTimes(json.getInteger(KEY_BURNED));
+        this.records.setZappedTimes(json.getInteger(KEY_ZAPPED));
+        this.records.setSavedMoney(json.getInteger(KEY_MONEY));
 
         try {
             json.requireKeys(KEY_BURNED, KEY_ZAPPED, KEY_MONEY);

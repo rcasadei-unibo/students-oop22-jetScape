@@ -278,6 +278,11 @@ public final class Records {
         this.savedMoney = savedMoney;
     }
 
+    /**
+     * This method adds a score record entry.
+     *
+     * @param newScoreRecord the new score record
+     */
     public void addScoreRecord(final int newScoreRecord) {
         //this.recordScores.forEach(System.out::println);
 
@@ -291,6 +296,13 @@ public final class Records {
         }
     }
 
+    /**
+     * This method gets the score record list.
+     * 
+     * This method can be used to write the list to file.
+     * 
+     * @return the score record list
+     */
     public List<Integer> getScoreRecords() {
         /*final List<Integer> recordScores = new ArrayList<>();
 
@@ -302,6 +314,13 @@ public final class Records {
         return List.copyOf(this.scoreRecords);
     }
 
+    /**
+     * This method sets the score record list.
+     * 
+     * This method is used to read that list from file.
+     * 
+     * @param recordScores the new score record list
+     */
     public void setScoreRecords(final List<Integer> recordScores) {
         this.scoreRecords.clear();
         this.scoreRecords.addAll(recordScores);
@@ -315,6 +334,11 @@ public final class Records {
         }*/
     }
 
+    /**
+     * This method adds a money record entry.
+     *
+     * @param newMoneyRecord the new money record
+     */
     public void addMoneyRecord(final int newMoneyRecord) {
 
         this.moneyRecords.add(newMoneyRecord);
@@ -327,10 +351,24 @@ public final class Records {
         }
     }
 
+    /**
+     * This method gets the money record list.
+     * 
+     * This method can be used to write the list to file.
+     * 
+     * @return the money record list
+     */
     public List<Integer> getMoneyRecords() {
         return List.copyOf(this.moneyRecords);
     }
 
+    /**
+     * This method sets the money record list.
+     * 
+     * This method is used to read that list from file.
+     * 
+     * @param recordCoins the new money record list
+     */
     public void setMoneyRecords(final List<Integer> recordCoins) {
         this.moneyRecords.clear();
         this.moneyRecords.addAll(recordCoins);

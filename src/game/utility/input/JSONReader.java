@@ -54,7 +54,7 @@ public class JSONReader extends JSONHandler {
             Reader reader = new FileReader(super.getFile());
         ) {
             this.fromJson(reader);
-            super.upload(json);
+            super.download(json);
         } catch (FileNotFoundException e1) {
             // TODO Auto-generated catch block
             System.err.println("File record non esistente...");
@@ -80,6 +80,6 @@ public class JSONReader extends JSONHandler {
             e.printStackTrace();
         }
 
-        super.upload(json);
+        super.download(json);
     }
 }

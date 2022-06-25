@@ -33,7 +33,7 @@ public class JSONWriter extends JSONHandler implements Jsonable {
      * Write informations passed by {@link JSONHandler}.
      */
     public void write() {
-        super.download();
+        super.upload();
         try (
             FileWriter fw = new FileWriter(super.getFile());
         ) {
