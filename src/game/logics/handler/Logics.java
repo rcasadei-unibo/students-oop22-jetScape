@@ -125,7 +125,7 @@ public interface Logics {
          * This method sets the game as ended.
          *
          * @param score score obtained by player
-         * @param coins coins collected by player
+         * @param money coins collected by player
          */
         public void setGameEnded(final int score, final int money) {
            if (!this.gameEnded) {

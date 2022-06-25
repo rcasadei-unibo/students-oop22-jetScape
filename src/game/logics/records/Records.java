@@ -4,7 +4,6 @@ import game.logics.entities.player.Player;
 import game.logics.entities.player.Player.PlayerDeath;
 import game.utility.input.JSONReader;
 import game.utility.input.JSONWriter;
-import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.handler.Logics.GameInfo;
 
 import java.util.ArrayList;
@@ -185,8 +184,8 @@ public final class Records {
 
         this.newScoreRecord = this.scoreRecords.isEmpty() || finalScore > this.getHighestRecordScore();
 
-        if (this.newScoreRecord || (finalScore < this.getHighestRecordScore()
-                && finalScore > this.getLowestRecordScore())
+        if (this.newScoreRecord || finalScore < this.getHighestRecordScore()
+                && finalScore > this.getLowestRecordScore()
                 || this.scoreRecords.size() < Records.getMaxSavedNumberOfRecords()) {
             this.addScoreRecord(finalScore);
         }

@@ -69,7 +69,15 @@ public class JSONHandler {
         KEY_LIST.add(KEY_ZAPPED);
     }
 
-    private void buildMap() {
+    /**
+     * {@link JSONHandler} constructor, called to set internal {@link Records} parameter.
+     *
+     * @param records {@link Records} Place to get and set statistics &amp; records data
+     */
+    protected JSONHandler(final Records records) {
+        this.records = records;
+
+        // Builds the map
 
         Stream.concat(KEY_SCORE_RECORDS.stream(), KEY_MONEY_RECORDS.stream())
                 .forEach(key -> RECORDS_MAP.put(key, 0));
@@ -81,16 +89,6 @@ public class JSONHandler {
 
         //KEY_LIST.forEach(System.out::println);
         //RECORDS_MAP.keySet().forEach(System.out::println);
-    }
-
-    /**
-     * {@link JSONHandler} constructor, called to set internal {@link Records} parameter.
-     *
-     * @param records {@link Records} Place to get and set statistics &amp; records data
-     */
-    protected JSONHandler(final Records records) {
-        this.records = records;
-        this.buildMap();
     }
 
     /**

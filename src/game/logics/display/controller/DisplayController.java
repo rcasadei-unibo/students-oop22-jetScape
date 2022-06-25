@@ -56,7 +56,8 @@ public class DisplayController {
      * @param keyH {@link KeyHandler} instance
      * @param setState {@link Consumer} to set new value of State
      * @param getState {@link Supplier} to get new value from State
-     * @param getScore Supplier to get new value of Score
+     * @param getScore Supplier to get new value of score
+     * @param getCoins Supplier to get new value of collected money
      * @param background {@link Background} background handler
      * @param records {@link Records} to check &amp; set new records
      */
