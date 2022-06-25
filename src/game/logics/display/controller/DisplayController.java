@@ -79,11 +79,11 @@ public class DisplayController {
         this.recordsDisplay = new DisplayRecords(records);
         this.gameOverDisplay = new DisplayGameOver(records);
 
-        this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
-        this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
-        this.recordsHandler = new MenuHandler(keyH, recordsDisplay, setState);
-        this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
-        this.settingsHandler = new SettingsHandler(keyH, gameSettings, setState);
+        this.pauseHandler = new MenuHandler(keyH, pauseDisplay.getOptions(), setState);
+        this.titleHandler = new MenuHandler(keyH, mainMenuDisplay.getOptions(), setState);
+        this.recordsHandler = new MenuHandler(keyH, recordsDisplay.getOptions(), setState);
+        this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay.getOptions(), setState);
+        this.settingsHandler = new SettingsHandler(keyH, gameSettings.getOptions(), setState);
     }
 
     /**

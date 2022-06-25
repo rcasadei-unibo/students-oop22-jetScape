@@ -20,12 +20,12 @@ public class CoinInstance extends PickupInstance implements Coin {
 
     /**
      * Specifies the path within the sprite folder [specified in {@link game.utility.sprites.Sprite Sprite} class]
-     * where {@link ShieldInstance} sprites can be found.
+     * where {@link CoinInstance} sprites can be found.
      */
     private static final String SPRITE_PATH = "coin" + System.getProperty("file.separator");
     /**
      * If sprites are missing, they will be replace by a rectangle of the color specified in
-     * <code>{@link ShieldInstance}.PLACE_HOLDER</code>.
+     * <code>{@link CoinInstance}.PLACE_HOLDER</code>.
      */
     private static final Color PLACE_HOLDER = Color.yellow;
 

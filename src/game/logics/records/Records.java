@@ -215,7 +215,7 @@ public final class Records {
 
     /**
      * This static method is used to get the constant value stored as
-     * {@link Records#NUMBER_OF_SAVED_RECORD}.
+     * {@link Records#MAX_NUMBER_OF_SAVED_RECORD}.
      *
      * @return the number of records that will be written to file.
      */

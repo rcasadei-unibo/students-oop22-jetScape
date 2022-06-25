@@ -89,15 +89,16 @@ public class BackgroundController implements Background {
     }
 
     /**
-     * Allows to set the background visibility.
-     * 
-     * @param v <code>true</code> if has to be shown, <code>false</code> if has to be hidden
+     * {@inheritDoc}
      */
-    private void setVisibility(final boolean v) {
+    public final void setVisibility(final boolean v) {
         visible = v;
     }
 
-    private boolean isVisible() {
+    /**
+     * {@inheritDoc}
+     */
+    public final boolean isVisible() {
         return visible;
     }
 
@@ -132,9 +133,7 @@ public class BackgroundController implements Background {
     }
 
     /**
-     * Draws the background if visible.
-     * 
-     * @param g the graphics drawer
+     * {@inheritDoc}
      */
     public void draw(final Graphics2D g) {
         if (this.isVisible()) {
@@ -148,6 +147,12 @@ public class BackgroundController implements Background {
         }
     }
 
+    /**
+     * This method shifts the assignments to the boxes one position to the left.
+     * 
+     * <p>It has to be called when the sprite assigned to the left box is going
+     * out of the screen and therefore it will be no longer visible.</p>
+     */
     private void shiftBox() {
 
         this.boxVisible.putAll(new HashMap<>(Map.of(
@@ -224,6 +229,12 @@ public class BackgroundController implements Background {
                 +  " - Y:" + Math.round(this.calculate(BoxPos.RIGHT).getY()) + "]";
     }
 
+    /**
+     * Enumeration used to attach at every background sprite its relative
+     * position on the screen:
+     * 
+     * <p>For example {@link BoxPos#LEFT} is on the left of the player window.</p>
+     */
     private enum BoxPos {
         LEFT, CENTRAL, RIGHT;
     }

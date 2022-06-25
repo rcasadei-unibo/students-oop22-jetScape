@@ -20,7 +20,8 @@ import game.utility.sprites.Sprite;
  * This class is an implementation of a {@link Sprite} handler.
  * 
  * If the image cannot be loaded or any path isn't specified, a rectangle of
- * the color set by <code>{@link BackgroundController#PLACE_HOLDER}</code> will be drawn.
+ * the color set by <code>{@link BackgroundController#PLACE_HOLDER}</code> will
+ * be drawn.
  */
 public class BackgroundSprite extends AbstractSprite implements Sprite {
 
@@ -34,6 +35,9 @@ public class BackgroundSprite extends AbstractSprite implements Sprite {
      */
     private final Color placeHolder;
 
+    /**
+     * The name identifier of the sprite, initially unknown.
+     */
     private String name = "unknown";
 
     /**
@@ -56,9 +60,11 @@ public class BackgroundSprite extends AbstractSprite implements Sprite {
      * @param placeHolder the color of the rectangle drawn as place holder
      * @param path the path of the image to load
      */
-    public BackgroundSprite(final String name, final Color placeHolder, final String path) {
+    public BackgroundSprite(final String name, final Color placeHolder,
+            final String path) {
         this(name, placeHolder);
-        image = Optional.ofNullable(BackgroundSprite.load(AbstractSprite.getDefaultSpriteDirectory() + path));
+        this.image = Optional.ofNullable(BackgroundSprite.load(
+                AbstractSprite.getDefaultSpriteDirectory() + path));
     }
 
     /**
@@ -92,7 +98,8 @@ public class BackgroundSprite extends AbstractSprite implements Sprite {
      * @param pos the position to draw the image
      * @param sizes the length of a side of the squared image
      */
-    public void draw(final Graphics2D g, final Pair<Double, Double> pos, final int... sizes) {
+    public void draw(final Graphics2D g, final Pair<Double, Double> pos,
+            final int... sizes) {
         final int height = sizes[0];
         final int width;
         if (sizes.length == 2) {
@@ -101,10 +108,12 @@ public class BackgroundSprite extends AbstractSprite implements Sprite {
             width = height;
         }
         if (this.image.isPresent()) {
-            g.drawImage(image.get(), (int) Math.round(pos.getX()), (int) Math.round(pos.getY()), width, height, null);
+            g.drawImage(image.get(), (int) Math.round(pos.getX()),
+                    (int) Math.round(pos.getY()), width, height, null);
         } else {
             g.setColor(placeHolder);
-            g.fillRect((int) Math.round(pos.getX()), (int) Math.round(pos.getY()), width, height);
+            g.fillRect((int) Math.round(pos.getX()),
+                    (int) Math.round(pos.getY()), width, height);
         }
     }
 }

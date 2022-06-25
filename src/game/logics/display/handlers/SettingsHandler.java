@@ -1,28 +1,29 @@
 package game.logics.display.handlers;
 
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.function.Consumer;
 
 import game.frame.GameWindow;
-import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
+import game.utility.other.MenuOption;
 import game.utility.other.Sound;
 
 /**
- * this class is used to handle settings regulations through sliders use.
+ * This class is used to handle settings regulations through sliders use.
  */
 public class SettingsHandler extends MenuHandler {
 
     /**
-     * initializes Setting Handler class.
-     * @param keyH
-     * @param display
-     * @param setGameState
+     * initializes {@link SettingsHandler} class.
+     * @param keyH {@link KeyHandler} instance
+     * @param options {@link List} of {@link MenuOption} that will be shown
+     * @param setGameState a {@link Consumer} of {@link GameState}
      */
-    public SettingsHandler(final KeyHandler keyH, final Display display,
+    public SettingsHandler(final KeyHandler keyH, final List<MenuOption> options,
             final Consumer<GameState> setGameState) {
-        super(keyH, display, setGameState);
+        super(keyH, options, setGameState);
     }
 
     /**
@@ -76,14 +77,14 @@ public class SettingsHandler extends MenuHandler {
 
     private void raise() {
         switch (super.getSelectedOption()) {
-        case MUSIC:
-            GameWindow.GAME_MUSIC.raiseVolumeLevel();
-            break;
-        case SOUND:
-            GameWindow.GAME_SOUND.raiseVolumeLevel();
-            break;
-        default:
-            break;
-    }
+            case MUSIC:
+                GameWindow.GAME_MUSIC.raiseVolumeLevel();
+                break;
+            case SOUND:
+                GameWindow.GAME_SOUND.raiseVolumeLevel();
+                break;
+            default:
+                break;
+        }
     }
 }

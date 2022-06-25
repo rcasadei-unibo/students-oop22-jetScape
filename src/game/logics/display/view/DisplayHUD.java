@@ -18,7 +18,13 @@ public class DisplayHUD extends Display {
     private static final double FONT_SCALE = 18;
     private final Font scoreFont;
 
+    /**
+     * Actual score value, that have to be shown on screen.
+     */
     private int score;
+    /**
+     * Actual number of coins collected, that have to be shown on screen.
+     */
     private int coins;
 
     /**
@@ -51,16 +57,16 @@ public class DisplayHUD extends Display {
     }
 
     /**
-     * Update internal score to be shown.
-     * @param score the score that have to be shown on HUD.
+     * Update internal {@link #score} variable to be shown on HUD.
+     * @param score the new score value.
      */
     public void updateScore(final int score) {
         this.score = score;
     }
 
     /**
-     * Update internal coins counter to be shown.
-     * @param coins
+     * Update internal {@link #coins} counter to be shown on HUD.
+     * @param coins the new number of coins collected.
      */
     public void updateCoins(final int coins) {
         this.coins = coins;
