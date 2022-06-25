@@ -36,7 +36,7 @@ public abstract class HitboxInstance implements Hitbox {
 
     /**
      * initializes a {@link game.logics.entities.generic.Entity Entity} hitbox.
-     * @param startingPos
+     * @param startingPos the starting position
      */
     public HitboxInstance(final Pair<Double, Double> startingPos) {
         super();
@@ -76,11 +76,11 @@ public abstract class HitboxInstance implements Hitbox {
 
     /**
      * adds the rectangle of the specified dimensions in the hitbox.
-     * 
-     * @param width
-     * @param height
-     * @param x
-     * @param y
+
+     * @param x x-axis initial coordinate
+     * @param y y-axis initial coordinate
+     * @param width width of the rectangle
+     * @param height height of the rectangle
      */
     protected void addRectangle(final double x, final double y, final double width, final double height) {
         final int startingX = (int) (startingPos.getX() + this.scale(x));
@@ -95,8 +95,8 @@ public abstract class HitboxInstance implements Hitbox {
     /**
      * scales the hitbox dimension using the current screen tile's size.
      * 
-     * @param x 
-     * @return scaled x
+     * @param x the length of one side of the hitbox
+     * @return the new scaled side of the hitbox
      */
     private double scale(final double x) {
         return GameWindow.GAME_SCREEN.getTileSize() * (x / SPRITE_DIMENSIONS);
@@ -105,7 +105,7 @@ public abstract class HitboxInstance implements Hitbox {
     /**
      * adds the specified hitbox to the group (to use only with groups of entities).
      * 
-     * @param hitbox
+     * @param hitbox an {@link Hitbox} instance
      */
     protected void addHitbox(final Hitbox hitbox) {
         this.rectangles.addAll(hitbox.getRectangles());

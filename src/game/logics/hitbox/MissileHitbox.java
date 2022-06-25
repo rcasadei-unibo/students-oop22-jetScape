@@ -16,7 +16,7 @@ public class MissileHitbox extends HitboxInstance {
      * initializes {@link game.logics.entities.obstacles.missile.Missile Missile}
      * {@link Hitbox} in the starting position.
      * 
-     * @param startingPos
+     * @param startingPos the starting position
      */
     public MissileHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);

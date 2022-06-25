@@ -11,10 +11,10 @@ import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
- * The class {@link ShieldInstance} is used for defining a shield pickup in the environment.
+ * The class {@code CoinInstance} is used for defining a coin pickup in the environment.
  * 
- * A shield is a bonus item that can be picked up by the player granting a one-time
- * protection from any hit from any obstacle.
+ * A coin is a bonus item that can be picked up by the player granting the
+ * possibility to buy items in your favor at the store.
  */
 public class CoinInstance extends PickupInstance implements Coin {
 

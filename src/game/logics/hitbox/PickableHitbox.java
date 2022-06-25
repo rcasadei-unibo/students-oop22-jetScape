@@ -13,7 +13,7 @@ public class PickableHitbox extends HitboxInstance {
     /**
      * initializes a {@link game.logics.entities.pickups.generic.Pickup Pickup}
      * {@link Hitbox} in the given starting position.
-     * @param startingPos
+     * @param startingPos the starting position
      */
     public PickableHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);

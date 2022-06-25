@@ -18,7 +18,7 @@ public class ZapperBaseHitbox extends HitboxInstance {
      * initializes the {@link game.logics.entities.obstacles.zapper.ZapperBase ZapperBase}
      * {@link Hitbox} in the specified position.
     * 
-     * @param startingPos
+     * @param startingPos the starting position
      */
     public ZapperBaseHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);
