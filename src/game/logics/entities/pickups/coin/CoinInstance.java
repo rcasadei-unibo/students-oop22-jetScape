@@ -5,6 +5,7 @@ import java.awt.Color;
 import game.logics.entities.pickups.generic.PickupInstance;
 import game.logics.entities.player.Player;
 import game.logics.handler.Logics;
+import game.logics.hitbox.CoinHitbox;
 import game.logics.interactions.SpeedHandler;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
@@ -41,5 +42,6 @@ public class CoinInstance extends PickupInstance implements Coin {
         spritesMgr.setPlaceH(PLACE_HOLDER);
         spritesMgr.addSprite("coin", SPRITE_PATH + "coin.png");
         spritesMgr.setAnimator(() -> "coin");
+        super.setHitbox(new CoinHitbox(position));
     }
 }

@@ -203,7 +203,7 @@ public class PlayerInstance extends EntityInstance implements Player {
             case COIN:
                 this.coins++;
                 this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
-                GameWindow.GAME_SOUND.play(Sound.TELEPORT);
+                GameWindow.GAME_SOUND.play(Sound.COIN);
                 break;
             default:
                 break;
