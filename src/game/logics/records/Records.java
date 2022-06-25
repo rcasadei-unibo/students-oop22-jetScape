@@ -28,6 +28,7 @@ public final class Records {
     private static final int MAX_NUMBER_OF_SAVED_RECORD = 3;
 
     private final Supplier<GameInfo> getGame;
+
     private final Player player;
     private final JSONWriter writer;
     private final JSONReader reader;
@@ -38,6 +39,7 @@ public final class Records {
 
     private int burnedTimes;
     private int zappedTimes;
+    private int savedMoney;
 
     // Data read from game
     private int playingScoreRecord; // higher score obtained by playing consecutively
@@ -138,6 +140,7 @@ public final class Records {
                 default:
                     break;
             }
+        this.savedMoney = this.savedMoney + newGameInfo.getFinalMoney();
         //this.checkScore(this.getScore());
         this.checkScore(newGameInfo.getFinalScore());
         this.checkMoney(newGameInfo.getFinalMoney());
@@ -240,6 +243,15 @@ public final class Records {
     }
 
     /**
+     * This method is used to get how much savedMoney the player owns.
+     *
+     * @return how many money the player has saved.
+     */
+    public int getSavedMoney() {
+        return this.savedMoney;
+    }
+
+    /**
      * This method is used to set burnedTimes value.
      *
      * @param readBurnedTimes how many times Barry died burned.
@@ -255,6 +267,15 @@ public final class Records {
      */
     public void setZappedTimes(final int readZappedTimes) {
         this.zappedTimes = readZappedTimes;
+    }
+
+    /**
+     * This method is used to set savedMoney value.
+     *
+     * @param savedMoney how much money the player has saved.
+     */
+    public void setSavedMoney(final int savedMoney) {
+        this.savedMoney = savedMoney;
     }
 
     public void addScoreRecord(final int newScoreRecord) {
@@ -377,7 +398,7 @@ public final class Records {
      * Get coins collected by player given from {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
      * @return player score
      */
-    public int getMoney() {
+    public int getCollectedMoney() {
         return this.getGame.get().getFinalMoney();
     }
 

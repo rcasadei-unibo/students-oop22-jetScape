@@ -45,7 +45,7 @@ public class DisplayGameOver extends Display implements MenuDisplay {
      */
     private void readRecords() {
         this.finalScore = this.records.getScore();
-        this.finalMoney = this.records.getMoney();
+        this.finalMoney = this.records.getCollectedMoney();
 
         //this.recordScore = this.records.getRecordScore();
     }

@@ -345,12 +345,14 @@ public class PlayerInstance extends EntityInstance implements Player {
     @Override
     public void reset() {
         super.reset();
-        setStatus(PlayerStatus.WALK);
-        score = 0;
-        frameTime = 0;
+        this.setStatus(PlayerStatus.WALK);
+        this.score = 0;
+        this.coins = 0;
 
-        invulnerable = false;
-        shieldProtected = false;
+        this.frameTime = 0;
+
+        this.invulnerable = false;
+        this.shieldProtected = false;
     }
 
     /**

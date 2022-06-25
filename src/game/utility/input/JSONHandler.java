@@ -40,6 +40,7 @@ public class JSONHandler {
     private static final List<JsonKey> KEY_SCORE_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
     private static final List<JsonKey> KEY_MONEY_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
 
+    private static final JsonKey KEY_MONEY = new FileKey("savedMoney", 0);
     private static final JsonKey KEY_BURNED = new FileKey("burned", 0);
     private static final JsonKey KEY_ZAPPED = new FileKey("zapped", 0);
 
@@ -62,6 +63,7 @@ public class JSONHandler {
         }
         KEY_LIST.addAll(KEY_SCORE_RECORDS);
         KEY_LIST.addAll(KEY_MONEY_RECORDS);
+        KEY_LIST.add(KEY_MONEY);
         KEY_LIST.add(KEY_BURNED);
         KEY_LIST.add(KEY_ZAPPED);
     }
@@ -74,6 +76,7 @@ public class JSONHandler {
         });
         //RECORDS_MAP.forEach((x, y) -> System.out.println(x + " - " + y));
 
+        RECORDS_MAP.put(KEY_MONEY, 0);
         RECORDS_MAP.put(KEY_BURNED, 0);
         RECORDS_MAP.put(KEY_ZAPPED, 0);
 
@@ -108,6 +111,7 @@ public class JSONHandler {
             RECORDS_MAP.replace(KEY_MONEY_RECORDS.get(i), moneyRecordsList.get(i));
         });
 
+        RECORDS_MAP.replace(KEY_MONEY, this.records.getSavedMoney());
         RECORDS_MAP.replace(KEY_BURNED, this.records.getBurnedTimes());
         RECORDS_MAP.replace(KEY_ZAPPED, this.records.getZappedTimes());
 
@@ -144,9 +148,10 @@ public class JSONHandler {
 
         records.setBurnedTimes(json.getInteger(KEY_BURNED));
         records.setZappedTimes(json.getInteger(KEY_ZAPPED));
+        records.setSavedMoney(json.getInteger(KEY_MONEY));
 
         try {
-            json.requireKeys(KEY_BURNED, KEY_ZAPPED);
+            json.requireKeys(KEY_BURNED, KEY_ZAPPED, KEY_MONEY);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
         }
