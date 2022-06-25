@@ -4,19 +4,11 @@ import game.logics.entities.player.Player;
 import game.logics.entities.player.Player.PlayerDeath;
 import game.utility.input.JSONReader;
 import game.utility.input.JSONWriter;
-import game.logics.handler.Logics.GameInfoHandler;
 import game.logics.handler.Logics.GameInfo;
 
 import java.util.ArrayList;
-//import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-//import java.util.Optional;
-import java.util.Set;
-//import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 /**
@@ -235,6 +227,11 @@ public final class Records {
         this.zappedTimes = readZappedTimes;
     }
 
+    // TODO: javadoc
+    /**
+     * 
+     * @param newRecordScore
+     */
     public void addRecordScore(final int newRecordScore) {
         //this.recordScores.forEach(System.out::println);
 
@@ -248,6 +245,11 @@ public final class Records {
         }
     }
 
+    // TODO: javadoc
+    /**
+     * 
+     * @return .
+     */
     public List<Integer> getRecordScores() {
         /*final List<Integer> recordScores = new ArrayList<>();
 
@@ -259,6 +261,11 @@ public final class Records {
         return List.copyOf(this.recordScores);
     }
 
+    // TODO: javadoc 
+    /**
+     * 
+     * @param recordScores
+     */
     public void setRecordScores(final List<Integer> recordScores) {
         this.recordScores.clear();
         this.recordScores.addAll(recordScores);

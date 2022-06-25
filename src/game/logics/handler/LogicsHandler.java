@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
@@ -223,6 +222,22 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION;
     }
 
+    private void setInGame() {
+        if (this.gameState != GameState.PAUSED) {
+            this.game.setActualGame(new GameInfo(this.game));
+            //this.game.generateNewGameInfo();
+        }
+        if (this.gameState == GameState.ENDGAME) { // RETRY
+            this.records.refresh();
+            this.resetGame();
+        } else if (this.gameState == GameState.MENU) { // START
+            this.records.refresh();
+            this.resetGame();
+            this.entities.get(EntityType.PLAYER).add(playerEntity);
+        }
+        this.spawner.resume();
+    }
+
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
@@ -232,19 +247,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     }
                     break;
                 case INGAME:
-                    if (this.gameState != GameState.PAUSED) {
-                        this.game.setActualGame(new GameInfo(this.game));
-                        //this.game.generateNewGameInfo();
-                    }
-                    if (this.gameState == GameState.ENDGAME) { // RETRY
-                        this.records.refresh();
-                        this.resetGame();
-                    } else if (this.gameState == GameState.MENU) { // START
-                        this.records.refresh();
-                        this.resetGame();
-                        this.entities.get(EntityType.PLAYER).add(playerEntity);
-                    }
-                    this.spawner.resume();
+                    this.setInGame();
                     break;
                 case MENU:
                     if (this.gameState == GameState.PAUSED
