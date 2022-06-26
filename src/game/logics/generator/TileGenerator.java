@@ -92,13 +92,13 @@ public class TileGenerator implements Generator {
     private final Map<EntityType, Set<Entity>> entities;
 
     /**
-     * Decides the odds for the generator to spawn a set of missiles.
-     */
-    private static final int MISSILE_ODDS = 35;
-    /**
      * Decides the odds for the generator to spawn a group of coins.
      */
-    private static final int MONEY_ODDS = 15;
+    private static final int COINS_ODDS = 55;
+    /**
+     * Decides the odds for the generator to spawn a set of missiles.
+     */
+    private static final int MISSILE_ODDS = 25;
     /**
      * Decides the odds for the generator to spawn a power up.
      */
@@ -301,18 +301,18 @@ public class TileGenerator implements Generator {
     }
 
     private void spawnTile() {
-        int randomNumber = RNG.nextInt() % 100;
+        int randomNumber = TileGenerator.RNG.nextInt() % 100;
         randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 
         if (randomNumber <= POWERUP_ODDS) {
-            randomNumber = RNG.nextInt() % 2;
+            randomNumber = TileGenerator.RNG.nextInt() % 2;
             randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
             randomNumber += EntityType.SHIELD.ordinal();
             spawnSet(EntityType.values()[randomNumber]);
-        } else if (randomNumber <= MONEY_ODDS) {
-            spawnSet(EntityType.COIN);
-        } else if (randomNumber <= MISSILE_ODDS) {
+        } else if (randomNumber <= TileGenerator.MISSILE_ODDS) {
             spawnSet(EntityType.MISSILE);
+        } else if (randomNumber <= TileGenerator.COINS_ODDS) {
+            spawnSet(EntityType.COIN);
         } else {
             spawnSet(EntityType.ZAPPER);
         }
