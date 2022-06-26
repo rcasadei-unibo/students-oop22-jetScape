@@ -176,7 +176,7 @@ public class PlayerInstance extends EntityInstance implements Player {
 
     private void checkHit(final Entity entityHit) {
         switch (entityHit.entityType()) {
-            case MISSILE: 
+            case MISSILE:
                 if (!this.shieldProtected) {
                     GameWindow.GAME_SOUND.stop(Sound.JETPACK);
                     GameWindow.GAME_SOUND.play(Sound.MISSILE);
@@ -202,7 +202,7 @@ public class PlayerInstance extends EntityInstance implements Player {
                 break;
             case COIN:
                 this.coins++;
-                this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
+                entityHit.clean();
                 GameWindow.GAME_SOUND.play(Sound.COIN);
                 break;
             default:
