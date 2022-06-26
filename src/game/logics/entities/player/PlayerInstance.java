@@ -199,10 +199,12 @@ public class PlayerInstance extends EntityInstance implements Player {
             case TELEPORT:
                 this.score += TeleportInstance.getScoreIncrease();
                 this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
+                GameWindow.GAME_SOUND.play(Sound.TELEPORT);
                 break;
             case COIN:
                 this.coins++;
                 entityHit.clean();
+                GameWindow.GAME_SOUND.stop(Sound.COIN);
                 GameWindow.GAME_SOUND.play(Sound.COIN);
                 break;
             default:
