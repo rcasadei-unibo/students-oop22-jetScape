@@ -28,8 +28,8 @@ public class DisplayMainMenu extends Display implements MenuDisplay {
         this.background = background;
         this.getOptions().add(MenuOption.START);
         this.getOptions().add(MenuOption.SETTINGS);
-        this.getOptions().add(MenuOption.QUIT);
         this.getOptions().add(MenuOption.RECORDS);
+        this.getOptions().add(MenuOption.QUIT);
     }
 
     /**
