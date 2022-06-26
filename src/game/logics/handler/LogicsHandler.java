@@ -43,6 +43,7 @@ import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
 import game.utility.other.FormatException;
 import game.utility.other.GameState;
+import game.utility.other.Sound;
 
 /**
  * The {@link LogicsHandler} class helps {@link GameWindow} to update
@@ -173,6 +174,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 break;
             case KeyEvent.VK_P:
                 this.setGameState(GameState.PAUSED);
+                GameWindow.GAME_SOUND.stop(Sound.JETPACK);
                 this.keyH.resetKeyTyped();
                 break;
             default:
