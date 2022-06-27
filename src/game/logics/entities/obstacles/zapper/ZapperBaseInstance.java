@@ -99,4 +99,14 @@ public class ZapperBaseInstance extends ObstacleInstance implements ZapperBase {
             rotation = "undefined";
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clean() {
+        super.reset();
+        if (this.hasMaster) {
+            this.getCleaner().accept(t -> master.entityType() == EntityType.ZAPPER, e -> master == e);
+        }
+    }
 }

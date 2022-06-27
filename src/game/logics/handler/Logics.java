@@ -5,8 +5,9 @@ import game.utility.other.EntityType;
 import java.awt.Graphics2D;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
-
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -26,6 +27,11 @@ public interface Logics {
      * @return a {@link BiConsumer} that can be used to clean up current active entities in the environment
      */
     BiConsumer<Predicate<EntityType>, Predicate<Entity>> getEntitiesCleaner();
+
+    /**
+     * @return a map of the current active entities in the environment.
+     */
+    Map<EntityType, Set<Entity>> getEntities();
 
     /**
      * Updates all the logical objects handled for a frame.

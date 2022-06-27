@@ -18,8 +18,7 @@ import game.utility.other.Pair;
 /**
  * The {@link Generator} interface can be used for accessing {@link TileGenerator} methods.
  * 
- * The class {@link TileGenerator} handles the generation of tiles of
- * obstacles during the game.
+ * The class {@link TileGenerator} handles the generation of tiles during the game.
  * 
  * {@link TileGenerator} works on a separated thread which can be manually
  * controlled by the {@link game.logics.handler.LogicsHandler LogicsHandler}.
@@ -79,7 +78,7 @@ public interface Generator extends Runnable {
     boolean isWaiting();
 
     /**
-     * Loads up all required information for the generation of obstacles.
+     * Loads up all required information for the generation of entities.
      * 
      * @throws FormatException if parser fails to parse into objects the contents of json file
      * @throws JsonException if json file reading fails

@@ -95,7 +95,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
         this.game = new GameInfoHandler(new GameInfo());
 
-        this.playerEntity = new PlayerInstance(this, this.entities);
+        this.playerEntity = new PlayerInstance(this);
 
         this.records = new Records(() -> this.game.getActualGame(), playerEntity);
 
@@ -154,6 +154,13 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 }
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<EntityType, Set<Entity>> getEntities() {
+        return entities;
     }
 
     private void resetGame() {

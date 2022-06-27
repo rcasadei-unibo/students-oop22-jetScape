@@ -3,8 +3,6 @@ package game.logics.entities.player;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.Graphics2D;
-import java.util.Map;
-import java.util.Set;
 
 import game.frame.GameWindow;
 import game.logics.entities.generic.Entity;
@@ -107,9 +105,8 @@ public class PlayerInstance extends EntityInstance implements Player {
      * Constructor used for initializing basic parts of the player entity.
      * 
      * @param l the logics handler which the entity is linked to
-     * @param entities the map where all current active entities are contained
      */
-    public PlayerInstance(final Logics l, final Map<EntityType, Set<Entity>> entities) {
+    public PlayerInstance(final Logics l) {
 
         super(l, new Pair<>(X_POSITION, Y_LOW_LIMIT), EntityType.PLAYER);
         this.keyH = GameWindow.GAME_KEYHANDLER;
@@ -118,7 +115,7 @@ public class PlayerInstance extends EntityInstance implements Player {
         this.jumpSpeed = BASE_JUMP_SPEED / GameWindow.FPS_LIMIT;
 
         this.setHitbox(new PlayerHitbox(this.getPosition()));
-        hitChecker = new CollisionsHandler(entities, this);
+        hitChecker = new CollisionsHandler(l.getEntities(), this);
 
         this.status = PlayerStatus.WALK;
 
