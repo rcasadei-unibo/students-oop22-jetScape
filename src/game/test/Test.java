@@ -3,7 +3,11 @@ package game.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Set;
 
 import game.frame.GameWindow;
@@ -20,12 +24,19 @@ import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.pickups.teleport.Teleport;
 import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
+import game.logics.entities.player.Player.PlayerDeath;
 import game.logics.entities.player.PlayerInstance;
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
 import game.logics.handler.Logics;
 import game.logics.handler.LogicsHandler;
 import game.logics.interactions.SpeedHandler;
+import game.logics.records.Records;
+import game.utility.input.JSONHandler;
+import game.utility.input.JSONReader;
+import game.utility.input.JSONReaderImpl;
+import game.utility.input.JSONWriter;
+import game.utility.input.JSONWriterImpl;
 import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
@@ -308,5 +319,118 @@ public class Test {
         assertTrue(teleport.isOnSpawnArea());
 
         assertTrue(logics.getEntities().get(teleport.entityType()).isEmpty());
+    }
+
+    //FIXME
+    /**
+     * Records file writing test.
+     */
+    @org.junit.Test
+    public void recordTest() {
+
+        final int burnedTimes = 3;
+        final Logics logics = new LogicsHandler();
+        final Player player = new PlayerInstance(logics);
+        final Records records = new Records(() -> logics.getGame().getActualGame(), player);
+
+        records.clear();
+        for (int i = 0; i < burnedTimes; i++) {
+            // Adds a new missile
+            final Pair<Double, Double> missilePos = new Pair<>(player.getPosition().getX() + 25, player.getPosition().getY());
+            final SpeedHandler missileMovement = new SpeedHandler(500.0, 10.0, 5000.0);
+            final Missile missile = new MissileInstance(logics, missilePos, player, missileMovement);
+
+            logics.getEntities().get(missile.entityType()).add(missile);
+
+            // Wait the collision
+            while (missile.getPosition().getX() > player.getPosition().getX()) {
+                missile.update();
+            }
+
+            // Missile hits the player
+            missile.update();
+            player.update();
+
+            assertEquals(PlayerDeath.BURNED, player.getCauseOfDeath());
+
+            //records.refresh();
+            //logics.getGame().getActualGame().setGameEnded(500);
+            //records.fetch(logics.getGame().getActualGame());
+            //records.update();
+        }
+        assertEquals(burnedTimes, records.getBurnedTimes());
+    }
+
+    /**
+     * Records file writing test.
+     */
+    @org.junit.Test
+    public void writingTest() {
+        final Logics logics = new LogicsHandler();
+        final Player player = new PlayerInstance(logics);
+        final Records records = new Records(() -> logics.getGame().getActualGame(), player);
+        final JSONWriter writer = new JSONWriterImpl(records);
+
+        final int burnedTimes = 5;
+        final int zappedTimes = 2;
+        final int highestScoreRecord = 400;
+        final int lowestScoreRecord = 250;
+
+        records.clear();
+
+        records.setBurnedTimes(burnedTimes);
+        records.setZappedTimes(zappedTimes);
+
+        records.addRecordScore(highestScoreRecord);
+        records.addRecordScore(lowestScoreRecord);
+
+        records.update(); // write
+
+        try (
+            BufferedReader reader = new BufferedReader(
+                    new FileReader(JSONHandler.getFile()));
+        ) {
+            assertEquals(reader.readLine(), writer.toJson());
+        } catch (IOException e) {
+            fail("File \"" + JSONHandler.getFile().toString() + "\" missing.");
+        }
+    }
+
+    /**
+     * Records file reading test.
+     */
+    @org.junit.Test
+    public void readingTest() {
+        final Logics logics = new LogicsHandler();
+        final Player player = new PlayerInstance(logics);
+        final Records records = new Records(() -> logics.getGame().getActualGame(), player);
+        final JSONWriter writer = new JSONWriterImpl(records);
+        final JSONReader reader = new JSONReaderImpl(records);
+
+        final int burnedTimes = 5;
+        final int zappedTimes = 2;
+        final int highestScoreRecord = 400;
+        final int lowestScoreRecord = 250;
+
+        records.clear();
+
+        records.setBurnedTimes(burnedTimes);
+        records.setZappedTimes(zappedTimes);
+
+        records.addRecordScore(highestScoreRecord);
+        records.addRecordScore(lowestScoreRecord);
+
+        records.update(); // write
+
+        assertEquals(writer.toJson(), reader.toString());
+
+        records.refresh(); // read
+
+        assertEquals(burnedTimes, records.getBurnedTimes());
+        assertEquals(zappedTimes, records.getZappedTimes());
+
+        assertEquals(highestScoreRecord, records.getHighestScore());
+        assertEquals(highestScoreRecord, records.getRecordScores().get(0).intValue());
+        assertEquals(lowestScoreRecord, records.getRecordScores().get(1).intValue());
     }
 }
