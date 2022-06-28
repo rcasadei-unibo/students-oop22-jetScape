@@ -15,7 +15,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import game.logics.records.Records;
 
 /**
- * Non-instantiable class used by {@link JSONWriter} and {@link JSONReader} to
+ * Non-instantiable class used by {@link JSONWriterImpl} and {@link JSONReaderImpl} to
  * get common file information used to read &amp; write information to and from a
  * JSON formatted file.
  */
@@ -156,7 +156,7 @@ public class JSONHandler {
      * This method is used to get the file used for writing and reading.
      * @return the {@link File} JSONHandler.FILE
      */
-    protected File getFile() {
+    public static File getFile() {
         return JSONHandler.FILE;
     }
 

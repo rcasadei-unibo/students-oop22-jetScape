@@ -35,7 +35,6 @@ import game.logics.display.controller.DisplayController;
 
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
-
 import game.logics.records.Records;
 
 import game.utility.debug.Debugger;
@@ -265,8 +264,15 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     this.getEntitiesCleaner().accept(t -> true, e -> true);
                     break;
                 case ENDGAME:
+                    final GameInfo actualGame = this.game.getActualGame();
                     this.spawner.stop();
-                    this.records.fetchGameEnded();
+
+                    // Declares game ended: sets game end date and gets final score
+                    if (!actualGame.isGameEnded()) {
+                        actualGame.setGameEnded(this.playerEntity.getCurrentScore());
+
+                        this.records.fetch(actualGame);
+                    }
                     this.records.update();
                     break;
                 case PAUSED:
@@ -344,6 +350,13 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 break;
         }
         this.displayController.drawScreen(g);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public GameInfoHandler getGame() {
+        return this.game;
     }
 }
 

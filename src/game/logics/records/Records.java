@@ -2,11 +2,12 @@ package game.logics.records;
 
 import game.logics.entities.player.Player;
 import game.logics.entities.player.Player.PlayerDeath;
+
+import game.logics.handler.Logics.GameInfo;
 import game.utility.input.JSONReader;
 import game.utility.input.JSONReaderImpl;
 import game.utility.input.JSONWriter;
 import game.utility.input.JSONWriterImpl;
-import game.logics.handler.Logics.GameInfo;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,52 +62,13 @@ public final class Records {
     /***    In and to file operations     ***/
     /****************************************/
 
-/*
-    private boolean checkAndSet(final GameUID newGameUID) {
-
-        final BiPredicate<GameUID, GameUID> checkIfNew =
-                (oldUID,newUID) -> oldUID.getGameDate() != newUID.getGameDate();
-        boolean isNewUID = false;
-
-        if (!newGameUID.isGamePlayed()) {
-            isNewUID = true;
-        } else if(checkIfNew.test(UIDGame, newGameUID)) {
-            isNewUID = true;
-            Records.UIDGame = newGameUID;
-        }
-        return isNewUID;
-    }*/
-
-    /**
-     * Declares game ended: sets game end date and gets final score.
-     */
-    public void fetchGameEnded() {
-
-        final GameInfo newGameInfo = this.getGame.get();
-
-        // if different --> new game
-        //if (oldGameInfo.getUID() != newGameInfo.getUID()) {
-
-        // Only if new gameUID (new game)
-        //if (this.checkAndSet(gameUID)) {
-            // Only if the game is not set as finished
-            if (!newGameInfo.isGameEnded()) { // FIXME
-
-                newGameInfo.setGameEnded(player.getCurrentScore());
-                //System.out.println(newGameInfo.getFinalScore());
-                this.fetch(newGameInfo);
-            }
-            //oldGameInfo = newGameInfo;
-        //}true if the new score is a new
-    }
-
     /**
      * Get data for updating in game, calling the data getters.
      *
-     * @param newGameInfo GameInfo passed via {@link Supplier}
-     * by {@link #fetchGameEnded()}
+     * @param newGameInfo {@link GameInfo} instance containing
+     * final game data
      */
-    private void fetch(final GameInfo newGameInfo) {
+    public void fetch(final GameInfo newGameInfo) {
 
         final PlayerDeath causeOfDeath;
 
@@ -125,9 +87,9 @@ public final class Records {
                 default:
                     break;
             }
+
+            this.checkScore(newGameInfo.getFinalScore());
         }
-        //this.checkScore(this.getScore());
-        this.checkScore(newGameInfo.getFinalScore());
     }
 
     /**
@@ -148,7 +110,6 @@ public final class Records {
     /***   Calculate and check records    ***/
     /****************************************/
 
-    //  TODO use new GameUID Date
     /**
      * This method checks if the new finalScore is a new record and only in
      * this case saves it.
@@ -157,6 +118,10 @@ public final class Records {
      *   final score in the current game
      */
     public void checkScore(final int finalScore) {
+
+       // final BiPredicate<GameUID, GameUID> checkIfNew =
+       //         (oldUID,newUID) -> oldUID.getGameDate() != newUID.getGameDate();
+       // checkIfNew.test(UIDGame, newGameUID)
 
         if (finalScore > Records.playingRecordScore) {
             Records.newPlayingRecordScore = true;
@@ -290,7 +255,6 @@ public final class Records {
      * @return the player score
      */
     public int getScore() {
-        //return this.score;
         return this.getGame.get().getFinalScore();
     }
 
@@ -298,15 +262,19 @@ public final class Records {
      * Get current highest score obtained by player.
      * @return the first element of the highest scores list
      */
-    public Integer getHighestScore() {
-        return this.recordScores.get(0);
+    public int getHighestScore() {
+        if (this.recordScores.isEmpty()) {
+            return 0;
+        } else {
+            return this.recordScores.get(0);
+        }
     }
 
     /**
      * Get current least score obtained by player.
      * @return the last element of the highest scores list
      */
-    private Integer getLowestRecordScore() {
+    private int getLowestRecordScore() {
         if (this.recordScores.isEmpty()) {
             return 0;
         } else {
@@ -337,5 +305,12 @@ public final class Records {
      */
     public boolean isNewPlayingRecordScore() {
         return Records.newPlayingRecordScore;
+    }
+
+    /**
+     * Orders the deletion of the record file.
+     */
+    public void clear() {
+        this.writer.clear();
     }
 }

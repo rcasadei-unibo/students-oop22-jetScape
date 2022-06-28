@@ -46,9 +46,9 @@ public class DisplayRecords extends Display implements MenuDisplay {
     private void fetch() {
         DisplayRecords.LENGTH_RECORDS.clear();
 
-        this.records.getRecordScores().forEach(x -> {
-            DisplayRecords.LENGTH_RECORDS.add(x.toString());
-        });
+        this.records.getRecordScores().stream()
+                .map(x -> x.toString())
+                .forEach(DisplayRecords.LENGTH_RECORDS::add);
 
         /*
         this.records.getRecordScores().stream()
@@ -57,9 +57,6 @@ public class DisplayRecords extends Display implements MenuDisplay {
                 .peek(DisplayRecords.LENGTH_RECORDS::add)
                 //.peek(System.out::println)
                 .close();*/
-
-        //TODO remove
-        //DisplayRecords.MONEY_RECORDS.add("3500");
     }
 
     // TODO: SPOSTARE IN CLASSE APPOSITA

@@ -46,6 +46,11 @@ public interface Logics {
     void drawAll(Graphics2D g);
 
     /**
+     * @return the {@GameInfoHandler} instance
+     */
+    GameInfoHandler getGame();
+
+    /**
      * This class models a Game, the GameInfo handler: this class keeps a
      *   reference to the actual UID of the current game.
      */
