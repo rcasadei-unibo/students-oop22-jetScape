@@ -18,11 +18,19 @@ public interface JSONReader {
     void read();
 
     /**
-     * Read informations written by {@link JSONWriterImpl} to a
-     * JSON formatted string.
+     * Read informations written by {@link JSONWriterImpl} and
+     * returns the string obtained by the internal map.
      *
      * @return a {@link String} with all JSON data
      */
     @Override
     String toString();
+
+    /**
+     * Read informations written by {@link JSONWriterImpl} to a
+     * JSON formatted string.
+     *
+     * @return a {@link String} with all JSON data
+     */
+    String toJsonString();
 }

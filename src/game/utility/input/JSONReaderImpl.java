@@ -20,6 +20,9 @@ import game.logics.records.Records;
  */
 public class JSONReaderImpl extends JSONHandler implements JSONReader {
 
+    private static final String IO_EXCEPTION_STRING = "An error occurred while trying to read from JSON file!";
+    private static final String JSON_EXCEPTION_STRING = "An error occurred while trying to parse the JSON file!";
+
     private JsonObject json = new JsonObject();
 
     /**
@@ -42,7 +45,7 @@ public class JSONReaderImpl extends JSONHandler implements JSONReader {
             this.fromJson(reader);
             super.upload(json);
         } catch (IOException e1) {
-            System.err.println("An error occurred while trying to read from JSON file!");
+            System.err.println(IO_EXCEPTION_STRING);
             e1.printStackTrace();
         }
     }
@@ -58,9 +61,9 @@ public class JSONReaderImpl extends JSONHandler implements JSONReader {
             this.fromJson(reader);
             super.upload(json);
         } catch (FileNotFoundException e1) {
-            System.err.println("File record non esistente...");
+            System.err.println("File \"" + JSONHandler.getFile().toString() + "\" missing.");
         } catch (IOException e1) {
-            System.err.println("An error occurred while trying to read from JSON file!");
+            System.err.println(IO_EXCEPTION_STRING);
             e1.printStackTrace();
         }
 
@@ -77,16 +80,41 @@ public class JSONReaderImpl extends JSONHandler implements JSONReader {
         ) {
             this.fromJson(reader);
         } catch (FileNotFoundException e1) {
-            System.err.println("File record non esistente...");
+            System.err.println("File \"" + JSONHandler.getFile().toString() + "\" missing.");
         } catch (IOException e1) {
-            System.err.println("An error occurred while trying to read from JSON file!");
+            System.err.println(IO_EXCEPTION_STRING);
             e1.printStackTrace();
         }
 
         return json.toString();
-        //json.entrySet().stream()
-        //.map(entry -> entry.getKey().toString() + entry.getValue().toString())
-        //.collect(Collectors.joining(", "));
+
+        /*return json.values().stream()
+                .map(x -> x.toString())
+                .peek(System.out::println)
+                .collect(Collectors.joining(", "));*/
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toJsonString() {
+
+        try (
+            Reader reader = new FileReader(super.getFile());
+        ) {
+            this.fromJson(reader);
+        } catch (FileNotFoundException e1) {
+            System.err.println("File \"" + JSONHandler.getFile().toString() + "\" missing.");
+        } catch (IOException e1) {
+            System.err.println(IO_EXCEPTION_STRING);
+            e1.printStackTrace();
+        }
+
+        return "{".concat(
+                json.entrySet().stream()
+                        .map(entry -> "\"" + entry.getKey().toString() + "\":"
+                                + entry.getValue().toString())
+                .collect(Collectors.joining(","))).concat("}");
 
         /*return json.values().stream()
                 .map(x -> x.toString())
@@ -105,7 +133,7 @@ public class JSONReaderImpl extends JSONHandler implements JSONReader {
         try {
             json = (JsonObject) Jsoner.deserialize(reader);
         } catch (JsonException e) {
-            System.err.println("An error occurred while trying to parse the JSON file");
+            System.err.println(JSON_EXCEPTION_STRING);
             e.printStackTrace();
         }
     }
