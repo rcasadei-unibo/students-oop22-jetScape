@@ -87,7 +87,7 @@ public class Test {
         final Logics logics = new LogicsHandler();
         final Player player = new PlayerInstance(logics);
 
-        assertEquals(player.entityType(), EntityType.PLAYER);
+        assertEquals(EntityType.PLAYER, player.entityType());
         logics.getEntities().get(player.entityType()).add(player);
 
         final int updates = 20;
@@ -95,7 +95,7 @@ public class Test {
             player.update();
         }
 
-        assertEquals(player.getCurrentScore(), updates / 2 - 1);
+        assertEquals(updates / 2 - 1, player.getCurrentScore());
         assertFalse(player.hasDied());
         assertTrue(player.isOnScreenBounds());
         assertFalse(player.isOnClearArea());
@@ -104,7 +104,7 @@ public class Test {
         player.clean();
         player.update();
 
-        assertEquals(player.getCurrentScore(), 0);
+        assertEquals(0, player.getCurrentScore());
         assertFalse(player.hasDied());
         assertTrue(player.isOnScreenBounds());
         assertFalse(player.isOnClearArea());
@@ -132,13 +132,13 @@ public class Test {
         b.getX().setMaster(zapper);
         b.getY().setMaster(zapper);
 
-        assertEquals(zapper.entityType(), EntityType.ZAPPER);
+        assertEquals(EntityType.ZAPPER, zapper.entityType());
         logics.getEntities().get(zapper.entityType()).add(zapper);
 
-        assertEquals(zapper.getBothBases(), b);
-        assertEquals(zapper.getPaired(b.getX()), b.getY());
-        assertEquals(zapper.getPaired(b.getY()), b.getX());
-        assertEquals(zapper.getEntitiesSet(), Set.of(b.getX(), b.getY(), r));
+        assertEquals(b, zapper.getBothBases());
+        assertEquals(b.getY(), zapper.getPaired(b.getX()));
+        assertEquals(b.getX(), zapper.getPaired(b.getY()));
+        assertEquals(Set.of(b.getX(), b.getY(), r), zapper.getEntitiesSet());
 
         assertFalse(zapper.isOnScreenBounds());
         assertFalse(zapper.isOnClearArea());
@@ -183,7 +183,7 @@ public class Test {
         final Player player = new PlayerInstance(logics);
         final Missile missile = new MissileInstance(logics, pos, player, movement);
 
-        assertEquals(missile.entityType(), EntityType.MISSILE);
+        assertEquals(EntityType.MISSILE, missile.entityType());
         logics.getEntities().get(missile.entityType()).add(missile);
 
         assertFalse(missile.isOnScreenBounds());
@@ -229,7 +229,7 @@ public class Test {
         final Player player = new PlayerInstance(logics);
         final Shield shield = new ShieldInstance(logics, pos, player, movement);
 
-        assertEquals(shield.entityType(), EntityType.SHIELD);
+        assertEquals(EntityType.SHIELD, shield.entityType());
         logics.getEntities().get(shield.entityType()).add(shield);
 
         assertFalse(shield.isOnScreenBounds());
@@ -275,7 +275,7 @@ public class Test {
         final Player player = new PlayerInstance(logics);
         final Teleport teleport = new TeleportInstance(logics, pos, player, movement);
 
-        assertEquals(teleport.entityType(), EntityType.TELEPORT);
+        assertEquals(EntityType.TELEPORT, teleport.entityType());
         logics.getEntities().get(teleport.entityType()).add(teleport);
 
         assertFalse(teleport.isOnScreenBounds());
