@@ -1,85 +1,28 @@
 package game.utility.input;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-
-import com.github.cliftonlabs.json_simple.JsonException;
-import com.github.cliftonlabs.json_simple.JsonObject;
-import com.github.cliftonlabs.json_simple.Jsoner;
-
-import game.logics.records.Records;
-
 /**
- * This class reads information from a JSON file.
+ * This interface models how a JSON reader must be made.
  */
-public class JSONReader extends JSONHandler {
-
-    private JsonObject json = new JsonObject();
-
-    /**
-     * Builds a {@link JSONReader}.
-    *
-    * @param records records to send read data
-    */
-    public JSONReader(final Records records) {
-        super(records);
-    }
+public interface JSONReader {
 
     /**
      * Read informations passed by String parameter.
      *
-     * @param string A string, formatted in JSON, that represents the Jsonable.
+     * @param string A {@link String}, formatted in JSON, that represents the {@link Jsonable}.
      */
-    public void read(final String string) {
-
-        try (
-            Reader reader = new StringReader(string);
-        ) {
-            this.fromJson(reader);
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-    }
+    void read(String string);
 
     /**
-     * Read informations written by {@link JSONWriter}.
+     * Read informations written by {@link JSONWriterImpl}.
      */
-    public void read() {
-
-        try (
-            Reader reader = new FileReader(super.getFile());
-        ) {
-            this.fromJson(reader);
-            super.upload(json);
-        } catch (FileNotFoundException e1) {
-            // TODO Auto-generated catch block
-            System.err.println("File record non esistente...");
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-    }
+    void read();
 
     /**
-     * Deserialize from a JSON formatted stream.
+     * Read informations written by {@link JSONWriterImpl} to a
+     * JSON formatted string.
      *
-     * @param reader where the resulting JSON text should be got
-     * @throws IOException - when the reader encounters an I/O error
+     * @return a {@link String} with all JSON data
      */
-    private void fromJson(final Reader reader) throws IOException {
-
-        try {
-            json = (JsonObject) Jsoner.deserialize(reader);
-        } catch (JsonException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        super.upload(json);
-    }
+    @Override
+    String toString();
 }

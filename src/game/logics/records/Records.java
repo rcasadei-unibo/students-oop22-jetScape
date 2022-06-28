@@ -3,7 +3,9 @@ package game.logics.records;
 import game.logics.entities.player.Player;
 import game.logics.entities.player.Player.PlayerDeath;
 import game.utility.input.JSONReader;
+import game.utility.input.JSONReaderImpl;
 import game.utility.input.JSONWriter;
+import game.utility.input.JSONWriterImpl;
 import game.logics.handler.Logics.GameInfo;
 
 import java.util.ArrayList;
@@ -48,8 +50,8 @@ public final class Records {
     public Records(final Supplier<GameInfo> getGame, final Player player) {
         this.getGame = getGame;
 
-        this.writer = new JSONWriter(this);
-        this.reader = new JSONReader(this);
+        this.writer = new JSONWriterImpl(this);
+        this.reader = new JSONReaderImpl(this);
 
         //this.game.getNumbersOfGamesPlayed();
         this.player = player;
