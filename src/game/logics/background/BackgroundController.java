@@ -194,7 +194,7 @@ public class BackgroundController implements Background {
                 + GameWindow.GAME_SCREEN.getTileSize();
         final int yShiftDrawnY = yShiftDrawnX + 10;
 
-        if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.ENTITY_COORDINATES) && this.isVisible()) {
+        if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.BACKGROUND_COORDINATES) && this.isVisible()) {
             g.setColor(Debugger.DEBUG_COLOR);
             g.setFont(Debugger.DEBUG_FONT);
 

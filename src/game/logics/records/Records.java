@@ -7,15 +7,8 @@ import game.utility.input.JSONWriter;
 import game.logics.handler.Logics.GameInfo;
 
 import java.util.ArrayList;
-//import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-//import java.util.Optional;
-import java.util.Set;
-//import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 /**
@@ -323,6 +316,7 @@ public final class Records {
     public void setScoreRecords(final List<Integer> recordScores) {
         this.scoreRecords.clear();
         this.scoreRecords.addAll(recordScores);
+
         /*for (final Integer record : recordScores) {
                 this.scoreRecords.add(Optional.of(record));
         }
@@ -390,8 +384,12 @@ public final class Records {
      * Get current highest score obtained by player.
      * @return the first element of the highest scores list
      */
-    private Integer getHighestRecordScore() {
-        return this.scoreRecords.get(0);
+    public int getHighestRecordScore() {
+        if (this.scoreRecords.isEmpty()) {
+            return 0;
+        } else {
+            return this.scoreRecords.get(0);
+        }
     }
 
     /**

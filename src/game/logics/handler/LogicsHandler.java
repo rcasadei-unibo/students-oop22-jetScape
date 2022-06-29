@@ -44,6 +44,7 @@ import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
 import game.utility.other.FormatException;
 import game.utility.other.GameState;
+import game.utility.other.Sound;
 
 /**
  * The {@link LogicsHandler} class helps {@link GameWindow} to update
@@ -188,6 +189,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 break;
             case KeyEvent.VK_P:
                 this.setGameState(GameState.PAUSED);
+                GameWindow.GAME_SOUND.stop(Sound.JETPACK);
                 this.keyH.resetKeyTyped();
                 break;
             default:
@@ -237,6 +239,22 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION;
     }
 
+    private void setInGame() {
+        if (this.gameState != GameState.PAUSED) {
+            this.game.setActualGame(new GameInfo(this.game));
+            //this.game.generateNewGameInfo();
+        }
+        if (this.gameState == GameState.ENDGAME) { // RETRY
+            this.records.refresh();
+            this.resetGame();
+        } else if (this.gameState == GameState.MENU) { // START
+            this.records.refresh();
+            this.resetGame();
+            this.entities.get(EntityType.PLAYER).add(playerEntity);
+        }
+        this.spawner.resume();
+    }
+
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
@@ -246,19 +264,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     }
                     break;
                 case INGAME:
-                    if (this.gameState != GameState.PAUSED) {
-                        this.game.setActualGame(new GameInfo(this.game));
-                        //this.game.generateNewGameInfo();
-                    }
-                    if (this.gameState == GameState.ENDGAME) { // RETRY
-                        this.records.refresh();
-                        this.resetGame();
-                    } else if (this.gameState == GameState.MENU) { // START
-                        this.records.refresh();
-                        this.resetGame();
-                        this.entities.get(EntityType.PLAYER).add(playerEntity);
-                    }
-                    this.spawner.resume();
+                    this.setInGame();
                     break;
                 case MENU:
                     if (this.gameState == GameState.PAUSED
