@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import game.frame.GameWindow;
+import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.Missile;
 import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.Zapper;
@@ -433,4 +434,55 @@ public class Test {
         assertEquals(highestScoreRecord, records.getRecordScores().get(0).intValue());
         assertEquals(lowestScoreRecord, records.getRecordScores().get(1).intValue());
     }
+
+    /**
+     * Menus handling test.
+     */
+    @org.junit.Test
+    public void collisionsTest() {
+         final Logics logics = new LogicsHandler();
+         Player player = new PlayerInstance(logics);
+         this.throwAtPlayer(logics, player, EntityType.ZAPPER);
+         assertEquals(player.getCauseOfDeath(),PlayerDeath.ZAPPED);
+
+         player = new PlayerInstance(logics);
+         this.throwAtPlayer(logics, player, EntityType.MISSILE);
+         assertEquals(player.getCauseOfDeath(),PlayerDeath.BURNED);
+
+         player = new PlayerInstance(logics);
+         this.throwAtPlayer(logics, player, EntityType.SHIELD);
+         this.throwAtPlayer(logics, player, EntityType.MISSILE);
+         assertEquals(player.getCauseOfDeath(),null);
+
+         player = new PlayerInstance(logics);
+         this.throwAtPlayer(logics, player, EntityType.TELEPORT);
+         assertEquals(player.getCurrentScore(), 250);
+    }
+    
+
+    private void throwAtPlayer(Logics logics, Player player, EntityType entityT) {
+        Entity entity;
+        final Pair<Double, Double> entityPos = new Pair<>(player.getPosition().getX(),
+                player.getPosition().getY());
+        final SpeedHandler entityMovement = new SpeedHandler(500.0, 10.0, 5000.0);
+
+        switch(entityT) {
+        case MISSILE:
+            entity = new MissileInstance(logics, entityPos, player, entityMovement); break;
+        case TELEPORT:
+            entity = new TeleportInstance(logics, entityPos, player, entityMovement); break;
+        case SHIELD:
+            entity = new ShieldInstance(logics, entityPos,player, entityMovement); break;
+        default:
+            ZapperBaseInstance base1 = new ZapperBaseInstance(logics, entityPos, entityMovement);
+            ZapperBaseInstance base2 = new ZapperBaseInstance(logics, entityPos, entityMovement);
+            entity = new ZapperInstance(base1 , base2,
+                    Set.of(new ZapperRayInstance(logics, entityPos,base1,base2))); break;
+        }
+
+        logics.getEntities().get(entityT).add(entity);
+        player.update();
+        logics.getEntitiesCleaner().accept(t -> true, e -> true);
+    }
+    
 }
