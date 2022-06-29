@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.Set;
 
 import game.frame.GameWindow;
+import java.awt.event.KeyEvent;
+import game.logics.display.handlers.MenuHandler;
+import game.logics.display.view.DisplayPause;
 import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.Missile;
 import game.logics.entities.obstacles.missile.MissileInstance;
@@ -38,6 +41,7 @@ import game.utility.input.JSONReader;
 import game.utility.input.JSONReaderImpl;
 import game.utility.input.JSONWriter;
 import game.utility.input.JSONWriterImpl;
+import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.EntityType;
 import game.utility.other.MenuOption;
 import game.utility.other.Pair;
@@ -462,6 +466,37 @@ public class Test {
          assertEquals(player.getCurrentScore(), 250);
     }
 
+    /**
+     * collisions detection and handling test.
+     */
+    @org.junit.Test
+    public void menuTest() {
+        DisplayPause pause = new DisplayPause();
+        KeyHandler keyH = new KeyHandler();
+        MenuHandler pauseH = new MenuHandler(keyH, pause,
+                x -> System.out.println(x.toString()));
+
+        assertEquals(MenuOption.RESUME, pauseH.getSelectedOption());
+
+        keyH.typeKey(KeyEvent.VK_UP);
+        pauseH.update();
+        assertEquals(MenuOption.MENU, pauseH.getSelectedOption());
+
+        keyH.typeKey(KeyEvent.VK_UP);
+        pauseH.update();
+        assertEquals(MenuOption.RESUME, pauseH.getSelectedOption());
+
+        keyH.typeKey(KeyEvent.VK_DOWN);
+        pauseH.update();
+        keyH.typeKey(KeyEvent.VK_DOWN);
+        pauseH.update();
+        assertEquals(MenuOption.RESUME, pauseH.getSelectedOption());
+
+    }
+
+    /**
+     * sounds playing and volume test.
+     */
     @org.junit.Test
     public void soundTest() {
          final Logics logics = new LogicsHandler();
