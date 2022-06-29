@@ -3,6 +3,7 @@ package game.utility.sound;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,13 @@ public class SoundManager {
             updateVolume();
             this.sManager.writeSetting(volumeLevel);
         }
+    }
+
+    /**
+     * @return the map of the currently playing tracks
+     */
+    public Map<Sound, Clip> getClipsMap(){
+        return Collections.unmodifiableMap(this.clips);
     }
 
     private void setTrack(final Sound sound) {
