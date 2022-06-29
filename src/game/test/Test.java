@@ -434,7 +434,7 @@ public class Test {
 
         records.update(); // write
 
-        assertEquals(writer.toJson(), reader.toString());
+        assertEquals(writer.toJson(), reader.toJsonString());
 
         records.refresh(); // read
 
@@ -539,8 +539,6 @@ public class Test {
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.SHIELD);
          assertTrue(clipsMap.containsKey(Sound.SHIELD_UP));
-
-         player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.MISSILE);
          assertTrue(clipsMap.containsKey(Sound.SHIELD_DOWN));
 
