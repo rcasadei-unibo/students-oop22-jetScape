@@ -39,7 +39,10 @@ import game.utility.input.JSONReaderImpl;
 import game.utility.input.JSONWriter;
 import game.utility.input.JSONWriterImpl;
 import game.utility.other.EntityType;
+import game.utility.other.MenuOption;
 import game.utility.other.Pair;
+import game.utility.other.Sound;
+import game.utility.sound.SoundManager;
 
 /**
  * JUnit test class.
@@ -436,29 +439,73 @@ public class Test {
     }
 
     /**
-     * Menus handling test.
+     * collisions detection and handling test.
      */
     @org.junit.Test
     public void collisionsTest() {
          final Logics logics = new LogicsHandler();
          Player player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.ZAPPER);
-         assertEquals(player.getCauseOfDeath(),PlayerDeath.ZAPPED);
+         assertEquals(player.getCauseOfDeath(), PlayerDeath.ZAPPED);
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.MISSILE);
-         assertEquals(player.getCauseOfDeath(),PlayerDeath.BURNED);
+         assertEquals(player.getCauseOfDeath(), PlayerDeath.BURNED);
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.SHIELD);
          this.throwAtPlayer(logics, player, EntityType.MISSILE);
-         assertEquals(player.getCauseOfDeath(),null);
+         assertEquals(player.getCauseOfDeath(), null);
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.TELEPORT);
          assertEquals(player.getCurrentScore(), 250);
     }
-    
+
+    @org.junit.Test
+    public void soundTest() {
+         final Logics logics = new LogicsHandler();
+         final SoundManager sound = new SoundManager(MenuOption.SOUND);
+         final int start = sound.getVolumeLevel();
+         Player player = new PlayerInstance(logics);
+
+         sound.play(Sound.MENU_SELECTION);
+         //Max Volume bound
+         for(int i = 0; i < 5; i++) {
+         sound.raiseVolumeLevel();
+         }
+         assertEquals(4, sound.getVolumeLevel());
+
+         //Min Volume bound
+         for(int i = 0; i < 5; i++) {
+         sound.lowerVolumeLevel();
+         }
+         assertEquals(0, sound.getVolumeLevel());
+
+         //Back to player's settings
+         for(int i = 0; i < start; i++) {
+         sound.raiseVolumeLevel();
+         }
+         assertEquals(start, sound.getVolumeLevel());
+
+         //check sound after events
+         this.throwAtPlayer(logics, player, EntityType.ZAPPER);
+         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.ZAPPED));
+
+         player = new PlayerInstance(logics);
+         this.throwAtPlayer(logics, player, EntityType.MISSILE);
+         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.MISSILE));
+
+         player = new PlayerInstance(logics);
+         this.throwAtPlayer(logics, player, EntityType.SHIELD);
+         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.SHIELD_UP));
+         this.throwAtPlayer(logics, player, EntityType.MISSILE);
+         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.SHIELD_DOWN));
+
+         player = new PlayerInstance(logics);
+         this.throwAtPlayer(logics, player, EntityType.TELEPORT);
+         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.TELEPORT));
+    }
 
     private void throwAtPlayer(Logics logics, Player player, EntityType entityT) {
         Entity entity;
