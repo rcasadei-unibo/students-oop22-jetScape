@@ -94,7 +94,7 @@ public class TileGenerator implements Generator {
     /**
      * Decides the odds for the generator to spawn a group of coins.
      */
-    private static final int COINS_ODDS = 55;
+    private static final int COINS_ODDS = 50;
     /**
      * Decides the odds for the generator to spawn a set of missiles.
      */
