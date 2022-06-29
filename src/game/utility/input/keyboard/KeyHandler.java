@@ -98,4 +98,12 @@ public class KeyHandler implements KeyListener {
         }
     }
 
+    /**
+     * types the key associated to the value taken
+     * @param key
+     */
+    public void typeKey(final int key) {
+        this.lastKeyTyped = Optional.of(key);
+    }
+
 }
