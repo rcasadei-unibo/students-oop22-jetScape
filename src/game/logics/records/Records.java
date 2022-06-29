@@ -296,8 +296,12 @@ public final class Records {
      * Get current highest score obtained by player.
      * @return the first element of the highest scores list
      */
-    public Integer getHighestScore() {
-        return this.recordScores.get(0);
+    public int getHighestScore() {
+        if (this.recordScores.isEmpty()) {
+            return 0;
+        } else {
+            return this.recordScores.get(0);
+        }
     }
 
     /**
