@@ -2,13 +2,17 @@ package game.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
+
+import javax.sound.sampled.Clip;
 
 import game.frame.GameWindow;
 import java.awt.event.KeyEvent;
@@ -450,20 +454,20 @@ public class Test {
          final Logics logics = new LogicsHandler();
          Player player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.ZAPPER);
-         assertEquals(player.getCauseOfDeath(), PlayerDeath.ZAPPED);
+         assertEquals(PlayerDeath.ZAPPED, player.getCauseOfDeath());
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.MISSILE);
-         assertEquals(player.getCauseOfDeath(), PlayerDeath.BURNED);
+         assertEquals(PlayerDeath.BURNED, player.getCauseOfDeath());
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.SHIELD);
          this.throwAtPlayer(logics, player, EntityType.MISSILE);
-         assertEquals(player.getCauseOfDeath(), null);
+         assertNull(player.getCauseOfDeath());
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.TELEPORT);
-         assertEquals(player.getCurrentScore(), 250);
+         assertEquals(TeleportInstance.getScoreIncrease(), player.getCurrentScore());
     }
 
     /**
@@ -471,9 +475,9 @@ public class Test {
      */
     @org.junit.Test
     public void menuTest() {
-        DisplayPause pause = new DisplayPause();
-        KeyHandler keyH = new KeyHandler();
-        MenuHandler pauseH = new MenuHandler(keyH, pause,
+        final DisplayPause pause = new DisplayPause();
+        final KeyHandler keyH = new KeyHandler();
+        final MenuHandler pauseH = new MenuHandler(keyH, pause,
                 x -> System.out.println(x.toString()));
 
         assertEquals(MenuOption.RESUME, pauseH.getSelectedOption());
@@ -491,7 +495,6 @@ public class Test {
         keyH.typeKey(KeyEvent.VK_DOWN);
         pauseH.update();
         assertEquals(MenuOption.RESUME, pauseH.getSelectedOption());
-
     }
 
     /**
@@ -505,66 +508,73 @@ public class Test {
          Player player = new PlayerInstance(logics);
 
          sound.play(Sound.MENU_SELECTION);
-         //Max Volume bound
-         for(int i = 0; i < 5; i++) {
+
+         // Max Volume bound
+         for (int i = 0; i < 5; i++) {
          sound.raiseVolumeLevel();
          }
          assertEquals(4, sound.getVolumeLevel());
 
-         //Min Volume bound
-         for(int i = 0; i < 5; i++) {
+         // Min Volume bound
+         for (int i = 0; i < 5; i++) {
          sound.lowerVolumeLevel();
          }
          assertEquals(0, sound.getVolumeLevel());
 
          //Back to player's settings
-         for(int i = 0; i < start; i++) {
+         for (int i = 0; i < start; i++) {
          sound.raiseVolumeLevel();
          }
          assertEquals(start, sound.getVolumeLevel());
 
+         final Map<Sound, Clip> clipsMap = GameWindow.GAME_SOUND.getClipsMap();
          //check sound after events
          this.throwAtPlayer(logics, player, EntityType.ZAPPER);
-         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.ZAPPED));
+         assertTrue(clipsMap.containsKey(Sound.ZAPPED));
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.MISSILE);
-         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.MISSILE));
+         assertTrue(clipsMap.containsKey(Sound.MISSILE));
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.SHIELD);
-         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.SHIELD_UP));
+         assertTrue(clipsMap.containsKey(Sound.SHIELD_UP));
+
+         player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.MISSILE);
-         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.SHIELD_DOWN));
+         assertTrue(clipsMap.containsKey(Sound.SHIELD_DOWN));
 
          player = new PlayerInstance(logics);
          this.throwAtPlayer(logics, player, EntityType.TELEPORT);
-         assertEquals(true, GameWindow.GAME_SOUND.getClipsMap().containsKey(Sound.TELEPORT));
+         assertTrue(clipsMap.containsKey(Sound.TELEPORT));
     }
 
-    private void throwAtPlayer(Logics logics, Player player, EntityType entityT) {
-        Entity entity;
+    private void throwAtPlayer(final Logics logics, final Player player, final EntityType entityT) {
+        final Entity entity;
         final Pair<Double, Double> entityPos = new Pair<>(player.getPosition().getX(),
                 player.getPosition().getY());
         final SpeedHandler entityMovement = new SpeedHandler(500.0, 10.0, 5000.0);
 
-        switch(entityT) {
-        case MISSILE:
-            entity = new MissileInstance(logics, entityPos, player, entityMovement); break;
-        case TELEPORT:
-            entity = new TeleportInstance(logics, entityPos, player, entityMovement); break;
-        case SHIELD:
-            entity = new ShieldInstance(logics, entityPos,player, entityMovement); break;
-        default:
-            ZapperBaseInstance base1 = new ZapperBaseInstance(logics, entityPos, entityMovement);
-            ZapperBaseInstance base2 = new ZapperBaseInstance(logics, entityPos, entityMovement);
-            entity = new ZapperInstance(base1 , base2,
-                    Set.of(new ZapperRayInstance(logics, entityPos,base1,base2))); break;
+        switch (entityT) {
+            case MISSILE:
+                entity = new MissileInstance(logics, entityPos, player, entityMovement);
+                break;
+            case TELEPORT:
+                entity = new TeleportInstance(logics, entityPos, player, entityMovement);
+                break;
+            case SHIELD:
+                entity = new ShieldInstance(logics, entityPos, player, entityMovement);
+                break;
+            default:
+                final ZapperBaseInstance base1 = new ZapperBaseInstance(logics, entityPos, entityMovement);
+                final ZapperBaseInstance base2 = new ZapperBaseInstance(logics, entityPos, entityMovement);
+                entity = new ZapperInstance(base1, base2,
+                       Set.of(new ZapperRayInstance(logics, entityPos, base1, base2)));
+                break;
         }
 
         logics.getEntities().get(entityT).add(entity);
         player.update();
         logics.getEntitiesCleaner().accept(t -> true, e -> true);
     }
-    
 }

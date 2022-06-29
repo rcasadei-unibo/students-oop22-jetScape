@@ -121,7 +121,7 @@ public class SoundManager {
     /**
      * @return the map of the currently playing tracks
      */
-    public Map<Sound, Clip> getClipsMap(){
+    public Map<Sound, Clip> getClipsMap() {
         return Collections.unmodifiableMap(this.clips);
     }
 

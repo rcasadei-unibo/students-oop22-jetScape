@@ -99,8 +99,8 @@ public class KeyHandler implements KeyListener {
     }
 
     /**
-     * types the key associated to the value taken
-     * @param key
+     * Types the key associated to the value taken.
+     * @param key the key that have to be typed
      */
     public void typeKey(final int key) {
         this.lastKeyTyped = Optional.of(key);
