@@ -204,7 +204,6 @@ public class PlayerInstance extends EntityInstance implements Player {
             case COIN:
                 this.coins++;
                 entityHit.clean();
-                GameWindow.GAME_SOUND.stop(Sound.COIN);
                 GameWindow.GAME_SOUND.play(Sound.COIN);
                 break;
             default:
