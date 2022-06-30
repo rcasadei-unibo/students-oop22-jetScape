@@ -54,7 +54,7 @@ public class Debugger {
         this.debugMode = mode;
 
         optionEnabled.put(Option.FPS_METER, true);
-        optionEnabled.put(Option.DRAW_TIME, true);
+        optionEnabled.put(Option.DRAW_TIME, false);
         optionEnabled.put(Option.ENTITY_COORDINATES, true);
         optionEnabled.put(Option.BACKGROUND_COORDINATES, false);
         optionEnabled.put(Option.NEXT_SPAWN_TIMER, true);

@@ -1,6 +1,5 @@
 package game.logics.display.controller;
 
-import game.logics.background.Background;
 import game.logics.display.handlers.DisplayHandler;
 import game.logics.display.handlers.MenuHandler;
 import game.logics.display.handlers.SettingsHandler;
@@ -58,7 +57,6 @@ public class DisplayController {
      * @param getState {@link Supplier} to get new value from State
      * @param getScore Supplier to get new value of score
      * @param getCoins Supplier to get new value of collected money
-     * @param background {@link Background} background handler
      * @param records {@link Records} to check &amp; set new records
      */
     public DisplayController(final KeyHandler keyH,
@@ -66,7 +64,7 @@ public class DisplayController {
             final Supplier<GameState> getState,
             final Supplier<Integer> getScore,
             final Supplier<Integer> getCoins,
-            final Background background, final Records records) {
+            final Records records) {
 
         this.getState = getState;
         this.getScore = getScore;
@@ -74,7 +72,7 @@ public class DisplayController {
 
         this.hud = new DisplayHUD();
         this.pauseDisplay = new DisplayPause();
-        this.mainMenuDisplay = new DisplayMainMenu(background);
+        this.mainMenuDisplay = new DisplayMainMenu();
         this.gameSettings = new DisplaySettings();
         this.recordsDisplay = new DisplayRecords(records);
         this.gameOverDisplay = new DisplayGameOver(records);

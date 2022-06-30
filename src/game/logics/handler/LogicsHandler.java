@@ -107,7 +107,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 g -> setGameState(g), () -> this.gameState,
                 () -> this.playerEntity.getCurrentScore(),
                 () -> this.playerEntity.getCurrentCoinsCollected(),
-                this.background, this.records);
+                this.records);
 
         this.spawner = new TileGenerator(this.entities, super.getSpawningInteval());
         this.initializeSpawner();
@@ -342,7 +342,6 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                                     e1.getKey().ordinal()))
                             .collect(Collectors.toList())
                             .forEach(e -> e.getValue().forEach(se -> se.draw(g)));
-
                     this.entities.forEach((s, se) -> se.forEach(e -> e.getHitbox().draw(g)));
                     this.entities.forEach((s, se) -> se.forEach(e -> e.drawCoordinates(g)));
                 }
@@ -351,6 +350,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 this.drawDifficultyLevel(g);
                 break;
             default:
+                this.background.draw(g);
                 break;
         }
         this.displayController.drawScreen(g);
