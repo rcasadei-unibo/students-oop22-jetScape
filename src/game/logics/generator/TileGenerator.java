@@ -28,6 +28,7 @@ import game.logics.entities.obstacles.zapper.Zapper;
 import game.logics.entities.obstacles.zapper.ZapperBase;
 import game.logics.entities.obstacles.zapper.ZapperInstance;
 import game.logics.entities.obstacles.zapper.ZapperRay;
+import game.logics.entities.pickups.coin.Coin;
 import game.logics.entities.pickups.shield.Shield;
 import game.logics.entities.pickups.teleport.Teleport;
 import game.logics.handler.AbstractLogics;
@@ -75,6 +76,10 @@ public class TileGenerator implements Generator {
      * A function used by the generator for creating <code>Teleport</code> object.
      */
     private Optional<Function<Pair<Double, Double>, Teleport>> createTeleport = Optional.empty();
+    /**
+     * A function used by the generator for creating <code>Coin</code> object.
+     */
+    private Optional<Function<Pair<Double, Double>, Coin>> createCoins = Optional.empty();
 
     /**
      * A map containing lists where all loaded set of tiles are stored.
@@ -87,9 +92,13 @@ public class TileGenerator implements Generator {
     private final Map<EntityType, Set<Entity>> entities;
 
     /**
+     * Decides the odds for the generator to spawn a group of coins.
+     */
+    private static final int COINS_ODDS = 50;
+    /**
      * Decides the odds for the generator to spawn a set of missiles.
      */
-    private static final int MISSILE_ODDS = 30;
+    private static final int MISSILE_ODDS = 25;
     /**
      * Decides the odds for the generator to spawn a power up.
      */
@@ -132,7 +141,7 @@ public class TileGenerator implements Generator {
         EntityType.ALL_ENTITY_TYPE.stream()
                 .filter(e -> e.isGenerableEntity())
                 .collect(Collectors.toList())
-                .forEach(e -> tileSets.put(e, new ArrayList<>()));
+                .forEach(e -> this.tileSets.put(e, new ArrayList<>()));
     }
 
     private Object checkParse(final Object parsed) throws FormatException {
@@ -145,30 +154,30 @@ public class TileGenerator implements Generator {
     private void loadZappers(final JsonArray types) throws FormatException {
 
         for (int i = 0; i < types.size(); i++) {
-            final JsonArray zsets = (JsonArray) checkParse(types.get(i));
+            final JsonArray zsets = (JsonArray) this.checkParse(types.get(i));
             final Set<Entity> tile = new HashSet<>();
 
             for (int j = 0; j < zsets.size(); j++) {
-                final JsonArray set = (JsonArray) checkParse(zsets.get(j));
+                final JsonArray set = (JsonArray) this.checkParse(zsets.get(j));
 
                 if (set.size() >= 2) {
                     final Set<ZapperRay> tmp = new HashSet<>();
 
-                    final JsonObject b1 = (JsonObject) checkParse(set.get(0));
-                    final JsonObject b2 = (JsonObject) checkParse(set.get(1));
+                    final JsonObject b1 = (JsonObject) this.checkParse(set.get(0));
+                    final JsonObject b2 = (JsonObject) this.checkParse(set.get(1));
 
-                    final ZapperBase base1 = createZBase.get().apply(new Pair<>(
-                            Double.parseDouble((String) b1.get("x")) * tileSize,
-                            Double.parseDouble((String) b1.get("y")) * tileSize));
-                    final ZapperBase base2 = createZBase.get().apply(new Pair<>(
-                            Double.parseDouble((String) b2.get("x")) * tileSize,
-                            Double.parseDouble((String) b2.get("y")) * tileSize));
+                    final ZapperBase base1 = this.createZBase.get().apply(new Pair<>(
+                            Double.parseDouble((String) b1.get("x")) * this.tileSize,
+                            Double.parseDouble((String) b1.get("y")) * this.tileSize));
+                    final ZapperBase base2 = this.createZBase.get().apply(new Pair<>(
+                            Double.parseDouble((String) b2.get("x")) * this.tileSize,
+                            Double.parseDouble((String) b2.get("y")) * this.tileSize));
 
                     for (int h = 2; h < set.size(); h++) {
-                        final JsonObject ray = (JsonObject) checkParse(set.get(h));
-                        tmp.add(createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
-                                Double.parseDouble((String) ray.get("x")) * tileSize,
-                                Double.parseDouble((String) ray.get("y")) * tileSize)));
+                        final JsonObject ray = (JsonObject) this.checkParse(set.get(h));
+                        tmp.add(this.createZRay.get().apply(new Pair<>(base1, base2), new Pair<>(
+                                Double.parseDouble((String) ray.get("x")) * this.tileSize,
+                                Double.parseDouble((String) ray.get("y")) * this.tileSize)));
                     }
                     final Zapper master = new ZapperInstance(base1, base2, tmp);
 
@@ -177,57 +186,78 @@ public class TileGenerator implements Generator {
                     tile.add(master);
                 }
             }
-            tileSets.get(EntityType.ZAPPER).add(tile);
+            this.tileSets.get(EntityType.ZAPPER).add(tile);
         }
     }
 
     private void loadMissiles(final JsonArray types) throws FormatException {
         for (int i = 0; i < types.size(); i++) {
-            final JsonArray sets = (JsonArray) checkParse(types.get(i));
+            final JsonArray sets = (JsonArray) this.checkParse(types.get(i));
             final Set<Entity> tmp = new HashSet<>();
 
             for (int j = 0; j < sets.size(); j++) {
-                final JsonObject missile = (JsonObject) checkParse(sets.get(j));
+                final JsonObject missile = (JsonObject) this.checkParse(sets.get(j));
 
-                tmp.add(createMissile.get().apply(new Pair<>(
-                    Double.parseDouble((String) missile.get("x")) * tileSize,
-                    Double.parseDouble((String) missile.get("y")) * tileSize)));
+                tmp.add(this.createMissile.get().apply(new Pair<>(
+                    Double.parseDouble((String) missile.get("x")) * this.tileSize,
+                    Double.parseDouble((String) missile.get("y")) * this.tileSize)));
             }
-            tileSets.get(EntityType.MISSILE).add(tmp);
+            this.tileSets.get(EntityType.MISSILE).add(tmp);
         }
     }
 
     private void loadShields(final JsonArray types) throws FormatException {
        for (int i = 0; i < types.size(); i++) {
-            final JsonArray sets = (JsonArray) checkParse(types.get(i));
+            final JsonArray sets = (JsonArray) this.checkParse(types.get(i));
             final Set<Entity> tmp = new HashSet<>();
 
             for (int j = 0; j < sets.size(); j++) {
-                final JsonObject shield = (JsonObject) checkParse(sets.get(j));
+                final JsonObject shield = (JsonObject) this.checkParse(sets.get(j));
 
-                tmp.add(createShield.get().apply(new Pair<>(
-                    Double.parseDouble((String) shield.get("x")) * tileSize,
-                    Double.parseDouble((String) shield.get("y")) * tileSize)));
+                tmp.add(this.createShield.get().apply(new Pair<>(
+                    Double.parseDouble((String) shield.get("x")) * this.tileSize,
+                    Double.parseDouble((String) shield.get("y")) * this.tileSize)));
             }
-            tileSets.get(EntityType.SHIELD).add(tmp);
+            this.tileSets.get(EntityType.SHIELD).add(tmp);
         }
     }
 
     private void loadTeleport(final JsonArray types) throws FormatException {
        for (int i = 0; i < types.size(); i++) {
-            final JsonArray sets = (JsonArray) checkParse(types.get(i));
+            final JsonArray sets = (JsonArray) this.checkParse(types.get(i));
             final Set<Entity> tmp = new HashSet<>();
 
             for (int j = 0; j < sets.size(); j++) {
-                final JsonObject teleport = (JsonObject) checkParse(sets.get(j));
+                final JsonObject teleport = (JsonObject) this.checkParse(sets.get(j));
 
-                tmp.add(createTeleport.get().apply(new Pair<>(
-                    Double.parseDouble((String) teleport.get("x")) * tileSize,
-                    Double.parseDouble((String) teleport.get("y")) * tileSize)));
+                tmp.add(this.createTeleport.get().apply(new Pair<>(
+                    Double.parseDouble((String) teleport.get("x")) * this.tileSize,
+                    Double.parseDouble((String) teleport.get("y")) * this.tileSize)));
             }
-            tileSets.get(EntityType.TELEPORT).add(tmp);
+            this.tileSets.get(EntityType.TELEPORT).add(tmp);
         }
     }
+
+    private void loadCoin(final JsonArray types) throws FormatException {
+        for (int i = 0; i < types.size(); i++) {
+             final JsonArray sets = (JsonArray) this.checkParse(types.get(i));
+             final Set<Entity> tile = new HashSet<>();
+
+             for (int j = 0; j < sets.size(); j++) {
+                 final JsonArray set = (JsonArray) this.checkParse(sets.get(j));
+                 final Set<Coin> tmp = new HashSet<>();
+
+                 for (int h = 0; h < set.size(); h++) {
+                     final JsonObject coin = (JsonObject) this.checkParse(set.get(h));
+                     tmp.add(createCoins.get().apply(new Pair<>(
+                             Double.parseDouble((String) coin.get("x")) * this.tileSize,
+                             Double.parseDouble((String) coin.get("y")) * this.tileSize)));
+                 }
+                 tile.addAll(tmp);
+             }
+             this.tileSets.get(EntityType.COIN).add(tile);
+         }
+     }
 
     /**
      * Loads each set of obstacles from a json file and store them in Lists.
@@ -238,43 +268,51 @@ public class TileGenerator implements Generator {
      */
     private void loadTiles() throws FileNotFoundException, JsonException, FormatException {
         final Object parsed = Jsoner.deserialize(new FileReader(TILES_PATH));
-        final JsonObject allTiles = (JsonObject) checkParse(parsed);
+        final JsonObject allTiles = (JsonObject) this.checkParse(parsed);
 
         ///        LOADING ZAPPERS        ///
-        if (createZBase.isPresent() && createZRay.isPresent()) {
-            final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.ZAPPER.toString()));
+        if (this.createZBase.isPresent() && this.createZRay.isPresent()) {
+            final JsonArray types = (JsonArray) this.checkParse(allTiles.get(EntityType.ZAPPER.toString()));
             this.loadZappers(types);
         }
         ///        LOADING MISSILES    ///
-        if (createMissile.isPresent()) {
-            final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.MISSILE.toString()));
+        if (this.createMissile.isPresent()) {
+            final JsonArray types = (JsonArray) this.checkParse(allTiles.get(EntityType.MISSILE.toString()));
             this.loadMissiles(types);
         }
 
         ///        LOADING SHIELDS     ///
-        if (createShield.isPresent()) {
-            final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.SHIELD.toString()));
+        if (this.createShield.isPresent()) {
+            final JsonArray types = (JsonArray) this.checkParse(allTiles.get(EntityType.SHIELD.toString()));
             this.loadShields(types);
         }
 
         ///        LOADING TELEPORTS      ///
-        if (createTeleport.isPresent()) {
-            final JsonArray types = (JsonArray) checkParse(allTiles.get(EntityType.TELEPORT.toString()));
+        if (this.createTeleport.isPresent()) {
+            final JsonArray types = (JsonArray) this.checkParse(allTiles.get(EntityType.TELEPORT.toString()));
             this.loadTeleport(types);
+        }
+
+        ///        LOADING COINS      ///
+        if (this.createCoins.isPresent()) {
+            final JsonArray types = (JsonArray) this.checkParse(allTiles.get(EntityType.COIN.toString()));
+            this.loadCoin(types);
         }
     }
 
     private void spawnTile() {
-        int randomNumber = RNG.nextInt() % 100;
+        int randomNumber = TileGenerator.RNG.nextInt() % 100;
         randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 
         if (randomNumber <= POWERUP_ODDS) {
-            randomNumber = RNG.nextInt() % 2;
+            randomNumber = TileGenerator.RNG.nextInt() % 2;
             randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
             randomNumber += EntityType.SHIELD.ordinal();
             spawnSet(EntityType.values()[randomNumber]);
-        } else if (randomNumber <= MISSILE_ODDS) {
+        } else if (randomNumber <= TileGenerator.MISSILE_ODDS) {
             spawnSet(EntityType.MISSILE);
+        } else if (randomNumber <= TileGenerator.COINS_ODDS) {
+            spawnSet(EntityType.COIN);
         } else {
             spawnSet(EntityType.ZAPPER);
         }
@@ -289,7 +327,7 @@ public class TileGenerator implements Generator {
             randomNumber = randomNumber < 0 ? randomNumber * -1 : randomNumber;
 
             for (final Entity e : tileSets.get(type).get(randomNumber)) {
-                if (entities.get(type).contains(e)) {
+                if (this.entities.get(type).contains(e)) {
                     continueSearch = true;
                     break;
                 }
@@ -297,22 +335,25 @@ public class TileGenerator implements Generator {
         } while (continueSearch);
 
         if (!this.isWaiting()) {
-            tileSets.get(type).get(randomNumber).forEach(e -> GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_SPAWN, "spawned::" + e.toString()));
-            entities.get(type).addAll(tileSets.get(type).get(randomNumber));
+            this.tileSets.get(type).get(randomNumber)
+                    .forEach(e -> GameWindow.GAME_DEBUGGER
+                            .printLog(Debugger.Option.LOG_SPAWN, "spawned:" + e.toString()));
+            this.entities.get(type).addAll(tileSets.get(type).get(randomNumber));
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setZapperRayCreator(final BiFunction<Pair<ZapperBase, ZapperBase>, Pair<Double, Double>, ZapperRay> zapperr) {
-        this.createZRay = Optional.of(zapperr);
+    public void setZapperRayCreator(final BiFunction<Pair<ZapperBase, ZapperBase>,
+            Pair<Double, Double>, ZapperRay> zapperray) {
+        this.createZRay = Optional.of(zapperray);
     }
     /**
      * {@inheritDoc}
      */
-    public void setZapperBaseCreator(final Function<Pair<Double, Double>, ZapperBase> zapperb) {
-        this.createZBase = Optional.of(zapperb);
+    public void setZapperBaseCreator(final Function<Pair<Double, Double>, ZapperBase> zapperbase) {
+        this.createZBase = Optional.of(zapperbase);
     }
     /**
      * {@inheritDoc}
@@ -331,6 +372,12 @@ public class TileGenerator implements Generator {
      */
     public void setTeleportCreator(final Function<Pair<Double, Double>, Teleport> teleport) {
         this.createTeleport = Optional.of(teleport);
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public void setCoinCreator(final Function<Pair<Double, Double>, Coin> coins) {
+        this.createCoins = Optional.of(coins);
     }
 
 
@@ -368,9 +415,9 @@ public class TileGenerator implements Generator {
     public void start() {
         synchronized (generator) {
             if (!this.isRunning()) {
-                running = true;
-                waiting = true;
-                generator.start();
+                this.running = true;
+                this.waiting = true;
+                this.generator.start();
             }
         }
     }
@@ -378,28 +425,28 @@ public class TileGenerator implements Generator {
      * {@inheritDoc}
      */
     public void terminate() {
-        running = false;
+        this.running = false;
         this.resume();
     }
     /**
      * {@inheritDoc}
      */
     public void stop() {
-        waiting = true;
+        this.waiting = true;
 
         synchronized (this) {
-            remainingTimeToSleep = 0;
+            this.remainingTimeToSleep = 0;
         }
     }
     /**
      * {@inheritDoc}
      */
     public void pause() {
-        waiting = true;
+        this.waiting = true;
 
         synchronized (this) {
-            final long timePassed = System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeBeforeSleep;
-            remainingTimeToSleep = sleepInterval - timePassed;
+            final long timePassed = System.nanoTime() / GameWindow.MICRO_SECOND - this.systemTimeBeforeSleep;
+            this.remainingTimeToSleep = this.sleepInterval - timePassed;
         }
     }
     /**
@@ -408,14 +455,18 @@ public class TileGenerator implements Generator {
     public void resume() {
         synchronized (generator) {
             if (this.isWaiting()) {
-                waiting = false;
-                generator.notifyAll();
+                this.waiting = false;
+                this.generator.notifyAll();
 
                 synchronized (this) {
-                    final long timePassed = System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeBeforeSleep;
-                    sleepTimeLeft = sleepInterval - timePassed > 0 ? sleepInterval - timePassed : 0;
-                    remainingTimeToSleep = timePassed < sleepInterval ? remainingTimeToSleep - sleepTimeLeft : remainingTimeToSleep;
-                    systemTimeAfterPaused = System.nanoTime() / GameWindow.MICRO_SECOND; 
+                    final long timePassed = System.nanoTime()
+                            / GameWindow.MICRO_SECOND - this.systemTimeBeforeSleep;
+                    this.sleepTimeLeft = this.sleepInterval - timePassed > 0
+                            ? this.sleepInterval - timePassed : 0;
+                    this.remainingTimeToSleep = timePassed < this.sleepInterval
+                            ? this.remainingTimeToSleep - this.sleepTimeLeft
+                            : this.remainingTimeToSleep;
+                    this.systemTimeAfterPaused = System.nanoTime() / GameWindow.MICRO_SECOND; 
                 }
             }
         }
@@ -430,9 +481,14 @@ public class TileGenerator implements Generator {
 
         if (GameWindow.GAME_DEBUGGER.isFeatureEnabled(Debugger.Option.NEXT_SPAWN_TIMER)) {
             synchronized (this) {
-                final long expectedTimer = sleepInterval - (System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeBeforeSleep);
-                final long remainingTime = remainingTimeToSleep + sleepTimeLeft - (System.nanoTime() / GameWindow.MICRO_SECOND - systemTimeAfterPaused);
-                final long timer = !this.isWaiting() ? remainingTime > 0 ? remainingTime : expectedTimer  : remainingTimeToSleep;
+                final long expectedTimer = this.sleepInterval
+                        - (System.nanoTime() / GameWindow.MICRO_SECOND - this.systemTimeBeforeSleep);
+                final long remainingTime = this.remainingTimeToSleep
+                        + this.sleepTimeLeft
+                        - (System.nanoTime() / GameWindow.MICRO_SECOND - this.systemTimeAfterPaused);
+                final long timer = !this.isWaiting()
+                        ? remainingTime > 0 ? remainingTime : expectedTimer
+                        : this.remainingTimeToSleep;
 
                 g.setColor(Debugger.DEBUG_COLOR);
                 g.setFont(Debugger.DEBUG_FONT);
@@ -446,14 +502,15 @@ public class TileGenerator implements Generator {
      */
     @Override
     public void run() {
-        final long minimum = (interval - INTERVAL_DECREASE_DIFF) * MINIMAL_INTERVAL / 100;
+        final long minimum = (this.interval - TileGenerator.INTERVAL_DECREASE_DIFF)
+                * TileGenerator.MINIMAL_INTERVAL / 100;
 
-        while (generator.isAlive() && this.isRunning()) {
+        while (this.generator.isAlive() && this.isRunning()) {
 
-            synchronized (generator) {
+            synchronized (this.generator) {
                 while (this.isWaiting()) {
                     try {
-                        generator.wait();
+                        this.generator.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -461,24 +518,24 @@ public class TileGenerator implements Generator {
                         continue;
                     }
                 }
-                this.invokeSleep(remainingTimeToSleep);
+                this.invokeSleep(this.remainingTimeToSleep);
                 synchronized (this) {
-                    remainingTimeToSleep = 0;
-                    sleepTimeLeft = 0;
+                    this.remainingTimeToSleep = 0;
+                    this.sleepTimeLeft = 0;
                 }
             }
 
-            synchronized (entities) {
+            synchronized (this.entities) {
                 spawnTile();
             }
 
             synchronized (this) {
-                systemTimeBeforeSleep = System.nanoTime() / GameWindow.MICRO_SECOND;
-                sleepInterval =  interval - INTERVAL_DECREASE_DIFF * AbstractLogics.getDifficultyLevel() > minimum
-                    ? interval - INTERVAL_DECREASE_DIFF * AbstractLogics.getDifficultyLevel()
+                this.systemTimeBeforeSleep = System.nanoTime() / GameWindow.MICRO_SECOND;
+                this.sleepInterval = interval - TileGenerator.INTERVAL_DECREASE_DIFF * AbstractLogics.getDifficultyLevel() > minimum
+                    ? this.interval - TileGenerator.INTERVAL_DECREASE_DIFF * AbstractLogics.getDifficultyLevel()
                     : minimum;
             }
-            this.invokeSleep(sleepInterval);
+            this.invokeSleep(this.sleepInterval);
         }
     }
 }

@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * The {@link EntityType} enumerable describes which category of each entity that encapsulates it.
+ * The {@code EntityType} enumerable describes which category of each entity that encapsulates it.
  */
 public enum EntityType {
     /**
      * Defines the type of the entity.
      */
-    UNDEFINED, PLAYER, MISSILE, ZAPPER, ZAPPERBASE, ZAPPERRAY, SHIELD, TELEPORT;
+    UNDEFINED, PLAYER, MISSILE, ZAPPER, ZAPPERBASE, ZAPPERRAY, SHIELD, TELEPORT, COIN;
 
     /**
      * A list containing each type of entity that can be implemented.
      */
-    public static final List<EntityType> ALL_ENTITY_TYPE = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT);
+    public static final List<EntityType> ALL_ENTITY_TYPE = List.of(EntityType.PLAYER, EntityType.ZAPPER, EntityType.MISSILE, EntityType.SHIELD, EntityType.TELEPORT, EntityType.COIN);
 
     /**
      * @return <code>true</code> if the current type is for a generable entity, <code>false</code> if not
@@ -28,6 +28,7 @@ public enum EntityType {
             case ZAPPERRAY:
             case SHIELD:
             case TELEPORT:
+            case COIN:
                 return true;
             default:
                 break;
@@ -58,6 +59,7 @@ public enum EntityType {
         switch (this) {
             case SHIELD:
             case TELEPORT:
+            case COIN:
                 return true;
             default:
                 break;

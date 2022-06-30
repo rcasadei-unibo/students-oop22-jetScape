@@ -21,7 +21,7 @@ public class PlayerHitbox extends HitboxInstance {
      * initializes {@link game.logics.entities.player.Player Player}
      * {@link Hitbox} in the starting position.
      * 
-     * @param startingPos
+     * @param startingPos the starting position
      */
     public PlayerHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);

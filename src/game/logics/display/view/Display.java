@@ -101,11 +101,11 @@ public abstract class Display {
      */
     private int getCenteredX(final Graphics2D g, final String text) {
 
-        final int lenght = (int) g.getFontMetrics()
+        final int length = (int) g.getFontMetrics()
                 .getStringBounds(text, g)
                 .getWidth();
 
-        return gScreen.getWidth() / 2 - lenght / 2;
+        return gScreen.getWidth() / 2 - length / 2;
     }
 
     /**

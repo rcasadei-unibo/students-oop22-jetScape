@@ -64,6 +64,10 @@ public class PlayerInstance extends EntityInstance implements Player {
      */
     private int score;
     /**
+     * The current player's number of coins collected.
+     */
+    private int coins;
+    /**
      * The current jump speed of the player.
      */
     private final double jumpSpeed;
@@ -172,7 +176,7 @@ public class PlayerInstance extends EntityInstance implements Player {
 
     private void checkHit(final Entity entityHit) {
         switch (entityHit.entityType()) {
-            case MISSILE: 
+            case MISSILE:
                 if (!this.shieldProtected) {
                     GameWindow.GAME_SOUND.stop(Sound.JETPACK);
                     GameWindow.GAME_SOUND.play(Sound.MISSILE);
@@ -193,9 +197,15 @@ public class PlayerInstance extends EntityInstance implements Player {
                 GameWindow.GAME_SOUND.play(Sound.SHIELD_UP);
                 break;
             case TELEPORT:
-                score += TeleportInstance.getScoreIncrease();
+                this.score += TeleportInstance.getScoreIncrease();
                 this.getCleaner().accept(t -> t.isGenerableEntity(), e -> true);
                 GameWindow.GAME_SOUND.play(Sound.TELEPORT);
+                break;
+            case COIN:
+                this.coins++;
+                entityHit.clean();
+                GameWindow.GAME_SOUND.stop(Sound.COIN);
+                GameWindow.GAME_SOUND.play(Sound.COIN);
                 break;
             default:
                 break;
@@ -299,6 +309,13 @@ public class PlayerInstance extends EntityInstance implements Player {
     /**
      * {@inheritDoc}
      */
+    public int getCurrentCoinsCollected() {
+        return this.coins;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean hasDied() {
         return status == PlayerStatus.DEAD;
     }
@@ -330,12 +347,14 @@ public class PlayerInstance extends EntityInstance implements Player {
     @Override
     public void reset() {
         super.reset();
-        setStatus(PlayerStatus.WALK);
-        score = 0;
-        frameTime = 0;
+        this.setStatus(PlayerStatus.WALK);
+        this.score = 0;
+        this.coins = 0;
 
-        invulnerable = false;
-        shieldProtected = false;
+        this.frameTime = 0;
+
+        this.invulnerable = false;
+        this.shieldProtected = false;
     }
 
     /**

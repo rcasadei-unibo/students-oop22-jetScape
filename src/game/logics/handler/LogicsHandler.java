@@ -25,6 +25,7 @@ import game.logics.entities.generic.Entity;
 import game.logics.entities.obstacles.missile.MissileInstance;
 import game.logics.entities.obstacles.zapper.ZapperBaseInstance;
 import game.logics.entities.obstacles.zapper.ZapperRayInstance;
+import game.logics.entities.pickups.coin.CoinInstance;
 import game.logics.entities.pickups.shield.ShieldInstance;
 import game.logics.entities.pickups.teleport.TeleportInstance;
 import game.logics.entities.player.Player;
@@ -104,7 +105,9 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
         this.displayController = new DisplayController(this.keyH,
                 g -> setGameState(g), () -> this.gameState,
-                () -> this.playerEntity.getCurrentScore(), this.background, this.records);
+                () -> this.playerEntity.getCurrentScore(),
+                () -> this.playerEntity.getCurrentCoinsCollected(),
+                this.background, this.records);
 
         this.spawner = new TileGenerator(this.entities, super.getSpawningInteval());
         this.initializeSpawner();
@@ -112,22 +115,34 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
     private void initializeSpawner() {
 
-        this.spawner.setMissileCreator(p -> new MissileInstance(this, p, this.playerEntity, super.getEntityMovementInfo(EntityType.MISSILE)));
-        this.spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p, super.getEntityMovementInfo(EntityType.ZAPPERBASE)));
+        this.spawner.setMissileCreator(p -> new MissileInstance(this, p,
+                this.playerEntity, super.getEntityMovementInfo(EntityType.MISSILE)));
+        this.spawner.setZapperBaseCreator(p -> new ZapperBaseInstance(this, p,
+                super.getEntityMovementInfo(EntityType.ZAPPERBASE)));
         this.spawner.setZapperRayCreator((b, p) -> new ZapperRayInstance(this, p, b.getX(), b.getY()));
-        this.spawner.setShieldCreator(p -> new ShieldInstance(this, p, this.playerEntity, super.getEntityMovementInfo(EntityType.SHIELD)));
-        this.spawner.setTeleportCreator(p -> new TeleportInstance(this, p, this.playerEntity, super.getEntityMovementInfo(EntityType.TELEPORT)));
+        this.spawner.setShieldCreator(p -> new ShieldInstance(this, p,
+                this.playerEntity, super.getEntityMovementInfo(EntityType.SHIELD)));
+        this.spawner.setTeleportCreator(p -> new TeleportInstance(this, p,
+                this.playerEntity, super.getEntityMovementInfo(EntityType.TELEPORT)));
+        this.spawner.setCoinCreator(p -> new CoinInstance(this, p,
+                this.playerEntity, super.getEntityMovementInfo(EntityType.COIN)));
 
         try {
             this.spawner.initialize();
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file cannot be found.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW,
+                    "Tiles information file cannot be found.\n\nDetails:\n"
+                    + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } catch (JsonException e) {
-            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "An error occured while trying to load tiles.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW,
+                    "An error occured while trying to load tiles.\n\nDetails:\n"
+                    + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } catch (FormatException e) {
-            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW, "Tiles information file has an incorrect format.\n\nDetails:\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog((Component) GameHandler.GAME_WINDOW,
+                    "Tiles information file has an incorrect format.\n\nDetails:\n"
+                    + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }

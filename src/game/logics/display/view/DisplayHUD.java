@@ -18,7 +18,14 @@ public class DisplayHUD extends Display {
     private static final double FONT_SCALE = 18;
     private final Font scoreFont;
 
+    /**
+     * Actual score value, that have to be shown on screen.
+     */
     private int score;
+    /**
+     * Actual number of coins collected, that have to be shown on screen.
+     */
+    private int coins;
 
     /**
      * {@link DisplayHUD} constructor: loads scoreFont.
@@ -27,6 +34,7 @@ public class DisplayHUD extends Display {
         super();
 
         this.score = 0;
+        this.coins = 0;
         this.scoreFont = GameWindow.GAME_FONTLOADER.getOptionsFont().deriveFont(getScaledSize(FONT_SCALE));
     }
 
@@ -35,19 +43,33 @@ public class DisplayHUD extends Display {
      */
     public void drawScreen(final Graphics2D g) {
         final String scoreString = "SCORE: " + this.score;
+        final String coinsString = "COINS: " + this.coins;
 
         // SCORE
         super.drawText(g, scoreFont, scoreString,
                 super.getGameScreen().getTileSize() * TEXT_X_TILE,
                 super.getGameScreen().getTileSize() * SCORE_TILE, SCORE_SHIFT);
+
+        // COINS
+        super.drawText(g, scoreFont, coinsString,
+                super.getGameScreen().getTileSize() * TEXT_X_TILE,
+                super.getGameScreen().getTileSize() * (SCORE_TILE + 1), SCORE_SHIFT);
     }
 
     /**
-     * Update internal score to be shown.
-     * @param score the score that have to be shown on HUD.
+     * Update internal {@link #score} variable to be shown on HUD.
+     * @param score the new score value.
      */
     public void updateScore(final int score) {
         this.score = score;
+    }
+
+    /**
+     * Update internal {@link #coins} counter to be shown on HUD.
+     * @param coins the new number of coins collected.
+     */
+    public void updateCoins(final int coins) {
+        this.coins = coins;
     }
 
     /**

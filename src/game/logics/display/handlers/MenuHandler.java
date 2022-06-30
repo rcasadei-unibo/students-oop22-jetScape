@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import game.frame.GameWindow;
-import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.MenuOption;
 import game.utility.other.Sound;
+
 /**
- * The {@link MenuHandler} class manages {@link Display} menus.
+ * The {@code MenuHandler} class manages {@link game.logics.display.view.Display Display} menus.
  */
 public class MenuHandler implements DisplayHandler {
     private final KeyHandler keyH;
@@ -33,17 +33,17 @@ public class MenuHandler implements DisplayHandler {
     private MenuOption selectedOption;
 
     /**
-     * Initializes the menu handler with the given display's options and sets 
+     * Initializes the {@link MenuHandler} with the given display's options and sets 
      * the first one as currently selected, performing setGameState when enter is pressed.
      * @param keyH {@link KeyHandler} instance
-     * @param display
-     * @param setGameState
+     * @param options {@link List} of {@link MenuOption} that will be shown
+     * @param setGameState a {@link Consumer} of {@link GameState}
      */
-    public MenuHandler(final KeyHandler keyH, final Display display, final Consumer<GameState> setGameState) {
+    public MenuHandler(final KeyHandler keyH, final List<MenuOption> options, final Consumer<GameState> setGameState) {
         super();
         this.keyH = keyH;
         this.cursor = 0;
-        this.options = display.getOptions();
+        this.options = options;
         this.selectedOption = options.get(this.cursor);
         this.setGameState = setGameState;
     }
@@ -55,23 +55,24 @@ public class MenuHandler implements DisplayHandler {
         switch (keyH.getKeyTyped()) {
             case KeyEvent.VK_UP :
                 this.goUp();
-                keyH.resetKeyTyped();
+                this.keyH.resetKeyTyped();
                 GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_DOWN:
                 this.goDown();
-                keyH.resetKeyTyped();
+                this.keyH.resetKeyTyped();
                 GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             case KeyEvent.VK_ENTER:
                 this.setGameState.accept(this.selectedOption.getOptionsGS());
-                keyH.resetKeyTyped();
+                this.keyH.resetKeyTyped();
                 GameWindow.GAME_SOUND.play(Sound.MENU_SELECTION);
                 break;
             default:
                 break;
         }
     }
+
     /**
      * {@inheritDoc}
      */
@@ -81,7 +82,7 @@ public class MenuHandler implements DisplayHandler {
     }
 
     /**
-     * moves the cursor up .
+     * moves the cursor up.
      */
     protected void goUp() {
         this.cursor--;
@@ -91,7 +92,7 @@ public class MenuHandler implements DisplayHandler {
     }
 
     /**
-     * moves the cursor down .
+     * moves the cursor down.
      */
     protected void goDown() {
         this.cursor++;

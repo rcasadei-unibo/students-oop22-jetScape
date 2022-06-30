@@ -10,14 +10,15 @@ import game.utility.other.EntityType;
 import game.utility.other.Pair;
 
 /**
- * The abstract class {@link PickupInstance} is used to define the common parts of each pickup bonus.
+ * The class {@code PickupInstance} is used to define the common parts of each pickup bonus.
  */
-public abstract class PickupInstance extends EntityInstance implements Pickup {
+public class PickupInstance extends EntityInstance implements Pickup {
 
     private final SpeedHandler movement;
     private final Player player;
 
     /**
+     * Builds a new {@link PickupInstance}.
      * @param l the logics handler which the entity is linked to
      * @param position the starting position of the pickup in the environment
      * @param pickupType the type of pickup to create
@@ -30,7 +31,7 @@ public abstract class PickupInstance extends EntityInstance implements Pickup {
         this.player = player;
         this.movement = speed.copy();
 
-        this.setHitbox(new PickableHitbox(position));
+        super.setHitbox(new PickableHitbox(position));
     }
     /**
      * {@inheritDoc}

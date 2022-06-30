@@ -16,7 +16,7 @@ public class ZapperRayVerticalHitbox extends HitboxInstance {
     /**
      * initializes {@link game.logics.entities.obstacles.zapper.ZapperRay ZapperRay} vertical
      * {@link Hitbox} in the starting position.
-     * @param startingPos
+     * @param startingPos the starting position
      */
     public ZapperRayVerticalHitbox(final Pair<Double, Double> startingPos) {
         super(startingPos);

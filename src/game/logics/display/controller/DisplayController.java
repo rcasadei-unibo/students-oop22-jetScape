@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 public class DisplayController {
     private final Supplier<GameState> getState;
     private final Supplier<Integer> getScore;
+    private final Supplier<Integer> getCoins;
 
     /*
      * Screen's displays
@@ -55,7 +56,8 @@ public class DisplayController {
      * @param keyH {@link KeyHandler} instance
      * @param setState {@link Consumer} to set new value of State
      * @param getState {@link Supplier} to get new value from State
-     * @param getScore Supplier to get new value of Score
+     * @param getScore Supplier to get new value of score
+     * @param getCoins Supplier to get new value of collected money
      * @param background {@link Background} background handler
      * @param records {@link Records} to check &amp; set new records
      */
@@ -63,10 +65,12 @@ public class DisplayController {
             final Consumer<GameState> setState,
             final Supplier<GameState> getState,
             final Supplier<Integer> getScore,
+            final Supplier<Integer> getCoins,
             final Background background, final Records records) {
 
         this.getState = getState;
         this.getScore = getScore;
+        this.getCoins = getCoins;
 
         this.hud = new DisplayHUD();
         this.pauseDisplay = new DisplayPause();
@@ -75,11 +79,11 @@ public class DisplayController {
         this.recordsDisplay = new DisplayRecords(records);
         this.gameOverDisplay = new DisplayGameOver(records);
 
-        this.pauseHandler = new MenuHandler(keyH, pauseDisplay, setState);
-        this.titleHandler = new MenuHandler(keyH, mainMenuDisplay, setState);
-        this.recordsHandler = new MenuHandler(keyH, recordsDisplay, setState);
-        this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay, setState);
-        this.settingsHandler = new SettingsHandler(keyH, gameSettings, setState);
+        this.pauseHandler = new MenuHandler(keyH, pauseDisplay.getOptions(), setState);
+        this.titleHandler = new MenuHandler(keyH, mainMenuDisplay.getOptions(), setState);
+        this.recordsHandler = new MenuHandler(keyH, recordsDisplay.getOptions(), setState);
+        this.gameOverHandler = new MenuHandler(keyH, gameOverDisplay.getOptions(), setState);
+        this.settingsHandler = new SettingsHandler(keyH, gameSettings.getOptions(), setState);
     }
 
     /**
@@ -133,6 +137,7 @@ public class DisplayController {
                 break;
             case INGAME :
                 this.hud.updateScore(getScore.get());
+                this.hud.updateCoins(getCoins.get());
                 break;
             case ENDGAME :
                 this.gameOverHandler.update();

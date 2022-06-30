@@ -25,8 +25,8 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
     private final Records records;
 
-    private static final List<String> LENGTH_RECORDS = new ArrayList<>();
-    //private static final List<String> MONEY_RECORDS = new ArrayList<>();
+    private static final List<String> LENGTH_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+    private static final List<String> MONEY_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
 
     /**
      * {@link DisplayRecords} constructor: add options to be shown.
@@ -45,21 +45,23 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
     private void fetch() {
         DisplayRecords.LENGTH_RECORDS.clear();
+        DisplayRecords.MONEY_RECORDS.clear();
 
-        this.records.getRecordScores().forEach(x -> {
+        this.records.getScoreRecords().forEach(x -> {
             DisplayRecords.LENGTH_RECORDS.add(x.toString());
         });
 
+        this.records.getMoneyRecords().forEach(x -> {
+            DisplayRecords.MONEY_RECORDS.add(x.toString());
+        });
+
         /*
-        this.records.getRecordScores().stream()
+        this.records.getScoreRecords().stream()
                 .map(s -> s.toString())
                 //.peek(System.out::println)
                 .peek(DisplayRecords.LENGTH_RECORDS::add)
                 //.peek(System.out::println)
                 .close();*/
-
-        //TODO remove
-        //DisplayRecords.MONEY_RECORDS.add("3500");
     }
 
     // TODO: SPOSTARE IN CLASSE APPOSITA
@@ -70,7 +72,6 @@ public class DisplayRecords extends Display implements MenuDisplay {
         return returnList;
     }*/
 
-    // Use game.utility.sprites.Drawer to load a sprite
     /**
      * {@inheritDoc}
      */
@@ -101,11 +102,13 @@ public class DisplayRecords extends Display implements MenuDisplay {
                 super.getGameScreen().getTileSize() * 3, 0);
 
         /*final List<String> moneyList = this.listify(DisplayRecords.MONEY_RECORDS);
+         */
+        final List<String> moneyList = DisplayRecords.MONEY_RECORDS;
         for (int i = 0; i < moneyList.size(); i++) {
             super.drawText(g, super.getTextFont(), moneyList.get(i),
                     super.getGameScreen().getTileSize() * 3 + super.getGameScreen().getWidth() / 2,
                     super.getGameScreen().getTileSize() * (3 + i + 1), 0);
-        }*/
+        }
 
         //OPTIONS
         super.drawOptions(g, DisplayRecords.OPTION_TILE);
