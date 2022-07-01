@@ -96,12 +96,6 @@ public class DisplayGameOver extends Display implements MenuDisplay {
         super.drawOptions(g, DisplayGameOver.OPTION_TILE);
     }
 
-    // TODO: remove magic setting from here
-    /*public void drawScreen(final Graphics2D g) {
-        this.setSelectedOption(Optional.of(MenuOption.RETRY));
-        this.drawScreen(g, Optional.of(this.getSelectedOption()));
-    }*/
-
     /**
      * {@inheritDoc}
      */
