@@ -1,7 +1,6 @@
 package game.utility.sound;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -71,15 +70,10 @@ public final class SettingsManager {
             this.buildDefault();
             this.write();
         }
+
         try (Reader reader = new FileReader(this.file)) {
             this.settings = (JsonObject) Jsoner.deserialize(reader);
-        } catch (FileNotFoundException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        } catch (JsonException e) {
+        } catch (IOException | JsonException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }

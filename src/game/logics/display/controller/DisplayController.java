@@ -46,7 +46,6 @@ public class DisplayController {
     private final DisplayHandler recordsHandler;
     private final DisplayHandler gameOverHandler;
     private final SettingsHandler settingsHandler;
-    // TODO: eventually add shop 
 
     /**
      * {@link DisplayController} builder: builds all displayed cards and
