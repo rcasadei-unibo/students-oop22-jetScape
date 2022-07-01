@@ -36,7 +36,7 @@ public class CollisionsHandler {
         var entity = this.cChecker.getNextToHandle();
         while (entity.isPresent()) {
             action.accept(entity.get());
-            GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_HITCHECK, "Colpito! " + entity.get().entityType());
+            GameWindow.GAME_DEBUGGER.printLog(Debugger.Option.LOG_HITCHECK, "Hit " + entity.get().entityType());
             entity = this.cChecker.getNextToHandle();
         }
     }
