@@ -19,10 +19,10 @@ import java.util.function.Predicate;
  * like their position, entity relationship, visibility, on screen presence, etc...
  */
 public abstract class EntityInstance implements Entity {
-    /**
-     * Defines the entity's position on the game environment. 
-     */
 
+    /**
+     * Defines the entity's position on the game environment.
+     */
     private final Pair<Double, Double> position;
 
     /**

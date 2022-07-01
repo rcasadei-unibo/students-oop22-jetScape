@@ -14,6 +14,7 @@ import com.github.cliftonlabs.json_simple.JsonKey;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 import game.logics.records.Records;
+import game.logics.records.RecordsImpl;
 
 /**
  * Non-instantiable class used by {@link JSONWriter} and {@link JSONReader} to
@@ -30,7 +31,7 @@ public class JSONHandler {
 
     // Data for building JSON data table
     private static final List<JsonKey> KEY_LIST = new ArrayList<>();
-    private static final Map<JsonKey, Object> RECORDS_MAP = new HashMap<>(Records.getMaxSavedNumberOfRecords());
+    private static final Map<JsonKey, Object> RECORDS_MAP = new HashMap<>(RecordsImpl.getMaxSavedNumberOfRecords());
 
     // List of keys for JSON files
     private static final JsonKey PSEUDOKEY_RECORD_LIST = new FileKey("record%i", 0); // %i represents record index
@@ -38,8 +39,8 @@ public class JSONHandler {
     private static final String STRING_SCORE_RECORD = "score";
     private static final String STRING_MONEY_RECORD = "money";
 
-    private static final List<JsonKey> KEY_SCORE_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
-    private static final List<JsonKey> KEY_MONEY_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+    private static final List<JsonKey> KEY_SCORE_RECORDS = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
+    private static final List<JsonKey> KEY_MONEY_RECORDS = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
 
     private static final JsonKey KEY_MONEY = new FileKey("savedMoney", 0);
     private static final JsonKey KEY_BURNED = new FileKey("burned", 0);
@@ -50,7 +51,7 @@ public class JSONHandler {
     // Static initializer
     static {
         // create all Record Score keys using PSEUDOKEY_RECORD_SCORE and an index
-        for (Integer i = 0; i < Records.getMaxSavedNumberOfRecords(); i++) {
+        for (Integer i = 0; i < RecordsImpl.getMaxSavedNumberOfRecords(); i++) {
             KEY_SCORE_RECORDS.add(new FileKey(
                     PSEUDOKEY_RECORD_LIST.getKey()
                             .replace("record", STRING_SCORE_RECORD)
@@ -78,7 +79,6 @@ public class JSONHandler {
         this.records = records;
 
         // Builds the map
-
         Stream.concat(KEY_SCORE_RECORDS.stream(), KEY_MONEY_RECORDS.stream())
                 .forEach(key -> RECORDS_MAP.put(key, 0));
         //RECORDS_MAP.forEach((x, y) -> System.out.println(x + " - " + y));
@@ -127,18 +127,18 @@ public class JSONHandler {
      */
     protected void download(final JsonObject json) {
 
-        final List<Integer> scoreRecordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
-        final List<Integer> moneyRecordsReadList = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+        final List<Integer> scoreRecordsReadList = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
+        final List<Integer> moneyRecordsReadList = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
 
         // Overwrites the score map
-        IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(x -> {
+        IntStream.range(0, RecordsImpl.getMaxSavedNumberOfRecords()).forEach(x -> {
             final int receivedValue = json.getIntegerOrDefault(KEY_SCORE_RECORDS.get(x));
             if (receivedValue != (int) PSEUDOKEY_RECORD_LIST.getValue()) {
                 scoreRecordsReadList.add(x, receivedValue);
             }
         });
         // Overwrites the money map
-        IntStream.range(0, Records.getMaxSavedNumberOfRecords()).forEach(x -> {
+        IntStream.range(0, RecordsImpl.getMaxSavedNumberOfRecords()).forEach(x -> {
             final int receivedValue = json.getIntegerOrDefault(KEY_MONEY_RECORDS.get(x));
             if (receivedValue != (int) PSEUDOKEY_RECORD_LIST.getValue()) {
                 moneyRecordsReadList.add(x, receivedValue);

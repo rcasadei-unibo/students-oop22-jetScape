@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 import game.logics.records.Records;
+import game.logics.records.RecordsImpl;
 import game.utility.other.MenuOption;
-
 
 /**
  * <p>This class is used to display statistics and records.</p>
@@ -25,8 +25,8 @@ public class DisplayRecords extends Display implements MenuDisplay {
 
     private final Records records;
 
-    private static final List<String> LENGTH_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
-    private static final List<String> MONEY_RECORDS = new ArrayList<>(Records.getMaxSavedNumberOfRecords());
+    private static final List<String> LENGTH_RECORDS = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
+    private static final List<String> MONEY_RECORDS = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
 
     /**
      * {@link DisplayRecords} constructor: add options to be shown.

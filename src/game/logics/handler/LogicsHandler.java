@@ -38,6 +38,7 @@ import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
 
 import game.logics.records.Records;
+import game.logics.records.RecordsImpl;
 
 import game.utility.debug.Debugger;
 import game.utility.input.keyboard.KeyHandler;
@@ -99,7 +100,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
         this.playerEntity = new PlayerInstance(this, this.entities);
 
-        this.records = new Records(() -> this.game.getActualGame(), playerEntity);
+        this.records = new RecordsImpl(() -> this.game.getActualGame(), playerEntity);
 
         this.background = new BackgroundController(super.getBackgroundMovementInfo());
 
@@ -275,8 +276,16 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     this.getEntitiesCleaner().accept(t -> true, e -> true);
                     break;
                 case ENDGAME:
+                    final GameInfo actualGame = this.game.getActualGame();
                     this.spawner.stop();
-                    this.records.fetchGameEnded();
+
+                    // Declares game ended: sets game end date and gets final score
+                    if (!actualGame.isGameEnded()) {
+                        actualGame.setGameEnded(this.playerEntity.getCurrentScore(),
+                                this.playerEntity.getCurrentCoinsCollected());
+
+                        this.records.fetch(actualGame);
+                    }
                     this.records.update();
                     break;
                 case PAUSED:
