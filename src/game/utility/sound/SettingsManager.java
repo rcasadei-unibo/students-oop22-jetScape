@@ -67,16 +67,20 @@ public final class SettingsManager {
     }
 
     private void update() {
+        if (!file.exists()) {
+            this.buildDefault();
+            this.write();
+        }
         try (Reader reader = new FileReader(this.file)) {
             this.settings = (JsonObject) Jsoner.deserialize(reader);
         } catch (FileNotFoundException e) {
-            System.err.println("Setting information file cannot be found. Created a default one.\n\nDetails:\n" + e.getMessage());
-            this.buildDefault();
+            System.err.println(e.getMessage());
+            e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("An error occurred while trying to read settings.\n\nDetails:\n" + e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
         } catch (JsonException e) {
-            System.err.println("Settings information file has an incorrect format.\n\nDetails:\n" + e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }
