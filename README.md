@@ -34,4 +34,4 @@ _Pellanda_: generazione degli ostacoli, fisica del jetpack e implementazione bon
 
 _Amadio_: interfaccia base (menù di gioco e punteggio) e collisioni
 
-_Zandonella_: scorrimento ambiente di gioco e salvataggio punteggi
+_Zandonella_: scorrimento ambiente di gioco e sfondo, salvataggio punteggi, implementazione valuta interna del gioco
