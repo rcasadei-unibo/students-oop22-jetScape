@@ -333,43 +333,28 @@ public class Test {
         assertTrue(logics.getEntities().get(teleport.entityType()).isEmpty());
     }
 
-    //FIXME
     /**
      * Records file writing test.
      */
     @org.junit.Test
     public void recordTest() {
 
-        final int burnedTimes = 3;
+        final int burnedTimes = 1;
         final Logics logics = new LogicsHandler();
         final Player player = new PlayerInstance(logics);
         final Records records = new Records(() -> logics.getGame().getActualGame(), player);
 
         records.clear();
-        for (int i = 0; i < burnedTimes; i++) {
-            // Adds a new missile
-            final Pair<Double, Double> missilePos = new Pair<>(player.getPosition().getX() + 25, player.getPosition().getY());
-            final SpeedHandler missileMovement = new SpeedHandler(500.0, 10.0, 5000.0);
-            final Missile missile = new MissileInstance(logics, missilePos, player, missileMovement);
-
-            logics.getEntities().get(missile.entityType()).add(missile);
-
-            // Wait the collision
-            while (missile.getPosition().getX() > player.getPosition().getX()) {
-                missile.update();
-            }
-
-            // Missile hits the player
-            missile.update();
+        this.throwAtPlayer(logics, player, EntityType.MISSILE);
+        while (!player.hasDied()) {
             player.update();
-
-            assertEquals(PlayerDeath.BURNED, player.getCauseOfDeath());
-
-            //records.refresh();
-            //logics.getGame().getActualGame().setGameEnded(500);
-            //records.fetch(logics.getGame().getActualGame());
-            //records.update();
         }
+        player.update();
+
+        logics.getGame().getActualGame().setGameEnded(player.getCurrentScore());
+        records.fetch(logics.getGame().getActualGame());
+        records.update();
+
         assertEquals(burnedTimes, records.getBurnedTimes());
     }
 
@@ -509,14 +494,16 @@ public class Test {
 
          sound.play(Sound.MENU_SELECTION);
 
+         final int raiseVolume = 5;
          // Max Volume bound
-         for (int i = 0; i < 5; i++) {
-         sound.raiseVolumeLevel();
+         for (int i = 0; i < raiseVolume; i++) {
+             sound.raiseVolumeLevel();
          }
          assertEquals(4, sound.getVolumeLevel());
 
+         final int lowerVolume = 5;
          // Min Volume bound
-         for (int i = 0; i < 5; i++) {
+         for (int i = 0; i < lowerVolume; i++) {
          sound.lowerVolumeLevel();
          }
          assertEquals(0, sound.getVolumeLevel());
