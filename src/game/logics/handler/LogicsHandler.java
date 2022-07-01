@@ -36,7 +36,6 @@ import game.logics.display.controller.DisplayController;
 
 import game.logics.generator.Generator;
 import game.logics.generator.TileGenerator;
-
 import game.logics.records.Records;
 import game.logics.records.RecordsImpl;
 
@@ -98,7 +97,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
 
         this.game = new GameInfoHandler(new GameInfo());
 
-        this.playerEntity = new PlayerInstance(this, this.entities);
+        this.playerEntity = new PlayerInstance(this);
 
         this.records = new RecordsImpl(() -> this.game.getActualGame(), playerEntity);
 
@@ -173,6 +172,13 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public Map<EntityType, Set<Entity>> getEntities() {
+        return entities;
+    }
+
     private void resetGame() {
         this.getEntitiesCleaner().accept(t -> t != EntityType.PLAYER, e -> true);
         this.playerEntity.reset();
@@ -240,7 +246,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION;
     }
 
-    private void setInGame() {
+    private void setupInGame() {
         if (this.gameState != GameState.PAUSED) {
             this.game.setActualGame(new GameInfo(this.game));
             //this.game.generateNewGameInfo();
@@ -256,6 +262,20 @@ public class LogicsHandler extends AbstractLogics implements Logics {
         this.spawner.resume();
     }
 
+    private void setupEndgame() {
+        final GameInfo actualGame = this.game.getActualGame();
+        this.spawner.stop();
+
+        // Declares game ended: sets game end date and gets final score
+        if (!actualGame.isGameEnded()) {
+            actualGame.setGameEnded(this.playerEntity.getCurrentScore(),
+                    this.playerEntity.getCurrentCoinsCollected());
+
+            this.records.fetch(actualGame);
+        }
+        this.records.update();
+    }
+
     private void setGameState(final GameState gs) {
         if (this.gameState != gs) {
             switch (gs) {
@@ -265,7 +285,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     }
                     break;
                 case INGAME:
-                    this.setInGame();
+                    this.setupInGame();
                     break;
                 case MENU:
                     if (this.gameState == GameState.PAUSED
@@ -276,17 +296,7 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                     this.getEntitiesCleaner().accept(t -> true, e -> true);
                     break;
                 case ENDGAME:
-                    final GameInfo actualGame = this.game.getActualGame();
-                    this.spawner.stop();
-
-                    // Declares game ended: sets game end date and gets final score
-                    if (!actualGame.isGameEnded()) {
-                        actualGame.setGameEnded(this.playerEntity.getCurrentScore(),
-                                this.playerEntity.getCurrentCoinsCollected());
-
-                        this.records.fetch(actualGame);
-                    }
-                    this.records.update();
+                    this.setupEndgame();
                     break;
                 case PAUSED:
                     if (this.gameState != GameState.INGAME) {
@@ -363,6 +373,13 @@ public class LogicsHandler extends AbstractLogics implements Logics {
                 break;
         }
         this.displayController.drawScreen(g);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public GameInfoHandler getGame() {
+        return this.game;
     }
 }
 

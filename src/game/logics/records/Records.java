@@ -16,8 +16,8 @@ public interface Records {
     /**
      * Get data for updating in game, calling the data getters.
      *
-     * @param newGameInfo GameInfo passed via {@link Supplier}
-     * by {@link #fetchGameEnded()}
+     * @param newGameInfo {@link GameInfo} instance containing
+     * final game data
      */
     void fetch(GameInfo newGameInfo);
 
@@ -200,4 +200,9 @@ public interface Records {
      * @return true if the new number of coins collected is a new highest record.
      */
     boolean isNewMoneyRecord();
+
+    /**
+     * Orders the deletion of the record file.
+     */
+    void clear();
 }

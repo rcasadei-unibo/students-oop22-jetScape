@@ -17,7 +17,7 @@ import game.logics.records.Records;
 import game.logics.records.RecordsImpl;
 
 /**
- * Non-instantiable class used by {@link JSONWriter} and {@link JSONReader} to
+ * Non-instantiable class used by {@link JSONWriterImpl} and {@link JSONReaderImpl} to
  * get common file information used to read &amp; write information to and from a
  * JSON formatted file.
  */
@@ -70,13 +70,7 @@ public class JSONHandler {
         KEY_LIST.add(KEY_ZAPPED);
     }
 
-    /**
-     * {@link JSONHandler} constructor, called to set internal {@link Records} parameter.
-     *
-     * @param records {@link Records} Place to get and set statistics &amp; records data
-     */
-    protected JSONHandler(final Records records) {
-        this.records = records;
+    private void buildMap() {
 
         // Builds the map
         Stream.concat(KEY_SCORE_RECORDS.stream(), KEY_MONEY_RECORDS.stream())
@@ -92,14 +86,22 @@ public class JSONHandler {
     }
 
     /**
+     * {@link JSONHandler} constructor, called to set internal {@link Records} parameter.
+     *
+     * @param records {@link Records} Place to get and set statistics &amp; records data
+     */
+    protected JSONHandler(final Records records) {
+        this.records = records;
+        this.buildMap();
+    }
+
+    /**
      * Refresh recordsMap with information data read from records that have to
      *   be written to file.
-     *
-     *  This method writes to file.
      */
-    protected void upload() {
+    protected void download() {
 
-        // Refreshes the map
+        // Refresh the maps
         final List<Integer> scoreRecordsList = this.records.getScoreRecords();
         IntStream.range(0, this.records.getScoreRecords().size()).forEach(i -> {
             RECORDS_MAP.replace(KEY_SCORE_RECORDS.get(i), scoreRecordsList.get(i));
@@ -120,12 +122,9 @@ public class JSONHandler {
     /**
      * Overwrite recordsMap with information data read from file that have to
      *   be loaded as new records.
-     *
-     * This method reads from file.
-     *
-     * @param json the {@link JsonObject} read from file
+     * @param json the {@link JsonObject} instance read from file (deserialized)
      */
-    protected void download(final JsonObject json) {
+    protected void upload(final JsonObject json) {
 
         final List<Integer> scoreRecordsReadList = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
         final List<Integer> moneyRecordsReadList = new ArrayList<>(RecordsImpl.getMaxSavedNumberOfRecords());
@@ -148,9 +147,9 @@ public class JSONHandler {
         this.records.setScoreRecords(scoreRecordsReadList);
         this.records.setMoneyRecords(moneyRecordsReadList);
 
+        this.records.setSavedMoney(json.getInteger(KEY_MONEY));
         this.records.setBurnedTimes(json.getInteger(KEY_BURNED));
         this.records.setZappedTimes(json.getInteger(KEY_ZAPPED));
-        this.records.setSavedMoney(json.getInteger(KEY_MONEY));
 
         try {
             json.requireKeys(KEY_BURNED, KEY_ZAPPED, KEY_MONEY);
@@ -161,23 +160,23 @@ public class JSONHandler {
 
     /**
      * This method is used to get the ordered list of keys.
-     * @return the {@link List} JSONHandler.KEY_LIST
+     * @return the {@link List} {@linkplain JSONHandler#KEY_LIST}
      */
     protected static List<JsonKey> getKeyList() {
         return JSONHandler.KEY_LIST;
     }
 
     /**
-     * This method is used to get record score base string used to form related keys.
-     * @return {@link String} JSONHandler.STRING_SCORE_RECORD
+     * This method is used to get record base string used to form related keys.
+     * @return the {@link String} {@linkplain JSONHandler#STRING_SCORE_RECORD}
      */
     protected static String getStringScoreRecord() {
         return JSONHandler.STRING_SCORE_RECORD;
     }
 
     /**
-     * This method is used to get record money base string used to form related keys.
-     * @return {@link String} JSONHandler.STRING_MONEY_RECORD
+     * This method is used to get record base string used to form related keys.
+     * @return the {@link String} {@linkplain JSONHandler#STRING_MONEY_RECORD}
      */
     protected static String getStringMoneyRecord() {
         return JSONHandler.STRING_MONEY_RECORD;
@@ -185,7 +184,7 @@ public class JSONHandler {
 
     /**
      * This method is used to get actual records.
-     * @return the {@link Map} JSONHandler.RECORDS_MAP
+     * @return the {@link Map} {@linkplain JSONHandler#RECORDS_MAP}
      */
     protected static Map<JsonKey, Object> getRecordsMap() {
         return JSONHandler.RECORDS_MAP;
@@ -193,16 +192,15 @@ public class JSONHandler {
 
     /**
      * This method is used to get the file used for writing and reading.
-     * @return the {@link File} JSONHandler.FILE
+     * @return the {@link File} {@linkplain JSONHandler#FILE}
      */
-    protected File getFile() {
+    public static File getFile() {
         return JSONHandler.FILE;
     }
 
     /**
      * Represents a key that could be written to file and owns also a default
      * value.
-     *
      */
     protected static final class FileKey implements JsonKey, Serializable {
 

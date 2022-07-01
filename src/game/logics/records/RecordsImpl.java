@@ -5,7 +5,9 @@ import game.logics.entities.player.Player.PlayerDeath;
 
 import game.logics.handler.Logics.GameInfo;
 import game.utility.input.JSONReader;
+import game.utility.input.JSONReaderImpl;
 import game.utility.input.JSONWriter;
+import game.utility.input.JSONWriterImpl;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,8 +57,8 @@ public final class RecordsImpl implements Records {
     public RecordsImpl(final Supplier<GameInfo> getGame, final Player player) {
         this.getGame = getGame;
 
-        this.writer = new JSONWriter(this);
-        this.reader = new JSONReader(this);
+        this.writer = new JSONWriterImpl(this);
+        this.reader = new JSONReaderImpl(this);
 
         //this.game.getNumbersOfGamesPlayed();
         this.player = player;
@@ -109,6 +111,13 @@ public final class RecordsImpl implements Records {
      */
     public void update() {
         this.writer.write();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        this.writer.clear();
     }
 
     /****************************************/
