@@ -114,6 +114,7 @@ public class TileGenerator implements Generator {
     private final Thread generator = new Thread(this);
     private boolean running;
     private boolean waiting;
+    private boolean loaded;
 
     private final int tileSize;
 
@@ -298,6 +299,8 @@ public class TileGenerator implements Generator {
             final JsonArray types = (JsonArray) this.checkParse(allTiles.get(EntityType.COIN.toString()));
             this.loadCoin(types);
         }
+
+        this.loaded = true;
     }
 
     private void spawnTile() {
@@ -319,6 +322,10 @@ public class TileGenerator implements Generator {
     }
 
     private void spawnSet(final EntityType type) {
+        if (!this.loaded) {
+            return;
+        }
+
         boolean continueSearch;
         int randomNumber;
         do {

@@ -47,9 +47,9 @@ public class DisplayRecords extends Display implements MenuDisplay {
         DisplayRecords.LENGTH_RECORDS.clear();
         DisplayRecords.MONEY_RECORDS.clear();
 
-        this.records.getScoreRecords().forEach(x -> {
-            DisplayRecords.LENGTH_RECORDS.add(x.toString());
-        });
+        this.records.getScoreRecords().stream()
+                .map(x -> x.toString())
+                .forEach(DisplayRecords.LENGTH_RECORDS::add);
 
         this.records.getMoneyRecords().forEach(x -> {
             DisplayRecords.MONEY_RECORDS.add(x.toString());
@@ -64,7 +64,6 @@ public class DisplayRecords extends Display implements MenuDisplay {
                 .close();*/
     }
 
-    // TODO: SPOSTARE IN CLASSE APPOSITA
     /*private List<String> listify(final Set<String> set) {
         final List<String> returnList = new ArrayList<>();
         returnList.addAll(List.copyOf(set));

@@ -15,7 +15,7 @@ import game.logics.entities.generic.Entity;
 public interface Player extends Entity {
 
     /**
-     * This method is used to know if the player has considered dead (after the death animation has finished), <code>false</code> if not.
+     * This method is used to know if the player has considered dead (after the death animation has finished).
      * @return <code>true</code> if the player has died, <code>false</code> otherwise.
      */
     boolean hasDied();

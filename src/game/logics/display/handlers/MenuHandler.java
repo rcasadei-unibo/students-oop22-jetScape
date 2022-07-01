@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import game.frame.GameWindow;
+import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
 import game.utility.other.MenuOption;
@@ -36,14 +37,14 @@ public class MenuHandler implements DisplayHandler {
      * Initializes the {@link MenuHandler} with the given display's options and sets 
      * the first one as currently selected, performing setGameState when enter is pressed.
      * @param keyH {@link KeyHandler} instance
-     * @param options {@link List} of {@link MenuOption} that will be shown
+     * @param display {@link Display} to handle
      * @param setGameState a {@link Consumer} of {@link GameState}
      */
-    public MenuHandler(final KeyHandler keyH, final List<MenuOption> options, final Consumer<GameState> setGameState) {
+    public MenuHandler(final KeyHandler keyH, final Display display, final Consumer<GameState> setGameState) {
         super();
         this.keyH = keyH;
         this.cursor = 0;
-        this.options = options;
+        this.options = display.getOptions();
         this.selectedOption = options.get(this.cursor);
         this.setGameState = setGameState;
     }

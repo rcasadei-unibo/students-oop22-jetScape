@@ -162,7 +162,7 @@ public class ZapperInstance implements Zapper {
     public void clean() {
         base1.clean();
         base2.clean();
-        rays.forEach(r -> r.clean());
+        rays.forEach(r -> r.reset());
     }
 
     /**

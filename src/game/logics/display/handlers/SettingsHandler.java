@@ -1,13 +1,12 @@
 package game.logics.display.handlers;
 
 import java.awt.event.KeyEvent;
-import java.util.List;
 import java.util.function.Consumer;
 
 import game.frame.GameWindow;
+import game.logics.display.view.Display;
 import game.utility.input.keyboard.KeyHandler;
 import game.utility.other.GameState;
-import game.utility.other.MenuOption;
 import game.utility.other.Sound;
 
 /**
@@ -18,12 +17,12 @@ public class SettingsHandler extends MenuHandler {
     /**
      * initializes {@link SettingsHandler} class.
      * @param keyH {@link KeyHandler} instance
-     * @param options {@link List} of {@link MenuOption} that will be shown
+     * @param display {@link Display} to handle
      * @param setGameState a {@link Consumer} of {@link GameState}
      */
-    public SettingsHandler(final KeyHandler keyH, final List<MenuOption> options,
+    public SettingsHandler(final KeyHandler keyH, final Display display,
             final Consumer<GameState> setGameState) {
-        super(keyH, options, setGameState);
+        super(keyH, display, setGameState);
     }
 
     /**
