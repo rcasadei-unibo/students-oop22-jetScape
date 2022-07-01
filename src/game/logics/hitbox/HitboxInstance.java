@@ -76,9 +76,9 @@ public abstract class HitboxInstance implements Hitbox {
 
     /**
      * adds the rectangle of the specified dimensions in the hitbox.
-
-     * @param x x-axis initial coordinate
-     * @param y y-axis initial coordinate
+     * 
+     * @param x x-axis distance from sprite position
+     * @param y y-axis distance from sprite position
      * @param width width of the rectangle
      * @param height height of the rectangle
      */
@@ -93,10 +93,10 @@ public abstract class HitboxInstance implements Hitbox {
     }
 
     /**
-     * scales the hitbox dimension using the current screen tile's size.
+     * scales the Rectangle dimension using the current screen tile's size.
      * 
-     * @param x the length of one side of the hitbox
-     * @return the new scaled side of the hitbox
+     * @param x dimension
+     * @return the new scaled dimension of the Rectangle
      */
     private double scale(final double x) {
         return GameWindow.GAME_SCREEN.getTileSize() * (x / SPRITE_DIMENSIONS);
