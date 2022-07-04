@@ -8,6 +8,7 @@ import java.util.function.UnaryOperator;
 import game.frame.GameWindow;
 import game.utility.other.MenuOption;
 import game.utility.screen.Screen;
+
 /**
  * <p>This class contains what is shown when you want to change settings.</p>
  * 

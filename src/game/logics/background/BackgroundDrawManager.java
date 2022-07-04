@@ -14,6 +14,10 @@ import game.utility.sprites.Sprite;
  * 
  * If there aren't any textures to draw, a place holder rectangle
  * of a specified color will be drawn.
+ *
+ * The corresponding class for entity management is
+ * {@link game.sprite.DrawManager DrawManager}, implementation of
+ * {@link game.sprite.Drawer Drawer}
  */
 public class BackgroundDrawManager implements BackgroundDrawer {
 

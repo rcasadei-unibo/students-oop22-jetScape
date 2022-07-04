@@ -15,6 +15,13 @@ import game.utility.other.Pair;
 
 /**
  * This class is a {@link Background} handler.
+ *
+ * The correponding reference class for entity management is
+ * {@link game.logics.entities.generic.EntityIstance EntityIstance}
+ * implementation of {@link game.logics.entities.generic.Entity Entity}, from
+ * which some methods are the same.
+ *
+ * These classes in fact share a similar behavior.
  */
 public class BackgroundController implements Background {
 

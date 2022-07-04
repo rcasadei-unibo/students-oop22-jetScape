@@ -14,8 +14,8 @@ import game.utility.sprites.AbstractSprite;
 import game.utility.sprites.Sprite;
 
 /**
- * This class is a specialised version of SpriteImpl used for loading
- * and the background sprite
+ * This class is a specialised version of SpriteImpl used for loading the
+ * background sprite.
  * 
  * This class is an implementation of a {@link Sprite} handler.
  * 
