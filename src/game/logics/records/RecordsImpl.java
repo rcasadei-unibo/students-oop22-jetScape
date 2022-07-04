@@ -126,9 +126,13 @@ public final class RecordsImpl implements Records {
 
     // TODO use new GameUID Date
     /**
-     * {@inheritDoc}
+     * This method checks if the new finalScore is a new record and only in
+     * this case saves it.
+     *
+     * @param finalScore
+     *   final score in the current game
      */
-    public void checkScore(final int finalScore) {
+    private void checkScore(final int finalScore) {
 
         if (finalScore > this.playingScoreRecord) {
             this.newPlayingScoreRecord = true;
@@ -147,9 +151,13 @@ public final class RecordsImpl implements Records {
     }
 
     /**
-     * {@inheritDoc}
+     * This method checks if the new finalCoins is a new record and only in
+     * this case saves it.
+     *
+     * @param finalCoinsCollected
+     *   final number of coins collected in the current game
      */
-    public void checkMoney(final int finalCoinsCollected) {
+    private void checkMoney(final int finalCoinsCollected) {
 
         if (this.moneyRecords.size() < RecordsImpl.getMaxSavedNumberOfRecords()
                 || finalCoinsCollected > this.getLowestMoneyRecord()) {

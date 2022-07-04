@@ -32,28 +32,6 @@ public interface Records {
     void update();
 
     /****************************************/
-    /***   Calculate and check records    ***/
-    /****************************************/
-
-    /**
-     * This method checks if the new finalScore is a new record and only in
-     * this case saves it.
-     *
-     * @param finalScore
-     *   final score in the current game
-     */
-    void checkScore(int finalScore);
-
-    /**
-     * This method checks if the new finalCoins is a new record and only in
-     * this case saves it.
-     *
-     * @param finalCoinsCollected
-     *   final number of coins collected in the current game
-     */
-    void checkMoney(int finalCoinsCollected);
-
-    /****************************************/
     /*** Getters & Setters from / to file ***/
     /****************************************/
 
@@ -184,7 +162,8 @@ public interface Records {
     boolean isNewPlayingScoreRecord();
 
     /**
-     * Get coins collected by player given from {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
+     * Get coins collected by player given from
+     * {@link game.logics.handler.Logics.GameInfo GameInfo} instance.
      * @return player score
      */
     int getCollectedMoney();
